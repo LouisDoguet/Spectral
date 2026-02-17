@@ -6,8 +6,8 @@
 
 
 namespace mat {
-    void print(double* vec, size_t n);
-    void print(double* mat, size_t s_row, size_t s_col);
+    void print(const double* vec, size_t n);
+    void print(const double* mat, size_t s_row, size_t s_col);
 }
 
 #endif

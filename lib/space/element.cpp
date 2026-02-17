@@ -1,0 +1,74 @@
+#include <iostream>
+#include <cmath>
+#include <iomanip>
+#include "cblas.h"
+
+#include "element.h"
+#include "../math/math.h"
+#include "../phy/physics.h"
+
+void divF(double* dFdx, const double* D, const double* F, const double invJ, const int n){
+    cblas_dgemv(CblasRowMajor, CblasNoTrans, n,n, invJ,D,n, F,1, 0.,dFdx,1);
+}
+
+
+namespace elem {
+
+    /**
+     * @briefs Construct a new Element
+     * @param sharedBasis Basis object, shared by all the elements
+     * @xL Left boundary of the element in the x space
+     * @xR Right boundary of the element in the x space
+     */
+    Element::Element(const int id, gll::Basis* sharedBasis, double xL, double xR) : id(id), basis(sharedBasis){
+	double dx = xR - xL;
+	this->J = dx / 2.; /// Jacobian of the linear mapping for xi
+	this->invJ = 1 / J; /// Inversion for computational efficiency
+    
+	rho = new double[basis->getOrder()+1];
+	rhou = new double[basis->getOrder()+1];
+	e = new double[basis->getOrder()+1];
+    }
+
+    Element::Element(const int id, gll::Basis* sharedBasis, double xL, double xR, 
+		     double* rho, double* rhou, double* e) 
+		     : id(id), basis(sharedBasis), rho(rho), rhou(rhou), e(e) {
+	double dx = xR - xL;
+	this->J = dx / 2.; /// Jacobian of the linear mapping for xi
+	this->invJ = 1 / J; /// Inversion for computational efficiency
+    }
+    void Element::setF() {
+	int n = basis->getOrder() + 1;
+	double* p = new double[n];
+	phy::getP(p, rho, rhou, e, n);
+	phy::computeFlux(F1, F2, F3, rho, rhou, e, p, n);
+	delete[] p;
+    }
+
+
+    void Element::computeDivFlux(){
+	divF(divF1, basis->getD(), F1, invJ, basis->getOrder()+1);
+	divF(divF2, basis->getD(), F2, invJ, basis->getOrder()+1);
+	divF(divF3, basis->getD(), F3, invJ, basis->getOrder()+1);
+    }
+
+
+    Element::~Element() {
+	delete[] rho;
+	delete[] rhou;
+	delete[] e;
+	delete[] F1;
+	delete[] F2;
+	delete[] F3;
+	delete[] divF1;
+	delete[] divF2;
+	delete[] divF3;
+    }
+
+    std::ostream &operator<<(std::ostream &os, const Element& e) {
+	os << "----- ELEM -----" << std::endl
+	   << "ID  : " << e.id << std::endl;
+	return os;
+    }
+
+}
