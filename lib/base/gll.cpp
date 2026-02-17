@@ -83,3 +83,26 @@ void GetWeights(double* weights, const double* quads, const int P){
 	weights[i] = 2 / (P*(P+1)* (Lpi*Lpi));
     }
 }
+
+
+namespace gll{
+    Basis::Basis(const int p) : p(p) {
+	quads = new double[p+1];
+	weights = new double[p+1];
+	GetQuads(quads, p);
+	GetWeights(weights, quads, p);
+    }
+
+
+    Basis::~Basis() {
+	delete[] quads;
+	delete[] weights;
+    }    
+    
+    std::ostream &operator<<(std::ostream &os, const Basis& b) {
+	os << "----- BASIS -----" << std::endl
+	   << "ORDER  : " << b.p << std::endl;
+	return os;
+    }
+}
+

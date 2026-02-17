@@ -7,16 +7,16 @@
 
 int main() {
     const size_t n = 100;
-    const int P = 10;
-    mesh::Mesh* M = new mesh::Mesh(n);
+    const int P = 100;
+    gll::Basis* B = new gll::Basis(P);
     
-    elem::Element* E = new elem::Element(P);
+    elem::Element* E = new elem::Element(1, B);
 
-    std::cout << *M;
+    std::cout << *B;
     std::cout << *E;
 
-    double* q = E->getQuads();
-    double* w = E->getWeights();
+    double* q = B->getQuads();
+    double* w = B->getWeights();
 
     mat::print(q,P+1);
     mat::print(w,P+1);

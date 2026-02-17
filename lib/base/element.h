@@ -13,16 +13,11 @@ namespace elem{
 	     * @brief Construct a new element
 	     * @param p Order of the base function
 	     */
-	    Element(const int p);
-	    ~Element();
-
-	    double* getQuads(){ return quads; }
-	    double* getWeights(){ return weights; }
+	    Element(const int id, gll::Basis* sharedBasis) : id(id), basis(sharedBasis){};
 
 	private:
-	    const int p;
-	    double* quads;
-	    double* weights;
+	    const int id;
+	    gll::Basis* basis;
 
 	friend std::ostream &operator<<(std::ostream&, const Element&);	    
 
