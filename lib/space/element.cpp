@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include <iomanip>
-#include "cblas.h"
+#include <cblas.h>
 
 #include "element.h"
 #include "../math/math.h"
@@ -17,8 +17,8 @@ namespace elem {
     /**
      * @briefs Construct a new Element
      * @param sharedBasis Basis object, shared by all the elements
-     * @xL Left boundary of the element in the x space
-     * @xR Right boundary of the element in the x space
+     * @param xL Left boundary of the element in the x space
+     * @param xR Right boundary of the element in the x space
      */
     Element::Element(const int id, gll::Basis* sharedBasis, double xL, double xR) : id(id), basis(sharedBasis){
 	double dx = xR - xL;
@@ -28,14 +28,37 @@ namespace elem {
 	rho = new double[basis->getOrder()+1];
 	rhou = new double[basis->getOrder()+1];
 	e = new double[basis->getOrder()+1];
+
+	F1 = new double[basis->getOrder()+1];
+	F2 = new double[basis->getOrder()+1];
+	F3 = new double[basis->getOrder()+1];
+	divF1 = new double[basis->getOrder()+1];
+	divF2 = new double[basis->getOrder()+1];
+	divF3 = new double[basis->getOrder()+1];
     }
 
+    /**
+     * @briefs Construct a new Element with imposed values of DENSITY, MOMENTUM, ENERGY
+     * @param sharedBasis Basis object, shared by all the elements
+     * @param xL Left boundary of the element in the x space
+     * @param xR Right boundary of the element in the x space
+     * @rho Density array
+     * @rhou Momentum array
+     * @e Energy array
+     */ 
     Element::Element(const int id, gll::Basis* sharedBasis, double xL, double xR, 
 		     double* rho, double* rhou, double* e) 
 		     : id(id), basis(sharedBasis), rho(rho), rhou(rhou), e(e) {
 	double dx = xR - xL;
 	this->J = dx / 2.; /// Jacobian of the linear mapping for xi
 	this->invJ = 1 / J; /// Inversion for computational efficiency
+	
+	F1 = new double[basis->getOrder()+1];
+	F2 = new double[basis->getOrder()+1];
+	F3 = new double[basis->getOrder()+1];
+	divF1 = new double[basis->getOrder()+1];
+	divF2 = new double[basis->getOrder()+1];
+	divF3 = new double[basis->getOrder()+1];
     }
     void Element::setF() {
 	int n = basis->getOrder() + 1;
