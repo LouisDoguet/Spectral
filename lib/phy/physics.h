@@ -1,6 +1,7 @@
 #ifndef PHYSICS_H
 #define PHYSICS_H
 
+/// Check page 60 Laizet notes
 
 namespace phy {
     /**
@@ -26,6 +27,17 @@ namespace phy {
      * @return void
      */
     void computeFlux(double* f1, double* f2, double* f3, double* u1, double* u2, double* u3, double* p, int n);
+
 }
+
+namespace reimann {
+    /**
+     */
+    double computeMaxWaveSpeed(double rho, double u, double p);    
+    void Rusanov(double Fstar, double FL, double FR, double UL, double UR, double lambda);
+
+}
+
+
 
 #endif

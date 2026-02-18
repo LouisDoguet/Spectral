@@ -22,3 +22,15 @@ namespace phy {
     }
 
 }
+
+
+namespace reimann {
+    double computeMaxWaveSpeed(double rho, double u, double p){
+	double gamma=1.4;
+	return fabs(u) + sqrt((gamma*p)/rho);
+    }
+
+    void Rusanov(double Fstar, double FL, double FR, double UL, double UR, double lambda){
+	Fstar = 0.5*(FR-FL) - 0.5*lambda*(UR-UL);
+    }
+}

@@ -23,6 +23,10 @@ namespace elem{
 	    void setFlux();
 	    void computeDivFlux();
 
+	    const int* getID() const { return &id; }
+	    const double* getU1() const { return rho; }
+	    const double* getU2() const { return rhou; }
+	    const double* getU3() const { return e; }
 	    const double* getF1() const { return F1; }
 	    const double* getF2() const { return F2; }
 	    const double* getF3() const { return F3; }
