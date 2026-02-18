@@ -1,7 +1,30 @@
 #ifndef GLL_H
 #define GLL_H
 
-void GetQuads(double* quads, const int P);
-void GetWeights(double* weights, const double* quads, const int P);
+#include <iostream>
+
+namespace gll{
+    class Basis{
+	public:
+	    /**
+	     * @brief Constructor of Lagrange basis
+	     * @param p Order of the basis
+	     */
+	    Basis(const int p);
+	    const double* getQuads() const {return quads;}
+	    const double* getWeights() const {return weights;}
+	    const int getOrder() const {return p;}
+	    const double* getD() const {return D;}
+
+	    ~Basis();
+	    friend std::ostream &operator<<(std::ostream&, const Basis&);
+
+	private:
+	    const int p;
+	    double* D;
+	    double* quads;
+	    double* weights;
+    };
+};
 
 #endif

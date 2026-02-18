@@ -4,7 +4,14 @@
 #include <cblas.h>
 
 namespace mat {
-    void print(double* vec, size_t n){
+    
+    /**
+     * @brief Helper to print vectors
+     * @param vec Pointer to the vector
+     * @param n size of the vector
+     * @return void
+     */
+    void print(const double* vec, size_t n){
         std::cout << "[ ";
         for (size_t i=0; i<n; ++i){
             std::cout << std::fixed << vec[i] << "  ";
@@ -12,7 +19,14 @@ namespace mat {
         std::cout << " ]" << std::endl;
     }
 
-    void print(double* mat, size_t s_row, size_t s_col){
+    /**
+     * @brief Helper to print matrices
+     * @param mat Pointer to the matrix
+     * @param s_row Size of the rows
+     * @param s_col Size of the columns
+     * @return void
+     */
+    void print(const double* mat, size_t s_row, size_t s_col){
         std::cout << std::endl;
         for (size_t i=0; i<s_row; ++i){
             print(mat + i*s_col, s_col);
