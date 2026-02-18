@@ -32,8 +32,20 @@ namespace phy {
 
 namespace reimann {
     /**
+     * @brief Computes the wave speed of an element
+     * @param rho Density
+     * @param u Velocity
+     * @param p Pressure
      */
     double computeMaxWaveSpeed(double rho, double u, double p);    
+    /**
+     * @brief Computes a Rusanov flux (Reimann problem at interface)
+     * @param FL Flux of the quantity on the left
+     * @param FR Flux of the quantity on the right
+     * @param UL Velocity of the quantity on the left
+     * @param UR Velocity of the quantity on the right
+     * @param lambda Max wave speed between the elements
+     */
     double Rusanov(double FL, double FR, double UL, double UR, double lambda);
 
 }

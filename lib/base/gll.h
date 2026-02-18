@@ -6,6 +6,10 @@
 namespace gll{
     class Basis{
 	public:
+	    /**
+	     * @brief Constructor of Lagrange basis
+	     * @param p Order of the basis
+	     */
 	    Basis(const int p);
 	    const double* getQuads() const {return quads;}
 	    const double* getWeights() const {return weights;}

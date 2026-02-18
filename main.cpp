@@ -1,58 +1,44 @@
 #include <iostream>
-#include <vector>
-#include <cmath>
-#include <cassert>
-#include <iomanip>
-
-#include "lib/space/element.h"
+#include <cstdlib>
 #include "lib/base/gll.h"
 #include "lib/space/mesh.h"
-#include "lib/math/math.h"
+#include "lib/time/rk4.h"
+#include <cmath>
 
 int main() {
-    const int P = 4;
-    const int N = 3;
-    gll::Basis* B = new gll::Basis(P);
-    std::cout << *B;
+    //-- SIMULATION --
+    const int P = 10;           
+    const int N_elem = 100;    
+    const double L = 1.0;      
+    const double T_final = 0.5; 
+    const double dt = 5e-5;    
+    const int save_freq = 100; 
 
-    double* rho = new double[N];
-    double* rhou = new double[N];
-    double* e = new double[N];
+    //-- SETUP BASIS -- 
+    gll::Basis* basis = new gll::Basis(P);
+    double* rho_i = new double[N_elem]; 
+    double* rhou_i = new double[N_elem]; 
+    double* e_i = new double[N_elem];
 
-    for (int i=1; i<N+1; ++i) {
-        rho[i-1] = (double) i;
-        rhou[i-1] = (double) 3*i ;
-        e[i-1] = (double) 5*i;
+    //-- INIT --
+    for (int e = 0; e < N_elem; ++e) {
+        double x_mid = ((double)e + 0.5) * (L / N_elem);
+        double rho = 1.0 + 0.5 * std::exp(-100.0 * std::pow(x_mid - 0.3, 2));
+        double u = 1.0; double p = 1.0;
+        rho_i[e] = rho; rhou_i[e] = rho * u; 
+        e_i[e] = p / (1.4 - 1.0) + 0.5 * rho * u * u; 
     }
+
+    //-- MESH INIT --
+    mesh::Mesh* mesh = new mesh::Mesh(N_elem, basis, 0.0, L, rho_i, rhou_i, e_i);
+    //-- SOLVER INIT --
+    solver::RK4 solver(mesh);
     
-    mesh::Mesh* M = new mesh::Mesh(N, B, 0., 1., rho, rhou, e);
-    //M->computeInterfaces(); 
+    //-- SIMULATION -- 
+    solver.run(T_final, dt, save_freq, "results/smooth_advection");
 
-    std::cout << "---- QUAD ----" << std::endl;    
-    mat::print(M->getElem(0)->getBasis()->getQuads(),P+1);
-    
-    for (int i=0; i<N; ++i){
-	std::cout << *M->getElem(i);
-	std::cout << "U:" << std::endl;
-	mat::print(M->getElem(i)->getU1(),P+1);
-	mat::print(M->getElem(i)->getU2(),P+1);
-	mat::print(M->getElem(i)->getU3(),P+1);
-	std::cout << "F:" << std::endl;
-	mat::print(M->getElem(i)->getF1(),P+1);
-	mat::print(M->getElem(i)->getF2(),P+1);
-	mat::print(M->getElem(i)->getF3(),P+1);
-	std::cout << "divF:" << std::endl;
-	mat::print(M->getElem(i)->getDivF1(),P+1);
-	mat::print(M->getElem(i)->getDivF2(),P+1);
-	mat::print(M->getElem(i)->getDivF3(),P+1);
-    }
-   
-    M->computeElements(); 
-    for (int i=0; i<N; ++i){
-	std::cout << std::endl;
-	std::cout << "after flux computation :" << std::endl << "divF:" << std::endl;
-	mat::print(M->getElem(i)->getDivF1(),P+1);
-	mat::print(M->getElem(i)->getDivF2(),P+1);
-	mat::print(M->getElem(i)->getDivF3(),P+1);
-    }
+
+    // Cleanup
+    delete mesh; delete basis; delete[] rho_i; delete[] rhou_i; delete[] e_i;
+    return 0;
 }

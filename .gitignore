@@ -1,1 +1,4 @@
 *.out
+GEMINI*
+*.vtk
+**/results/**

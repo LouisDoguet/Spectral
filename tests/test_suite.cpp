@@ -9,6 +9,7 @@
 #include "lib/space/mesh.h"
 #include "lib/math/math.h"
 #include "lib/phy/physics.h"
+#include "lib/time/rk4.h"
 
 // Simple test framework
 #define TEST_SECTION(name) std::cout << "\n=== Testing " << name << " ===" << std::endl;
@@ -20,7 +21,7 @@
 
 void test_mesh_generation() {
     TEST_SECTION("Mesh Generation");
-    const int P = 4;
+    const int P = 10;
     const int N_elem = 2;
     gll::Basis B(P);
     mesh::Mesh M(N_elem, &B, 0.0, 10.0);
@@ -118,6 +119,32 @@ void test_boundary_conditions() {
     std::cout << "  Boundary condition tests passed!" << std::endl;
 }
 
+void test_rk4_step() {
+    TEST_SECTION("RK4 Time Stepping");
+    const int P = 2;
+    gll::Basis B(P);
+    mesh::Mesh M(1, &B, 0.0, 1.0);
+    
+    // Set initial condition: high pressure side state
+    for (int i=0; i<=P; ++i) {
+        *const_cast<double*>(M.getElem(0)->getU1(i)) = 1.0;
+        *const_cast<double*>(M.getElem(0)->getU2(i)) = 0.0;
+        *const_cast<double*>(M.getElem(0)->getU3(i)) = 2.5;
+    }
+    
+    solver::RK4 S(&M);
+    double dt = 0.001;
+    S.step(dt);
+    
+    // At node P, divF2 was -2.7 (due to mismatch at boundary)
+    // dU2/dt = -divF2 = 2.7
+    // U2_new = 0 + 2.7 * 0.001 = 0.0027 (approx)
+    double u2_new = *M.getElem(0)->getU2(P);
+    ASSERT_NEAR(u2_new, 0.0027, 1e-5, "RK4 step for Momentum at boundary");
+    
+    std::cout << "  RK4 time stepping tests passed!" << std::endl;
+}
+
 int main() {
     std::cout << "Starting Spectral1D Test Suite" << std::endl;
     test_mesh_generation();
@@ -125,6 +152,7 @@ int main() {
     test_divergence();
     test_riemann_interface();
     test_boundary_conditions();
+    test_rk4_step();
     std::cout << "\nAll tests finished successfully!" << std::endl;
     return 0;
 }
