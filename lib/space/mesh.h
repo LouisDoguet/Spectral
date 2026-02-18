@@ -1,5 +1,9 @@
 #ifndef MESH_H
 #define MESH_H
+
+#include "element.h"
+#include "../base/gll.h"
+
 namespace mesh{
     /**
      * @brief Class storing complete mesh
@@ -10,15 +14,16 @@ namespace mesh{
 	     * @brief Construct a new mesh
 	     * @param n Mesh number of points
 	     */
-	    Mesh(const size_t n);
+	    Mesh(const int n, gll::Basis* basis, double xL, double xR);
+	    
+	    const elem::Element* getElem(int i) const { return elem[i]; }
+	    
 	    ~Mesh();
 
         private:
-	    const size_t n;
-	    double* rho;
-	    double* rhou;
-	    double* e;
-    
+	    const int n;
+	    elem::Element** elem;
+	    
 	friend std::ostream &operator<<(std::ostream&, const Mesh&);	    
     };
 }

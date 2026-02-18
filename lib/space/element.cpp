@@ -15,16 +15,31 @@ void divF(double* dFdx, const double* D, const double* F, const double invJ, con
 namespace elem {
 
     /**
+     * @brief Setter for the linear mapping of the Jacobian
+     * @param xL Left boundary of the element in the x space
+     * @param xR Right boundary of the element in the x space
+     * @return void
+     */
+    void Element::setJ(double xL, double xR){
+	this->xL = xL;	
+	this->xR = xR;	
+	double dx = xR - xL;
+	this->J = dx / 2.; /// Jacobian of the linear mapping for xi
+	this->invJ = 1 / J; /// Inversion for computational efficiency
+    }
+
+
+
+    /**
      * @briefs Construct a new Element
      * @param sharedBasis Basis object, shared by all the elements
      * @param xL Left boundary of the element in the x space
      * @param xR Right boundary of the element in the x space
      */
     Element::Element(const int id, gll::Basis* sharedBasis, double xL, double xR) : id(id), basis(sharedBasis){
-	double dx = xR - xL;
-	this->J = dx / 2.; /// Jacobian of the linear mapping for xi
-	this->invJ = 1 / J; /// Inversion for computational efficiency
-    
+	
+	this->setJ(xL, xR);
+
 	rho = new double[basis->getOrder()+1];
 	rhou = new double[basis->getOrder()+1];
 	e = new double[basis->getOrder()+1];
@@ -49,10 +64,9 @@ namespace elem {
     Element::Element(const int id, gll::Basis* sharedBasis, double xL, double xR, 
 		     double* rho, double* rhou, double* e) 
 		     : id(id), basis(sharedBasis), rho(rho), rhou(rhou), e(e) {
-	double dx = xR - xL;
-	this->J = dx / 2.; /// Jacobian of the linear mapping for xi
-	this->invJ = 1 / J; /// Inversion for computational efficiency
-	
+
+	this->setJ(xL, xR);
+
 	F1 = new double[basis->getOrder()+1];
 	F2 = new double[basis->getOrder()+1];
 	F3 = new double[basis->getOrder()+1];
@@ -60,7 +74,9 @@ namespace elem {
 	divF2 = new double[basis->getOrder()+1];
 	divF3 = new double[basis->getOrder()+1];
     }
-    void Element::setF() {
+
+
+    void Element::setFlux() {
 	int n = basis->getOrder() + 1;
 	double* p = new double[n];
 	phy::getP(p, rho, rhou, e, n);
@@ -90,7 +106,9 @@ namespace elem {
 
     std::ostream &operator<<(std::ostream &os, const Element& e) {
 	os << "----- ELEM -----" << std::endl
-	   << "ID  : " << e.id << std::endl;
+	   << "ID  : " << e.id << std::endl
+	   << "xL  : " << e.xL << std::endl
+	   << "xR  : " << e.xR << std::endl;
 	return os;
     }
 

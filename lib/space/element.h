@@ -9,13 +9,18 @@ namespace elem{
      */
     class Element {
 	public:
-	    
 	    Element(const int id, gll::Basis* sharedBasis, double xL, double xR);
 	    Element(const int id, gll::Basis* sharedBasis, double xL, double xR, 
 		    double* rho, double* rhou, double* e);
 	    const gll::Basis* getBasis() const { return basis; };
 
-	    void setF();
+	    void setBasis(gll::Basis* sharedBasis){this->basis = sharedBasis;}
+	    void setJ(double xL, double xR);
+	    void setID(int ID){this->id=ID;}
+	    void setU1(double* rho){this->rho = rho;}
+	    void setU2(double* rhou){this->rhou = rhou;}
+	    void setU3(double* e){this->e = e;}
+	    void setFlux();
 	    void computeDivFlux();
 
 	    const double* getF1() const { return F1; }
@@ -27,7 +32,10 @@ namespace elem{
 
 	    ~Element();
 	private:
-	    const int id;
+	    double xL;
+	    double xR;
+	    
+	    int id;
 	    gll::Basis* basis;
 	    double J;
 	    double invJ;
