@@ -91,6 +91,7 @@ void setQuads(double* quads, const int P){
 	for (int iter=0; iter<50; ++iter){
 	    temp = xi - (Lpp(P,xi)/Lppp(P,xi));
 	    eps = fabs(temp - xi);
+	    xi = temp;
 	    if (eps < 1e-15) break;
 	}
 	quads[k] = xi;

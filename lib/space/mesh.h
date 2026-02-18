@@ -22,6 +22,8 @@ namespace mesh{
 	    void computeElements();
 	    void computeInterfaces();	    
 
+	    void applyDirichlet();
+
 	    ~Mesh();
 
         private:

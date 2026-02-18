@@ -11,7 +11,7 @@ namespace elem{
 	public:
 	    Element(const int id, gll::Basis* sharedBasis, double xL, double xR);
 	    Element(const int id, gll::Basis* sharedBasis, double xL, double xR, 
-		    double* rho, double* rhou, double* e);
+		    double rho_init, double rhou_init, double e_init);
 	    const gll::Basis* getBasis() const { return basis; };
 
 	    void setBasis(gll::Basis* sharedBasis){this->basis = sharedBasis;}
@@ -20,10 +20,14 @@ namespace elem{
 	    void setU1(double* rho){this->rho = rho;}
 	    void setU2(double* rhou){this->rhou = rhou;}
 	    void setU3(double* e){this->e = e;}
+	    void correctDivF1(int pos, double val) { divF1[pos]+=val; }
+	    void correctDivF2(int pos, double val) { divF2[pos]+=val; }
+	    void correctDivF3(int pos, double val) { divF3[pos]+=val; }
 	    void setFlux();
 	    void computeDivFlux();
 
 	    const int* getID() const { return &id; }
+	    const double* getInvJ() const { return &invJ; }
 	    const double* getU1() const { return rho; }
 	    const double* getU2() const { return rhou; }
 	    const double* getU3() const { return e; }
@@ -33,6 +37,16 @@ namespace elem{
 	    const double* getDivF1() const { return divF1; }
 	    const double* getDivF2() const { return divF2; }
 	    const double* getDivF3() const { return divF3; }
+	    
+	    double* getU1(int q) const { return rho+q; }
+	    double* getU2(int q) const { return rhou+q; }
+	    double* getU3(int q) const { return e+q; }
+	    double* getF1(int q) const { return F1+q; }
+	    double* getF2(int q) const { return F2+q; }
+	    double* getF3(int q) const { return F3+q; }
+	    double* getDivF1(int q) const { return divF1+q; }
+	    double* getDivF2(int q) const { return divF2+q; }
+	    double* getDivF3(int q) const { return divF3+q; }
 
 	    ~Element();
 	private:

@@ -61,18 +61,29 @@ namespace elem {
      * @rhou Momentum array
      * @e Energy array
      */ 
-    Element::Element(const int id, gll::Basis* sharedBasis, double xL, double xR, 
-		     double* rho, double* rhou, double* e) 
-		     : id(id), basis(sharedBasis), rho(rho), rhou(rhou), e(e) {
+    Element::Element(const int id, gll::Basis* sharedBasis, double xL, double xR, double rho_init, double rhou_init, double e_init) 
+	: id(id), basis(sharedBasis) {
+
+	int nquads = basis->getOrder()+1;
+
+	rho = new double[nquads];
+	rhou = new double[nquads];
+	e = new double[nquads];
+
+	for (int i=0; i<nquads; i++){
+	    rho[i]=rho_init;
+	    rhou[i]=rhou_init;
+	    e[i]=e_init;
+	}
 
 	this->setJ(xL, xR);
 
-	F1 = new double[basis->getOrder()+1];
-	F2 = new double[basis->getOrder()+1];
-	F3 = new double[basis->getOrder()+1];
-	divF1 = new double[basis->getOrder()+1];
-	divF2 = new double[basis->getOrder()+1];
-	divF3 = new double[basis->getOrder()+1];
+	F1 = new double[nquads];
+	F2 = new double[nquads];
+	F3 = new double[nquads];
+	divF1 = new double[nquads];
+	divF2 = new double[nquads];
+	divF3 = new double[nquads];
     }
 
 

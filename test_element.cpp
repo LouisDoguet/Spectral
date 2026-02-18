@@ -43,7 +43,7 @@ int main() {
     }
 
     // Element from -1 to 1. dx = 2. J = 1. invJ = 1.
-    elem::Element* E = new elem::Element(1, B, -1.0, 1.0, rho, rhou, e);
+    elem::Element* E = new elem::Element(1, B, -1.0, 1.0, *rho, *rhou, *e);
 
     // 1. Test Construction and Print
     std::cout << *E;

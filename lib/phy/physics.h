@@ -34,7 +34,7 @@ namespace reimann {
     /**
      */
     double computeMaxWaveSpeed(double rho, double u, double p);    
-    void Rusanov(double Fstar, double FL, double FR, double UL, double UR, double lambda);
+    double Rusanov(double FL, double FR, double UL, double UR, double lambda);
 
 }
 
