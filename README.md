@@ -15,8 +15,12 @@ A 1D Spectral Element Method solver for the Euler equations.
 - `lib/space/`: `Mesh` and `Element` classes managing the unified memory and spatial operator.
 - `lib/time/`: Optimized `RK4` class and data export routines.
 
-## Quick Start
-1. **Compile**:
-   ```bash
-   g++ -o main main.cpp lib/base/gll.cpp lib/math/math.cpp lib/phy/physics.cpp lib/space/element.cpp lib/space/mesh.cpp lib/time/rk4.cpp -lopenblas
-   ```
+## Build & Compile
+Requires BLAS and BOOST_PROGRAM_OPTIONS
+```bash
+mkdir build
+cd build
+../cmake
+make
+```
+Then the executable is `spectral`
