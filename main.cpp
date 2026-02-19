@@ -6,13 +6,34 @@
 #include "lib/math/math.h"
 #include "lib/space/mesh.h"
 #include "lib/time/rk4.h"
+#include <boost/program_options.hpp>
+namespace po = boost::program_options;
 
-int main() {
+
+
+
+int main(int argc, char* argv[]) {
+    po::options_description opts("Available options.");
+    opts.add_options()
+        ("P", po::value<int>()->default_value(5),"Polynomial order")
+        ("N", po::value<int>()->default_value(50),"Number of elements")
+        ("L", po::value<double>()->default_value(1.),"Domain size")
+        ("help", "Print help message.");
+    
+    po::variables_map vm;
+    po::store(po::parse_command_line(argc, argv, opts), vm);
+    po::notify(vm);
+    
+    if (vm.count("help")) {
+	std::cout << opts << std::endl;
+	return 0;
+    }
+    const int P = vm["P"].as<int>();
+    const int N_elem = vm["N"].as<int>();
+    const double L = vm["L"].as<double>();
+
     //-- SIMULATION PARAMETERS --
-    const int P = 10;           
-    const int N_elem = 100;    
     const int N_nodes = N_elem * (P + 1);
-    const double L = 2.0;      
     const double gamma = 1.4;
 
     // Use a smaller dt for P=5 to satisfy the strict CFL condition of Spectral Elements
