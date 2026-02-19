@@ -28,7 +28,7 @@ namespace solver {
              * @brief Export current state to CSV
              */
             void export_results(int step, double time, std::string prefix);
-            
+
 	    ~RK4();
             
         private:

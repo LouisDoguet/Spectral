@@ -88,7 +88,7 @@ int main(int argc, char* argv[]) {
         double rho = 1.0;
         double u = 1.0; // Advection speed
         // Gaussian pulse in pressure
-        double p = 1.0 + 0.5 * std::exp(-100.0 * std::pow(x - 1.*L/3., 2)); 
+        double p = 1.0 + 0.5 * std::exp(-200.0 * std::pow(x - 1.*L/3., 2)); 
         
         rho_i[i] = rho; 
         rhou_i[i] = rho * u; 

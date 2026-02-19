@@ -94,12 +94,20 @@ namespace solver {
         std::cout << "--- Starting Simulation ---" << std::endl;
         for (int step = 0; step <= n_steps; ++step) {
             if (step % save_freq == 0) {
-                export_results(step, step * dt, prefix);
+		std::printf("Timestep : %5d/%5d \n", step, n_steps);
+		export_results(step, step * dt, prefix);
             }
             this->step(dt);
         }
         write_pvd(prefix);
         std::cout << "--- Simulation Finished ---" << std::endl;
+	int nelem = this->m->getNumElements();
+	int nquad = this->m->getElem(0)->getBasis()->getOrder()+1;
+	std::cout << "Mesh size : " << nelem << std::endl;
+	std::cout << "Quads     : " << nquad << std::endl;
+	std::cout << "Nodes     : " << nelem*nquad << std::endl;
+	std::cout << "Timesteps : " << n_steps << std::endl;
+	std::cout << "--- TOTAL OPER : " << n_steps*nelem*nquad << std::endl;
     }
 
     void RK4::export_results(int step, double time, std::string prefix) {

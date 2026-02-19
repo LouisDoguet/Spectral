@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 project (spectral)
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 find_package(BLAS REQUIRED)
 find_package( Boost 1.40 COMPONENTS program_options REQUIRED )
 set(elem "lib/space/element.cpp" "lib/space/mesh.cpp")
