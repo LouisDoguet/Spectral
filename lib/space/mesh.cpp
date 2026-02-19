@@ -27,42 +27,49 @@ namespace mesh {
 	}
     }	    
     
-    Mesh::Mesh(const int n, gll::Basis* basis, double xL, double xR, double* init_u1, double* init_u2, double* init_u3) : n(n) {
-	double dx_mesh = xR - xL;
-	double dx = (double) dx_mesh / (n);
+    Mesh::Mesh(const int n, gll::Basis* basis, double xL, double xR, 
+               double* init_u1, double* init_u2, double* init_u3,
+               double u1_L, double u2_L, double u3_L, double u1_R, double u2_R, double u3_R) : 
+               n(n), u1_L(u1_L), u2_L(u2_L), u3_L(u3_L), u1_R(u1_R), u2_R(u2_R), u3_R(u3_R) {
 
-	/// Global buffer	
+        double dx_mesh = xR - xL;
+        double dx = (double) dx_mesh / (n);
+
+        /// Global buffer	
         int nquads = basis->getOrder() + 1;
         global_rho = new double[n * nquads];
         global_rhou = new double[n * nquads];
         global_e = new double[n * nquads];
 
-	/// Pointers to the elements
-	this->elem = new elem::Element*[n]; 
-	
-	double x_iter = xL;
-	for (int e = 0; e<n; ++e) {
-	    /// Assigns initial conditions to the fglobal buffer
+        /// Pointers to the elements
+        this->elem = new elem::Element*[n]; 
+        
+        double x_iter = xL;
+        for (int e = 0; e<n; ++e) {
+            double xL_elem = xL + e * dx;
+            double xR_elem = xL + (e + 1) * dx;
+            /// Assigns initial conditions to the fglobal buffer
             for (int q=0; q<nquads; q++) {
-                global_rho[e*nquads + q] = init_u1[e];
-                global_rhou[e*nquads + q] = init_u2[e];
-                global_e[e*nquads + q] = init_u3[e];
+                global_rho[e*nquads + q] = init_u1[e*nquads + q];
+                global_rhou[e*nquads + q] = init_u2[e*nquads + q];
+                global_e[e*nquads + q] = init_u3[e*nquads + q];
             }
 
-	    /// Construct the element e with for values it's position in the global buffer
-	    elem[e] = new elem::Element(e, basis, x_iter, x_iter + dx, 
+            /// Construct the element e with for values it's position in the global buffer
+            elem[e] = new elem::Element(e, basis, xL_elem, xR_elem,
                                         &global_rho[e*nquads], &global_rhou[e*nquads], &global_e[e*nquads]);
-	    /// Computes F from U
-	    elem[e]->setFlux();
-	    x_iter += dx;
-	}
+
+            /// Computes F from U
+            elem[e]->setFlux();
+            x_iter += dx;
+        }
     }
 
 
     void Mesh::computeElements(){
-	for (int e=0; e<n; ++e){
-	    elem[e]->computeDivFlux();
-	}
+        for (int e=0; e<n; ++e){
+            elem[e]->computeDivFlux();
+        }
     }
 
 
@@ -73,7 +80,7 @@ namespace mesh {
         for (int e = 0; e < n - 1; ++e) {
             /// Select iteracting elements
 	    elem::Element* LeftElem = elem[e];
-            elem::Element* RightElem = elem[e + 1];
+        elem::Element* RightElem = elem[e + 1];
 	    
 	    /// Set up of the useful values
             double u1L = *(LeftElem->getU1(P)); double u1R = *(RightElem->getU1(0));
@@ -117,10 +124,7 @@ namespace mesh {
     void Mesh::applyDirichlet() {
         const int P = elem[0]->getBasis()->getOrder();
         const double* w = elem[0]->getBasis()->getWeights();
-    
-        // Background External State
-        double u1_ext = 1.0; double u2_ext = 1.0; double u3_ext = 2.5; 
-        double f1_ext = 1.0; double f2_ext = 2.0; double f3_ext = 3.5; 
+
     
         // --- LEFT BOUNDARY ---
         double u1_int_L = *(elem[0]->getU1(0));
@@ -132,13 +136,20 @@ namespace mesh {
         
         // Dynamic lambda with safety factor for stability
         double p_int_L;
+        double p_ext_L;
         phy::getP(&p_int_L, &u1_int_L, &u2_int_L, &u3_int_L, 1);
+        phy::getP(&p_ext_L, &u1_L, &u2_L, &u3_L, 1);
+        double f1_ext_L = u2_L;                                         // rho * u
+        double f2_ext_L = (u2_L * u2_L / u1_L) + p_ext_L;                // rho * u^2 + p
+        double f3_ext_L = (u2_L / u1_L) * (u3_L + p_ext_L);
         double lam_int_L = reimann::computeMaxWaveSpeed(u1_int_L, u2_int_L/u1_int_L, p_int_L);
-        double lambda_L = std::max(2.2, lam_int_L) * 1.1; 
+        double lam_ext_L = reimann::computeMaxWaveSpeed(u1_L, u2_L/u1_L, p_ext_L);
+        double lambda_L = std::max(lam_ext_L, lam_int_L); //DIFF COEFF
     
-        double f1s_L = reimann::Rusanov(f1_ext, f1_int_L, u1_ext, u1_int_L, lambda_L);
-        double f2s_L = reimann::Rusanov(f2_ext, f2_int_L, u2_ext, u2_int_L, lambda_L);
-        double f3s_L = reimann::Rusanov(f3_ext, f3_int_L, u3_ext, u3_int_L, lambda_L);
+        /// Imposes same flux at the domain limit
+        double f1s_L = reimann::Rusanov(f1_ext_L, f1_int_L, u1_L, u1_int_L, lambda_L);
+        double f2s_L = reimann::Rusanov(f2_ext_L, f2_int_L, u2_L, u2_int_L, lambda_L);
+        double f3s_L = reimann::Rusanov(f3_ext_L, f3_int_L, u3_L, u3_int_L, lambda_L);
     
         double invWJ_L = (1.0 / w[0]) * *(elem[0]->getInvJ());
         elem[0]->correctDivF1(0, invWJ_L * (f1_int_L - f1s_L));
@@ -155,13 +166,20 @@ namespace mesh {
         double f3_int_R = *(elem[last]->getF3(P));
     
         double p_int_R;
+        double p_ext_R;
         phy::getP(&p_int_R, &u1_int_R, &u2_int_R, &u3_int_R, 1);
+        phy::getP(&p_ext_R, &u1_R, &u2_R, &u3_R, 1);
+        double f1_ext_R = u2_R;
+        double f2_ext_R = (u2_R * u2_R / u1_R) + p_ext_R;
+        double f3_ext_R = (u2_R / u1_R) * (u3_R + p_ext_R);
+
         double lam_int_R = reimann::computeMaxWaveSpeed(u1_int_R, u2_int_R/u1_int_R, p_int_R);
-        double lambda_R = std::max(2.2, lam_int_R) * 1.1;
+        double lam_ext_R = reimann::computeMaxWaveSpeed(u1_R, u2_R/u1_R, p_ext_R);
+        double lambda_R = std::max(lam_ext_R, lam_int_R); //DIFF COEFF
     
-        double f1s_R = reimann::Rusanov(f1_int_R, f1_ext, u1_int_R, u1_ext, lambda_R);
-        double f2s_R = reimann::Rusanov(f2_int_R, f2_ext, u2_int_R, u2_ext, lambda_R);
-        double f3s_R = reimann::Rusanov(f3_int_R, f3_ext, u3_int_R, u3_ext, lambda_R);
+        double f1s_R = reimann::Rusanov(f1_int_R, f1_ext_R, u1_int_R, u1_R, lambda_R);
+        double f2s_R = reimann::Rusanov(f2_int_R, f2_ext_R, u2_int_R, u2_R, lambda_R);
+        double f3s_R = reimann::Rusanov(f3_int_R, f3_ext_R, u3_int_R, u3_R, lambda_R);
     
         double invWJ_R = (1.0 / w[P]) * *(elem[last]->getInvJ());
         elem[last]->correctDivF1(P, invWJ_R * (f1s_R - f1_int_R));
@@ -170,12 +188,12 @@ namespace mesh {
     }
 
     void Mesh::computeResidual(){
-	for (int e=0; e<n; ++e){
-	    elem[e]->setFlux();
-	}
-	this->computeElements();
-	this->computeInterfaces();
-	this->applyDirichlet();
+        for (int e=0; e<n; ++e){
+            elem[e]->setFlux();
+        }
+        this->computeElements();
+        this->computeInterfaces();
+        this->applyDirichlet();
     }
 
     Mesh::~Mesh() {

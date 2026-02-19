@@ -27,8 +27,16 @@ namespace mesh{
 	     * @param init_u1 U1 initial values (assigned to the entire element)
 	     * @param init_u2 U2 initial values (assigned to the entire element)
 	     * @param init_u3 U3 initial values (assigned to the entire element)
+		 * @param u1_L Left BC
+		 * @param u2_L 
+		 * @param u3_L 
+		 * @param u1_R Right BC
+		 * @param u2_R 
+		 * @param u3_R 
 	     */
-	    Mesh(const int n, gll::Basis* basis, double xL, double xR, double* init_u1, double* init_u2, double* init_u3);
+	    Mesh(const int n, gll::Basis* basis, double xL, double xR, 
+			 double* init_u1, double* init_u2, double* init_u3, 
+			 double u1_L, double u2_L, double u3_L, double u1_R, double u2_R, double u3_R);
 	   
 	    /// GETTERS 
 	    const elem::Element* getElem(int i) const { return elem[i]; }
@@ -44,7 +52,7 @@ namespace mesh{
 	    void computeElements();	// Computes df/dx
 	    void computeInterfaces();	// Computes the Reimann problem at interface
 	    /**
-	     * @breif Find R(U) for an element (dU/dt = -dF/dx)
+	     * @brief Find R(U) for an element (dU/dt = -dF/dx)
 	     * From the initialized U, for all elements:
 	     * - Computes F
 	     * - Applies the divergence (dFdx)
@@ -55,7 +63,6 @@ namespace mesh{
 	    void computeResidual();
 
 	    /// Boundary conditions
-	    /// !!! REDESIGN !!!
 	    void applyDirichlet();
 
 
@@ -69,6 +76,14 @@ namespace mesh{
 	    double* global_rho;
 	    double* global_rhou;
 	    double* global_e;
+
+		/// Boudary conditions
+		double u1_L;
+		double u2_L;
+		double u3_L;
+		double u1_R;
+		double u2_R;
+		double u3_R;
 	    
 	friend std::ostream &operator<<(std::ostream&, const Mesh&);	    
     };
