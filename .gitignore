@@ -4,4 +4,5 @@ GEMINI*
 **/results/**
 **/CMakeFiles/**
 **/build/**
-
+spectral
+main
