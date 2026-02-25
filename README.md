@@ -20,7 +20,7 @@ Requires BLAS and BOOST_PROGRAM_OPTIONS
 ```bash
 mkdir build
 cd build
-../cmake
+cmake ../
 make
 ```
 Then the executable is `spectral`
