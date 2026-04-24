@@ -1,4 +1,5 @@
 #include "lib/base/gll.h"
+#include "lib/diffusion/diffusion.h"
 #include "lib/math/math.h"
 #include "lib/space/mesh.h"
 #include "lib/time/rk4.h"
@@ -17,7 +18,9 @@ int main(int argc, char *argv[]) {
       "Number of elements")("Q", po::value<int>()->default_value(0),
                             "Output points per element (0 = P+1)")(
       "L", po::value<double>()->default_value(1.),
-                            "Domain size")("help", "Print help message.");
+      "Domain size")("eps", po::value<double>()->default_value(0.0),
+                     "Constant artificial viscosity (0 = disabled)")(
+      "help", "Print help message.");
 
   po::variables_map vm;
   po::store(po::parse_command_line(argc, argv, opts), vm);
@@ -29,8 +32,9 @@ int main(int argc, char *argv[]) {
   }
   const int P = vm["P"].as<int>();
   const int N_elem = vm["N"].as<int>();
-  const int Q = vm["Q"].as<int>();
-  const double L = vm["L"].as<double>();
+  const int Q       = vm["Q"].as<int>();
+  const double L    = vm["L"].as<double>();
+  const double eps  = vm["eps"].as<double>();
 
   //-- SIMULATION PARAMETERS --
   const int N_nodes = N_elem * (P + 1);
@@ -120,6 +124,8 @@ int main(int argc, char *argv[]) {
 
   //-- SOLVER INIT --
   solver::RK4 solver(mesh, Q);
+  DIFF::Constant diffusion(eps);
+  if (eps > 0.0) solver.setDiffusion(&diffusion);
 
   //-- RUN --
   solver.run(T_final, dt, save_freq, case_name);

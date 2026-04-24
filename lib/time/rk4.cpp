@@ -8,6 +8,7 @@
 #include "rk4.h"
 #include "../math/math.h"
 #include "../base/gll.h"
+#include "../diffusion/diffusion.h"
 
 namespace solver {
 
@@ -80,15 +81,19 @@ namespace solver {
     void RK4::step(double dt) {
         save_state();
         m->computeResidual();
+        if (diffusion) diffusion->apply(m);
         accumulate_stage(1.0);
-        set_stage_state(dt, 0.5); 
+        set_stage_state(dt, 0.5);
         m->computeResidual();
+        if (diffusion) diffusion->apply(m);
         accumulate_stage(2.0);
-        set_stage_state(dt, 0.5); 
+        set_stage_state(dt, 0.5);
         m->computeResidual();
+        if (diffusion) diffusion->apply(m);
         accumulate_stage(2.0);
-        set_stage_state(dt, 1.0); 
+        set_stage_state(dt, 1.0);
         m->computeResidual();
+        if (diffusion) diffusion->apply(m);
         accumulate_stage(1.0);
         finalize_step(dt);
     }

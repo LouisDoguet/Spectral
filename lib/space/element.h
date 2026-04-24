@@ -75,6 +75,10 @@ public:
   void computeDivFlux();
   /// Computes Legendre coefficients from Lagrange polynomials
   void computeLegendreCoefficients();
+  /// Adds invJ^2 * D * (eps_nodes . D*U) diffusion correction to divF
+  void applyViscosity(const double *eps_nodes);
+  /// Multiplies each Legendre mode k by sigma[k] in-place (modal filtering/SVV)
+  void applyModalDamping(const double *sigma);
 
   ~Element();
 

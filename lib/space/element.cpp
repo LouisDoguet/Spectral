@@ -80,6 +80,29 @@ void Element::setFlux() {
   delete[] p;
 }
 
+void Element::applyViscosity(const double *eps_nodes) {
+  int n = basis->getOrder() + 1;
+  const double *D = basis->getD();
+  double *du     = new double[n];
+  double *eps_du = new double[n];
+  double *result = new double[n];
+
+  auto diffuse = [&](const double *u, void (Element::*correct)(int, double)) {
+    cblas_dgemv(CblasRowMajor, CblasNoTrans, n, n, 1.0, D, n, u,      1, 0.0, du,     1);
+    for (int i = 0; i < n; ++i) eps_du[i] = eps_nodes[i] * du[i];
+    cblas_dgemv(CblasRowMajor, CblasNoTrans, n, n, 1.0, D, n, eps_du, 1, 0.0, result, 1);
+    for (int i = 0; i < n; ++i) (this->*correct)(i, -invJ * invJ * result[i]);
+  };
+
+  diffuse(rho,  &Element::correctDivF1);
+  diffuse(rhou, &Element::correctDivF2);
+  diffuse(e,    &Element::correctDivF3);
+
+  delete[] du;
+  delete[] eps_du;
+  delete[] result;
+}
+
 void Element::computeLegendreCoefficients() {
   mat::computeLegendreCoeffs(legendreCoefficients, rho,
                              basis->getQuads(), basis->getWeights(),

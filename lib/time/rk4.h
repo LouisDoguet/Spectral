@@ -5,6 +5,8 @@
 #include <string>
 #include "../space/mesh.h"
 
+namespace DIFF { class Diffusion; }
+
 namespace solver {
 
     /**
@@ -35,6 +37,11 @@ namespace solver {
             mesh::Mesh* m;
             int total_points;
             int n_plot;
+            DIFF::Diffusion* diffusion = nullptr;
+
+        public:
+            void setDiffusion(DIFF::Diffusion* diff) { diffusion = diff; }
+        private:
                     
             // Tracking for VTK PVD Collection
             std::vector<std::pair<double, std::string>> exported_files;
