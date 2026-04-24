@@ -6,11 +6,15 @@
 #include <cmath>
 #include <cblas.h>
 #include "rk4.h"
+#include "../math/math.h"
+#include "../base/gll.h"
 
 namespace solver {
 
-    RK4::RK4(mesh::Mesh* mesh) : m(mesh) {
+    RK4::RK4(mesh::Mesh* mesh, int n_plot) : m(mesh) {
         total_points = m->getTotalPoints();
+        int P = m->getElem(0)->getBasis()->getOrder();
+        this->n_plot = (n_plot > 0) ? n_plot : (P + 1);
 
         rho_n = new double[total_points];
         rhou_n = new double[total_points];
@@ -115,74 +119,103 @@ namespace solver {
         ss << prefix << "_" << std::setfill('0') << std::setw(6) << step << ".vtu";
         std::string full_path = ss.str();
         std::ofstream file(full_path);
-        
-        // Extract basename for PVD
+
         std::string basename = full_path;
         size_t last_slash = full_path.find_last_of("/\\");
-        if (last_slash != std::string::npos) {
+        if (last_slash != std::string::npos)
             basename = full_path.substr(last_slash + 1);
-        }
         exported_files.push_back({time, basename});
 
         int n_elem = m->getNumElements();
-        int P = m->getElem(0)->getBasis()->getOrder();
-        int n_nodes = n_elem * (P + 1);
-        int n_cells = n_elem * P;
+        const gll::Basis* basis = m->getElem(0)->getBasis();
+        int P = basis->getOrder();
+        const double* quads   = basis->getQuads();
+        const double* weights = basis->getWeights();
 
-        file << "<?xml version=\"1.0\"?>" << std::endl;
-        file << "<VTKFile type=\"UnstructuredGrid\" version=\"0.1\" byte_order=\"LittleEndian\">" << std::endl;
-        file << "  <UnstructuredGrid>" << std::endl;
-        file << "    <Piece NumberOfPoints=\"" << n_nodes << "\" NumberOfCells=\"" << n_cells << "\">" << std::endl;
-        file << "      <Points>" << std::endl;
-        file << "        <DataArray type=\"Float64\" Name=\"Points\" NumberOfComponents=\"3\" format=\"ascii\">" << std::endl;
+        int n_nodes = n_elem * n_plot;
+        int n_cells = n_elem * (n_plot - 1);
+
+        // Uniform reference points in [-1, 1]
+        double* ref_pts = new double[n_plot];
+        for (int i = 0; i < n_plot; ++i)
+            ref_pts[i] = -1.0 + 2.0 * i / (n_plot - 1);
+
+        double* c1 = new double[P + 1];
+        double* c2 = new double[P + 1];
+        double* c3 = new double[P + 1];
+
+        file << "<?xml version=\"1.0\"?>\n";
+        file << "<VTKFile type=\"UnstructuredGrid\" version=\"0.1\" byte_order=\"LittleEndian\">\n";
+        file << "  <UnstructuredGrid>\n";
+        file << "    <Piece NumberOfPoints=\"" << n_nodes << "\" NumberOfCells=\"" << n_cells << "\">\n";
+
+        file << "      <Points>\n";
+        file << "        <DataArray type=\"Float64\" Name=\"Points\" NumberOfComponents=\"3\" format=\"ascii\">\n";
         for (int e = 0; e < n_elem; ++e) {
-            for (int q = 0; q <= P; ++q) file << m->getElem(e)->getX(q) << " 0.0 0.0 " << std::endl;
+            double xL = m->getElem(e)->getX(0);
+            double dx = m->getElem(e)->getX(P) - xL;
+            for (int i = 0; i < n_plot; ++i)
+                file << xL + (ref_pts[i] + 1.0) / 2.0 * dx << " 0.0 0.0 ";
         }
-        file << "        </DataArray>" << std::endl;
-        file << "      </Points>" << std::endl;
-        file << "      <Cells>" << std::endl;
-        file << "        <DataArray type=\"Int32\" Name=\"connectivity\" format=\"ascii\">" << std::endl;
+        file << "\n        </DataArray>\n      </Points>\n";
+
+        file << "      <Cells>\n";
+        file << "        <DataArray type=\"Int32\" Name=\"connectivity\" format=\"ascii\">\n";
         for (int e = 0; e < n_elem; ++e) {
-            int offset = e * (P + 1);
-            for (int i = 0; i < P; ++i) file << offset + i << " " << offset + i + 1 << " ";
+            int offset = e * n_plot;
+            for (int i = 0; i < n_plot - 1; ++i) file << offset + i << " " << offset + i + 1 << " ";
         }
-        file << std::endl << "        </DataArray>" << std::endl;
-        file << "        <DataArray type=\"Int32\" Name=\"offsets\" format=\"ascii\">" << std::endl;
-        int current_offset = 0;
-        for (int i = 0; i < n_cells; ++i) { current_offset += 2; file << current_offset << " "; }
-        file << std::endl << "        </DataArray>" << std::endl;
-        file << "        <DataArray type=\"UInt8\" Name=\"types\" format=\"ascii\">" << std::endl;
-        for (int i = 0; i < n_cells; ++i) file << "3 "; 
-        file << std::endl << "        </DataArray>" << std::endl;
-        file << "      </Cells>" << std::endl;
-        file << "      <PointData>" << std::endl;
-        file << "        <DataArray type=\"Float64\" Name=\"rho\" format=\"ascii\">" << std::endl;
+        file << "\n        </DataArray>\n";
+        file << "        <DataArray type=\"Int32\" Name=\"offsets\" format=\"ascii\">\n";
+        int cur = 0;
+        for (int i = 0; i < n_cells; ++i) { cur += 2; file << cur << " "; }
+        file << "\n        </DataArray>\n";
+        file << "        <DataArray type=\"UInt8\" Name=\"types\" format=\"ascii\">\n";
+        for (int i = 0; i < n_cells; ++i) file << "3 ";
+        file << "\n        </DataArray>\n      </Cells>\n";
+
+        file << "      <PointData>\n";
+        file << "        <DataArray type=\"Float64\" Name=\"rho\" format=\"ascii\">\n";
         for (int e = 0; e < n_elem; ++e) {
-            for (int q = 0; q <= P; ++q) file << m->getElem(e)->getU1()[q] << " ";
+            mat::computeLegendreCoeffs(c1, m->getElem(e)->getU1(), quads, weights, P);
+            for (int i = 0; i < n_plot; ++i)
+                file << mat::evalLegendreExpansion(ref_pts[i], c1, P) << " ";
         }
-        file << std::endl << "        </DataArray>" << std::endl;
-        file << "        <DataArray type=\"Float64\" Name=\"velocity\" format=\"ascii\">" << std::endl;
+        file << "\n        </DataArray>\n";
+
+        file << "        <DataArray type=\"Float64\" Name=\"velocity\" format=\"ascii\">\n";
         for (int e = 0; e < n_elem; ++e) {
-            for (int q = 0; q <= P; ++q) file << m->getElem(e)->getU2()[q]/m->getElem(e)->getU1()[q] << " ";
+            mat::computeLegendreCoeffs(c1, m->getElem(e)->getU1(), quads, weights, P);
+            mat::computeLegendreCoeffs(c2, m->getElem(e)->getU2(), quads, weights, P);
+            for (int i = 0; i < n_plot; ++i) {
+                double rho_val  = mat::evalLegendreExpansion(ref_pts[i], c1, P);
+                double rhou_val = mat::evalLegendreExpansion(ref_pts[i], c2, P);
+                file << rhou_val / rho_val << " ";
+            }
         }
-        file << std::endl << "        </DataArray>" << std::endl;
-        file << "        <DataArray type=\"Float64\" Name=\"pressure\" format=\"ascii\">" << std::endl;
+        file << "\n        </DataArray>\n";
+
+        file << "        <DataArray type=\"Float64\" Name=\"pressure\" format=\"ascii\">\n";
         const double gamma = 1.4;
         for (int e = 0; e < n_elem; ++e) {
-            const double* rho = m->getElem(e)->getU1();
-            const double* rhou = m->getElem(e)->getU2();
-            const double* en = m->getElem(e)->getU3();
-            for (int q = 0; q <= P; ++q) {
-                double p = (gamma - 1.0) * (en[q] - 0.5 * rhou[q] * rhou[q] / rho[q]);
+            mat::computeLegendreCoeffs(c1, m->getElem(e)->getU1(), quads, weights, P);
+            mat::computeLegendreCoeffs(c2, m->getElem(e)->getU2(), quads, weights, P);
+            mat::computeLegendreCoeffs(c3, m->getElem(e)->getU3(), quads, weights, P);
+            for (int i = 0; i < n_plot; ++i) {
+                double rho_val  = mat::evalLegendreExpansion(ref_pts[i], c1, P);
+                double rhou_val = mat::evalLegendreExpansion(ref_pts[i], c2, P);
+                double e_val    = mat::evalLegendreExpansion(ref_pts[i], c3, P);
+                double p = (gamma - 1.0) * (e_val - 0.5 * rhou_val * rhou_val / rho_val);
                 file << p << " ";
             }
         }
-        file << std::endl << "        </DataArray>" << std::endl;
-        file << "      </PointData>" << std::endl;
-        file << "    </Piece>" << std::endl;
-        file << "  </UnstructuredGrid>" << std::endl;
-        file << "</VTKFile>" << std::endl;
+        file << "\n        </DataArray>\n";
+
+        file << "      </PointData>\n    </Piece>\n  </UnstructuredGrid>\n</VTKFile>\n";
         file.close();
+
+        delete[] ref_pts;
+        delete[] c1; delete[] c2; delete[] c3;
     }
 
     void RK4::write_pvd(std::string prefix) {

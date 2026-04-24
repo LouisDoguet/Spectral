@@ -12,7 +12,7 @@ namespace solver {
     */
     class RK4 {
         public:
-            RK4(mesh::Mesh* mesh);
+            RK4(mesh::Mesh* mesh, int n_plot = 0);
             void step(double dt);
             
             /**
@@ -34,6 +34,7 @@ namespace solver {
         private:
             mesh::Mesh* m;
             int total_points;
+            int n_plot;
                     
             // Tracking for VTK PVD Collection
             std::vector<std::pair<double, std::string>> exported_files;

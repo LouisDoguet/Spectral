@@ -1,0 +1,1561 @@
+0 [139626530610112] INFO perfrun.launcher <> - Launcher main begin
+1 [139626530610112] INFO perfrun.launcher <> - MessageCatalogInit finished
+1 [139626530610112] INFO perfrun.launcher <> - Launcher instance created
+1 [139626530610112] INFO perfrun.launcher <> - argc = 7; cmdline = /opt/intel/oneapi/vtune/2025.0/bin64/amplxe-runss --ui-output-format xml --ui-output-fd 14 --option-file /home/louis/Imperial/MScProject/2-CODE/Spectral1D/vtune/Spectral1D/r000ps/config/runsa.options 
+49 [139626530610112] INFO perfrun.perfcollector <> - SEP tool path: /opt/intel/oneapi/vtune/2025.0/bin64/sep
+57 [139626530610112] INFO perfrun.launcher <> - create msngr2::ICliToolContext
+57 [139626530610112] INFO perfrun.launcher <> - create file finder object
+57 [139626530610112] INFO perfrun.launcher <> - create a result directory: pattern = /home/louis/Imperial/MScProject/2-CODE/Spectral1D/vtune/Spectral1D/r000ps pid = 4294967295
+59 [139626530610112] INFO perfrun.sdk <> - checked that the directory /home/louis/Imperial/MScProject/2-CODE/Spectral1D/vtune/Spectral1D/r000ps is a local directory
+59 [139626530610112] INFO perfrun.sdk <> - the directory /home/louis/Imperial/MScProject/2-CODE/Spectral1D/vtune/Spectral1D/r000ps is a local directory with FS type ID 61267
+59 [139626530610112] INFO perfrun.launcher <> - create data directory = /home/louis/Imperial/MScProject/2-CODE/Spectral1D/vtune/Spectral1D/r000ps/data.0
+59 [139626530610112] INFO perfrun.launcher <> - Creating the master collection flag
+61 [139626530610112] INFO perfrun.launcher <> - Done creating the master collection flag
+62 [139626299782848] INFO perfrun.launcher <> - plugin [remoteplug] was disabled because it doesn't support the given collection type.
+62 [139626299782848] INFO perfrun.sdk <> - Allocating TMU :/home/louis/Imperial/MScProject/2-CODE/Spectral1D/vtune/Spectral1D/r000ps/data.0/systemcollector-3081-computer.sc
+62 [139626299782848] INFO perfrun.launcher <> - plugin [itt] was disabled because it doesn't support the given collection type.
+62 [139626299782848] INFO perfrun.launcher <> - plugin [ptracecollector] was disabled because it doesn't support the given collection type.
+62 [139626299782848] INFO perfrun.launcher <> - plugin [gpu] was disabled because it doesn't support the given collection type.
+62 [139626299782848] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+62 [139626299782848] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+62 [139626299782848] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+63 [139626299782848] INFO perfrun.mrte <> - system-wide mode is 0
+63 [139626299782848] INFO perfrun.mrte <> - Getting  mrte profiling environment ...
+70 [139626299782848] INFO perfrun.mrte <> - INTEL_MRTE_DATA_DIR=/home/louis/Imperial/MScProject/2-CODE/Spectral1D/vtune/Spectral1D/r000ps/data.0
+70 [139626299782848] INFO perfrun.mrte <> - INTEL_MRTE_HOST_NAME=computer
+70 [139626299782848] INFO perfrun.mrte <> - JAVA_TOOL_OPTIONS=-agentlib:amplxe_samplingmrte_javaprof_1.0 -Dsun.boot.library.path=/opt/intel/oneapi/vtune/2025.0/lib32/runtime:/opt/intel/oneapi/vtune/2025.0/lib64/runtime
+70 [139626299782848] INFO perfrun.mrte <> - LD_LIBRARY_PATH=/opt/intel/oneapi/vtune/2025.0/lib32/runtime:/opt/intel/oneapi/vtune/2025.0/lib64/runtime:/home/louis/Softwares/nektar++/build/dist/lib64:/home/louis/Softwares/nektar++/build/dist/lib64:
+70 [139626299782848] INFO perfrun.mrte <> - CORECLR_ENABLE_PROFILING=1
+70 [139626299782848] INFO perfrun.mrte <> - CORECLR_PROFILER={AA5E4821-E3B1-479c-B7FF-5AD047D22CED}
+70 [139626299782848] INFO perfrun.mrte <> - CORECLR_PROFILER_PATH=/opt/intel/oneapi/vtune/2025.0/lib64/libamplxe_samplingmrte_clrprof_1.0.so
+70 [139626299782848] INFO perfrun.mrte <> - INTEL_MRTE_PROFILER_MODE=mixed
+70 [139626299782848] INFO perfrun.mrte <> - Data directory: /home/louis/Imperial/MScProject/2-CODE/Spectral1D/vtune/Spectral1D/r000ps/data.0
+70 [139626299782848] INFO perfrun.mrte <> - Mrte plugin is initialized
+70 [139626299782848] INFO perfrun.launcher <> - plugin [emon] was disabled because it doesn't support the given collection type.
+70 [139626299782848] INFO perfrun.launcher <> - plugin [cuscol] was disabled because it doesn't support the given collection type.
+70 [139626299782848] INFO perfrun.launcher <> - plugin [stdsrc] was disabled because it doesn't support the given collection type.
+70 [139626299782848] INFO perfrun.launcher <> - plugin [sep] was disabled because it doesn't support the given collection type.
+70 [139626299782848] INFO perfrun.launcher <> - plugin [vtsspp] was disabled because it doesn't support the given collection type.
+70 [139626299782848] INFO perfrun.perfcollector <> - Platform type: 116
+71 [139626299782848] INFO perfrun.sdk <> - Reading value (2) from file: /proc/sys/kernel/perf_event_paranoid
+71 [139626299782848] INFO perfrun.perfcollector <> - checking access to: /opt/intel/oneapi/vtune/2025.0/bin64/amplxe-perf-priv
+71 [139626299782848] INFO perfrun.perfcollector <> - dir found: /sys/bus/event_source/devices/software
+71 [139626299782848] INFO perfrun.perfcollector <> - format: pmu format subdir doesn't exist
+71 [139626299782848] INFO perfrun.perfcollector <> - hwInfo: not set, pmuFam: software
+71 [139626299782848] INFO perfrun.perfcollector <> - pmu added: software, idx: 0
+71 [139626299782848] INFO perfrun.perfcollector <> - dir found: /sys/bus/event_source/devices/power
+71 [139626299782848] INFO perfrun.perfcollector <> - format: event: config:0-7, mask:0-7
+71 [139626299782848] INFO perfrun.perfcollector <> - hwInfo: not set, pmuFam: power
+71 [139626299782848] INFO perfrun.perfcollector <> - pmu caps: raw,format,events
+71 [139626299782848] INFO perfrun.perfcollector <> - pmu added: power, idx: 0
+71 [139626299782848] INFO perfrun.perfcollector <> - dir found: /sys/bus/event_source/devices/uprobe
+71 [139626299782848] INFO perfrun.perfcollector <> - format: ref_ctr_offset: config:32-63, mask:32-63
+71 [139626299782848] INFO perfrun.perfcollector <> - format: retprobe: config:0, mask:0
+71 [139626299782848] INFO perfrun.perfcollector <> - hwInfo: not set, pmuFam: uprobe
+71 [139626299782848] INFO perfrun.perfcollector <> - pmu caps: raw,format
+71 [139626299782848] INFO perfrun.perfcollector <> - pmu added: uprobe, idx: 0
+71 [139626299782848] INFO perfrun.perfcollector <> - dir found: /sys/bus/event_source/devices/intel_bts
+71 [139626299782848] INFO perfrun.perfcollector <> - format: pmu format subdir doesn't exist
+71 [139626299782848] INFO perfrun.perfcollector <> - hwInfo: not set, pmuFam: intel_bts
+71 [139626299782848] INFO perfrun.perfcollector <> - pmu added: intel_bts, idx: 0
+71 [139626299782848] INFO perfrun.perfcollector <> - dir found: /sys/bus/event_source/devices/uncore_imc
+71 [139626299782848] INFO perfrun.perfcollector <> - format: event: config:0-7, mask:0-7
+71 [139626299782848] INFO perfrun.perfcollector <> - hwInfo: PERF_IMC_PMU_DETAILS
+71 [139626299782848] INFO perfrun.perfcollector <> - pmu caps: raw,format,events
+71 [139626299782848] INFO perfrun.perfcollector <> - pmu added: uncore_imc, idx: 0
+71 [139626299782848] INFO perfrun.perfcollector <> - dir found: /sys/bus/event_source/devices/cpu
+71 [139626299782848] INFO perfrun.perfcollector <> - format: event: config:0-7, mask:0-7
+72 [139626299782848] INFO perfrun.perfcollector <> - format: pc: config:19, mask:19
+72 [139626299782848] INFO perfrun.perfcollector <> - format: edge: config:18, mask:18
+72 [139626299782848] INFO perfrun.perfcollector <> - format: any: config:21, mask:21
+72 [139626299782848] INFO perfrun.perfcollector <> - format: offcore_rsp: config1:0-63, mask:0-63
+72 [139626299782848] INFO perfrun.perfcollector <> - format: ldlat: config1:0-15, mask:0-15
+72 [139626299782848] INFO perfrun.perfcollector <> - format: inv: config:23, mask:23
+72 [139626299782848] INFO perfrun.perfcollector <> - format: umask: config:8-15, mask:8-15
+72 [139626299782848] INFO perfrun.perfcollector <> - format: frontend: config1:0-23, mask:0-23
+72 [139626299782848] INFO perfrun.perfcollector <> - format: cmask: config:24-31, mask:24-31
+72 [139626299782848] INFO perfrun.perfcollector <> - hwInfo: PERF_CPU_PMU_DETAILS
+72 [139626299782848] INFO perfrun.perfcollector <> - pmu caps: raw,format,events,ldlat,frontend,offcore_rsp
+72 [139626299782848] INFO perfrun.perfcollector <> - pmu added: cpu, idx: 0
+72 [139626299782848] INFO perfrun.perfcollector <> - dir found: /sys/bus/event_source/devices/cstate_core
+72 [139626299782848] INFO perfrun.perfcollector <> - format: event: config:0-63, mask:0-63
+72 [139626299782848] INFO perfrun.perfcollector <> - hwInfo: not set, pmuFam: cstate_core
+72 [139626299782848] INFO perfrun.perfcollector <> - pmu caps: raw,format,events
+72 [139626299782848] INFO perfrun.perfcollector <> - pmu added: cstate_core, idx: 0
+72 [139626299782848] INFO perfrun.perfcollector <> - dir found: /sys/bus/event_source/devices/uncore_cbox_2
+72 [139626299782848] INFO perfrun.perfcollector <> - format: event: config:0-7, mask:0-7
+72 [139626299782848] INFO perfrun.perfcollector <> - format: edge: config:18, mask:18
+72 [139626299782848] INFO perfrun.perfcollector <> - format: inv: config:23, mask:23
+72 [139626299782848] INFO perfrun.perfcollector <> - format: umask: config:8-15, mask:8-15
+72 [139626299782848] INFO perfrun.perfcollector <> - format: cmask: config:24-28, mask:24-28
+72 [139626299782848] INFO perfrun.perfcollector <> - hwInfo: PERF_CBOX_PMU_DETAILS
+72 [139626299782848] INFO perfrun.perfcollector <> - pmu caps: raw,format,events
+72 [139626299782848] INFO perfrun.perfcollector <> - pmu added: uncore_cbox, idx: 2
+72 [139626299782848] INFO perfrun.perfcollector <> - dir found: /sys/bus/event_source/devices/breakpoint
+72 [139626299782848] INFO perfrun.perfcollector <> - format: pmu format subdir doesn't exist
+72 [139626299782848] INFO perfrun.perfcollector <> - hwInfo: not set, pmuFam: breakpoint
+72 [139626299782848] INFO perfrun.perfcollector <> - pmu added: breakpoint, idx: 0
+72 [139626299782848] INFO perfrun.perfcollector <> - dir found: /sys/bus/event_source/devices/uncore_cbox_0
+72 [139626299782848] INFO perfrun.perfcollector <> - format: event: config:0-7, mask:0-7
+73 [139626299782848] INFO perfrun.perfcollector <> - format: edge: config:18, mask:18
+73 [139626299782848] INFO perfrun.perfcollector <> - format: inv: config:23, mask:23
+73 [139626299782848] INFO perfrun.perfcollector <> - format: umask: config:8-15, mask:8-15
+73 [139626299782848] INFO perfrun.perfcollector <> - format: cmask: config:24-28, mask:24-28
+73 [139626299782848] INFO perfrun.perfcollector <> - hwInfo: PERF_CBOX_PMU_DETAILS
+73 [139626299782848] INFO perfrun.perfcollector <> - pmu caps: raw,format,events
+73 [139626299782848] INFO perfrun.perfcollector <> - pmu added: uncore_cbox, idx: 0
+73 [139626299782848] INFO perfrun.perfcollector <> - dir found: /sys/bus/event_source/devices/tracepoint
+73 [139626299782848] INFO perfrun.perfcollector <> - format: pmu format subdir doesn't exist
+73 [139626299782848] INFO perfrun.perfcollector <> - hwInfo: not set, pmuFam: tracepoint
+73 [139626299782848] INFO perfrun.perfcollector <> - pmu added: tracepoint, idx: 0
+73 [139626299782848] INFO perfrun.perfcollector <> - dir found: /sys/bus/event_source/devices/cstate_pkg
+73 [139626299782848] INFO perfrun.perfcollector <> - format: event: config:0-63, mask:0-63
+73 [139626299782848] INFO perfrun.perfcollector <> - hwInfo: not set, pmuFam: cstate_pkg
+73 [139626299782848] INFO perfrun.perfcollector <> - pmu caps: raw,format,events
+73 [139626299782848] INFO perfrun.perfcollector <> - pmu added: cstate_pkg, idx: 0
+73 [139626299782848] INFO perfrun.perfcollector <> - dir found: /sys/bus/event_source/devices/uncore_arb
+73 [139626299782848] INFO perfrun.perfcollector <> - format: event: config:0-7, mask:0-7
+73 [139626299782848] INFO perfrun.perfcollector <> - format: edge: config:18, mask:18
+73 [139626299782848] INFO perfrun.perfcollector <> - format: inv: config:23, mask:23
+73 [139626299782848] INFO perfrun.perfcollector <> - format: umask: config:8-15, mask:8-15
+73 [139626299782848] INFO perfrun.perfcollector <> - format: cmask: config:24-28, mask:24-28
+73 [139626299782848] INFO perfrun.perfcollector <> - hwInfo: not set, pmuFam: uncore_arb
+73 [139626299782848] INFO perfrun.perfcollector <> - pmu caps: raw,format
+73 [139626299782848] INFO perfrun.perfcollector <> - pmu added: uncore_arb, idx: 0
+73 [139626299782848] INFO perfrun.perfcollector <> - dir found: /sys/bus/event_source/devices/kprobe
+73 [139626299782848] INFO perfrun.perfcollector <> - format: retprobe: config:0, mask:0
+73 [139626299782848] INFO perfrun.perfcollector <> - hwInfo: not set, pmuFam: kprobe
+73 [139626299782848] INFO perfrun.perfcollector <> - pmu caps: raw,format
+73 [139626299782848] INFO perfrun.perfcollector <> - pmu added: kprobe, idx: 0
+73 [139626299782848] INFO perfrun.perfcollector <> - dir found: /sys/bus/event_source/devices/i915
+73 [139626299782848] INFO perfrun.perfcollector <> - format: i915_eventid: config:0-20, mask:0-20
+73 [139626299782848] INFO perfrun.perfcollector <> - hwInfo: not set, pmuFam: i915
+73 [139626299782848] INFO perfrun.perfcollector <> - pmu caps: raw,format,events
+73 [139626299782848] INFO perfrun.perfcollector <> - pmu added: i915, idx: 0
+73 [139626299782848] INFO perfrun.perfcollector <> - dir found: /sys/bus/event_source/devices/msr
+73 [139626299782848] INFO perfrun.perfcollector <> - format: event: config:0-63, mask:0-63
+73 [139626299782848] INFO perfrun.perfcollector <> - hwInfo: not set, pmuFam: msr
+73 [139626299782848] INFO perfrun.perfcollector <> - pmu caps: raw,format,events
+73 [139626299782848] INFO perfrun.perfcollector <> - pmu added: msr, idx: 0
+73 [139626299782848] INFO perfrun.perfcollector <> - dir found: /sys/bus/event_source/devices/uncore_cbox_3
+73 [139626299782848] INFO perfrun.perfcollector <> - format: event: config:0-7, mask:0-7
+73 [139626299782848] INFO perfrun.perfcollector <> - format: edge: config:18, mask:18
+73 [139626299782848] INFO perfrun.perfcollector <> - format: inv: config:23, mask:23
+73 [139626299782848] INFO perfrun.perfcollector <> - format: umask: config:8-15, mask:8-15
+73 [139626299782848] INFO perfrun.perfcollector <> - format: cmask: config:24-28, mask:24-28
+73 [139626299782848] INFO perfrun.perfcollector <> - hwInfo: PERF_CBOX_PMU_DETAILS
+73 [139626299782848] INFO perfrun.perfcollector <> - pmu caps: raw,format,events
+73 [139626299782848] INFO perfrun.perfcollector <> - pmu added: uncore_cbox, idx: 3
+73 [139626299782848] INFO perfrun.perfcollector <> - dir found: /sys/bus/event_source/devices/intel_pt
+73 [139626299782848] INFO perfrun.perfcollector <> - format: ptw: config:12, mask:12
+73 [139626299782848] INFO perfrun.perfcollector <> - format: event: config:31, mask:31
+73 [139626299782848] INFO perfrun.perfcollector <> - format: cyc_thresh: config:19-22, mask:19-22
+73 [139626299782848] INFO perfrun.perfcollector <> - format: pt: config:0, mask:0
+73 [139626299782848] INFO perfrun.perfcollector <> - format: notnt: config:55, mask:55
+74 [139626299782848] INFO perfrun.perfcollector <> - format: branch: config:13, mask:13
+74 [139626299782848] INFO perfrun.perfcollector <> - format: tsc: config:10, mask:10
+74 [139626299782848] INFO perfrun.perfcollector <> - format: pwr_evt: config:4, mask:4
+74 [139626299782848] INFO perfrun.perfcollector <> - format: fup_on_ptw: config:5, mask:5
+74 [139626299782848] INFO perfrun.perfcollector <> - format: cyc: config:1, mask:1
+74 [139626299782848] INFO perfrun.perfcollector <> - format: noretcomp: config:11, mask:11
+74 [139626299782848] INFO perfrun.perfcollector <> - format: mtc: config:9, mask:9
+74 [139626299782848] INFO perfrun.perfcollector <> - format: psb_period: config:24-27, mask:24-27
+74 [139626299782848] INFO perfrun.perfcollector <> - format: mtc_period: config:14-17, mask:14-17
+74 [139626299782848] INFO perfrun.perfcollector <> - hwInfo: not set, pmuFam: intel_pt
+74 [139626299782848] INFO perfrun.perfcollector <> - pmu caps: raw,format
+74 [139626299782848] INFO perfrun.perfcollector <> - pmu added: intel_pt, idx: 0
+74 [139626299782848] INFO perfrun.perfcollector <> - dir found: /sys/bus/event_source/devices/uncore_cbox_1
+74 [139626299782848] INFO perfrun.perfcollector <> - format: event: config:0-7, mask:0-7
+74 [139626299782848] INFO perfrun.perfcollector <> - format: edge: config:18, mask:18
+74 [139626299782848] INFO perfrun.perfcollector <> - format: inv: config:23, mask:23
+74 [139626299782848] INFO perfrun.perfcollector <> - format: umask: config:8-15, mask:8-15
+74 [139626299782848] INFO perfrun.perfcollector <> - format: cmask: config:24-28, mask:24-28
+74 [139626299782848] INFO perfrun.perfcollector <> - hwInfo: PERF_CBOX_PMU_DETAILS
+74 [139626299782848] INFO perfrun.perfcollector <> - pmu caps: raw,format,events
+74 [139626299782848] INFO perfrun.perfcollector <> - pmu added: uncore_cbox, idx: 1
+74 [139626299782848] INFO perfrun.perfcollector <> - Perf tool path: /opt/intel/oneapi/vtune/2025.0/bin64/amplxe-perf
+74 [139626299782848] INFO perfrun.perfcollector <> - Data directory: /home/louis/Imperial/MScProject/2-CODE/Spectral1D/vtune/Spectral1D/r000ps/data.0
+74 [139626299782848] INFO perfrun.perfcollector <> - Temp directory: /tmp/amplxe-tmp-louis
+74 [139626299782848] INFO perfrun.perfcollector <> - Perf sync path: /opt/intel/oneapi/vtune/2025.0/bin64/amplxe-perf-sync
+74 [139626299782848] INFO perfrun.perfcollector <> - Hypervisor = None
+74 [139626299782848] INFO perfrun.perfcollector <> - Counting mode is requested
+74 [139626299782848] INFO perfrun.perfcollector <> - Sample after multiplier: 1
+74 [139626299782848] INFO perfrun.sdk <> - runCmd: /opt/intel/oneapi/vtune/2025.0/bin64/sep -dry-run -sam 1 -ec CPU_CLK_UNHALTED.THREAD:sa=1600000,CPU_CLK_UNHALTED.REF_TSC:sample:sa=1600000,INST_RETIRED.ANY:sample:sa=1600000,CPU_CLK_UNHALTED.REF_XCLK:sa=100003,CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE:sa=100003,UOPS_RETIRED.RETIRE_SLOTS:sample:sa=2000003,FP_ARITH_INST_RETIRED.SCALAR_SINGLE:sa=2000003,FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE:sa=2000003,FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE:sa=2000003,FP_ARITH_INST_RETIRED.SCALAR_DOUBLE:sa=2000003,FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE:sa=2000003,FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE:sa=2000003,UOPS_EXECUTED.X87:sa=2000003,UOPS_EXECUTED.THREAD:sa=2000003,CPU_CLK_UNHALTED.THREAD_P,CYCLE_ACTIVITY.STALLS_MEM_ANY:sa=2000003,CYCLE_ACTIVITY.STALLS_TOTAL:sa=2000003,EXE_ACTIVITY.1_PORTS_UTIL:sa=2000003,EXE_ACTIVITY.2_PORTS_UTIL:sa=2000003,EXE_ACTIVITY.BOUND_ON_STORES:sa=2000003,FRONTEND_RETIRED.LATENCY_GE_4_PS,IDQ_UOPS_NOT_DELIVERED.CORE:sa=2000003,INT_MISC.RECOVERY_CYCLES:sa=2000003,UOPS_ISSUED.ANY:sa=2000003,CYCLE_ACTIVITY.STALLS_L1D_MISS:sa=2000003,CYCLE_ACTIVITY.STALLS_L2_MISS:sa=2000003,CYCLE_ACTIVITY.STALLS_L3_MISS:sa=2000003,EXE_ACTIVITY.EXE_BOUND_0_PORTS:sa=2000003,MEM_LOAD_RETIRED.L3_MISS_PS:sa=50003,L1D_PEND_MISS.FB_FULL:cmask=1:sa=2000003,L1D_PEND_MISS.PENDING:sa=2000003,MEM_LOAD_L3_HIT_RETIRED.XSNP_HITM_PS:sa=100003,MEM_LOAD_L3_HIT_RETIRED.XSNP_HIT_PS:sa=100003,MEM_LOAD_L3_HIT_RETIRED.XSNP_MISS_PS:sa=100003,MEM_LOAD_RETIRED.FB_HIT_PS:sa=2000003,MEM_LOAD_RETIRED.L1_MISS_PS:sa=2000003,MEM_LOAD_RETIRED.L2_HIT_PS:sa=2000003,MEM_LOAD_RETIRED.L3_HIT_PS:sa=200003,OFFCORE_REQUESTS_OUTSTANDING.ALL_DATA_RD:cmask=4:sa=2000003,OFFCORE_REQUESTS_OUTSTANDING.CYCLES_WITH_DATA_RD:sa=2000003,MEM_INST_RETIRED.ALL_LOADS_PS:sa=100003,MEM_INST_RETIRED.ALL_STORES_PS:sa=100003,CYCLE_ACTIVITY.CYCLES_L1D_MISS,CYCLE_ACTIVITY.CYCLES_MEM_ANY,DTLB_LOAD_MISSES.STLB_HIT:cmask=1,DTLB_LOAD_MISSES.WALK_ACTIVE,DTLB_STORE_MISSES.STLB_HIT:cmask=1,DTLB_STORE_MISSES.WALK_ACTIVE,L2_RQSTS.ALL_RFO,L2_RQSTS.RFO_HIT,LD_BLOCKS.NO_SR,LD_BLOCKS.STORE_FORWARD,LD_BLOCKS_PARTIAL.ADDRESS_ALIAS,MEM_INST_RETIRED.LOCK_LOADS_PS,MEM_INST_RETIRED.SPLIT_LOADS_PS,MEM_INST_RETIRED.SPLIT_STORES_PS,MEM_INST_RETIRED.STLB_MISS_LOADS_PS,MEM_INST_RETIRED.STLB_MISS_STORES_PS,MEM_LOAD_RETIRED.L1_HIT_PS,OFFCORE_REQUESTS_BUFFER.SQ_FULL,OFFCORE_REQUESTS_OUTSTANDING.CYCLES_WITH_DEMAND_RFO -experimental
+75 [139626299782848] INFO perfrun.sdk <> - runCmd started PID 3085
+87 [139626299782848] INFO perfrun.perfcollector <> - SepDryRun RC = true
+88 [139626299782848] INFO perfrun.perfcollector <> - Loading SEP event configuration
+88 [139626299782848] INFO perfrun.perfcollector <> - pmu: cpu
+88 [139626299782848] INFO perfrun.perfcollector <> - group_id: 0
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 2: INST_RETIRED.ANY
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 0: CPU_CLK_UNHALTED.THREAD
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 1: CPU_CLK_UNHALTED.REF_TSC
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 3: CPU_CLK_UNHALTED.REF_XCLK
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 4: CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 5: UOPS_RETIRED.RETIRE_SLOTS
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 6: FP_ARITH_INST_RETIRED.SCALAR_SINGLE
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 3: cccr: addr: 186, value: 53013c
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 4: cccr: addr: 187, value: 53023c
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 5: cccr: addr: 188, value: 5302c2
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 6: cccr: addr: 189, value: 5302c7
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 2: data: addr: 309, value: ffffffffffe79600
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 0: data: addr: 30a, value: ffffffffffe79600
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 1: data: addr: 30b, value: ffffffffffe79600
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 3: data: addr: c1, value: fffffffffffe795d
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 4: data: addr: c2, value: fffffffffffe795d
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 5: data: addr: c3, value: ffffffffffe17b7d
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 6: data: addr: c4, value: ffffffffffe17b7d
+88 [139626299782848] INFO perfrun.perfcollector <> - group_id: 1
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 2: INST_RETIRED.ANY
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 0: CPU_CLK_UNHALTED.THREAD
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 1: CPU_CLK_UNHALTED.REF_TSC
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 7: FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 8: FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 9: FP_ARITH_INST_RETIRED.SCALAR_DOUBLE
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 10: FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 7: cccr: addr: 186, value: 5308c7
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 8: cccr: addr: 187, value: 5320c7
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 9: cccr: addr: 188, value: 5301c7
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 10: cccr: addr: 189, value: 5304c7
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 2: data: addr: 309, value: ffffffffffe79600
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 0: data: addr: 30a, value: ffffffffffe79600
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 1: data: addr: 30b, value: ffffffffffe79600
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 7: data: addr: c1, value: ffffffffffe17b7d
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 8: data: addr: c2, value: ffffffffffe17b7d
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 9: data: addr: c3, value: ffffffffffe17b7d
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 10: data: addr: c4, value: ffffffffffe17b7d
+88 [139626299782848] INFO perfrun.perfcollector <> - group_id: 2
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 2: INST_RETIRED.ANY
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 0: CPU_CLK_UNHALTED.THREAD
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 1: CPU_CLK_UNHALTED.REF_TSC
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 11: FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 12: UOPS_EXECUTED.X87
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 13: UOPS_EXECUTED.THREAD
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 14: CPU_CLK_UNHALTED.THREAD_P
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 11: cccr: addr: 186, value: 5310c7
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 12: cccr: addr: 187, value: 5310b1
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 13: cccr: addr: 188, value: 5301b1
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 14: cccr: addr: 189, value: 53003c
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 2: data: addr: 309, value: ffffffffffe79600
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 0: data: addr: 30a, value: ffffffffffe79600
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 1: data: addr: 30b, value: ffffffffffe79600
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 11: data: addr: c1, value: ffffffffffe17b7d
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 12: data: addr: c2, value: ffffffffffe17b7d
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 13: data: addr: c3, value: ffffffffffe17b7d
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 14: data: addr: c4, value: ffffffffffe17b7d
+88 [139626299782848] INFO perfrun.perfcollector <> - group_id: 3
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 2: INST_RETIRED.ANY
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 0: CPU_CLK_UNHALTED.THREAD
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 1: CPU_CLK_UNHALTED.REF_TSC
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 15: CYCLE_ACTIVITY.STALLS_MEM_ANY
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 16: CYCLE_ACTIVITY.STALLS_TOTAL
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 17: EXE_ACTIVITY.1_PORTS_UTIL
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 18: EXE_ACTIVITY.2_PORTS_UTIL
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 15: cccr: addr: 186, value: 145314a3
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 16: cccr: addr: 187, value: 45304a3
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 17: cccr: addr: 188, value: 5302a6
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 18: cccr: addr: 189, value: 5304a6
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 2: data: addr: 309, value: ffffffffffe79600
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 0: data: addr: 30a, value: ffffffffffe79600
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 1: data: addr: 30b, value: ffffffffffe79600
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 15: data: addr: c1, value: ffffffffffe17b7d
+88 [139626299782848] INFO perfrun.perfcollector <> - event_id: 16: data: addr: c2, value: ffffffffffe17b7d
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 17: data: addr: c3, value: ffffffffffe17b7d
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 18: data: addr: c4, value: ffffffffffe17b7d
+89 [139626299782848] INFO perfrun.perfcollector <> - group_id: 4
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 2: INST_RETIRED.ANY
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 0: CPU_CLK_UNHALTED.THREAD
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 1: CPU_CLK_UNHALTED.REF_TSC
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 19: EXE_ACTIVITY.BOUND_ON_STORES
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 20: FRONTEND_RETIRED.LATENCY_GE_4_PS
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 21: IDQ_UOPS_NOT_DELIVERED.CORE
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 22: INT_MISC.RECOVERY_CYCLES
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 19: cccr: addr: 186, value: 5340a6
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 20: cccr: addr: 187, value: 4301c6
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 21: cccr: addr: 188, value: 53019c
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 22: cccr: addr: 189, value: 53010d
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 20: frontend: addr: 3f7, value: 400406
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 2: data: addr: 309, value: ffffffffffe79600
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 0: data: addr: 30a, value: ffffffffffe79600
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 1: data: addr: 30b, value: ffffffffffe79600
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 19: data: addr: c1, value: ffffffffffe17b7d
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 20: data: addr: c2, value: fffffffffffe7959
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 21: data: addr: c3, value: ffffffffffe17b7d
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 22: data: addr: c4, value: ffffffffffe17b7d
+89 [139626299782848] INFO perfrun.perfcollector <> - group_id: 5
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 2: INST_RETIRED.ANY
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 0: CPU_CLK_UNHALTED.THREAD
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 1: CPU_CLK_UNHALTED.REF_TSC
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 23: UOPS_ISSUED.ANY
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 24: CYCLE_ACTIVITY.STALLS_L1D_MISS
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 25: CYCLE_ACTIVITY.STALLS_L2_MISS
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 26: CYCLE_ACTIVITY.STALLS_L3_MISS
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 23: cccr: addr: 186, value: 53010e
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 24: cccr: addr: 187, value: c530ca3
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 25: cccr: addr: 188, value: 55305a3
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 26: cccr: addr: 189, value: 65306a3
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 2: data: addr: 309, value: ffffffffffe79600
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 0: data: addr: 30a, value: ffffffffffe79600
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 1: data: addr: 30b, value: ffffffffffe79600
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 23: data: addr: c1, value: ffffffffffe17b7d
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 24: data: addr: c2, value: ffffffffffe17b7d
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 25: data: addr: c3, value: ffffffffffe17b7d
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 26: data: addr: c4, value: ffffffffffe17b7d
+89 [139626299782848] INFO perfrun.perfcollector <> - group_id: 6
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 2: INST_RETIRED.ANY
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 0: CPU_CLK_UNHALTED.THREAD
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 1: CPU_CLK_UNHALTED.REF_TSC
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 27: EXE_ACTIVITY.EXE_BOUND_0_PORTS
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 28: MEM_LOAD_RETIRED.L3_MISS_PS
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 29: L1D_PEND_MISS.FB_FULL:cmask=1
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 30: L1D_PEND_MISS.PENDING
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 27: cccr: addr: 186, value: 5301a6
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 28: cccr: addr: 187, value: 4320d1
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 29: cccr: addr: 188, value: 1530248
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 30: cccr: addr: 189, value: 530148
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 2: data: addr: 309, value: ffffffffffe79600
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 0: data: addr: 30a, value: ffffffffffe79600
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 1: data: addr: 30b, value: ffffffffffe79600
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 27: data: addr: c1, value: ffffffffffe17b7d
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 28: data: addr: c2, value: ffffffffffff3cad
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 29: data: addr: c3, value: ffffffffffe17b7d
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 30: data: addr: c4, value: ffffffffffe17b7d
+89 [139626299782848] INFO perfrun.perfcollector <> - group_id: 7
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 2: INST_RETIRED.ANY
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 0: CPU_CLK_UNHALTED.THREAD
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 1: CPU_CLK_UNHALTED.REF_TSC
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 31: MEM_LOAD_L3_HIT_RETIRED.XSNP_HITM_PS
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 32: MEM_LOAD_L3_HIT_RETIRED.XSNP_HIT_PS
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 33: MEM_LOAD_L3_HIT_RETIRED.XSNP_MISS_PS
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 34: MEM_LOAD_RETIRED.FB_HIT_PS
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 31: cccr: addr: 186, value: 4304d2
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 32: cccr: addr: 187, value: 4302d2
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 33: cccr: addr: 188, value: 4301d2
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 34: cccr: addr: 189, value: 4340d1
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 2: data: addr: 309, value: ffffffffffe79600
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 0: data: addr: 30a, value: ffffffffffe79600
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 1: data: addr: 30b, value: ffffffffffe79600
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 31: data: addr: c1, value: fffffffffffe795d
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 32: data: addr: c2, value: fffffffffffe795d
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 33: data: addr: c3, value: fffffffffffe795d
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 34: data: addr: c4, value: ffffffffffe17b7d
+89 [139626299782848] INFO perfrun.perfcollector <> - group_id: 8
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 2: INST_RETIRED.ANY
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 0: CPU_CLK_UNHALTED.THREAD
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 1: CPU_CLK_UNHALTED.REF_TSC
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 35: MEM_LOAD_RETIRED.L1_MISS_PS
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 36: MEM_LOAD_RETIRED.L2_HIT_PS
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 37: MEM_LOAD_RETIRED.L3_HIT_PS
+89 [139626299782848] INFO perfrun.perfcollector <> - event_id: 38: OFFCORE_REQUESTS_OUTSTANDING.ALL_DATA_RD:cmask=4
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 35: cccr: addr: 186, value: 4308d1
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 36: cccr: addr: 187, value: 4302d1
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 37: cccr: addr: 188, value: 4304d1
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 38: cccr: addr: 189, value: 4530860
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 2: data: addr: 309, value: ffffffffffe79600
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 0: data: addr: 30a, value: ffffffffffe79600
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 1: data: addr: 30b, value: ffffffffffe79600
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 35: data: addr: c1, value: ffffffffffe17b7d
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 36: data: addr: c2, value: ffffffffffe17b7d
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 37: data: addr: c3, value: fffffffffffcf2bd
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 38: data: addr: c4, value: ffffffffffe17b7d
+90 [139626299782848] INFO perfrun.perfcollector <> - group_id: 9
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 2: INST_RETIRED.ANY
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 0: CPU_CLK_UNHALTED.THREAD
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 1: CPU_CLK_UNHALTED.REF_TSC
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 39: OFFCORE_REQUESTS_OUTSTANDING.CYCLES_WITH_DATA_RD
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 40: MEM_INST_RETIRED.ALL_LOADS_PS
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 41: MEM_INST_RETIRED.ALL_STORES_PS
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 42: CYCLE_ACTIVITY.CYCLES_L1D_MISS
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 39: cccr: addr: 186, value: 1530860
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 40: cccr: addr: 187, value: 4381d0
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 41: cccr: addr: 188, value: 4382d0
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 42: cccr: addr: 189, value: 85308a3
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 2: data: addr: 309, value: ffffffffffe79600
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 0: data: addr: 30a, value: ffffffffffe79600
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 1: data: addr: 30b, value: ffffffffffe79600
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 39: data: addr: c1, value: ffffffffffe17b7d
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 40: data: addr: c2, value: fffffffffffe795d
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 41: data: addr: c3, value: fffffffffffe795d
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 42: data: addr: c4, value: ffffffffffe17b7d
+90 [139626299782848] INFO perfrun.perfcollector <> - group_id: 10
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 2: INST_RETIRED.ANY
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 0: CPU_CLK_UNHALTED.THREAD
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 1: CPU_CLK_UNHALTED.REF_TSC
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 43: CYCLE_ACTIVITY.CYCLES_MEM_ANY
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 44: DTLB_LOAD_MISSES.STLB_HIT:cmask=1
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 45: DTLB_LOAD_MISSES.WALK_ACTIVE
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 46: DTLB_STORE_MISSES.STLB_HIT:cmask=1
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 43: cccr: addr: 186, value: 105310a3
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 44: cccr: addr: 187, value: 1532008
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 45: cccr: addr: 188, value: 1531008
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 46: cccr: addr: 189, value: 1532049
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 2: data: addr: 309, value: ffffffffffe79600
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 0: data: addr: 30a, value: ffffffffffe79600
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 1: data: addr: 30b, value: ffffffffffe79600
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 43: data: addr: c1, value: ffffffffffe17b7d
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 44: data: addr: c2, value: ffffffffffe17b7d
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 45: data: addr: c3, value: fffffffffffe795d
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 46: data: addr: c4, value: fffffffffffe795d
+90 [139626299782848] INFO perfrun.perfcollector <> - group_id: 11
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 2: INST_RETIRED.ANY
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 0: CPU_CLK_UNHALTED.THREAD
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 1: CPU_CLK_UNHALTED.REF_TSC
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 47: DTLB_STORE_MISSES.WALK_ACTIVE
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 48: L2_RQSTS.ALL_RFO
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 49: L2_RQSTS.RFO_HIT
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 50: LD_BLOCKS.NO_SR
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 47: cccr: addr: 186, value: 1531049
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 48: cccr: addr: 187, value: 53e224
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 49: cccr: addr: 188, value: 53c224
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 50: cccr: addr: 189, value: 530803
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 2: data: addr: 309, value: ffffffffffe79600
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 0: data: addr: 30a, value: ffffffffffe79600
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 1: data: addr: 30b, value: ffffffffffe79600
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 47: data: addr: c1, value: fffffffffffe795d
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 48: data: addr: c2, value: fffffffffffcf2bd
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 49: data: addr: c3, value: fffffffffffcf2bd
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 50: data: addr: c4, value: fffffffffffe795d
+90 [139626299782848] INFO perfrun.perfcollector <> - group_id: 12
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 2: INST_RETIRED.ANY
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 0: CPU_CLK_UNHALTED.THREAD
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 1: CPU_CLK_UNHALTED.REF_TSC
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 51: LD_BLOCKS.STORE_FORWARD
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 52: LD_BLOCKS_PARTIAL.ADDRESS_ALIAS
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 53: MEM_INST_RETIRED.LOCK_LOADS_PS
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 54: MEM_INST_RETIRED.SPLIT_LOADS_PS
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 51: cccr: addr: 186, value: 530203
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 52: cccr: addr: 187, value: 530107
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 53: cccr: addr: 188, value: 4321d0
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 54: cccr: addr: 189, value: 4341d0
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 2: data: addr: 309, value: ffffffffffe79600
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 0: data: addr: 30a, value: ffffffffffe79600
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 1: data: addr: 30b, value: ffffffffffe79600
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 51: data: addr: c1, value: fffffffffffe795d
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 52: data: addr: c2, value: fffffffffffe795d
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 53: data: addr: c3, value: fffffffffffe7959
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 54: data: addr: c4, value: fffffffffffe795d
+90 [139626299782848] INFO perfrun.perfcollector <> - group_id: 13
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 2: INST_RETIRED.ANY
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 0: CPU_CLK_UNHALTED.THREAD
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 1: CPU_CLK_UNHALTED.REF_TSC
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 55: MEM_INST_RETIRED.SPLIT_STORES_PS
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 56: MEM_INST_RETIRED.STLB_MISS_LOADS_PS
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 57: MEM_INST_RETIRED.STLB_MISS_STORES_PS
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 58: MEM_LOAD_RETIRED.L1_HIT_PS
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 55: cccr: addr: 186, value: 4342d0
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 56: cccr: addr: 187, value: 4311d0
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 57: cccr: addr: 188, value: 4312d0
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 58: cccr: addr: 189, value: 4301d1
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 2: data: addr: 309, value: ffffffffffe79600
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 0: data: addr: 30a, value: ffffffffffe79600
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 1: data: addr: 30b, value: ffffffffffe79600
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 55: data: addr: c1, value: fffffffffffe795d
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 56: data: addr: c2, value: fffffffffffe795d
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 57: data: addr: c3, value: fffffffffffe795d
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 58: data: addr: c4, value: ffffffffffe17b7d
+90 [139626299782848] INFO perfrun.perfcollector <> - group_id: 14
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 2: INST_RETIRED.ANY
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 0: CPU_CLK_UNHALTED.THREAD
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 1: CPU_CLK_UNHALTED.REF_TSC
+90 [139626299782848] INFO perfrun.perfcollector <> - event_id: 59: OFFCORE_REQUESTS_BUFFER.SQ_FULL
+91 [139626299782848] INFO perfrun.perfcollector <> - event_id: 60: OFFCORE_REQUESTS_OUTSTANDING.CYCLES_WITH_DEMAND_RFO
+91 [139626299782848] INFO perfrun.perfcollector <> - event_id: 59: cccr: addr: 186, value: 5301b2
+91 [139626299782848] INFO perfrun.perfcollector <> - event_id: 60: cccr: addr: 187, value: 1530460
+91 [139626299782848] INFO perfrun.perfcollector <> - event_id: 2: data: addr: 309, value: ffffffffffe79600
+91 [139626299782848] INFO perfrun.perfcollector <> - event_id: 0: data: addr: 30a, value: ffffffffffe79600
+91 [139626299782848] INFO perfrun.perfcollector <> - event_id: 1: data: addr: 30b, value: ffffffffffe79600
+91 [139626299782848] INFO perfrun.perfcollector <> - event_id: 59: data: addr: c1, value: ffffffffffe17b7d
+91 [139626299782848] INFO perfrun.perfcollector <> - event_id: 60: data: addr: c2, value: ffffffffffe17b7d
+91 [139626299782848] INFO perfrun.perfcollector <> - Converting events to Perf format
+91 [139626299782848] INFO perfrun.perfcollector <> - event: 0: CPU_CLK_UNHALTED.THREAD
+91 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: ffffffff, value: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - data: addr: 30a, value: ffffffffffe79600
+91 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+91 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: event: 3c
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0x3c,name='CPU_CLK_UNHALTED.THREAD'/D
+91 [139626299782848] INFO perfrun.perfcollector <> - event: 1: CPU_CLK_UNHALTED.REF_TSC
+91 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: ffffffff, value: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - data: addr: 30b, value: ffffffffffe79600
+91 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+91 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: event: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 3
+91 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/umask=0x3,name='CPU_CLK_UNHALTED.REF_TSC'/D
+91 [139626299782848] INFO perfrun.perfcollector <> - event: 2: INST_RETIRED.ANY
+91 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: ffffffff, value: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - data: addr: 309, value: ffffffffffe79600
+91 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+91 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: event: c0
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0xc0,name='INST_RETIRED.ANY'/D
+91 [139626299782848] INFO perfrun.perfcollector <> - event: 3: CPU_CLK_UNHALTED.REF_XCLK
+91 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 186, value: 53013c
+91 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c1, value: fffffffffffe795d
+91 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+91 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: event: 3c
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 1
+91 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0x3c,umask=0x1,name='CPU_CLK_UNHALTED.REF_XCLK'/
+91 [139626299782848] INFO perfrun.perfcollector <> - event: 4: CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE
+91 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 187, value: 53023c
+91 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c2, value: fffffffffffe795d
+91 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+91 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: event: 3c
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 2
+91 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0x3c,umask=0x2,name='CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE'/
+91 [139626299782848] INFO perfrun.perfcollector <> - event: 5: UOPS_RETIRED.RETIRE_SLOTS
+91 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 188, value: 5302c2
+91 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c3, value: ffffffffffe17b7d
+91 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+91 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: event: c2
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 2
+91 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0xc2,umask=0x2,name='UOPS_RETIRED.RETIRE_SLOTS'/
+91 [139626299782848] INFO perfrun.perfcollector <> - event: 6: FP_ARITH_INST_RETIRED.SCALAR_SINGLE
+91 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 189, value: 5302c7
+91 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c4, value: ffffffffffe17b7d
+91 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+91 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: event: c7
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 2
+91 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0xc7,umask=0x2,name='FP_ARITH_INST_RETIRED.SCALAR_SINGLE'/
+91 [139626299782848] INFO perfrun.perfcollector <> - event: 7: FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE
+91 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 186, value: 5308c7
+91 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c1, value: ffffffffffe17b7d
+91 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+91 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: event: c7
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 8
+91 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0xc7,umask=0x8,name='FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE'/
+91 [139626299782848] INFO perfrun.perfcollector <> - event: 8: FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE
+91 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 187, value: 5320c7
+91 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c2, value: ffffffffffe17b7d
+91 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+91 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: event: c7
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 20
+91 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0xc7,umask=0x20,name='FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE'/
+91 [139626299782848] INFO perfrun.perfcollector <> - event: 9: FP_ARITH_INST_RETIRED.SCALAR_DOUBLE
+91 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 188, value: 5301c7
+91 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c3, value: ffffffffffe17b7d
+91 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+91 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: event: c7
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 1
+91 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0xc7,umask=0x1,name='FP_ARITH_INST_RETIRED.SCALAR_DOUBLE'/
+91 [139626299782848] INFO perfrun.perfcollector <> - event: 10: FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE
+91 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 189, value: 5304c7
+91 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c4, value: ffffffffffe17b7d
+91 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+91 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: event: c7
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 4
+91 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0xc7,umask=0x4,name='FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE'/
+91 [139626299782848] INFO perfrun.perfcollector <> - event: 11: FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE
+91 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 186, value: 5310c7
+91 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c1, value: ffffffffffe17b7d
+91 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+91 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: event: c7
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 10
+91 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0xc7,umask=0x10,name='FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE'/
+91 [139626299782848] INFO perfrun.perfcollector <> - event: 12: UOPS_EXECUTED.X87
+91 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 187, value: 5310b1
+91 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c2, value: ffffffffffe17b7d
+91 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+91 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: event: b1
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 10
+91 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0xb1,umask=0x10,name='UOPS_EXECUTED.X87'/
+91 [139626299782848] INFO perfrun.perfcollector <> - event: 13: UOPS_EXECUTED.THREAD
+91 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 188, value: 5301b1
+91 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c3, value: ffffffffffe17b7d
+91 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+91 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: event: b1
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 1
+91 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0xb1,umask=0x1,name='UOPS_EXECUTED.THREAD'/
+91 [139626299782848] INFO perfrun.perfcollector <> - event: 14: CPU_CLK_UNHALTED.THREAD_P
+91 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 189, value: 53003c
+91 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c4, value: ffffffffffe17b7d
+91 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+91 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: event: 3c
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0x3c,name='CPU_CLK_UNHALTED.THREAD_P'/
+91 [139626299782848] INFO perfrun.perfcollector <> - event: 15: CYCLE_ACTIVITY.STALLS_MEM_ANY
+91 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 186, value: 145314a3
+91 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c1, value: ffffffffffe17b7d
+91 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+91 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+91 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 14
+92 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: event: a3
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 14
+92 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/cmask=0x14,event=0xa3,umask=0x14,name='CYCLE_ACTIVITY.STALLS_MEM_ANY'/
+92 [139626299782848] INFO perfrun.perfcollector <> - event: 16: CYCLE_ACTIVITY.STALLS_TOTAL
+92 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 187, value: 45304a3
+92 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c2, value: ffffffffffe17b7d
+92 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+92 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 4
+92 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: event: a3
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 4
+92 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/cmask=0x4,event=0xa3,umask=0x4,name='CYCLE_ACTIVITY.STALLS_TOTAL'/
+92 [139626299782848] INFO perfrun.perfcollector <> - event: 17: EXE_ACTIVITY.1_PORTS_UTIL
+92 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 188, value: 5302a6
+92 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c3, value: ffffffffffe17b7d
+92 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+92 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: event: a6
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 2
+92 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0xa6,umask=0x2,name='EXE_ACTIVITY.1_PORTS_UTIL'/
+92 [139626299782848] INFO perfrun.perfcollector <> - event: 18: EXE_ACTIVITY.2_PORTS_UTIL
+92 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 189, value: 5304a6
+92 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c4, value: ffffffffffe17b7d
+92 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+92 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: event: a6
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 4
+92 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0xa6,umask=0x4,name='EXE_ACTIVITY.2_PORTS_UTIL'/
+92 [139626299782848] INFO perfrun.perfcollector <> - event: 19: EXE_ACTIVITY.BOUND_ON_STORES
+92 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 186, value: 5340a6
+92 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c1, value: ffffffffffe17b7d
+92 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+92 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: event: a6
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 40
+92 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0xa6,umask=0x40,name='EXE_ACTIVITY.BOUND_ON_STORES'/
+92 [139626299782848] INFO perfrun.perfcollector <> - event: 20: FRONTEND_RETIRED.LATENCY_GE_4_PS
+92 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 187, value: 4301c6
+92 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c2, value: fffffffffffe7959
+92 [139626299782848] INFO perfrun.perfcollector <> - frontend: 400406
+92 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+92 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: event: c6
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 400406
+92 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 1
+92 [139626299782848] INFO perfrun.perfcollector <> - precise event: event selector has no imprecise bit
+92 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0xc6,frontend=0x400406,umask=0x1,name='FRONTEND_RETIRED.LATENCY_GE_4_PS'/
+92 [139626299782848] INFO perfrun.perfcollector <> - event: 21: IDQ_UOPS_NOT_DELIVERED.CORE
+92 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 188, value: 53019c
+92 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c3, value: ffffffffffe17b7d
+92 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+92 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: event: 9c
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 1
+92 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0x9c,umask=0x1,name='IDQ_UOPS_NOT_DELIVERED.CORE'/
+92 [139626299782848] INFO perfrun.perfcollector <> - event: 22: INT_MISC.RECOVERY_CYCLES
+92 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 189, value: 53010d
+92 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c4, value: ffffffffffe17b7d
+92 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+92 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: event: d
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 1
+92 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0xd,umask=0x1,name='INT_MISC.RECOVERY_CYCLES'/
+92 [139626299782848] INFO perfrun.perfcollector <> - event: 23: UOPS_ISSUED.ANY
+92 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 186, value: 53010e
+92 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c1, value: ffffffffffe17b7d
+92 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+92 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: event: e
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 1
+92 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0xe,umask=0x1,name='UOPS_ISSUED.ANY'/
+92 [139626299782848] INFO perfrun.perfcollector <> - event: 24: CYCLE_ACTIVITY.STALLS_L1D_MISS
+92 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 187, value: c530ca3
+92 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c2, value: ffffffffffe17b7d
+92 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+92 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: c
+92 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: event: a3
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: umask: c
+92 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/cmask=0xc,event=0xa3,umask=0xc,name='CYCLE_ACTIVITY.STALLS_L1D_MISS'/
+92 [139626299782848] INFO perfrun.perfcollector <> - event: 25: CYCLE_ACTIVITY.STALLS_L2_MISS
+92 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 188, value: 55305a3
+92 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c3, value: ffffffffffe17b7d
+92 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+92 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 5
+92 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: event: a3
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 5
+92 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/cmask=0x5,event=0xa3,umask=0x5,name='CYCLE_ACTIVITY.STALLS_L2_MISS'/
+92 [139626299782848] INFO perfrun.perfcollector <> - event: 26: CYCLE_ACTIVITY.STALLS_L3_MISS
+92 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 189, value: 65306a3
+92 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c4, value: ffffffffffe17b7d
+92 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+92 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 6
+92 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: event: a3
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 6
+92 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/cmask=0x6,event=0xa3,umask=0x6,name='CYCLE_ACTIVITY.STALLS_L3_MISS'/
+92 [139626299782848] INFO perfrun.perfcollector <> - event: 27: EXE_ACTIVITY.EXE_BOUND_0_PORTS
+92 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 186, value: 5301a6
+92 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c1, value: ffffffffffe17b7d
+92 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+92 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: event: a6
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 1
+92 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0xa6,umask=0x1,name='EXE_ACTIVITY.EXE_BOUND_0_PORTS'/
+92 [139626299782848] INFO perfrun.perfcollector <> - event: 28: MEM_LOAD_RETIRED.L3_MISS_PS
+92 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 187, value: 4320d1
+92 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c2, value: ffffffffffff3cad
+92 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+92 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: event: d1
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 20
+92 [139626299782848] INFO perfrun.perfcollector <> - precise event: event selector has no imprecise bit
+92 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0xd1,umask=0x20,name='MEM_LOAD_RETIRED.L3_MISS_PS'/
+92 [139626299782848] INFO perfrun.perfcollector <> - event: 29: L1D_PEND_MISS.FB_FULL:cmask=1
+92 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 188, value: 1530248
+92 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c3, value: ffffffffffe17b7d
+92 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+92 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 1
+92 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: event: 48
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 2
+92 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/cmask=0x1,event=0x48,umask=0x2,name='L1D_PEND_MISS.FB_FULL:cmask=1'/
+92 [139626299782848] INFO perfrun.perfcollector <> - event: 30: L1D_PEND_MISS.PENDING
+92 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 189, value: 530148
+92 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c4, value: ffffffffffe17b7d
+92 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+92 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: event: 48
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 1
+92 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0x48,umask=0x1,name='L1D_PEND_MISS.PENDING'/
+92 [139626299782848] INFO perfrun.perfcollector <> - event: 31: MEM_LOAD_L3_HIT_RETIRED.XSNP_HITM_PS
+92 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 186, value: 4304d2
+92 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c1, value: fffffffffffe795d
+92 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+92 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: event: d2
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 4
+92 [139626299782848] INFO perfrun.perfcollector <> - precise event: event selector has no imprecise bit
+92 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0xd2,umask=0x4,name='MEM_LOAD_L3_HIT_RETIRED.XSNP_HITM_PS'/
+92 [139626299782848] INFO perfrun.perfcollector <> - event: 32: MEM_LOAD_L3_HIT_RETIRED.XSNP_HIT_PS
+92 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 187, value: 4302d2
+92 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c2, value: fffffffffffe795d
+92 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+92 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: event: d2
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+92 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 2
+92 [139626299782848] INFO perfrun.perfcollector <> - precise event: event selector has no imprecise bit
+92 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0xd2,umask=0x2,name='MEM_LOAD_L3_HIT_RETIRED.XSNP_HIT_PS'/
+92 [139626299782848] INFO perfrun.perfcollector <> - event: 33: MEM_LOAD_L3_HIT_RETIRED.XSNP_MISS_PS
+92 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 188, value: 4301d2
+93 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c3, value: fffffffffffe795d
+93 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+93 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: event: d2
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 1
+93 [139626299782848] INFO perfrun.perfcollector <> - precise event: event selector has no imprecise bit
+93 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0xd2,umask=0x1,name='MEM_LOAD_L3_HIT_RETIRED.XSNP_MISS_PS'/
+93 [139626299782848] INFO perfrun.perfcollector <> - event: 34: MEM_LOAD_RETIRED.FB_HIT_PS
+93 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 189, value: 4340d1
+93 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c4, value: ffffffffffe17b7d
+93 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+93 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: event: d1
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 40
+93 [139626299782848] INFO perfrun.perfcollector <> - precise event: event selector has no imprecise bit
+93 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0xd1,umask=0x40,name='MEM_LOAD_RETIRED.FB_HIT_PS'/
+93 [139626299782848] INFO perfrun.perfcollector <> - event: 35: MEM_LOAD_RETIRED.L1_MISS_PS
+93 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 186, value: 4308d1
+93 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c1, value: ffffffffffe17b7d
+93 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+93 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: event: d1
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 8
+93 [139626299782848] INFO perfrun.perfcollector <> - precise event: event selector has no imprecise bit
+93 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0xd1,umask=0x8,name='MEM_LOAD_RETIRED.L1_MISS_PS'/
+93 [139626299782848] INFO perfrun.perfcollector <> - event: 36: MEM_LOAD_RETIRED.L2_HIT_PS
+93 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 187, value: 4302d1
+93 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c2, value: ffffffffffe17b7d
+93 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+93 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: event: d1
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 2
+93 [139626299782848] INFO perfrun.perfcollector <> - precise event: event selector has no imprecise bit
+93 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0xd1,umask=0x2,name='MEM_LOAD_RETIRED.L2_HIT_PS'/
+93 [139626299782848] INFO perfrun.perfcollector <> - event: 37: MEM_LOAD_RETIRED.L3_HIT_PS
+93 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 188, value: 4304d1
+93 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c3, value: fffffffffffcf2bd
+93 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+93 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: event: d1
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 4
+93 [139626299782848] INFO perfrun.perfcollector <> - precise event: event selector has no imprecise bit
+93 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0xd1,umask=0x4,name='MEM_LOAD_RETIRED.L3_HIT_PS'/
+93 [139626299782848] INFO perfrun.perfcollector <> - event: 38: OFFCORE_REQUESTS_OUTSTANDING.ALL_DATA_RD:cmask=4
+93 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 189, value: 4530860
+93 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c4, value: ffffffffffe17b7d
+93 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+93 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 4
+93 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: event: 60
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 8
+93 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/cmask=0x4,event=0x60,umask=0x8,name='OFFCORE_REQUESTS_OUTSTANDING.ALL_DATA_RD:cmask=4'/
+93 [139626299782848] INFO perfrun.perfcollector <> - event: 39: OFFCORE_REQUESTS_OUTSTANDING.CYCLES_WITH_DATA_RD
+93 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 186, value: 1530860
+93 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c1, value: ffffffffffe17b7d
+93 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+93 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 1
+93 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: event: 60
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 8
+93 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/cmask=0x1,event=0x60,umask=0x8,name='OFFCORE_REQUESTS_OUTSTANDING.CYCLES_WITH_DATA_RD'/
+93 [139626299782848] INFO perfrun.perfcollector <> - event: 40: MEM_INST_RETIRED.ALL_LOADS_PS
+93 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 187, value: 4381d0
+93 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c2, value: fffffffffffe795d
+93 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+93 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: event: d0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 81
+93 [139626299782848] INFO perfrun.perfcollector <> - precise event: event selector has no imprecise bit
+93 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0xd0,umask=0x81,name='MEM_INST_RETIRED.ALL_LOADS_PS'/
+93 [139626299782848] INFO perfrun.perfcollector <> - event: 41: MEM_INST_RETIRED.ALL_STORES_PS
+93 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 188, value: 4382d0
+93 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c3, value: fffffffffffe795d
+93 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+93 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: event: d0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 82
+93 [139626299782848] INFO perfrun.perfcollector <> - precise event: event selector has no imprecise bit
+93 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0xd0,umask=0x82,name='MEM_INST_RETIRED.ALL_STORES_PS'/
+93 [139626299782848] INFO perfrun.perfcollector <> - event: 42: CYCLE_ACTIVITY.CYCLES_L1D_MISS
+93 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 189, value: 85308a3
+93 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c4, value: ffffffffffe17b7d
+93 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+93 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 8
+93 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: event: a3
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 8
+93 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/cmask=0x8,event=0xa3,umask=0x8,name='CYCLE_ACTIVITY.CYCLES_L1D_MISS'/
+93 [139626299782848] INFO perfrun.perfcollector <> - event: 43: CYCLE_ACTIVITY.CYCLES_MEM_ANY
+93 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 186, value: 105310a3
+93 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c1, value: ffffffffffe17b7d
+93 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+93 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 10
+93 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: event: a3
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 10
+93 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/cmask=0x10,event=0xa3,umask=0x10,name='CYCLE_ACTIVITY.CYCLES_MEM_ANY'/
+93 [139626299782848] INFO perfrun.perfcollector <> - event: 44: DTLB_LOAD_MISSES.STLB_HIT:cmask=1
+93 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 187, value: 1532008
+93 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c2, value: ffffffffffe17b7d
+93 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+93 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 1
+93 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: event: 8
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 20
+93 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/cmask=0x1,event=0x8,umask=0x20,name='DTLB_LOAD_MISSES.STLB_HIT:cmask=1'/
+93 [139626299782848] INFO perfrun.perfcollector <> - event: 45: DTLB_LOAD_MISSES.WALK_ACTIVE
+93 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 188, value: 1531008
+93 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c3, value: fffffffffffe795d
+93 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+93 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 1
+93 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: event: 8
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 10
+93 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/cmask=0x1,event=0x8,umask=0x10,name='DTLB_LOAD_MISSES.WALK_ACTIVE'/
+93 [139626299782848] INFO perfrun.perfcollector <> - event: 46: DTLB_STORE_MISSES.STLB_HIT:cmask=1
+93 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 189, value: 1532049
+93 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c4, value: fffffffffffe795d
+93 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+93 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 1
+93 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: event: 49
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 20
+93 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/cmask=0x1,event=0x49,umask=0x20,name='DTLB_STORE_MISSES.STLB_HIT:cmask=1'/
+93 [139626299782848] INFO perfrun.perfcollector <> - event: 47: DTLB_STORE_MISSES.WALK_ACTIVE
+93 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 186, value: 1531049
+93 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c1, value: fffffffffffe795d
+93 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+93 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 1
+93 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: event: 49
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 10
+93 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/cmask=0x1,event=0x49,umask=0x10,name='DTLB_STORE_MISSES.WALK_ACTIVE'/
+93 [139626299782848] INFO perfrun.perfcollector <> - event: 48: L2_RQSTS.ALL_RFO
+93 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 187, value: 53e224
+93 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c2, value: fffffffffffcf2bd
+93 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+93 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: event: 24
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: umask: e2
+93 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0x24,umask=0xe2,name='L2_RQSTS.ALL_RFO'/
+93 [139626299782848] INFO perfrun.perfcollector <> - event: 49: L2_RQSTS.RFO_HIT
+93 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 188, value: 53c224
+93 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c3, value: fffffffffffcf2bd
+93 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+93 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: event: 24
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: umask: c2
+93 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0x24,umask=0xc2,name='L2_RQSTS.RFO_HIT'/
+93 [139626299782848] INFO perfrun.perfcollector <> - event: 50: LD_BLOCKS.NO_SR
+93 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 189, value: 530803
+93 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c4, value: fffffffffffe795d
+93 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+93 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: event: 3
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+93 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 8
+93 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0x3,umask=0x8,name='LD_BLOCKS.NO_SR'/
+93 [139626299782848] INFO perfrun.perfcollector <> - event: 51: LD_BLOCKS.STORE_FORWARD
+93 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 186, value: 530203
+93 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c1, value: fffffffffffe795d
+94 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+94 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: event: 3
+94 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 2
+94 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0x3,umask=0x2,name='LD_BLOCKS.STORE_FORWARD'/
+94 [139626299782848] INFO perfrun.perfcollector <> - event: 52: LD_BLOCKS_PARTIAL.ADDRESS_ALIAS
+94 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 187, value: 530107
+94 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c2, value: fffffffffffe795d
+94 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+94 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: event: 7
+94 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 1
+94 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0x7,umask=0x1,name='LD_BLOCKS_PARTIAL.ADDRESS_ALIAS'/
+94 [139626299782848] INFO perfrun.perfcollector <> - event: 53: MEM_INST_RETIRED.LOCK_LOADS_PS
+94 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 188, value: 4321d0
+94 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c3, value: fffffffffffe7959
+94 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+94 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: event: d0
+94 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 21
+94 [139626299782848] INFO perfrun.perfcollector <> - precise event: event selector has no imprecise bit
+94 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0xd0,umask=0x21,name='MEM_INST_RETIRED.LOCK_LOADS_PS'/
+94 [139626299782848] INFO perfrun.perfcollector <> - event: 54: MEM_INST_RETIRED.SPLIT_LOADS_PS
+94 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 189, value: 4341d0
+94 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c4, value: fffffffffffe795d
+94 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+94 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: event: d0
+94 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 41
+94 [139626299782848] INFO perfrun.perfcollector <> - precise event: event selector has no imprecise bit
+94 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0xd0,umask=0x41,name='MEM_INST_RETIRED.SPLIT_LOADS_PS'/
+94 [139626299782848] INFO perfrun.perfcollector <> - event: 55: MEM_INST_RETIRED.SPLIT_STORES_PS
+94 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 186, value: 4342d0
+94 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c1, value: fffffffffffe795d
+94 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+94 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: event: d0
+94 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 42
+94 [139626299782848] INFO perfrun.perfcollector <> - precise event: event selector has no imprecise bit
+94 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0xd0,umask=0x42,name='MEM_INST_RETIRED.SPLIT_STORES_PS'/
+94 [139626299782848] INFO perfrun.perfcollector <> - event: 56: MEM_INST_RETIRED.STLB_MISS_LOADS_PS
+94 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 187, value: 4311d0
+94 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c2, value: fffffffffffe795d
+94 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+94 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: event: d0
+94 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 11
+94 [139626299782848] INFO perfrun.perfcollector <> - precise event: event selector has no imprecise bit
+94 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0xd0,umask=0x11,name='MEM_INST_RETIRED.STLB_MISS_LOADS_PS'/
+94 [139626299782848] INFO perfrun.perfcollector <> - event: 57: MEM_INST_RETIRED.STLB_MISS_STORES_PS
+94 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 188, value: 4312d0
+94 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c3, value: fffffffffffe795d
+94 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+94 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: event: d0
+94 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 12
+94 [139626299782848] INFO perfrun.perfcollector <> - precise event: event selector has no imprecise bit
+94 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0xd0,umask=0x12,name='MEM_INST_RETIRED.STLB_MISS_STORES_PS'/
+94 [139626299782848] INFO perfrun.perfcollector <> - event: 58: MEM_LOAD_RETIRED.L1_HIT_PS
+94 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 189, value: 4301d1
+94 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c4, value: ffffffffffe17b7d
+94 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+94 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: event: d1
+94 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 1
+94 [139626299782848] INFO perfrun.perfcollector <> - precise event: event selector has no imprecise bit
+94 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0xd1,umask=0x1,name='MEM_LOAD_RETIRED.L1_HIT_PS'/
+94 [139626299782848] INFO perfrun.perfcollector <> - event: 59: OFFCORE_REQUESTS_BUFFER.SQ_FULL
+94 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 186, value: 5301b2
+94 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c1, value: ffffffffffe17b7d
+94 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+94 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: event: b2
+94 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 1
+94 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/event=0xb2,umask=0x1,name='OFFCORE_REQUESTS_BUFFER.SQ_FULL'/
+94 [139626299782848] INFO perfrun.perfcollector <> - event: 60: OFFCORE_REQUESTS_OUTSTANDING.CYCLES_WITH_DEMAND_RFO
+94 [139626299782848] INFO perfrun.perfcollector <> - cccr: addr: 187, value: 1530460
+94 [139626299782848] INFO perfrun.perfcollector <> - data: addr: c2, value: ffffffffffe17b7d
+94 [139626299782848] INFO perfrun.perfcollector <> - pmu config: cpu
+94 [139626299782848] INFO perfrun.perfcollector <> - config: any: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: cmask: 1
+94 [139626299782848] INFO perfrun.perfcollector <> - config: edge: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: event: 60
+94 [139626299782848] INFO perfrun.perfcollector <> - config1: frontend: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: inv: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config1: ldlat: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config1: offcore_rsp: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: pc: 0
+94 [139626299782848] INFO perfrun.perfcollector <> - config: umask: 4
+94 [139626299782848] INFO perfrun.perfcollector <> - format: cpu/cmask=0x1,event=0x60,umask=0x4,name='OFFCORE_REQUESTS_OUTSTANDING.CYCLES_WITH_DEMAND_RFO'/
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0x3c,name='CPU_CLK_UNHALTED.THREAD'/Du, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/umask=0x3,name='CPU_CLK_UNHALTED.REF_TSC'/Du, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0xc0,name='INST_RETIRED.ANY'/Du, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0x3c,umask=0x1,name='CPU_CLK_UNHALTED.REF_XCLK'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0x3c,umask=0x2,name='CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0xc2,umask=0x2,name='UOPS_RETIRED.RETIRE_SLOTS'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0xc7,umask=0x2,name='FP_ARITH_INST_RETIRED.SCALAR_SINGLE'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0xc7,umask=0x8,name='FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0xc7,umask=0x20,name='FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0xc7,umask=0x1,name='FP_ARITH_INST_RETIRED.SCALAR_DOUBLE'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0xc7,umask=0x4,name='FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0xc7,umask=0x10,name='FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0xb1,umask=0x10,name='UOPS_EXECUTED.X87'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0xb1,umask=0x1,name='UOPS_EXECUTED.THREAD'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0x3c,name='CPU_CLK_UNHALTED.THREAD_P'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/cmask=0x14,event=0xa3,umask=0x14,name='CYCLE_ACTIVITY.STALLS_MEM_ANY'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/cmask=0x4,event=0xa3,umask=0x4,name='CYCLE_ACTIVITY.STALLS_TOTAL'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0xa6,umask=0x2,name='EXE_ACTIVITY.1_PORTS_UTIL'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0xa6,umask=0x4,name='EXE_ACTIVITY.2_PORTS_UTIL'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0xa6,umask=0x40,name='EXE_ACTIVITY.BOUND_ON_STORES'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0xc6,frontend=0x400406,umask=0x1,name='FRONTEND_RETIRED.LATENCY_GE_4_PS'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0x9c,umask=0x1,name='IDQ_UOPS_NOT_DELIVERED.CORE'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0xd,umask=0x1,name='INT_MISC.RECOVERY_CYCLES'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0xe,umask=0x1,name='UOPS_ISSUED.ANY'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/cmask=0xc,event=0xa3,umask=0xc,name='CYCLE_ACTIVITY.STALLS_L1D_MISS'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/cmask=0x5,event=0xa3,umask=0x5,name='CYCLE_ACTIVITY.STALLS_L2_MISS'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/cmask=0x6,event=0xa3,umask=0x6,name='CYCLE_ACTIVITY.STALLS_L3_MISS'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0xa6,umask=0x1,name='EXE_ACTIVITY.EXE_BOUND_0_PORTS'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0xd1,umask=0x20,name='MEM_LOAD_RETIRED.L3_MISS_PS'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/cmask=0x1,event=0x48,umask=0x2,name='L1D_PEND_MISS.FB_FULL:cmask=1'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0x48,umask=0x1,name='L1D_PEND_MISS.PENDING'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0xd2,umask=0x4,name='MEM_LOAD_L3_HIT_RETIRED.XSNP_HITM_PS'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0xd2,umask=0x2,name='MEM_LOAD_L3_HIT_RETIRED.XSNP_HIT_PS'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0xd2,umask=0x1,name='MEM_LOAD_L3_HIT_RETIRED.XSNP_MISS_PS'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0xd1,umask=0x40,name='MEM_LOAD_RETIRED.FB_HIT_PS'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0xd1,umask=0x8,name='MEM_LOAD_RETIRED.L1_MISS_PS'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0xd1,umask=0x2,name='MEM_LOAD_RETIRED.L2_HIT_PS'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0xd1,umask=0x4,name='MEM_LOAD_RETIRED.L3_HIT_PS'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/cmask=0x4,event=0x60,umask=0x8,name='OFFCORE_REQUESTS_OUTSTANDING.ALL_DATA_RD:cmask=4'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/cmask=0x1,event=0x60,umask=0x8,name='OFFCORE_REQUESTS_OUTSTANDING.CYCLES_WITH_DATA_RD'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0xd0,umask=0x81,name='MEM_INST_RETIRED.ALL_LOADS_PS'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0xd0,umask=0x82,name='MEM_INST_RETIRED.ALL_STORES_PS'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/cmask=0x8,event=0xa3,umask=0x8,name='CYCLE_ACTIVITY.CYCLES_L1D_MISS'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/cmask=0x10,event=0xa3,umask=0x10,name='CYCLE_ACTIVITY.CYCLES_MEM_ANY'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/cmask=0x1,event=0x8,umask=0x20,name='DTLB_LOAD_MISSES.STLB_HIT:cmask=1'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/cmask=0x1,event=0x8,umask=0x10,name='DTLB_LOAD_MISSES.WALK_ACTIVE'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/cmask=0x1,event=0x49,umask=0x20,name='DTLB_STORE_MISSES.STLB_HIT:cmask=1'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/cmask=0x1,event=0x49,umask=0x10,name='DTLB_STORE_MISSES.WALK_ACTIVE'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0x24,umask=0xe2,name='L2_RQSTS.ALL_RFO'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0x24,umask=0xc2,name='L2_RQSTS.RFO_HIT'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0x3,umask=0x8,name='LD_BLOCKS.NO_SR'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0x3,umask=0x2,name='LD_BLOCKS.STORE_FORWARD'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0x7,umask=0x1,name='LD_BLOCKS_PARTIAL.ADDRESS_ALIAS'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0xd0,umask=0x21,name='MEM_INST_RETIRED.LOCK_LOADS_PS'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0xd0,umask=0x41,name='MEM_INST_RETIRED.SPLIT_LOADS_PS'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0xd0,umask=0x42,name='MEM_INST_RETIRED.SPLIT_STORES_PS'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0xd0,umask=0x11,name='MEM_INST_RETIRED.STLB_MISS_LOADS_PS'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0xd0,umask=0x12,name='MEM_INST_RETIRED.STLB_MISS_STORES_PS'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0xd1,umask=0x1,name='MEM_LOAD_RETIRED.L1_HIT_PS'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/event=0xb2,umask=0x1,name='OFFCORE_REQUESTS_BUFFER.SQ_FULL'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - event: cpu/cmask=0x1,event=0x60,umask=0x4,name='OFFCORE_REQUESTS_OUTSTANDING.CYCLES_WITH_DEMAND_RFO'/u, added for counting
+94 [139626299782848] INFO perfrun.perfcollector <> - attaching to pid: 4294967295, m_mode: 10, mode: 3
+95 [139626291390144] INFO perfrun.perfcollector <> - Perf stat trace pipe capacity: read = 1048576, write = 1048576
+95 [139626282997440] INFO perfrun.sdk <> - Reading value (0-7) from file: /sys/devices/system/cpu/cpu0/topology/core_siblings_list
+95 [139626282997440] INFO perfrun.sdk <> - Reading value (0,4) from file: /sys/devices/system/cpu/cpu0/topology/thread_siblings_list
+95 [139626282997440] INFO perfrun.sdk <> - Reading value (0-7) from file: /sys/devices/system/cpu/cpu1/topology/core_siblings_list
+95 [139626282997440] INFO perfrun.sdk <> - Reading value (1,5) from file: /sys/devices/system/cpu/cpu1/topology/thread_siblings_list
+95 [139626282997440] INFO perfrun.sdk <> - Reading value (0-7) from file: /sys/devices/system/cpu/cpu2/topology/core_siblings_list
+95 [139626282997440] INFO perfrun.sdk <> - Reading value (2,6) from file: /sys/devices/system/cpu/cpu2/topology/thread_siblings_list
+95 [139626282997440] INFO perfrun.sdk <> - Reading value (0-7) from file: /sys/devices/system/cpu/cpu3/topology/core_siblings_list
+95 [139626282997440] INFO perfrun.sdk <> - Reading value (3,7) from file: /sys/devices/system/cpu/cpu3/topology/thread_siblings_list
+95 [139626282997440] INFO perfrun.sdk <> - Reading value (0-7) from file: /sys/devices/system/cpu/cpu4/topology/core_siblings_list
+95 [139626282997440] INFO perfrun.sdk <> - Reading value (0,4) from file: /sys/devices/system/cpu/cpu4/topology/thread_siblings_list
+95 [139626282997440] INFO perfrun.sdk <> - Reading value (0-7) from file: /sys/devices/system/cpu/cpu5/topology/core_siblings_list
+95 [139626282997440] INFO perfrun.sdk <> - Reading value (1,5) from file: /sys/devices/system/cpu/cpu5/topology/thread_siblings_list
+95 [139626282997440] INFO perfrun.sdk <> - Reading value (0-7) from file: /sys/devices/system/cpu/cpu6/topology/core_siblings_list
+95 [139626282997440] INFO perfrun.sdk <> - Reading value (2,6) from file: /sys/devices/system/cpu/cpu6/topology/thread_siblings_list
+95 [139626282997440] INFO perfrun.sdk <> - Reading value (0-7) from file: /sys/devices/system/cpu/cpu7/topology/core_siblings_list
+95 [139626282997440] INFO perfrun.sdk <> - Reading value (3,7) from file: /sys/devices/system/cpu/cpu7/topology/thread_siblings_list
+95 [139626282997440] ERROR perfrun.sdk <> - boost::filesystem::exists(filename) 'gh2::error::IsNot.Valid.File(filename):/sys/bus/event_source/devices/cpu_core/cpus'
+_sdks/release_posix-x86_64_icx_2023.0.0_gnutools_9.2_binutils_2.28/perfrun_1.33.15/include/perfrun1/sdk/utils.hpp(767): gh2::error_code_t runtool::sdk::loadFileValue(RetType &, const cpil2::uchar_t *) [RetType = std::basic_string<char>]
+, at file: _sdks/release_posix-x86_64_icx_2023.0.0_gnutools_9.2_binutils_2.28/perfrun_1.33.15/include/perfrun1/sdk/utils.hpp:767
+95 [139626282997440] ERROR perfrun.sdk <> - boost::filesystem::exists(filename) 'gh2::error::IsNot.Valid.File(filename):/sys/bus/event_source/devices/cpu_atom/cpus'
+_sdks/release_posix-x86_64_icx_2023.0.0_gnutools_9.2_binutils_2.28/perfrun_1.33.15/include/perfrun1/sdk/utils.hpp(767): gh2::error_code_t runtool::sdk::loadFileValue(RetType &, const cpil2::uchar_t *) [RetType = std::basic_string<char>]
+, at file: _sdks/release_posix-x86_64_icx_2023.0.0_gnutools_9.2_binutils_2.28/perfrun_1.33.15/include/perfrun1/sdk/utils.hpp:767
+95 [139626291390144] INFO perfrun.sdk <> - runCmd: /opt/intel/oneapi/vtune/2025.0/bin64/amplxe-perf stat -v --log-fd 9 --scale -x ; -e cpu/event=0x3c,name='CPU_CLK_UNHALTED.THREAD'/Du,cpu/umask=0x3,name='CPU_CLK_UNHALTED.REF_TSC'/Du,cpu/event=0xc0,name='INST_RETIRED.ANY'/Du,cpu/event=0x3c,umask=0x1,name='CPU_CLK_UNHALTED.REF_XCLK'/u,cpu/event=0x3c,umask=0x2,name='CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE'/u,cpu/event=0xc2,umask=0x2,name='UOPS_RETIRED.RETIRE_SLOTS'/u,cpu/event=0xc7,umask=0x2,name='FP_ARITH_INST_RETIRED.SCALAR_SINGLE'/u,cpu/event=0xc7,umask=0x8,name='FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE'/u,cpu/event=0xc7,umask=0x20,name='FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE'/u,cpu/event=0xc7,umask=0x1,name='FP_ARITH_INST_RETIRED.SCALAR_DOUBLE'/u,cpu/event=0xc7,umask=0x4,name='FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE'/u,cpu/event=0xc7,umask=0x10,name='FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE'/u,cpu/event=0xb1,umask=0x10,name='UOPS_EXECUTED.X87'/u,cpu/event=0xb1,umask=0x1,name='UOPS_EXECUTED.THREAD'/u,cpu/event=0x3c,name='CPU_CLK_UNHALTED.THREAD_P'/u,cpu/cmask=0x14,event=0xa3,umask=0x14,name='CYCLE_ACTIVITY.STALLS_MEM_ANY'/u,cpu/cmask=0x4,event=0xa3,umask=0x4,name='CYCLE_ACTIVITY.STALLS_TOTAL'/u,cpu/event=0xa6,umask=0x2,name='EXE_ACTIVITY.1_PORTS_UTIL'/u,cpu/event=0xa6,umask=0x4,name='EXE_ACTIVITY.2_PORTS_UTIL'/u,cpu/event=0xa6,umask=0x40,name='EXE_ACTIVITY.BOUND_ON_STORES'/u,cpu/event=0xc6,frontend=0x400406,umask=0x1,name='FRONTEND_RETIRED.LATENCY_GE_4_PS'/u,cpu/event=0x9c,umask=0x1,name='IDQ_UOPS_NOT_DELIVERED.CORE'/u,cpu/event=0xd,umask=0x1,name='INT_MISC.RECOVERY_CYCLES'/u,cpu/event=0xe,umask=0x1,name='UOPS_ISSUED.ANY'/u,cpu/cmask=0xc,event=0xa3,umask=0xc,name='CYCLE_ACTIVITY.STALLS_L1D_MISS'/u,cpu/cmask=0x5,event=0xa3,umask=0x5,name='CYCLE_ACTIVITY.STALLS_L2_MISS'/u,cpu/cmask=0x6,event=0xa3,umask=0x6,name='CYCLE_ACTIVITY.STALLS_L3_MISS'/u,cpu/event=0xa6,umask=0x1,name='EXE_ACTIVITY.EXE_BOUND_0_PORTS'/u,cpu/event=0xd1,umask=0x20,name='MEM_LOAD_RETIRED.L3_MISS_PS'/u,cpu/cmask=0x1,event=0x48,umask=0x2,name='L1D_PEND_MISS.FB_FULL:cmask=1'/u,cpu/event=0x48,umask=0x1,name='L1D_PEND_MISS.PENDING'/u,cpu/event=0xd2,umask=0x4,name='MEM_LOAD_L3_HIT_RETIRED.XSNP_HITM_PS'/u,cpu/event=0xd2,umask=0x2,name='MEM_LOAD_L3_HIT_RETIRED.XSNP_HIT_PS'/u,cpu/event=0xd2,umask=0x1,name='MEM_LOAD_L3_HIT_RETIRED.XSNP_MISS_PS'/u,cpu/event=0xd1,umask=0x40,name='MEM_LOAD_RETIRED.FB_HIT_PS'/u,cpu/event=0xd1,umask=0x8,name='MEM_LOAD_RETIRED.L1_MISS_PS'/u,cpu/event=0xd1,umask=0x2,name='MEM_LOAD_RETIRED.L2_HIT_PS'/u,cpu/event=0xd1,umask=0x4,name='MEM_LOAD_RETIRED.L3_HIT_PS'/u,cpu/cmask=0x4,event=0x60,umask=0x8,name='OFFCORE_REQUESTS_OUTSTANDING.ALL_DATA_RD:cmask=4'/u,cpu/cmask=0x1,event=0x60,umask=0x8,name='OFFCORE_REQUESTS_OUTSTANDING.CYCLES_WITH_DATA_RD'/u,cpu/event=0xd0,umask=0x81,name='MEM_INST_RETIRED.ALL_LOADS_PS'/u,cpu/event=0xd0,umask=0x82,name='MEM_INST_RETIRED.ALL_STORES_PS'/u,cpu/cmask=0x8,event=0xa3,umask=0x8,name='CYCLE_ACTIVITY.CYCLES_L1D_MISS'/u,cpu/cmask=0x10,event=0xa3,umask=0x10,name='CYCLE_ACTIVITY.CYCLES_MEM_ANY'/u,cpu/cmask=0x1,event=0x8,umask=0x20,name='DTLB_LOAD_MISSES.STLB_HIT:cmask=1'/u,cpu/cmask=0x1,event=0x8,umask=0x10,name='DTLB_LOAD_MISSES.WALK_ACTIVE'/u,cpu/cmask=0x1,event=0x49,umask=0x20,name='DTLB_STORE_MISSES.STLB_HIT:cmask=1'/u,cpu/cmask=0x1,event=0x49,umask=0x10,name='DTLB_STORE_MISSES.WALK_ACTIVE'/u,cpu/event=0x24,umask=0xe2,name='L2_RQSTS.ALL_RFO'/u,cpu/event=0x24,umask=0xc2,name='L2_RQSTS.RFO_HIT'/u,cpu/event=0x3,umask=0x8,name='LD_BLOCKS.NO_SR'/u,cpu/event=0x3,umask=0x2,name='LD_BLOCKS.STORE_FORWARD'/u,cpu/event=0x7,umask=0x1,name='LD_BLOCKS_PARTIAL.ADDRESS_ALIAS'/u,cpu/event=0xd0,umask=0x21,name='MEM_INST_RETIRED.LOCK_LOADS_PS'/u,cpu/event=0xd0,umask=0x41,name='MEM_INST_RETIRED.SPLIT_LOADS_PS'/u,cpu/event=0xd0,umask=0x42,name='MEM_INST_RETIRED.SPLIT_STORES_PS'/u,cpu/event=0xd0,umask=0x11,name='MEM_INST_RETIRED.STLB_MISS_LOADS_PS'/u,cpu/event=0xd0,umask=0x12,name='MEM_INST_RETIRED.STLB_MISS_STORES_PS'/u,cpu/event=0xd1,umask=0x1,name='MEM_LOAD_RETIRED.L1_HIT_PS'/u,cpu/event=0xb2,umask=0x1,name='OFFCORE_REQUESTS_BUFFER.SQ_FULL'/u,cpu/cmask=0x1,event=0x60,umask=0x4,name='OFFCORE_REQUESTS_OUTSTANDING.CYCLES_WITH_DEMAND_RFO'/u /opt/intel/oneapi/vtune/2025.0/bin64/amplxe-perf-sync dryrun tsc
+96 [139626291390144] INFO perfrun.sdk <> - runCmd started PID 3088
+125 [139626291390144] INFO perfrun.perfcollector <> - Monitor: runCmd RC = true
+126 [139626299782848] INFO perfrun.launcher <> - plugin [aoclprofile] was disabled because it doesn't support the given collection type.
+126 [139626299782848] INFO perfrun.tpss <> - initialize tpss controller
+126 [139626299782848] INFO perfrun.launcher <> - plugin [tpss] was disabled because it doesn't support the given collection type.
+126 [139626299782848] INFO perfrun.launcher <> - plugin [media] was disabled because it doesn't support the given collection type.
+126 [139626299782848] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+126 [139626299782848] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+126 [139626299782848] INFO perfrun.launcher <> - plugin [parallelfs] was disabled because it doesn't support the given collection type.
+126 [139626299782848] INFO perfrun.launcher <> - plugin [power] was disabled because it doesn't support the given collection type.
+126 [139626299782848] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+126 [139626299782848] INFO perfrun.launcher <> - plugin [ipmwatch] was disabled because it doesn't support the given collection type.
+126 [139626299782848] INFO perfrun.launcher <> - plugin [os_counters] was disabled because it doesn't support the given collection type.
+126 [139626299782848] INFO perfrun.launcher <> - plugin [l0_metrics] was disabled because it doesn't support the given collection type.
+126 [139626530610112] INFO perfrun.launcher <> - set environment variable: INTEL_MRTE_DATA_DIR = /home/louis/Imperial/MScProject/2-CODE/Spectral1D/vtune/Spectral1D/r000ps/data.0
+126 [139626530610112] INFO perfrun.launcher <> - set environment variable: INTEL_MRTE_HOST_NAME = computer
+126 [139626530610112] INFO perfrun.launcher <> - set environment variable: JAVA_TOOL_OPTIONS = -agentlib:amplxe_samplingmrte_javaprof_1.0 -Dsun.boot.library.path=/opt/intel/oneapi/vtune/2025.0/lib32/runtime:/opt/intel/oneapi/vtune/2025.0/lib64/runtime
+126 [139626530610112] INFO perfrun.launcher <> - set environment variable: LD_LIBRARY_PATH = /opt/intel/oneapi/vtune/2025.0/lib32/runtime:/opt/intel/oneapi/vtune/2025.0/lib64/runtime:/home/louis/Softwares/nektar++/build/dist/lib64:/home/louis/Softwares/nektar++/build/dist/lib64:
+126 [139626530610112] INFO perfrun.launcher <> - set environment variable: CORECLR_ENABLE_PROFILING = 1
+126 [139626530610112] INFO perfrun.launcher <> - set environment variable: CORECLR_PROFILER = {AA5E4821-E3B1-479c-B7FF-5AD047D22CED}
+126 [139626530610112] INFO perfrun.launcher <> - set environment variable: CORECLR_PROFILER_PATH = /opt/intel/oneapi/vtune/2025.0/lib64/libamplxe_samplingmrte_clrprof_1.0.so
+126 [139626530610112] INFO perfrun.launcher <> - set environment variable: INTEL_MRTE_PROFILER_MODE = mixed
+126 [139626530610112] INFO perfrun.launcher <> - RpcServer: run RPC server to handle requests
+127 [139626530610112] INFO perfrun.launcher <> - Launcher: command line to start before modification = /home/louis/Imperial/MScProject/2-CODE/Spectral1D/build/spectral --P 10 --N 1000
+127 [139626530610112] INFO perfrun.launcher <> - Launcher: command line to start after modification = /home/louis/Imperial/MScProject/2-CODE/Spectral1D/build/spectral --P 10 --N 1000
+127 [139626530610112] INFO perfrun.launcher <> - ProcessCreator object was created
+127 [139626530610112] INFO perfrun.launcher <> - Launcher: the process was started in suspend mode
+129 [139626299782848] WARN perfrun.system <> - Could not do anything with /sys/kernel/debug/kvm: boost::filesystem::status: Permission denied [system:13]: "/sys/kernel/debug/kvm", at file: vcs/perfrun1/plugins/system/src/trace_writer.cpp:787
+129 [139626299782848] WARN perfrun.system <> - Folder "/var/run/libvirt/qemu/"doesn't exist, at file: vcs/perfrun1/plugins/system/src/trace_writer.cpp:800
+129 [139626299782848] INFO perfrun.perfcollector <> - attaching to pid: 3091, m_mode: 10, mode: 11
+129 [139626274604736] INFO perfrun.perfcollector <> - Perf stat trace pipe capacity: read = 1048576, write = 1048576
+129 [139626291390144] INFO perfrun.sdk <> - Reading value (0-7) from file: /sys/devices/system/cpu/cpu0/topology/core_siblings_list
+129 [139626291390144] INFO perfrun.sdk <> - Reading value (0,4) from file: /sys/devices/system/cpu/cpu0/topology/thread_siblings_list
+129 [139626291390144] INFO perfrun.sdk <> - Reading value (0-7) from file: /sys/devices/system/cpu/cpu1/topology/core_siblings_list
+129 [139626291390144] INFO perfrun.sdk <> - Reading value (1,5) from file: /sys/devices/system/cpu/cpu1/topology/thread_siblings_list
+129 [139626291390144] INFO perfrun.sdk <> - Reading value (0-7) from file: /sys/devices/system/cpu/cpu2/topology/core_siblings_list
+129 [139626291390144] INFO perfrun.sdk <> - Reading value (2,6) from file: /sys/devices/system/cpu/cpu2/topology/thread_siblings_list
+129 [139626291390144] INFO perfrun.sdk <> - Reading value (0-7) from file: /sys/devices/system/cpu/cpu3/topology/core_siblings_list
+129 [139626291390144] INFO perfrun.sdk <> - Reading value (3,7) from file: /sys/devices/system/cpu/cpu3/topology/thread_siblings_list
+129 [139626291390144] INFO perfrun.sdk <> - Reading value (0-7) from file: /sys/devices/system/cpu/cpu4/topology/core_siblings_list
+129 [139626291390144] INFO perfrun.sdk <> - Reading value (0,4) from file: /sys/devices/system/cpu/cpu4/topology/thread_siblings_list
+129 [139626291390144] INFO perfrun.sdk <> - Reading value (0-7) from file: /sys/devices/system/cpu/cpu5/topology/core_siblings_list
+129 [139626291390144] INFO perfrun.sdk <> - Reading value (1,5) from file: /sys/devices/system/cpu/cpu5/topology/thread_siblings_list
+129 [139626291390144] INFO perfrun.sdk <> - Reading value (0-7) from file: /sys/devices/system/cpu/cpu6/topology/core_siblings_list
+129 [139626291390144] INFO perfrun.sdk <> - Reading value (2,6) from file: /sys/devices/system/cpu/cpu6/topology/thread_siblings_list
+129 [139626291390144] INFO perfrun.sdk <> - Reading value (0-7) from file: /sys/devices/system/cpu/cpu7/topology/core_siblings_list
+130 [139626291390144] INFO perfrun.sdk <> - Reading value (3,7) from file: /sys/devices/system/cpu/cpu7/topology/thread_siblings_list
+130 [139626291390144] ERROR perfrun.sdk <> - boost::filesystem::exists(filename) 'gh2::error::IsNot.Valid.File(filename):/sys/bus/event_source/devices/cpu_core/cpus'
+_sdks/release_posix-x86_64_icx_2023.0.0_gnutools_9.2_binutils_2.28/perfrun_1.33.15/include/perfrun1/sdk/utils.hpp(767): gh2::error_code_t runtool::sdk::loadFileValue(RetType &, const cpil2::uchar_t *) [RetType = std::basic_string<char>]
+, at file: _sdks/release_posix-x86_64_icx_2023.0.0_gnutools_9.2_binutils_2.28/perfrun_1.33.15/include/perfrun1/sdk/utils.hpp:767
+130 [139626291390144] ERROR perfrun.sdk <> - boost::filesystem::exists(filename) 'gh2::error::IsNot.Valid.File(filename):/sys/bus/event_source/devices/cpu_atom/cpus'
+_sdks/release_posix-x86_64_icx_2023.0.0_gnutools_9.2_binutils_2.28/perfrun_1.33.15/include/perfrun1/sdk/utils.hpp(767): gh2::error_code_t runtool::sdk::loadFileValue(RetType &, const cpil2::uchar_t *) [RetType = std::basic_string<char>]
+, at file: _sdks/release_posix-x86_64_icx_2023.0.0_gnutools_9.2_binutils_2.28/perfrun_1.33.15/include/perfrun1/sdk/utils.hpp:767
+130 [139626274604736] INFO perfrun.sdk <> - runCmd: /opt/intel/oneapi/vtune/2025.0/bin64/amplxe-perf stat -v --log-fd 25 --control=fd:26,29 --scale -x ; -p 3091 -e cpu/event=0x3c,name='CPU_CLK_UNHALTED.THREAD'/Du,cpu/umask=0x3,name='CPU_CLK_UNHALTED.REF_TSC'/Du,cpu/event=0xc0,name='INST_RETIRED.ANY'/Du,cpu/event=0x3c,umask=0x1,name='CPU_CLK_UNHALTED.REF_XCLK'/u,cpu/event=0x3c,umask=0x2,name='CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE'/u,cpu/event=0xc2,umask=0x2,name='UOPS_RETIRED.RETIRE_SLOTS'/u,cpu/event=0xc7,umask=0x2,name='FP_ARITH_INST_RETIRED.SCALAR_SINGLE'/u,cpu/event=0xc7,umask=0x8,name='FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE'/u,cpu/event=0xc7,umask=0x20,name='FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE'/u,cpu/event=0xc7,umask=0x1,name='FP_ARITH_INST_RETIRED.SCALAR_DOUBLE'/u,cpu/event=0xc7,umask=0x4,name='FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE'/u,cpu/event=0xc7,umask=0x10,name='FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE'/u,cpu/event=0xb1,umask=0x10,name='UOPS_EXECUTED.X87'/u,cpu/event=0xb1,umask=0x1,name='UOPS_EXECUTED.THREAD'/u,cpu/event=0x3c,name='CPU_CLK_UNHALTED.THREAD_P'/u,cpu/cmask=0x14,event=0xa3,umask=0x14,name='CYCLE_ACTIVITY.STALLS_MEM_ANY'/u,cpu/cmask=0x4,event=0xa3,umask=0x4,name='CYCLE_ACTIVITY.STALLS_TOTAL'/u,cpu/event=0xa6,umask=0x2,name='EXE_ACTIVITY.1_PORTS_UTIL'/u,cpu/event=0xa6,umask=0x4,name='EXE_ACTIVITY.2_PORTS_UTIL'/u,cpu/event=0xa6,umask=0x40,name='EXE_ACTIVITY.BOUND_ON_STORES'/u,cpu/event=0xc6,frontend=0x400406,umask=0x1,name='FRONTEND_RETIRED.LATENCY_GE_4_PS'/u,cpu/event=0x9c,umask=0x1,name='IDQ_UOPS_NOT_DELIVERED.CORE'/u,cpu/event=0xd,umask=0x1,name='INT_MISC.RECOVERY_CYCLES'/u,cpu/event=0xe,umask=0x1,name='UOPS_ISSUED.ANY'/u,cpu/cmask=0xc,event=0xa3,umask=0xc,name='CYCLE_ACTIVITY.STALLS_L1D_MISS'/u,cpu/cmask=0x5,event=0xa3,umask=0x5,name='CYCLE_ACTIVITY.STALLS_L2_MISS'/u,cpu/cmask=0x6,event=0xa3,umask=0x6,name='CYCLE_ACTIVITY.STALLS_L3_MISS'/u,cpu/event=0xa6,umask=0x1,name='EXE_ACTIVITY.EXE_BOUND_0_PORTS'/u,cpu/event=0xd1,umask=0x20,name='MEM_LOAD_RETIRED.L3_MISS_PS'/u,cpu/cmask=0x1,event=0x48,umask=0x2,name='L1D_PEND_MISS.FB_FULL:cmask=1'/u,cpu/event=0x48,umask=0x1,name='L1D_PEND_MISS.PENDING'/u,cpu/event=0xd2,umask=0x4,name='MEM_LOAD_L3_HIT_RETIRED.XSNP_HITM_PS'/u,cpu/event=0xd2,umask=0x2,name='MEM_LOAD_L3_HIT_RETIRED.XSNP_HIT_PS'/u,cpu/event=0xd2,umask=0x1,name='MEM_LOAD_L3_HIT_RETIRED.XSNP_MISS_PS'/u,cpu/event=0xd1,umask=0x40,name='MEM_LOAD_RETIRED.FB_HIT_PS'/u,cpu/event=0xd1,umask=0x8,name='MEM_LOAD_RETIRED.L1_MISS_PS'/u,cpu/event=0xd1,umask=0x2,name='MEM_LOAD_RETIRED.L2_HIT_PS'/u,cpu/event=0xd1,umask=0x4,name='MEM_LOAD_RETIRED.L3_HIT_PS'/u,cpu/cmask=0x4,event=0x60,umask=0x8,name='OFFCORE_REQUESTS_OUTSTANDING.ALL_DATA_RD:cmask=4'/u,cpu/cmask=0x1,event=0x60,umask=0x8,name='OFFCORE_REQUESTS_OUTSTANDING.CYCLES_WITH_DATA_RD'/u,cpu/event=0xd0,umask=0x81,name='MEM_INST_RETIRED.ALL_LOADS_PS'/u,cpu/event=0xd0,umask=0x82,name='MEM_INST_RETIRED.ALL_STORES_PS'/u,cpu/cmask=0x8,event=0xa3,umask=0x8,name='CYCLE_ACTIVITY.CYCLES_L1D_MISS'/u,cpu/cmask=0x10,event=0xa3,umask=0x10,name='CYCLE_ACTIVITY.CYCLES_MEM_ANY'/u,cpu/cmask=0x1,event=0x8,umask=0x20,name='DTLB_LOAD_MISSES.STLB_HIT:cmask=1'/u,cpu/cmask=0x1,event=0x8,umask=0x10,name='DTLB_LOAD_MISSES.WALK_ACTIVE'/u,cpu/cmask=0x1,event=0x49,umask=0x20,name='DTLB_STORE_MISSES.STLB_HIT:cmask=1'/u,cpu/cmask=0x1,event=0x49,umask=0x10,name='DTLB_STORE_MISSES.WALK_ACTIVE'/u,cpu/event=0x24,umask=0xe2,name='L2_RQSTS.ALL_RFO'/u,cpu/event=0x24,umask=0xc2,name='L2_RQSTS.RFO_HIT'/u,cpu/event=0x3,umask=0x8,name='LD_BLOCKS.NO_SR'/u,cpu/event=0x3,umask=0x2,name='LD_BLOCKS.STORE_FORWARD'/u,cpu/event=0x7,umask=0x1,name='LD_BLOCKS_PARTIAL.ADDRESS_ALIAS'/u,cpu/event=0xd0,umask=0x21,name='MEM_INST_RETIRED.LOCK_LOADS_PS'/u,cpu/event=0xd0,umask=0x41,name='MEM_INST_RETIRED.SPLIT_LOADS_PS'/u,cpu/event=0xd0,umask=0x42,name='MEM_INST_RETIRED.SPLIT_STORES_PS'/u,cpu/event=0xd0,umask=0x11,name='MEM_INST_RETIRED.STLB_MISS_LOADS_PS'/u,cpu/event=0xd0,umask=0x12,name='MEM_INST_RETIRED.STLB_MISS_STORES_PS'/u,cpu/event=0xd1,umask=0x1,name='MEM_LOAD_RETIRED.L1_HIT_PS'/u,cpu/event=0xb2,umask=0x1,name='OFFCORE_REQUESTS_BUFFER.SQ_FULL'/u,cpu/cmask=0x1,event=0x60,umask=0x4,name='OFFCORE_REQUESTS_OUTSTANDING.CYCLES_WITH_DEMAND_RFO'/u /opt/intel/oneapi/vtune/2025.0/bin64/amplxe-perf-sync sync tsc
+130 [139626274604736] INFO perfrun.sdk <> - runCmd started PID 3094
+151 [139626530610112] INFO perfrun.launcher <> - Launcher: all plugins were started
+151 [139626530610112] INFO perfrun.launcher <> - DirectoryMonitor object was created
+151 [139626530610112] INFO perfrun.launcher <> - DirectoryMonitor: a callback was added
+151 [139626530610112] INFO perfrun.launcher <> - DirectoryMonitor was started with pingTime = 1000
+151 [139626530610112] INFO perfrun.launcher <> - DeadlineTimer is going to be constructed
+151 [139626530610112] INFO perfrun.launcher <> - DeadlineTimer: a callback was added
+157 [139626530610112] INFO perfrun.launcher <> - Launcher: resume the profiled application and  wait its termination or stop command
+19145 [139626530610112] INFO perfrun.launcher <> - Launcher: the profiled application was terminated  with exit code = 0
+19148 [139626274604736] INFO perfrun.perfcollector <> - Monitor: runCmd RC = true
+19148 [139626299782848] INFO perfrun.perfcollector <> - Monitor: state = 3, error = 1
+19148 [139626299782848] INFO perfrun.sdk <> - De-allocating TMU: /home/louis/Imperial/MScProject/2-CODE/Spectral1D/vtune/Spectral1D/r000ps/data.0/systemcollector-3081-computer.sc
+19148 [139626299782848] INFO perfrun.system <> - closed the system trace file: /home/louis/Imperial/MScProject/2-CODE/Spectral1D/vtune/Spectral1D/r000ps/data.0/systemcollector-3081-computer.sc
+19148 [139626530610112] INFO perfrun.launcher <> - Launcher: all plugins were stopped.
+19148 [139626530610112] INFO perfrun.launcher <> - DeadlineTimer is going to be destroyed
+19148 [139626530610112] INFO perfrun.launcher <> - DeadlineTimer was destroyed
+19148 [139626530610112] INFO perfrun.launcher <> - DirectoryMonitor object was destroyed
+19148 [139626530610112] WARN perfrun.launcher <> - Stop command is ignored because it is received when collection is already stopped, at file: vcs/perfrun1/launcher/src/command_handler.cpp:226
+19149 [139626530610112] INFO perfrun.launcher <> - Application exit code: 0
+19149 [139626530610112] INFO perfrun.launcher <> - Exit code: 0
