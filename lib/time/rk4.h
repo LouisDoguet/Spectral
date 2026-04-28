@@ -47,9 +47,11 @@ namespace solver {
             int total_points;
             int n_plot;
             DIFF::Diffusion* diffusion = nullptr;
+            std::string snapshot_dir;
 
         public:
             void setDiffusion(DIFF::Diffusion* diff) { diffusion = diff; }
+            void setSnapshotDir(std::string dir) { snapshot_dir = std::move(dir); }
         private:
                     
             // Tracking for VTK PVD Collection

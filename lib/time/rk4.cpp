@@ -113,6 +113,8 @@ void RK4::run(double T_final, double dt, int save_freq, std::string prefix) {
     if (step % save_freq == 0) {
       std::printf("Timestep : %5d/%5d \n", step, n_steps);
       export_results(step, step * dt, prefix);
+      if (!snapshot_dir.empty())
+        export_snapshot(step, step * dt, snapshot_dir);
     }
     this->step(dt);
   }

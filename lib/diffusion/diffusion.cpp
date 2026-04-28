@@ -92,4 +92,44 @@ void Custom::apply(mesh::Mesh *mesh) {
   }
 }
 
+#ifdef WITH_ONNX
+ONNX::ONNX(const std::string &model_path, int n_total)
+    : Diffusion("ONNX"), n_total(n_total), input_buf(3 * n_total),
+      output_buf(n_total), eps_buf(n_total),
+      env(std::make_unique<Ort::Env>(ORT_LOGGING_LEVEL_WARNING, "av")),
+      session(std::make_unique<Ort::Session>(*env, model_path.c_str(),
+                                             Ort::SessionOptions{})) {}
+
+void ONNX::apply(mesh::Mesh *mesh) {
+  double *rho = mesh->getGlobalU1();
+  double *rhou = mesh->getGlobalU2();
+  double *e = mesh->getGlobalU3();
+
+  for (int i = 0; i < n_total; ++i) {
+    input_buf[i] = (float)rho[i];
+    input_buf[n_total + i] = (float)rhou[i];
+    input_buf[2 * n_total + i] = (float)e[i];
+  }
+
+  auto mem = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
+  std::array<int64_t, 2> in_shape{1, (int64_t)(3 * n_total)};
+  Ort::Value in_tensor = Ort::Value::CreateTensor<float>(
+      mem, input_buf.data(), input_buf.size(), in_shape.data(), 2);
+
+  const char *in_name = "state";
+  const char *out_name = "eps";
+  auto outputs = session->Run(Ort::RunOptions{nullptr}, &in_name, &in_tensor, 1,
+                              &out_name, 1);
+
+  float *eps_data = outputs[0].GetTensorMutableData<float>();
+  for (int i = 0; i < n_total; ++i)
+    eps_buf[i] = (double)eps_data[i];
+
+  int n_elem = mesh->getNumElements();
+  int n = n_total / n_elem;
+  for (int i = 0; i < n_elem; ++i)
+    diffuse(mesh->getElem(i), eps_buf.data() + i * n, n);
+}
+#endif // WITH_ONNX
+
 } // namespace DIFF
