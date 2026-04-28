@@ -27,9 +27,18 @@ namespace solver {
             void run(double T_final, double dt, int save_freq, std::string prefix);
     
             /**
-             * @brief Export current state to CSV
+             * @brief Export current state to VTK
              */
             void export_results(int step, double time, std::string prefix);
+
+            /**
+             * @brief Export current state as a raw binary snapshot for ML training.
+             * Layout: int32 n_elem | int32 P | float64 t | float64[n_total] rho | rhou | e
+             * @param step Timestep index (used for filename)
+             * @param time Current simulation time
+             * @param dir  Output directory (must exist)
+             */
+            void export_snapshot(int step, double time, std::string dir);
 
 	    ~RK4();
             

@@ -4,6 +4,7 @@
 #include "../math/math.h"
 #include <cblas.h>
 #include <cmath>
+#include <cstdint>
 #include <cstring>
 #include <fstream>
 #include <iomanip>
@@ -245,6 +246,22 @@ void RK4::export_results(int step, double time, std::string prefix) {
   delete[] c1;
   delete[] c2;
   delete[] c3;
+}
+
+void RK4::export_snapshot(int step, double time, std::string dir) {
+  std::stringstream ss;
+  ss << dir << "/snap_" << std::setfill('0') << std::setw(6) << step << ".bin";
+  std::ofstream f(ss.str(), std::ios::binary);
+
+  int n_elem = m->getNumElements();
+  int P      = m->getElem(0)->getBasis()->getOrder();
+
+  f.write(reinterpret_cast<const char *>(&n_elem), sizeof(int32_t));
+  f.write(reinterpret_cast<const char *>(&P),      sizeof(int32_t));
+  f.write(reinterpret_cast<const char *>(&time),   sizeof(double));
+  f.write(reinterpret_cast<const char *>(m->getGlobalU1()), total_points * sizeof(double));
+  f.write(reinterpret_cast<const char *>(m->getGlobalU2()), total_points * sizeof(double));
+  f.write(reinterpret_cast<const char *>(m->getGlobalU3()), total_points * sizeof(double));
 }
 
 void RK4::write_pvd(std::string prefix) {
