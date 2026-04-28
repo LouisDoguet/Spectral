@@ -23,6 +23,16 @@ private:
   const double epsilon;
 };
 
+class Custom : public Diffusion {
+public:
+  Custom(const double *eps_array)
+      : Diffusion("CUSTOM"), eps_array(eps_array) {};
+  void apply(mesh::Mesh *mesh) override;
+
+private:
+  const double *eps_array;
+};
+
 } // namespace DIFF
 
 #endif
