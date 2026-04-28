@@ -61,24 +61,30 @@ public:
   double *getF1(int q) const { return F1 + q; }
   double *getF2(int q) const { return F2 + q; }
   double *getF3(int q) const { return F3 + q; }
+
+  /// Modify the flux (USED FOR REIMANN CORRECTION)
   double *getDivF1(int q) const { return divF1 + q; }
   double *getDivF2(int q) const { return divF2 + q; }
   double *getDivF3(int q) const { return divF3 + q; }
 
-  /// Modify the flux (USED FOR REIMANN CORRECTION)
   void correctDivF1(int pos, double val) { divF1[pos] += val; }
   void correctDivF2(int pos, double val) { divF2[pos] += val; }
   void correctDivF3(int pos, double val) { divF3[pos] += val; }
+
+  void setRho(int pos, double val) { rho[pos] = val; }
+  void setRhoU(int pos, double val) { rhou[pos] = val; }
+  void setE(int pos, double val) { e[pos] = val; }
+
+  void setDivF1(int pos, double val) { divF1[pos] = val; }
+  void setDivF2(int pos, double val) { divF2[pos] = val; }
+  void setDivF3(int pos, double val) { divF3[pos] = val; }
+
   /// From U -> F
   void setFlux();
   /// df/dx using the base's derivative matrix
   void computeDivFlux();
   /// Computes Legendre coefficients from Lagrange polynomials
   void computeLegendreCoefficients();
-  /// Adds invJ^2 * D * (eps_nodes . D*U) diffusion correction to divF
-  void applyViscosity(const double *eps_nodes);
-  /// Multiplies each Legendre mode k by sigma[k] in-place (modal filtering/SVV)
-  void applyModalDamping(const double *sigma);
 
   ~Element();
 
@@ -110,8 +116,8 @@ private:
 
 private:
   /// Core constructor: all public constructors delegate to this
-  Element(int id, gll::Basis* basis, double xL, double xR,
-          double* rho, double* rhou, double* e, bool ownsMemory);
+  Element(int id, gll::Basis *basis, double xL, double xR, double *rho,
+          double *rhou, double *e, bool ownsMemory);
 };
 } // namespace elem
 

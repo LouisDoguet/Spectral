@@ -36,13 +36,17 @@ void Element::setJ(double xL, double xR) {
 }
 
 /// Core constructor: all public constructors delegate here
-Element::Element(int id, gll::Basis *basis, double xL, double xR,
-                 double *rho, double *rhou, double *e, bool ownsMemory)
+Element::Element(int id, gll::Basis *basis, double xL, double xR, double *rho,
+                 double *rhou, double *e, bool ownsMemory)
     : id(id), basis(basis), rho(rho), rhou(rhou), e(e), ownsMemory(ownsMemory) {
   setJ(xL, xR);
   int n = basis->getOrder() + 1;
-  F1 = new double[n]; F2 = new double[n]; F3 = new double[n];
-  divF1 = new double[n]; divF2 = new double[n]; divF3 = new double[n];
+  F1 = new double[n];
+  F2 = new double[n];
+  F3 = new double[n];
+  divF1 = new double[n];
+  divF2 = new double[n];
+  divF3 = new double[n];
   legendreCoefficients = new double[n];
 }
 
@@ -51,23 +55,24 @@ Element::Element(const int id, gll::Basis *sharedBasis, double xL, double xR)
     : Element(id, sharedBasis, xL, xR,
               new double[sharedBasis->getOrder() + 1](),
               new double[sharedBasis->getOrder() + 1](),
-              new double[sharedBasis->getOrder() + 1](),
-              true) {}
+              new double[sharedBasis->getOrder() + 1](), true) {}
 
 /// Scalar init: delegates to no-values, then fills U arrays
 Element::Element(const int id, gll::Basis *sharedBasis, double xL, double xR,
                  double rho_init, double rhou_init, double e_init)
     : Element(id, sharedBasis, xL, xR) {
   int n = sharedBasis->getOrder() + 1;
-  std::fill(rho,  rho  + n, rho_init);
+  std::fill(rho, rho + n, rho_init);
   std::fill(rhou, rhou + n, rhou_init);
-  std::fill(e,    e    + n, e_init);
+  std::fill(e, e + n, e_init);
 }
 
 /// External buffers: delegates to core with ownsMemory=false
 Element::Element(const int id, gll::Basis *sharedBasis, double xL, double xR,
-                 double *external_rho, double *external_rhou, double *external_e)
-    : Element(id, sharedBasis, xL, xR, external_rho, external_rhou, external_e, false) {}
+                 double *external_rho, double *external_rhou,
+                 double *external_e)
+    : Element(id, sharedBasis, xL, xR, external_rho, external_rhou, external_e,
+              false) {}
 
 /**
  * @brief Sets the flux from the Euler system solved
@@ -80,33 +85,9 @@ void Element::setFlux() {
   delete[] p;
 }
 
-void Element::applyViscosity(const double *eps_nodes) {
-  int n = basis->getOrder() + 1;
-  const double *D = basis->getD();
-  double *du     = new double[n];
-  double *eps_du = new double[n];
-  double *result = new double[n];
-
-  auto diffuse = [&](const double *u, void (Element::*correct)(int, double)) {
-    cblas_dgemv(CblasRowMajor, CblasNoTrans, n, n, 1.0, D, n, u,      1, 0.0, du,     1);
-    for (int i = 0; i < n; ++i) eps_du[i] = eps_nodes[i] * du[i];
-    cblas_dgemv(CblasRowMajor, CblasNoTrans, n, n, 1.0, D, n, eps_du, 1, 0.0, result, 1);
-    for (int i = 0; i < n; ++i) (this->*correct)(i, -invJ * invJ * result[i]);
-  };
-
-  diffuse(rho,  &Element::correctDivF1);
-  diffuse(rhou, &Element::correctDivF2);
-  diffuse(e,    &Element::correctDivF3);
-
-  delete[] du;
-  delete[] eps_du;
-  delete[] result;
-}
-
 void Element::computeLegendreCoefficients() {
-  mat::computeLegendreCoeffs(legendreCoefficients, rho,
-                             basis->getQuads(), basis->getWeights(),
-                             basis->getOrder());
+  mat::computeLegendreCoeffs(legendreCoefficients, rho, basis->getQuads(),
+                             basis->getWeights(), basis->getOrder());
 }
 
 void Element::computeDivFlux() {
@@ -121,8 +102,12 @@ Element::~Element() {
     delete[] rhou;
     delete[] e;
   }
-  delete[] F1;    delete[] F2;    delete[] F3;
-  delete[] divF1; delete[] divF2; delete[] divF3;
+  delete[] F1;
+  delete[] F2;
+  delete[] F3;
+  delete[] divF1;
+  delete[] divF2;
+  delete[] divF3;
   delete[] legendreCoefficients;
 }
 
