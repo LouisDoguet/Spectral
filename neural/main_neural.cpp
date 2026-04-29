@@ -1,22 +1,33 @@
 #include "tensor.h"
 #include "layer.h"
+#include "container.h"
+#include <memory>
+#include <vector>
 #include <iostream>
 
 int main() {
     // Define topology
-    const size_t batch_size = 4;
-    const size_t input_nodes = 128;
-    const size_t hidden_nodes = 8;
 
     try {
         // Initialize batched input tensor X
-        TENSOR::Tensor input(batch_size, input_nodes);
+        TENSOR::Tensor input(4, 128);
 
-        // Initialize Layer
-        LAYER::Linear layer1(input_nodes, hidden_nodes);
+        // Generate Layers
+        LAYER::Linear layer1(128, 8);
+        LAYER::Linear layer2(8, 16);
+        LAYER::Linear layer3(16, 16);
+        LAYER::Linear layer4(16, 4);
+
+        CONT::Sequential network;
+    
+        network.add( std::make_unique<LAYER::Linear>(layer1) );
+        network.add( std::make_unique<LAYER::Linear>(layer2) );
+        network.add( std::make_unique<LAYER::Linear>(layer3) );
+        network.add( std::make_unique<LAYER::Linear>(layer4) );
+        
 
         // Execute forward pass: Y = XW + B
-        TENSOR::Tensor output = layer1.forward(input);
+        TENSOR::Tensor output = network.forward(input);
 
         std::cout << "Forward propagation successful.\n";
         std::cout << "Output tensor shape: (" << output.n_rows << ", " << output.n_cols << ")\n";
