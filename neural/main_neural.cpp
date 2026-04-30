@@ -1,37 +1,78 @@
 #include "tensor.h"
 #include "layer.h"
 #include "container.h"
+#include "loss_function.h"
+#include <algorithm>
+#include <random>
 #include <memory>
 #include <vector>
 #include <iostream>
 
 int main() {
-    // Define topology
+    const size_t BATCH      = 4;
+    const size_t INPUT_DIM  = 8;
+    const size_t OUTPUT_DIM = 4;
+    const int    EPOCHS     = 100000;
+    const double LR         = 0.001;
 
     try {
-        // Initialize batched input tensor X
-        TENSOR::Tensor input(4, 128);
+        // ── 1. Synthetic data ────────────────────────────────────────────
+        // Single fixed batch: the network should overfit to it,
+        // so loss must decrease monotonically — a clean sanity check.
 
-        // Generate Layers
-        LAYER::Linear layer1(128, 8);
-        LAYER::Linear layer2(8, 16);
-        LAYER::Linear layer3(16, 16);
-        LAYER::Linear layer4(16, 4);
+        std::mt19937 rng(42);
+        std::uniform_real_distribution<double> dist(-1.0, 1.0);
+
+        TENSOR::Tensor input(BATCH, INPUT_DIM);
+        {
+            std::vector<double> d(BATCH * INPUT_DIM);
+            std::generate(d.begin(), d.end(), [&]() { return dist(rng); });
+            input.setData(d);
+        }
+
+        TENSOR::Tensor target(BATCH, OUTPUT_DIM);
+        {
+            std::vector<double> d(BATCH * OUTPUT_DIM);
+            std::generate(d.begin(), d.end(), [&]() { return dist(rng); });
+            target.setData(d);
+        }
+
+        // ── 2. Network topology: 8 → 16 → 16 → 4 ────────────────────────
+        // Weights are Xavier-initialised inside the Layer constructor.
 
         CONT::Sequential network;
-    
-        network.add( std::make_unique<LAYER::Linear>(layer1) );
-        network.add( std::make_unique<LAYER::Linear>(layer2) );
-        network.add( std::make_unique<LAYER::Linear>(layer3) );
-        network.add( std::make_unique<LAYER::Linear>(layer4) );
-        
+        network.add(std::make_shared<LAYER::Linear>(INPUT_DIM, 16));
+        network.add(std::make_shared<LAYER::Linear>(16,        16));
+        network.add(std::make_shared<LAYER::Linear>(16,        OUTPUT_DIM));
 
-        // Execute forward pass: Y = XW + B
-        TENSOR::Tensor output = network.forward(input);
+        // ── 3. Loss ──────────────────────────────────────────────────────
+        LFUN::MSE loss;
 
-        std::cout << "Forward propagation successful.\n";
-        std::cout << "Output tensor shape: (" << output.n_rows << ", " << output.n_cols << ")\n";
-        
+        // ── 4. Training loop ─────────────────────────────────────────────
+        for (int epoch = 0; epoch <= EPOCHS; ++epoch) {
+
+            // Forward pass
+            TENSOR::Tensor output = network.forward(input);
+
+            // Scalar loss for monitoring
+            TENSOR::Tensor residual_buf(BATCH, OUTPUT_DIM);
+            double L = loss.residuals(output, target, residual_buf);
+
+            // Gradient dL/dY — shape (BATCH, OUTPUT_DIM)
+            TENSOR::Tensor grad = loss.gradient(output, target);
+
+            // Backward pass (reverse through layers)
+            network.backward(grad);
+
+            // SGD parameter update
+            network.update(LR);
+
+            if (epoch % 100 == 0)
+                std::cout << "Epoch " << epoch << "  loss: " << L << "\n";
+        }
+
+        std::cout << "\nTraining complete.\n";
+
     } catch (const std::exception& e) {
         std::cerr << "Runtime Error: " << e.what() << std::endl;
         return 1;

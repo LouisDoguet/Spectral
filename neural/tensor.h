@@ -6,14 +6,16 @@
 namespace TENSOR {
 
 class Tensor {
+private:
+    std::vector<double> array;
 public:
     size_t n_rows;
     size_t n_cols;
-    std::vector<double> array;
+    
 
     Tensor() : n_rows(0), n_cols(0) {}
-    Tensor(const size_t rows, const size_t cols) 
-        : n_rows(rows), n_cols(cols), array(rows * cols, 0.0) {}
+    Tensor(const size_t n_rows, const size_t n_cols) 
+        : n_rows(n_rows), n_cols(n_cols), array(n_rows * n_cols, 0.0) {}
 
     const std::vector<double>& getData() { return array; }
     void setData(const std::vector<double>& arr) {
@@ -36,7 +38,13 @@ public:
         return result;
     }
 
-    Tensor operator+(const Tensor& bias) const {
+    Tensor operator*(const double val) const {
+        Tensor result = *this;
+        cblas_dscal(n_rows * n_cols, val, result.array.data(), 1);
+        return result;
+    }
+
+    Tensor add_bias(const Tensor& bias) const {
         if (n_cols != bias.n_cols || bias.n_rows != 1) {
             throw std::invalid_argument("Bias must be a 1xN row vector matching tensor columns.");
         }
@@ -46,6 +54,41 @@ public:
             cblas_daxpy(n_cols, 1.0, bias.array.data(), 1, result.array.data() + i * n_cols, 1);
         }
         
+        return result;
+    }
+
+    Tensor operator+(const Tensor& other) const {
+        if (n_rows != other.n_rows || n_cols != other.n_cols)
+            throw std::invalid_argument("Tensor shapes must match for element-wise addition.");
+
+        Tensor result = *this;
+        cblas_daxpy(n_rows * n_cols, 1.0,
+                    other.array.data(), 1,
+                    result.array.data(), 1);
+        return result;
+    }
+
+    Tensor operator-(const Tensor& other) const {
+        if (n_rows != other.n_rows || n_cols != other.n_cols)
+            throw std::invalid_argument("Tensor shapes must match for element-wise subtraction.");
+
+        Tensor result = *this;
+        cblas_daxpy(n_rows * n_cols, -1.0,
+                    other.array.data(), 1,
+                    result.array.data(), 1);
+        return result;
+    }
+
+
+    /**
+     * @brief Sum of the rows of the tensor
+     * @return Tensor (1,out_features)
+     */
+    Tensor sum_rows() const {
+        Tensor result(1, n_cols);
+        for (size_t i = 0; i < n_rows; ++i) {
+            cblas_daxpy(n_cols, 1.0, array.data() + i * n_cols, 1, result.array.data(), 1);
+        }
         return result;
     }
 

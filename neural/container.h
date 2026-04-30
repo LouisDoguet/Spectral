@@ -23,6 +23,17 @@ public:
         return input;
     }
 
+    TENSOR::Tensor backward(TENSOR::Tensor grad) {
+        for (int i = layers.size() - 1; i >= 0; --i)
+            grad = layers[i]->backward(grad);
+        return grad;
+    }
+
+    void update(double learning_rate) {
+        for (auto& layer : layers)
+            layer->update(learning_rate);
+    }
+
 };
     
 } // namespace CONT
