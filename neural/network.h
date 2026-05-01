@@ -8,15 +8,15 @@
 
 class Network {
 public:
-    Network(CONT::Sequential container, LFUN::LossFunction loss_function, double learning_rate) : 
+    Network(std::shared_ptr<CONT::Sequential> container, std::shared_ptr<LFUN::LossFunction> loss_function, double learning_rate) : 
         container(container),
         loss_function(loss_function),
         l(learning_rate)    
     {};
 
 private:
-    CONT::Sequential container;
-    LFUN::LossFunction loss_function;
+    std::shared_ptr<CONT::Sequential> container;
+    std::shared_ptr<LFUN::LossFunction> loss_function;
     double l;
 
 };

@@ -2,6 +2,7 @@
 #include "layer.h"
 #include "container.h"
 #include "loss_function.h"
+#include "activation.h"
 #include <algorithm>
 #include <random>
 #include <memory>
@@ -41,9 +42,9 @@ int main() {
         // Weights are Xavier-initialised inside the Layer constructor.
 
         CONT::Sequential network;
-        network.add(std::make_shared<LAYER::Linear>(INPUT_DIM, 16));
-        network.add(std::make_shared<LAYER::Linear>(16,        16));
-        network.add(std::make_shared<LAYER::Linear>(16,        OUTPUT_DIM));
+        network.add(std::make_shared<LAYER::ReLU>(INPUT_DIM, 16));
+        network.add(std::make_shared<LAYER::ReLU>(16,        16));
+        network.add(std::make_shared<LAYER::SoftMax>(16,        OUTPUT_DIM));
 
         // ── 3. Loss ──────────────────────────────────────────────────────
         LFUN::MSE loss;

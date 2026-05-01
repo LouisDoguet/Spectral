@@ -9,10 +9,10 @@
 namespace CONT {
 class Sequential {
 protected:
-    std::vector<std::shared_ptr<LAYER::Layer>> layers;
+    std::vector<std::shared_ptr<LAYER::_Layer>> layers;
 
 public:
-    void add(std::shared_ptr<LAYER::Layer> layer) {
+    void add(std::shared_ptr<LAYER::_Layer> layer) {
         layers.push_back(layer);
     }
 

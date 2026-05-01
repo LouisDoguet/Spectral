@@ -3,22 +3,28 @@
 #include "memory"
 #include <random>
 #include <algorithm>
+#include <string>
+#include "activation.h"
 
 namespace LAYER {
 
-class Layer {
+class _Layer {
 protected:
+    const std::string name;
     const size_t in_features;
     const size_t out_features;
+    std::shared_ptr<ACTI::Activation> activation_function;
     TENSOR::Tensor weights;
     TENSOR::Tensor bias;
     TENSOR::Tensor input_cache;
     TENSOR::Tensor grad_weights;
     TENSOR::Tensor grad_bias;
+    TENSOR::Tensor preactivation_cache;
+    TENSOR::Tensor postactivation_cache;
 
 public:
-    Layer(const size_t in, const size_t out) : 
-        in_features(in), out_features(out),
+    _Layer(const size_t in, const size_t out, std::shared_ptr<ACTI::Activation> act) : 
+        in_features(in), out_features(out), activation_function(act),
         weights(in, out), bias(1, out),
         grad_weights(in, out), grad_bias(1, out) 
     {
@@ -29,27 +35,26 @@ public:
         weights.setData(w);
     }
 
-    virtual TENSOR::Tensor forward(const TENSOR::Tensor& input) = 0;
-    virtual TENSOR::Tensor backward(const TENSOR::Tensor& grad_output) = 0;
-    void update(double learning_rate){
-        weights = weights - (grad_weights*learning_rate);
-        bias = bias - (grad_bias*learning_rate);
-    };
-    virtual ~Layer() = default;
-
-    virtual std::unique_ptr<Layer> generateLayerFrom(const size_t next_out_features) const = 0;
+    TENSOR::Tensor forward(const TENSOR::Tensor& input);
+    virtual TENSOR::Tensor backward(const TENSOR::Tensor& grad_output);
+    void update(double learning_rate);
+    virtual ~_Layer() = default;
 
     const size_t getInputSize() { return in_features; }
     const size_t getOutputSize() { return out_features; }
 
 };
 
-class Linear : public Layer {
+class ReLU : public _Layer {
 public:
-    Linear(const size_t in, const size_t out) : Layer(in, out) {}
-    TENSOR::Tensor forward(const TENSOR::Tensor& input) override;
+    ReLU(const size_t in, const size_t out) : _Layer(in, out, std::make_shared<ACTI::ReLU>()) {}
     TENSOR::Tensor backward(const TENSOR::Tensor& grad_output) override;
-    std::unique_ptr<Layer> generateLayerFrom(const size_t next_out_features) const override;
+};
+
+class SoftMax : public _Layer {
+public:
+    SoftMax(const size_t in, const size_t out) : _Layer(in, out, std::make_shared<ACTI::SoftMax>()) {}
+    TENSOR::Tensor backward(const TENSOR::Tensor& grad_output) override;
 };
 
 } // namespace LAYER

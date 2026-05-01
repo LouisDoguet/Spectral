@@ -14,13 +14,17 @@ public:
     
 
     Tensor() : n_rows(0), n_cols(0) {}
-    Tensor(const size_t n_rows, const size_t n_cols) 
+    Tensor(const size_t n_rows, const size_t n_cols)
         : n_rows(n_rows), n_cols(n_cols), array(n_rows * n_cols, 0.0) {}
 
-    const std::vector<double>& getData() { return array; }
+    std::vector<double>& getData() { return array; }
+    const std::vector<double>& readData() const { return array; }
     void setData(const std::vector<double>& arr) {
         if (arr.size() != this->array.size()) throw std::invalid_argument("Size of the setter not matching (looser)");
         array = arr; 
+    }
+    void setData(size_t i, double val) {
+        array.at(i) = val;
     }
 
     Tensor operator*(const Tensor& other) const {
