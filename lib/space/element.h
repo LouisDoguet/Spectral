@@ -85,6 +85,10 @@ public:
   void computeDivFlux();
   /// Computes Legendre coefficients from Lagrange polynomials
   void computeLegendreCoefficients();
+  /// Computes element pressure
+  double* computePressure();
+  /// Computes the pressure Laplacian
+  const double* computePressureLaplacian();
 
   ~Element();
 

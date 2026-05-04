@@ -96,6 +96,23 @@ void Element::computeDivFlux() {
   divF(divF3, basis->getD(), F3, invJ, basis->getOrder() + 1);
 }
 
+double* Element::computePressure() {
+  const int N = this->getBasis()->getOrder()+1;
+  double* pressure = new double[N];
+  for (int i=0; i<N; ++i ){
+    pressure[i] = (this->e[i] - 0.5 * this->rhou[i] * (this->rhou[i] / this->rho[i]) ) / (0.4);
+  }
+  return pressure;
+}
+
+const double* Element::computePressureLaplacian() {
+  double* pressure = this->computePressure();
+  double* lap_pressure = new double[this->basis->getOrder()+1];
+  mat::computeLaplacian(this->basis, this->invJ, pressure, lap_pressure);
+  delete[] pressure;
+  return lap_pressure;
+}
+
 Element::~Element() {
   if (ownsMemory) {
     delete[] rho;

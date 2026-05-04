@@ -164,6 +164,8 @@ int main(int argc, char *argv[]) {
 
   //-- RUN --
   solver.run(T_final, dt, save_freq, case_name);
+  const double* lap_press = mesh->getElem(20)->computePressureLaplacian();
+  mat::print(lap_press, 6);
 
   //-- CLEANUP --
   delete mesh;

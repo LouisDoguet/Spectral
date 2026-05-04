@@ -20,7 +20,7 @@ public:
     std::vector<double>& getData() { return array; }
     const std::vector<double>& readData() const { return array; }
     void setData(const std::vector<double>& arr) {
-        if (arr.size() != this->array.size()) throw std::invalid_argument("Size of the setter not matching (looser)");
+        if (arr.size() != this->array.size()) throw std::invalid_argument("TENSOR::setData : Size of the setter not matching (looser)");
         array = arr; 
     }
     void setData(size_t i, double val) {

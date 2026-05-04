@@ -3,6 +3,7 @@
 #include "container.h"
 #include "loss_function.h"
 #include "activation.h"
+#include "network.h"
 #include <algorithm>
 #include <random>
 #include <memory>
@@ -38,40 +39,16 @@ int main() {
             target.setData(d);
         }
 
-        // ── 2. Network topology: 8 → 16 → 16 → 4 ────────────────────────
-        // Weights are Xavier-initialised inside the Layer constructor.
+        std::shared_ptr<CONT::Sequential> architecture = std::make_shared<CONT::Sequential>();
+        architecture->add(std::make_shared<LAYER::ReLU>(INPUT_DIM, 16));
+        architecture->add(std::make_shared<LAYER::ReLU>(16,        16));
+        architecture->add(std::make_shared<LAYER::ReLU>(16,        OUTPUT_DIM));
 
-        CONT::Sequential network;
-        network.add(std::make_shared<LAYER::ReLU>(INPUT_DIM, 16));
-        network.add(std::make_shared<LAYER::ReLU>(16,        16));
-        network.add(std::make_shared<LAYER::SoftMax>(16,        OUTPUT_DIM));
+        std::shared_ptr<LFUN::MSE> loss = std::make_shared<LFUN::MSE>();
 
-        // ── 3. Loss ──────────────────────────────────────────────────────
-        LFUN::MSE loss;
-
-        // ── 4. Training loop ─────────────────────────────────────────────
-        for (int epoch = 0; epoch <= EPOCHS; ++epoch) {
-
-            // Forward pass
-            TENSOR::Tensor output = network.forward(input);
-
-            // Scalar loss for monitoring
-            TENSOR::Tensor residual_buf(BATCH, OUTPUT_DIM);
-            double L = loss.residuals(output, target, residual_buf);
-
-            // Gradient dL/dY — shape (BATCH, OUTPUT_DIM)
-            TENSOR::Tensor grad = loss.gradient(output, target);
-
-            // Backward pass (reverse through layers)
-            network.backward(grad);
-
-            // SGD parameter update
-            network.update(LR);
-
-            if (epoch % 100 == 0)
-                std::cout << "Epoch " << epoch << "  loss: " << L << "\n";
-        }
-
+        Network nwork(architecture, loss, LR);
+        nwork.train(input, target, EPOCHS);
+        
         std::cout << "\nTraining complete.\n";
 
     } catch (const std::exception& e) {
