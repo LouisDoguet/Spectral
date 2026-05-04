@@ -10,5 +10,17 @@ double LFUN::MSE::residuals(TENSOR::Tensor val, TENSOR::Tensor ref, TENSOR::Tens
 
 TENSOR::Tensor LFUN::MSE::gradient(TENSOR::Tensor val, TENSOR::Tensor ref) {
     size_t L = val.n_rows * val.n_cols;
-    return (val - ref) * (2.0 / (double)L);  // note: val-ref, not ref-val
+    return (val - ref) * (2.0 / (double)L);
+}
+
+double LFUN::CrossEntropy::residuals(TENSOR::Tensor val, TENSOR::Tensor ref, TENSOR::Tensor& res) {
+    res.setData( (ref * val.ln() + (ref + (-1.))*(val + (-1.)).ln()).getData() );
+    double L = 0;
+    for (double r : res.getData()) L+= r;
+    return -L/(val.n_cols * val.n_rows);
+}
+
+TENSOR::Tensor LFUN::CrossEntropy::gradient(TENSOR::Tensor val, TENSOR::Tensor ref) {
+    size_t L = val.n_rows * val.n_cols;
+
 }

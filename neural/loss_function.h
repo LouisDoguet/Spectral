@@ -24,6 +24,14 @@ public:
     ~MSE() = default;
 };
 
+class CrossEntropy : public LossFunction {
+public:
+    BinaryCrossEntropy() : LossFunction("BinaryCrossEntropy") {};
+    double residuals(TENSOR::Tensor val, TENSOR::Tensor ref, TENSOR::Tensor& res) override;
+    TENSOR::Tensor gradient(TENSOR::Tensor val, TENSOR::Tensor ref) override;
+    ~BinaryCrossEntropy() = default;
+};
+
 }
 
 #endif

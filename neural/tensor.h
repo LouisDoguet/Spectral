@@ -2,6 +2,7 @@
 #include <cblas.h>
 #include <stdexcept>
 #include <vector>
+#include <cmath>
 
 namespace TENSOR {
 
@@ -72,6 +73,14 @@ public:
         return result;
     }
 
+    Tensor operator+(const double num) const {
+        Tensor result = *this;
+        cblas_daxpy(n_rows * n_cols, num,
+                    this->array.data(), 1,
+                    result.array.data(), 1);
+        return result;
+    }
+
     Tensor operator-(const Tensor& other) const {
         if (n_rows != other.n_rows || n_cols != other.n_cols)
             throw std::invalid_argument("Tensor shapes must match for element-wise subtraction.");
@@ -80,6 +89,22 @@ public:
         cblas_daxpy(n_rows * n_cols, -1.0,
                     other.array.data(), 1,
                     result.array.data(), 1);
+        return result;
+    }
+
+    Tensor ln() const {
+        Tensor result = *this;
+        for (int i=0; i<n_rows*n_cols; ++i){
+            result.setData(i, std::log(array[i]));
+        }
+        return result;
+    }
+
+    Tensor exp() const {
+        Tensor result = *this;
+        for (int i=0; i<n_rows*n_cols; ++i){
+            result.setData(i, std::exp(array[i]));
+        }
         return result;
     }
 
