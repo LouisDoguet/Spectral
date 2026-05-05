@@ -21,6 +21,12 @@ double LFUN::CrossEntropy::residuals(TENSOR::Tensor val, TENSOR::Tensor ref, TEN
 }
 
 TENSOR::Tensor LFUN::CrossEntropy::gradient(TENSOR::Tensor val, TENSOR::Tensor ref) {
-    size_t L = val.n_rows * val.n_cols;
-
+    size_t N = val.n_rows * val.n_cols;
+    TENSOR::Tensor grad(val.n_rows, val.n_cols);
+    for (size_t i = 0; i < N; ++i) {
+        double y_hat = val.getData()[i];
+        double y     = ref.getData()[i];
+        grad.setData(i, (y_hat - y) / (N * y_hat * (1.0 - y_hat)));
+    }
+    return grad;
 }

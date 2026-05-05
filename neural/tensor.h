@@ -75,9 +75,8 @@ public:
 
     Tensor operator+(const double num) const {
         Tensor result = *this;
-        cblas_daxpy(n_rows * n_cols, num,
-                    this->array.data(), 1,
-                    result.array.data(), 1);
+        for (size_t i = 0; i < n_rows * n_cols; ++i)
+            result.array[i] += num;
         return result;
     }
 
