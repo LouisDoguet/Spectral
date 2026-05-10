@@ -40,7 +40,9 @@ public:
         }
     };
 
-    TENSOR::Tensor predict (const TENSOR::Tensor& input);
+    TENSOR::Tensor predict(const TENSOR::Tensor& input) {
+        return container->forward(input);
+    }
 
 private:
     std::shared_ptr<CONT::Sequential> container;

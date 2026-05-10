@@ -41,7 +41,7 @@ public:
   }
 
   TENSOR::Tensor forward(const TENSOR::Tensor &input);
-  virtual TENSOR::Tensor backward(const TENSOR::Tensor &grad_output);
+  TENSOR::Tensor backward(const TENSOR::Tensor &grad_output);
   void update(double learning_rate);
   virtual ~_Layer() = default;
 
@@ -53,21 +53,22 @@ class ReLU : public _Layer {
 public:
   ReLU(const size_t in, const size_t out)
       : _Layer(in, out, std::make_shared<ACTI::ReLU>()) {}
-  TENSOR::Tensor backward(const TENSOR::Tensor &grad_output) override;
 };
 
+/**
+ * TO BE DEVELOPPED LATER : NEEDS DIFFERENT BACKWARD METHOD
 class SoftMax : public _Layer {
 public:
   SoftMax(const size_t in, const size_t out)
       : _Layer(in, out, std::make_shared<ACTI::SoftMax>()) {}
   TENSOR::Tensor backward(const TENSOR::Tensor &grad_output) override;
 };
+*/
 
 class Sigmoid : public _Layer {
 public:
   Sigmoid(const size_t in, const size_t out)
       : _Layer(in, out, std::make_shared<ACTI::Sigmoid>()) {};
-  TENSOR::Tensor backward(const TENSOR::Tensor &grad_output) override;
 };
 } // namespace LAYER
 
