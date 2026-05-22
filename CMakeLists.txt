@@ -15,9 +15,14 @@ set(base "lib/base/gll.cpp")
 set(math "lib/math/math.cpp")
 set(time "lib/time/rk4.cpp")
 set(diff "lib/diffusion/diffusion.cpp")
+set(SOD "lib/SOD.cpp")
+set(neural "neural/activation.cpp" "neural/layer.cpp" "neural/loss_function.cpp" "neural/test_mnist.cpp")
 
-add_executable(spectral "main.cpp" ${elem} ${phy} ${math} ${time} ${base} ${diff})
+add_executable(spectral "main.cpp" ${elem} ${phy} ${math} ${time} ${base} ${diff} ${SOD})
+add_executable(neural "neural/test_mnist" ${neural})
+
 target_link_libraries(spectral ${BLAS_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(neural ${BLAS_LIBRARIES} ${Boost_LIBRARIES})
 
 # GCC < 9 needs an explicit link for std::filesystem
 if(CMAKE_COMPILER_IS_GNUCXX AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9.0)

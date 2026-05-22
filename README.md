@@ -15,6 +15,9 @@ A 1D Spectral Element Method solver for the Euler equations.
 - `lib/space/`: `Mesh` and `Element` classes managing the unified memory and spatial operator.
 - `lib/time/`: Optimized `RK4` class and data export routines.
 
+## Neural Network
+The framework contains a working neural network, ready to be tested with `MNIST` dataset
+
 ## Build & Compile
 Requires BLAS and BOOST_PROGRAM_OPTIONS
 ```bash
@@ -24,3 +27,4 @@ cd build
 make
 ```
 Then the executable is `spectral`
+Neural network `MNIST` test is available by running `neural`

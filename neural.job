@@ -1,0 +1,11 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --mem=8GB
+#SBATCH --time=5:59:00
+#SBATCH --job-name=MNIST
+#SBATCH --partition=short
+#SBATCH --output=SlurmOutput/Neural.txt
+#SBATCH --account=aero_hpc
+
+./build/neural

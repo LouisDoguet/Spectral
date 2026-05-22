@@ -1,0 +1,11 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --mem=10GB
+#SBATCH --time=5:59:00
+#SBATCH --job-name=S1D
+#SBATCH --partition=short
+#SBATCH --output=SlurmOutput/Spectral1D.txt
+#SBATCH --account=aero_hpc
+
+./build/spectral --dt 5e-5 --L 2.0 --Q 200 --delta 0.1 --T 0.3

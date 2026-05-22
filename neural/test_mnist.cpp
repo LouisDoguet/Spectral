@@ -15,10 +15,10 @@ static int argmax(const TENSOR::Tensor &t) {
 }
 
 int main() {
-  const std::string TRAIN_IMG = "dataset_mnist/train-images.idx3-ubyte";
-  const std::string TRAIN_LBL = "dataset_mnist/train-labels.idx1-ubyte";
-  const std::string TEST_IMG = "dataset_mnist/t10k-images.idx3-ubyte";
-  const std::string TEST_LBL = "dataset_mnist/t10k-labels.idx1-ubyte";
+  const std::string TRAIN_IMG = "neural/dataset_mnist/train-images-idx3-ubyte";
+  const std::string TRAIN_LBL = "neural/dataset_mnist/train-labels-idx1-ubyte";
+  const std::string TEST_IMG = "neural/dataset_mnist/t10k-images-idx3-ubyte";
+  const std::string TEST_LBL = "neural/dataset_mnist/t10k-labels-idx1-ubyte";
 
   const int N_TRAIN = 500;
   const int IMG_SIZE = 784; // 28x28

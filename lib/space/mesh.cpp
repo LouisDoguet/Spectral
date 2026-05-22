@@ -21,8 +21,8 @@ Mesh::Mesh(const int n, gll::Basis *basis, double xL, double xR) : n(n) {
   double x_iter = xL;
   for (int e = 0; e < n; ++e) {
     elem[e] = new elem::Element(
-        e, basis, x_iter, x_iter + dx, &global_rho[e * nquads],
-        &global_rhou[e * nquads], &global_e[e * nquads]);
+        e, basis, x_iter, x_iter + dx, 
+        &global_rho[e * nquads], &global_rhou[e * nquads], &global_e[e * nquads]);
     elem[e]->setFlux();
     x_iter += dx;
   }
@@ -35,7 +35,7 @@ Mesh::Mesh(const int n, gll::Basis *basis, double xL, double xR,
       u3_R(u3_R) {
 
   double dx_mesh = xR - xL;
-  double dx = (double)dx_mesh / (n);
+  double dx = (double) dx_mesh / (n);
 
   /// Global buffer
   int nquads = basis->getOrder() + 1;
@@ -50,7 +50,7 @@ Mesh::Mesh(const int n, gll::Basis *basis, double xL, double xR,
   for (int e = 0; e < n; ++e) {
     double xL_elem = xL + e * dx;
     double xR_elem = xL + (e + 1) * dx;
-    /// Assigns initial conditions to the fglobal buffer
+    /// Assigns initial conditions to the global buffer
     for (int q = 0; q < nquads; q++) {
       global_rho[e * nquads + q] = init_u1[e * nquads + q];
       global_rhou[e * nquads + q] = init_u2[e * nquads + q];
@@ -60,8 +60,8 @@ Mesh::Mesh(const int n, gll::Basis *basis, double xL, double xR,
     /// Construct the element e with for values it's position in the global
     /// buffer
     elem[e] =
-        new elem::Element(e, basis, xL_elem, xR_elem, &global_rho[e * nquads],
-                          &global_rhou[e * nquads], &global_e[e * nquads]);
+        new elem::Element(e, basis, xL_elem, xR_elem, 
+                          &global_rho[e * nquads], &global_rhou[e * nquads], &global_e[e * nquads]);
 
     /// Computes F from U
     elem[e]->setFlux();
