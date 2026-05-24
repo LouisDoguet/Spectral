@@ -2,6 +2,7 @@
 #define DIFFUSION_H
 
 #include "../space/mesh.h"
+#include "../sensor/sensor.h"
 #include <string>
 
 #ifdef WITH_ONNX
@@ -38,6 +39,18 @@ public:
 
 private:
   const double *eps_array;
+};
+
+class PerssonPeraire : public Diffusion {
+public:
+  PerssonPeraire(int truncation, double s0, double kappa, double eps0)
+      : Diffusion("PERSSON_PERAIRE"), truncation(truncation), s0(s0), kappa(kappa), eps0(eps0) {}
+  void apply(mesh::Mesh *mesh) override;
+
+private:
+  int truncation;
+  double s0, kappa, eps0;
+  sens::PerssonPeraire sensor;
 };
 
 #ifdef WITH_ONNX

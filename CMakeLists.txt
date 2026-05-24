@@ -15,10 +15,11 @@ set(base "lib/base/gll.cpp")
 set(math "lib/math/math.cpp")
 set(time "lib/time/rk4.cpp")
 set(diff "lib/diffusion/diffusion.cpp")
+set(sensor "lib/sensor/persson_peraire.cpp")
 set(SOD "lib/SOD.cpp")
 set(neural "neural/activation.cpp" "neural/layer.cpp" "neural/loss_function.cpp" "neural/test_mnist.cpp")
 
-add_executable(spectral "main.cpp" ${elem} ${phy} ${math} ${time} ${base} ${diff} ${SOD})
+add_executable(spectral "main.cpp" ${elem} ${phy} ${math} ${time} ${base} ${diff} ${SOD} ${sensor})
 add_executable(neural "neural/test_mnist" ${neural})
 
 target_link_libraries(spectral ${BLAS_LIBRARIES} ${Boost_LIBRARIES})

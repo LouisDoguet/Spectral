@@ -7,6 +7,7 @@
 #include "tensor.h"
 #include <algorithm>
 #include <cstddef>
+#include <fstream>
 #include <memory>
 #include <random>
 #include <string>
@@ -47,6 +48,9 @@ public:
 
   const size_t getInputSize() { return in_features; }
   const size_t getOutputSize() { return out_features; }
+
+  void serialize(std::ofstream &f) const;
+  void loadWeightsBias(std::ifstream &f);
 };
 
 class ReLU : public _Layer {

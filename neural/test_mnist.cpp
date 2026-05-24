@@ -60,6 +60,9 @@ int main() {
     // Train
     net.train(input, target, EPOCHS);
 
+    // Neu
+    net.save("neural/MNIST.nn");
+
     // Evaluate 3 test samples
     idxDatabase test_img_db(TEST_IMG);
     idxLabelDB test_lbl_db(TEST_LBL);

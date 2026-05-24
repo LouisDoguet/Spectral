@@ -92,6 +92,17 @@ void Custom::apply(mesh::Mesh *mesh) {
   }
 }
 
+void PerssonPeraire::apply(mesh::Mesh *mesh) {
+  const int n      = mesh->getBasis()->getOrder() + 1;
+  const int n_elem = mesh->getNumElements();
+  for (int i = 0; i < n_elem; ++i) {
+    elem::Element *e   = mesh->getElem(i);
+    double        *eps = sensor.getViscosity(*e, truncation, s0, kappa, eps0);
+    diffuse(e, eps, n);
+    delete[] eps;
+  }
+}
+
 #ifdef WITH_ONNX
 ONNX::ONNX(const std::string &model_path, int n_total)
     : Diffusion("ONNX"), n_total(n_total), input_buf(3 * n_total),

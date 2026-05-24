@@ -106,4 +106,9 @@ void print(const double *mat, size_t s_row, size_t s_col) {
   }
   std::cout << std::endl;
 }
+
+double inner_product(const double* vec1, const double* vec2, size_t n){
+  return cblas_ddot(n, vec1, 1, vec2, 1);
+}
+
 } // namespace mat

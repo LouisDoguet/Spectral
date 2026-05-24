@@ -14,6 +14,8 @@ namespace mat {
                                const double* weights, int P);
     double evalLegendreExpansion(double s, const double* c, int P);
     void computeLaplacian(gll::Basis *basis, const double invJ, const double *array, double* result);
+
+    double inner_product(const double* vec1, const double* vec2, size_t n);
 }
 
 #endif

@@ -61,6 +61,7 @@ public:
   double *getF1(int q) const { return F1 + q; }
   double *getF2(int q) const { return F2 + q; }
   double *getF3(int q) const { return F3 + q; }
+  double *getModes() const { return legendreCoefficients; }
 
   /// Modify the flux (USED FOR REIMANN CORRECTION)
   double *getDivF1(int q) const { return divF1 + q; }
