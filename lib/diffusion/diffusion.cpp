@@ -12,7 +12,7 @@
  * @param n Size of the element (number of nodes)
  * @return None
  */
-void diffuse(elem::Element *elem, const double *nodes_eps, const int n) {
+void diffuse(elem::Element *elem, double *nodes_eps, const int n) {
 
   const double *D = elem->getBasis()->getD();
   const double invJ = *(elem->getInvJ());
@@ -43,6 +43,9 @@ void diffuse(elem::Element *elem, const double *nodes_eps, const int n) {
               1);
   cblas_dgemv(CblasRowMajor, CblasNoTrans, n, n, invJ, D, n, du3, 1, 0., tmp3,
               1);
+
+  // Set the AV attributes of the element for history pusposed (storing and results writing of the specific element)
+  elem->setAV(nodes_eps);
 
   // Subtract from divF: diffusion adds to RHS, which means subtracting from
   // divF

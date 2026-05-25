@@ -240,6 +240,17 @@ void RK4::export_results(int step, double time, std::string prefix) {
   }
   file << "\n        </DataArray>\n";
 
+  file << "        <DataArray type=\"Float64\" Name=\"a_viscosity\" "
+          "format=\"ascii\">\n";
+  for (int e = 0; e < n_elem; ++e) {
+    for (int i = 0; i < n_plot; ++i) {
+      double nrm2_AV = *(m->getElem(e)->getAV(i)) * *(m->getElem(e)->getAV(i));
+      file << nrm2_AV << " ";
+    }
+  }
+  file << "\n        </DataArray>\n";
+  
+
   file << "      </PointData>\n    </Piece>\n  "
           "</UnstructuredGrid>\n</VTKFile>\n";
   file.close();

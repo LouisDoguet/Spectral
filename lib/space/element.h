@@ -2,6 +2,7 @@
 #define ELEMENT_H
 
 #include "../base/gll.h"
+#include <cstring>
 
 namespace elem {
 /**
@@ -28,9 +29,12 @@ public:
    * @param external_rho Pointer to the general density
    * @param external_rhou Pointer to the general momentum
    * @param external_e Pointer to the general energy
+   * @param AV1 Pointer to the artificial viscosity of general density
+   * @param AV2 Pointer to the artificial viscosity of general momentum
+   * @param AV3 Pointer to the artificial viscosity of general energy
    */
   Element(const int id, gll::Basis *sharedBasis, double xL, double xR,
-          double *external_rho, double *external_rhou, double *external_e);
+          double *external_rho, double *external_rhou, double *external_e, double* artVisc);
 
   /// SETTERS
   void setBasis(gll::Basis *sharedBasis) { this->basis = sharedBasis; }
@@ -39,6 +43,23 @@ public:
   void setU1(double *rho) { this->rho = rho; }
   void setU2(double *rhou) { this->rhou = rhou; }
   void setU3(double *e) { this->e = e; }
+  
+  void setAV(double *arr) {
+    int n = basis->getOrder() + 1;
+    memcpy(this->AV, arr, n * sizeof(double));
+  }
+  
+  void setRho(int pos, double val) { rho[pos] = val; }
+  void setRhoU(int pos, double val) { rhou[pos] = val; }
+  void setE(int pos, double val) { e[pos] = val; }
+
+  void setDivF1(int pos, double val) { divF1[pos] = val; }
+  void setDivF2(int pos, double val) { divF2[pos] = val; }
+  void setDivF3(int pos, double val) { divF3[pos] = val; }
+
+  void setAV(int pos, double val) { AV[pos] = val;}
+    /// From U -> F
+  void setFlux();
 
   /// GETTERS
   const int *getID() const { return &id; }
@@ -68,20 +89,15 @@ public:
   double *getDivF2(int q) const { return divF2 + q; }
   double *getDivF3(int q) const { return divF3 + q; }
 
+  double *getAV() const {return AV;}
+  double *getAV(int q) const {return AV + q;}
+
+
   void correctDivF1(int pos, double val) { divF1[pos] += val; }
   void correctDivF2(int pos, double val) { divF2[pos] += val; }
   void correctDivF3(int pos, double val) { divF3[pos] += val; }
 
-  void setRho(int pos, double val) { rho[pos] = val; }
-  void setRhoU(int pos, double val) { rhou[pos] = val; }
-  void setE(int pos, double val) { e[pos] = val; }
 
-  void setDivF1(int pos, double val) { divF1[pos] = val; }
-  void setDivF2(int pos, double val) { divF2[pos] = val; }
-  void setDivF3(int pos, double val) { divF3[pos] = val; }
-
-  /// From U -> F
-  void setFlux();
   /// df/dx using the base's derivative matrix
   void computeDivFlux();
   /// Computes Legendre coefficients from Lagrange polynomials
@@ -115,6 +131,8 @@ private:
   double *divF2;
   double *divF3;
 
+  double *AV;
+
   double *legendreCoefficients;
 
   friend std::ostream &operator<<(std::ostream &, const Element &);
@@ -122,7 +140,7 @@ private:
 private:
   /// Core constructor: all public constructors delegate to this
   Element(int id, gll::Basis *basis, double xL, double xR, double *rho,
-          double *rhou, double *e, bool ownsMemory);
+          double *rhou, double *e, double* AV, bool ownsMemory);
 };
 } // namespace elem
 

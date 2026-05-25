@@ -24,21 +24,21 @@ private:
 
 class Constant : public Diffusion {
 public:
-  Constant(const double eps) : Diffusion("CONSTANT"), epsilon(eps) {};
+  Constant(double eps) : Diffusion("CONSTANT"), epsilon(eps) {};
   void apply(mesh::Mesh *mesh) override;
 
 private:
-  const double epsilon;
+  double epsilon;
 };
 
 class Custom : public Diffusion {
 public:
-  Custom(const double *eps_array)
+  Custom(double *eps_array)
       : Diffusion("CUSTOM"), eps_array(eps_array) {};
   void apply(mesh::Mesh *mesh) override;
 
 private:
-  const double *eps_array;
+  double *eps_array;
 };
 
 class PerssonPeraire : public Diffusion {

@@ -37,8 +37,8 @@ void Element::setJ(double xL, double xR) {
 
 /// Core constructor: all public constructors delegate here
 Element::Element(int id, gll::Basis *basis, double xL, double xR, double *rho,
-                 double *rhou, double *e, bool ownsMemory)
-    : id(id), basis(basis), rho(rho), rhou(rhou), e(e), ownsMemory(ownsMemory) {
+                 double *rhou, double *e, double* AV, bool ownsMemory)
+    : id(id), basis(basis), rho(rho), rhou(rhou), e(e), AV(AV), ownsMemory(ownsMemory) {
   setJ(xL, xR);
   int n = basis->getOrder() + 1;
   F1 = new double[n];
@@ -55,6 +55,7 @@ Element::Element(const int id, gll::Basis *sharedBasis, double xL, double xR)
     : Element(id, sharedBasis, xL, xR,
               new double[sharedBasis->getOrder() + 1](),
               new double[sharedBasis->getOrder() + 1](),
+              new double[sharedBasis->getOrder() + 1](), 
               new double[sharedBasis->getOrder() + 1](), true) {}
 
 /// Scalar init: delegates to no-values, then fills U arrays
@@ -65,14 +66,14 @@ Element::Element(const int id, gll::Basis *sharedBasis, double xL, double xR,
   std::fill(rho, rho + n, rho_init);
   std::fill(rhou, rhou + n, rhou_init);
   std::fill(e, e + n, e_init);
+  std::fill(AV, AV + n, 0.);
 }
 
 /// External buffers: delegates to core with ownsMemory=false
 Element::Element(const int id, gll::Basis *sharedBasis, double xL, double xR,
                  double *external_rho, double *external_rhou,
-                 double *external_e)
-    : Element(id, sharedBasis, xL, xR, external_rho, external_rhou, external_e,
-              false) {}
+                 double *external_e, double* AV)
+    : Element(id, sharedBasis, xL, xR, external_rho, external_rhou, external_e, AV, false) {}
 
 /**
  * @brief Sets the flux from the Euler system solved

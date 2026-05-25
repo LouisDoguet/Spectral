@@ -78,6 +78,9 @@ private:
   double *global_rho;
   double *global_rhou;
   double *global_e;
+  /// Unified Artificial Viscosities
+  double *global_AV;
+
 
   /// Boudary conditions
   double u1_L;

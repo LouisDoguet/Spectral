@@ -15,6 +15,7 @@ Mesh::Mesh(const int n, gll::Basis *basis, double xL, double xR) : n(n) {
   global_rho = new double[n * nquads];
   global_rhou = new double[n * nquads];
   global_e = new double[n * nquads];
+  global_AV = new double[n * nquads];
 
   this->elem = new elem::Element *[n];
 
@@ -22,7 +23,8 @@ Mesh::Mesh(const int n, gll::Basis *basis, double xL, double xR) : n(n) {
   for (int e = 0; e < n; ++e) {
     elem[e] = new elem::Element(
         e, basis, x_iter, x_iter + dx, 
-        &global_rho[e * nquads], &global_rhou[e * nquads], &global_e[e * nquads]);
+        &global_rho[e * nquads], &global_rhou[e * nquads], &global_e[e * nquads], 
+        &global_AV[e * nquads]);
     elem[e]->setFlux();
     x_iter += dx;
   }
@@ -42,6 +44,7 @@ Mesh::Mesh(const int n, gll::Basis *basis, double xL, double xR,
   global_rho = new double[n * nquads];
   global_rhou = new double[n * nquads];
   global_e = new double[n * nquads];
+  global_AV = new double[n * nquads];
 
   /// Pointers to the elements
   this->elem = new elem::Element *[n];
@@ -51,17 +54,20 @@ Mesh::Mesh(const int n, gll::Basis *basis, double xL, double xR,
     double xL_elem = xL + e * dx;
     double xR_elem = xL + (e + 1) * dx;
     /// Assigns initial conditions to the global buffer
+    /// Automatic setup of the viscosity at 0.
     for (int q = 0; q < nquads; q++) {
       global_rho[e * nquads + q] = init_u1[e * nquads + q];
       global_rhou[e * nquads + q] = init_u2[e * nquads + q];
       global_e[e * nquads + q] = init_u3[e * nquads + q];
+      global_AV[e * nquads + q] = 0.;
     }
 
     /// Construct the element e with for values it's position in the global
     /// buffer
     elem[e] =
         new elem::Element(e, basis, xL_elem, xR_elem, 
-                          &global_rho[e * nquads], &global_rhou[e * nquads], &global_e[e * nquads]);
+                          &global_rho[e * nquads], &global_rhou[e * nquads], &global_e[e * nquads], 
+                          &global_AV[e * nquads]);
 
     /// Computes F from U
     elem[e]->setFlux();
@@ -212,6 +218,7 @@ Mesh::~Mesh() {
   delete[] global_rho;
   delete[] global_rhou;
   delete[] global_e;
+  delete[] global_AV;
 }
 
 std::ostream &operator<<(std::ostream &os, const Mesh &m) {
