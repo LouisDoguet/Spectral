@@ -114,6 +114,20 @@ const double* Element::computePressureLaplacian() {
   return lap_pressure;
 }
 
+const double* Element::computeVelocityDivergence() {
+  int N = this->getBasis()->getOrder()+1;
+  double* v = new double[N];
+  double* dvdx = new double[N];
+
+  for (int q=0; q<N; ++q) v[q]=this->getU(q);
+
+  cblas_dgemv(CblasRowMajor, CblasNoTrans, N, N, 1., this->getBasis()->getD(), N, v, 1, 0., dvdx, 1);
+  for (int i=0; i<N; ++i) { 
+      dvdx[i]*= this->getInvJ()[N*i + i];
+  }
+  return dvdx;
+}
+
 Element::~Element() {
   if (ownsMemory) {
     delete[] rho;

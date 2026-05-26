@@ -1,0 +1,99 @@
+#ifndef SOLVER_H
+#define SOLVER_H
+
+#include <string>
+#include "../space/mesh.h"
+#include "../sensor/sensor.h"
+#include "../post/vtu_exporter.h"
+
+namespace diff { class _Diffusion; }
+
+namespace solver {
+
+    class _Solver {
+        public:
+            _Solver(std::string name, mesh::Mesh* mesh, int n_plot = 0);
+
+            virtual void step(double dt) = 0;
+
+            /**
+             * @brief Run the simulation loop
+             * @param T_final Total simulation time
+             * @param dt Time step
+             * @param save_freq Frequency of data export (every N steps)
+             * @param prefix Output file prefix
+             */
+            virtual void run(double T_final, double dt, int save_freq, std::string prefix) = 0;
+
+            /**
+             * @brief Export current state as a raw binary snapshot for ML training.
+             * Layout: int32 n_elem | int32 P | float64 t | float64[n_total] rho | rhou | e
+             */
+            void export_snapshot(int step, double time, std::string dir);
+
+            void setDiffusion(diff::_Diffusion* diffus) { diffusion = diffus; }
+            void setSensor(sens::_Sensor* sensr) { sensor = sensr; }
+            void setSnapshotDir(std::string dir) { snapshot_dir = std::move(dir); }
+
+            /** Access the VTU exporter to register extra fields before run(). */
+            post::VTUExporter& getExporter() { return *exporter; }
+
+            ~_Solver();
+
+        protected:
+            std::string name;
+            int total_points;
+            int n_plot;
+            std::string snapshot_dir;
+            mesh::Mesh* m;
+            diff::_Diffusion* diffusion = nullptr;
+            sens::_Sensor* sensor = nullptr;
+
+            post::VTUExporter* exporter;
+
+            // Contiguous buffers to store state at t_n
+            double* rho_n;
+            double* rhou_n;
+            double* e_n;
+
+            // Contiguous buffers to accumulate stage updates
+            double* rho_acc;
+            double* rhou_acc;
+            double* e_acc;
+
+            // Temporary buffers for global divF (used for BLAS vector ops)
+            double* global_df1;
+            double* global_df2;
+            double* global_df3;
+
+            void save_state();
+            void collect_residuals();
+    };
+
+    /**
+    * @brief Optimized Runge-Kutta 4th order solver using contiguous buffers and BLAS
+    */
+    class RK4 : public _Solver {
+        public:
+            RK4(mesh::Mesh* mesh, int n_plot = 0) : _Solver("RungeKutta4", mesh, n_plot) {};
+
+            void step(double dt) override;
+
+            /**
+             * @brief Run the simulation loop
+             * @param T_final Total simulation time
+             * @param dt Time step
+             * @param save_freq Frequency of data export (every N steps)
+             * @param prefix Output file prefix
+             */
+            void run(double T_final, double dt, int save_freq, std::string prefix) override;
+
+        private:
+            void set_stage_state(double dt, double coeff);
+            void accumulate_stage(double coeff);
+            void finalize_step(double dt);
+    };
+
+}
+
+#endif

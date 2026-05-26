@@ -2,7 +2,8 @@
 #include "diffusion/diffusion.h"
 #include "math/math.h"
 #include "space/mesh.h"
-#include "time/rk4.h"
+#include "time/solver.h"
+#include "sensor/sensor.h"
 #include "S1D.h"
 #include <boost/program_options.hpp>
 #include <cmath>
@@ -14,14 +15,13 @@
 namespace po = boost::program_options;
 
 namespace S1D {
-void RunShockTube(
-        const int N_elem, const int P, const int Q,
-        const double L, const double T_final,
-        const double dt, const double eps,
+
+mesh::Mesh* generateMesh(
+        const int N_elem, const int P, const double L,
         const double rhoL, const double uL, const double pL, 
         const double rhoR, const double uR, const double pR, 
-        int x0, double delta) {
-
+        double x0, double delta) {
+        
     double gamma = 1.4;
     
     const double dx   = L / N_elem;
@@ -70,20 +70,18 @@ void RunShockTube(
                                       bc_rhoL, bc_rhouL, bc_eL,
                                       bc_rhoR, bc_rhouR, bc_eR);
 
-    //-- SOLVER --
-    solver::RK4 solver(mesh, Q);
+    return mesh;    
+};
+
+void RunShockTube(
+    solver::_Solver* solver, diff::_Diffusion* diffusion, sens::_Sensor* sensor, 
+    double T_final, double dt, std::string case_name) {
 
     //-- DIFFUSION MODE --
-    DIFF::Constant constant_diff(eps);
-    if (eps>0) solver.setDiffusion(&constant_diff);
+    if (diffusion) solver->setDiffusion(diffusion);
+    if (sensor) solver->setSensor(sensor);
 
     //-- RUN --
-    solver.run(T_final, dt, 10, case_name);
-
-    delete mesh;
-    delete basis;
-    delete[] rho_i;
-    delete[] rhou_i;
-    delete[] e_i;
+    solver->run(T_final, dt, 10, case_name);
 }   
 }

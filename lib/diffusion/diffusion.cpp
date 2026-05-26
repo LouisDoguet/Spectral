@@ -63,9 +63,9 @@ void diffuse(elem::Element *elem, double *nodes_eps, const int n) {
   delete[] tmp3;
 }
 
-namespace DIFF {
+namespace diff {
 
-void Diffusion::apply(mesh::Mesh *mesh) {}
+void _Diffusion::apply(mesh::Mesh *mesh) {}
 
 void Constant::apply(mesh::Mesh *mesh) {
   const gll::Basis *basis = mesh->getBasis();

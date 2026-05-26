@@ -8,4 +8,8 @@
 #SBATCH --output=SlurmOutput/Spectral1D.txt
 #SBATCH --account=aero_hpc
 
-./build/spectral --dt 5e-5 --L 2.0 --Q 200 --delta 0.1 --T 0.3
+
+./build/spectral \
+    --P 6 --N 50 --T 0.2 --dt 5e-5 \
+    --sensor --trunc 1 --s0 -3.0 --kappa 1 --eps0 5e-3 \
+    --Q 30 --output PP_test/k1/SOD_P6_E50

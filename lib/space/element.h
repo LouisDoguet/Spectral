@@ -4,6 +4,8 @@
 #include "../base/gll.h"
 #include <cstring>
 
+static const double GAMMA = 1.4;
+
 namespace elem {
 /**
  * @brief Class storing an element
@@ -44,6 +46,9 @@ public:
   void setU2(double *rhou) { this->rhou = rhou; }
   void setU3(double *e) { this->e = e; }
   
+  /// @brief Sets the Artificial Viscosity of the element
+  /// @param arr Array containing AV values
+  /// @note Requires `memcpy` because `diffuse` deletes `eps` array to avoid memory leaks
   void setAV(double *arr) {
     int n = basis->getOrder() + 1;
     memcpy(this->AV, arr, n * sizeof(double));
@@ -82,6 +87,9 @@ public:
   double *getF1(int q) const { return F1 + q; }
   double *getF2(int q) const { return F2 + q; }
   double *getF3(int q) const { return F3 + q; }
+  double getU(int q) const { return *(rhou + q) / *(rho + q); }
+  double getRho(int q) const { return *(rho + q); }
+  double getP(int q) const { return (GAMMA - 1.0) * (*(e + q) - 0.5 * *(rhou + q) * *(rhou + q) / *(rho + q)); }
   double *getModes() const { return legendreCoefficients; }
 
   /// Modify the flux (USED FOR REIMANN CORRECTION)
@@ -106,6 +114,8 @@ public:
   double* computePressure();
   /// Computes the pressure Laplacian
   const double* computePressureLaplacian();
+  /// Computes the divergence of velocity
+  const double* computeVelocityDivergence();
 
   ~Element();
 

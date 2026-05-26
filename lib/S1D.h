@@ -3,13 +3,15 @@
 
 namespace S1D
 {
-    void RunShockTube(
-        const int N_elem, const int P, const int Q,
-        const double L, const double T_final,
-        const double dt, const double eps,
+    mesh::Mesh* generateMesh(
+        const int N_elem, const int P, const double L,
         const double rhoL, const double uL, const double pL, 
         const double rhoR, const double uR, const double pR, 
-        int x0, double delta);
+        double x0, double delta);
+
+    void RunShockTube(
+        solver::_Solver* solver, diff::_Diffusion* diffusion, sens::_Sensor* sensor, 
+        double T_final, double dt, std::string case_name);
 } // namespace S1D
 
 

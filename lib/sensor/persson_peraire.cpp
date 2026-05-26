@@ -19,6 +19,13 @@ double sens::PerssonPeraire::SmoothnessIndicator(elem::Element& elem, int trunca
     return Se / S;
 }
 
+double* sens::PerssonPeraire::getSensor(elem::Element& elem, int truncation){
+    const int N = elem.getBasis()->getOrder() + 1;
+    double* S = new double[N];
+    std::fill(S, S+N, this->SmoothnessIndicator(elem, truncation));
+    return S;
+}
+
 double* sens::PerssonPeraire::getViscosity(elem::Element& elem, int truncation, double s0, double kappa, double eps0){
     elem.computeLegendreCoefficients();
 

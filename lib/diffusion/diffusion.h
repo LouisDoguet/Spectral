@@ -11,40 +11,42 @@
 #include <onnxruntime_cxx_api.h>
 #endif
 
-namespace DIFF {
+namespace diff {
 
-class Diffusion {
+class _Diffusion {
 public:
-  Diffusion(const std::string name) : name(name) {};
+  _Diffusion(const std::string name) : name(name) {};
   virtual void apply(mesh::Mesh *mesh);
+
+  std::string getName() { return name; }
 
 private:
   const std::string name;
 };
 
-class Constant : public Diffusion {
+class Constant : public _Diffusion {
 public:
-  Constant(double eps) : Diffusion("CONSTANT"), epsilon(eps) {};
+  Constant(double eps) : _Diffusion("CONSTANT"), epsilon(eps) {};
   void apply(mesh::Mesh *mesh) override;
 
 private:
   double epsilon;
 };
 
-class Custom : public Diffusion {
+class Custom : public _Diffusion {
 public:
   Custom(double *eps_array)
-      : Diffusion("CUSTOM"), eps_array(eps_array) {};
+      : _Diffusion("CUSTOM"), eps_array(eps_array) {};
   void apply(mesh::Mesh *mesh) override;
 
 private:
   double *eps_array;
 };
 
-class PerssonPeraire : public Diffusion {
+class PerssonPeraire : public _Diffusion {
 public:
   PerssonPeraire(int truncation, double s0, double kappa, double eps0)
-      : Diffusion("PERSSON_PERAIRE"), truncation(truncation), s0(s0), kappa(kappa), eps0(eps0) {}
+      : _Diffusion("PERSSON_PERAIRE"), truncation(truncation), s0(s0), kappa(kappa), eps0(eps0) {}
   void apply(mesh::Mesh *mesh) override;
 
 private:
