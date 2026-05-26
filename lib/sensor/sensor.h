@@ -13,6 +13,14 @@ private:
 public:
     _Sensor(std::string name): name(name) {};
     std::string getName() { return name; }
+
+    /**
+     * @brief Returns per-node sensor values for the element (size P+1).
+     * Caller owns the returned array and must delete[] it.
+     * Default returns nullptr (sensor does not support direct export).
+     */
+    virtual double* getSensor(elem::Element& elem) { return nullptr; }
+    virtual ~_Sensor() = default;
 };
 
 class PerssonPeraire : public _Sensor {
@@ -44,7 +52,7 @@ private:
 
 public:
     DivLaplacian() : _Sensor("DivLaplacian") {};
-    double* getSensor(elem::Element& elem);
+    double* getSensor(elem::Element& elem) override;
 };
 
 } // namespace sens

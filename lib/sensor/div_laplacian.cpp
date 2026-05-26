@@ -12,16 +12,11 @@ double* sens::DivLaplacian::getSensor(elem::Element& elem){
     double EPS1 = 1.;
     double EPS2 = 1.;
 
-    double* Id = new double[N];
-    double* Ip = new double[N];
     double* S = new double[N];
 
     for (int q=0; q<N; ++q) {
-        S[q] = EPS1 * Id[q] * std::max(Ip[q], 1e-3);
+        S[q] = EPS1 * divV[q] * std::max(lapP[q], 1e-3);
     }
-
-    delete[] Id;
-    delete[] Ip;
 
     return S;
 }
@@ -29,4 +24,3 @@ double* sens::DivLaplacian::getSensor(elem::Element& elem){
 double* sens::DivLaplacian::SmoothnessIndicator(elem::Element& elem){
     return sens::DivLaplacian::getSensor(elem);
 }
-

@@ -75,5 +75,7 @@ int main(int argc, char *argv[]) {
   diff::PerssonPeraire* diff_PP = new diff::PerssonPeraire(trunc, s0, kappa, eps0);
   sens::DivLaplacian* sensor_DL = new sens::DivLaplacian();
 
+  S->addSensorField("div_laplacian", sensor_DL);
+
   S1D::RunShockTube(S, diff_PP, sensor_DL, T_final, dt, output);
 }

@@ -2,6 +2,7 @@
 #define VTU_EXPORTER_H
 
 #include "../space/mesh.h"
+#include "../sensor/sensor.h"
 #include <functional>
 #include <string>
 #include <vector>
@@ -38,7 +39,16 @@ public:
     void addField(ScalarField field);
 
     /**
-     * @brief Convenience wrapper for element-constant sensor outputs.
+     * @brief Register a sensor for export.
+     *
+     * Calls sensor->getSensor(elem) each timestep to get per-node values
+     * (size P+1 at GLL nodes), then Legendre-interpolates them to the
+     * output grid so the field is smooth in ParaView.
+     */
+    void addSensorField(const std::string& name, sens::_Sensor* sensor);
+
+    /**
+     * @brief Convenience wrapper for element-constant outputs.
      *
      * `fn(elem)` is evaluated once per element; the value is broadcast to
      * all n_plot output points of that element.

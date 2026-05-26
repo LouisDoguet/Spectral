@@ -2,6 +2,7 @@
 #include "../base/gll.h"
 #include "../math/math.h"
 #include "../space/element.h"
+#include <algorithm>
 #include <cblas.h>
 #include <fstream>
 #include <iomanip>
@@ -19,6 +20,23 @@ VTUExporter::VTUExporter(mesh::Mesh* mesh, int n_plot) : m(mesh), n_plot(n_plot)
 
 void VTUExporter::addField(ScalarField field) {
     fields.push_back(std::move(field));
+}
+
+void VTUExporter::addSensorField(const std::string& name, sens::_Sensor* sensor) {
+    addField({name,
+              [sensor](elem::Element& elem,
+                       const double* ref_pts, int n_plot,
+                       const double* quads, const double* weights, int P,
+                       double* out) {
+                  double* s = sensor->getSensor(elem);
+                  if (!s) { std::fill(out, out + n_plot, 0.0); return; }
+                  double* c = new double[P + 1];
+                  mat::computeLegendreCoeffs(c, s, quads, weights, P);
+                  for (int i = 0; i < n_plot; ++i)
+                      out[i] = mat::evalLegendreExpansion(ref_pts[i], c, P);
+                  delete[] c;
+                  delete[] s;
+              }});
 }
 
 void VTUExporter::addElemField(const std::string& name,

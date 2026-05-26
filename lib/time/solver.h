@@ -38,6 +38,11 @@ namespace solver {
             /** Access the VTU exporter to register extra fields before run(). */
             post::VTUExporter& getExporter() { return *exporter; }
 
+            /** Register a sensor for export by name — calls getSensor() on every element at each output step. */
+            void addSensorField(const std::string& name, sens::_Sensor* sensor) {
+                exporter->addSensorField(name, sensor);
+            }
+
             ~_Solver();
 
         protected:
