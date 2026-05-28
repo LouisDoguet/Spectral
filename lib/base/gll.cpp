@@ -1,6 +1,8 @@
 #include "base.h"
 #include <cmath>
 
+namespace gauss
+{
 /**
  * @breif Computes Bonnet recursion formula to approximate Legendre poly at
  * order P
@@ -113,10 +115,13 @@ void setWeights(double *weights, const double *quads, const int P) {
   }
 }
 
+  
+} // namespace gauss
+
 namespace base {
 Lagrange::Lagrange(const int p) : _Basis("GaussLegendreLobato", p) {
-  setQuads(quads, p);
-  setWeights(weights, quads, p);
-  computeDerivative(D, quads, p);
+  gauss::setQuads(quads, p);
+  gauss::setWeights(weights, quads, p);
+  gauss::computeDerivative(D, quads, p);
 }
 } // namespace base

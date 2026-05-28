@@ -38,6 +38,34 @@ namespace base{
 	    const int getOrder() const override {return p;}
 	    const double* getD() const override {return D;}
     };
+
+	class RBF : public _Basis {
+	public:
+		RBF(const int p, const double eps, std::string RBF_name);
+
+	protected:
+		const std::string fname;
+		const double eps;
+		double* radial_matrix;
+		double* activated_radial_matrix;
+		double* inv_activ_radial_matrix;
+
+		/// @brief Forms the matrix of the distances of the quadrature `|| quad_i - quad_j ||`
+		void computeRadialMatrix();
+		virtual void activateRadialMatrix() {};
+		void invertActivatedRadialMatrix();
+		/// @brief Computes derivative
+		virtual void computeDerivative() {};
+	};
+
+	class InverseMultiQuadratic : public RBF {
+	public:
+		InverseMultiQuadratic(const int p, const double eps);
+		/// @brief Applies Inverse Multi Quadratic function to the radial matrix
+		void activateRadialMatrix() override;
+		void computeDerivative() override;
+	};
+
 };
 
 #endif

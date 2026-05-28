@@ -79,6 +79,18 @@ void computeLaplacian(base::_Basis *basis, const double invJ, const double *arra
 }
 
 /**
+ * @brief Derivative of the Inverse Multiquadratic function centered in `xi`, at point `x`
+ * @param eps Epsilon parameter of RBF
+ * @param x Point to evaluate the derivative at
+ * @param xi Origin of the IMQ
+ * @return Derivative value
+ */
+double derivativeInverseMultiQuad(double eps, double x, double xi){
+  return ( -eps*eps * (x - xi) ) / pow(( 1 + eps*eps * (x - xi)*(x - xi) ), 1.5);
+}
+
+
+/**
  * @brief Helper to print vectors
  * @param vec Pointer to the vector
  * @param n size of the vector

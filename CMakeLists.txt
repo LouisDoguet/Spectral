@@ -7,11 +7,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 find_package(BLAS REQUIRED)
+find_package(LAPACK REQUIRED)
 find_package(Boost 1.40 COMPONENTS program_options REQUIRED)
 
 set(elem "lib/space/element.cpp" "lib/space/mesh.cpp")
 set(phy  "lib/phy/physics.cpp")
-set(base "lib/base/gll.cpp" "lib/base/base.cpp")
+set(base "lib/base/gll.cpp" "lib/base/base.cpp" "lib/base/radial_base_function.cpp")
 set(math "lib/math/math.cpp")
 set(time "lib/time/solver.cpp" "lib/time/rk4.cpp")
 set(diff "lib/diffusion/diffusion.cpp")
@@ -23,7 +24,7 @@ set(neural "neural/activation.cpp" "neural/layer.cpp" "neural/loss_function.cpp"
 add_executable(spectral "main.cpp" ${elem} ${phy} ${math} ${time} ${base} ${diff} ${SOD} ${sensor} ${post})
 add_executable(neural "neural/test_mnist" ${neural})
 
-target_link_libraries(spectral ${BLAS_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(spectral ${BLAS_LIBRARIES} ${Boost_LIBRARIES} ${LAPACK_LIBRARIES})
 target_link_libraries(neural ${BLAS_LIBRARIES} ${Boost_LIBRARIES})
 
 # GCC < 9 needs an explicit link for std::filesystem
