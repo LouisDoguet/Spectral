@@ -36,7 +36,7 @@ void Element::setJ(double xL, double xR) {
 }
 
 /// Core constructor: all public constructors delegate here
-Element::Element(int id, gll::Basis *basis, double xL, double xR, double *rho,
+Element::Element(int id, base::_Basis *basis, double xL, double xR, double *rho,
                  double *rhou, double *e, double* AV, bool ownsMemory)
     : id(id), basis(basis), rho(rho), rhou(rhou), e(e), AV(AV), ownsMemory(ownsMemory) {
   setJ(xL, xR);
@@ -51,7 +51,7 @@ Element::Element(int id, gll::Basis *basis, double xL, double xR, double *rho,
 }
 
 /// No-values: allocates zeroed U arrays, delegates to core
-Element::Element(const int id, gll::Basis *sharedBasis, double xL, double xR)
+Element::Element(const int id, base::_Basis *sharedBasis, double xL, double xR)
     : Element(id, sharedBasis, xL, xR,
               new double[sharedBasis->getOrder() + 1](),
               new double[sharedBasis->getOrder() + 1](),
@@ -59,7 +59,7 @@ Element::Element(const int id, gll::Basis *sharedBasis, double xL, double xR)
               new double[sharedBasis->getOrder() + 1](), true) {}
 
 /// Scalar init: delegates to no-values, then fills U arrays
-Element::Element(const int id, gll::Basis *sharedBasis, double xL, double xR,
+Element::Element(const int id, base::_Basis *sharedBasis, double xL, double xR,
                  double rho_init, double rhou_init, double e_init)
     : Element(id, sharedBasis, xL, xR) {
   int n = sharedBasis->getOrder() + 1;
@@ -70,7 +70,7 @@ Element::Element(const int id, gll::Basis *sharedBasis, double xL, double xR,
 }
 
 /// External buffers: delegates to core with ownsMemory=false
-Element::Element(const int id, gll::Basis *sharedBasis, double xL, double xR,
+Element::Element(const int id, base::_Basis *sharedBasis, double xL, double xR,
                  double *external_rho, double *external_rhou,
                  double *external_e, double* AV)
     : Element(id, sharedBasis, xL, xR, external_rho, external_rhou, external_e, AV, false) {}

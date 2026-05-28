@@ -1,5 +1,5 @@
 #include "solver.h"
-#include "../base/gll.h"
+#include "../base/base.h"
 #include "../diffusion/diffusion.h"
 #include <cblas.h>
 #include <cmath>

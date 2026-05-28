@@ -1,5 +1,5 @@
 #include "diffusion.h"
-#include "../base/gll.h"
+#include "../base/base.h"
 #include "../space/element.h"
 #include "../space/mesh.h"
 #include <algorithm>
@@ -68,7 +68,7 @@ namespace diff {
 void _Diffusion::apply(mesh::Mesh *mesh) {}
 
 void Constant::apply(mesh::Mesh *mesh) {
-  const gll::Basis *basis = mesh->getBasis();
+  const base::_Basis *basis = mesh->getBasis();
   int n = basis->getOrder() + 1;
   const int n_elem = mesh->getNumElements();
 
@@ -85,7 +85,7 @@ void Constant::apply(mesh::Mesh *mesh) {
 
 void Custom::apply(mesh::Mesh *mesh) {
 
-  const gll::Basis *basis = mesh->getBasis();
+  const base::_Basis *basis = mesh->getBasis();
   int n = basis->getOrder() + 1;
   const int n_elem = mesh->getNumElements();
 

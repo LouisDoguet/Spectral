@@ -1,5 +1,5 @@
 #include "vtu_exporter.h"
-#include "../base/gll.h"
+#include "../base/base.h"
 #include "../math/math.h"
 #include "../space/element.h"
 #include <algorithm>
@@ -64,7 +64,7 @@ void VTUExporter::write(int step, double time, const std::string& prefix) {
     exported_files.push_back({time, basename});
 
     const int n_elem = m->getNumElements();
-    const gll::Basis* basis = m->getElem(0)->getBasis();
+    const base::_Basis* basis = m->getElem(0)->getBasis();
     const int P = basis->getOrder();
     const double* quads = basis->getQuads();
     const double* weights = basis->getWeights();

@@ -1,7 +1,7 @@
 #ifndef MESH_H
 #define MESH_H
 
-#include "../base/gll.h"
+#include "../base/base.h"
 #include "element.h"
 
 namespace mesh {
@@ -17,7 +17,7 @@ public:
    * @param xL Beginning of the mesh
    * @param xR End of the mesh
    */
-  Mesh(const int n, gll::Basis *basis, double xL, double xR);
+  Mesh(const int n, base::_Basis *basis, double xL, double xR);
   /**
    * @brief Construct a new mesh, with initial parameters
    * @param n Mesh number of points
@@ -34,7 +34,7 @@ public:
    * @param u2_R
    * @param u3_R
    */
-  Mesh(const int n, gll::Basis *basis, double xL, double xR, double *init_u1,
+  Mesh(const int n, base::_Basis *basis, double xL, double xR, double *init_u1,
        double *init_u2, double *init_u3, double u1_L, double u2_L, double u3_L,
        double u1_R, double u2_R, double u3_R);
 
@@ -46,7 +46,7 @@ public:
   double *getGlobalU1() { return global_rho; }
   double *getGlobalU2() { return global_rhou; }
   double *getGlobalU3() { return global_e; }
-  const gll::Basis *getBasis() { return elem[0]->getBasis(); }
+  const base::_Basis *getBasis() { return elem[0]->getBasis(); }
   int getTotalPoints() const {
     return n * (elem[0]->getBasis()->getOrder() + 1);
   }

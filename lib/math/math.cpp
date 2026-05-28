@@ -2,7 +2,7 @@
 #include <cmath>
 #include <iomanip>
 #include <iostream>
-#include "../base/gll.h"
+#include "../base/base.h"
 
 namespace mat {
 
@@ -67,7 +67,7 @@ double evalLegendreExpansion(double s, const double *c, int P) {
  * @param result Overwritten object
  * @return None
  */
-void computeLaplacian(gll::Basis *basis, const double invJ, const double *array, double* result){
+void computeLaplacian(base::_Basis *basis, const double invJ, const double *array, double* result){
   const double *D = basis->getD();
   int n = basis->getOrder() + 1;
   double *tmp = new double[n];

@@ -7,7 +7,7 @@
 
 namespace mesh {
 
-Mesh::Mesh(const int n, gll::Basis *basis, double xL, double xR) : n(n) {
+Mesh::Mesh(const int n, base::_Basis *basis, double xL, double xR) : n(n) {
   double dx_mesh = xR - xL;
   double dx = (double)dx_mesh / (n);
 
@@ -30,7 +30,7 @@ Mesh::Mesh(const int n, gll::Basis *basis, double xL, double xR) : n(n) {
   }
 }
 
-Mesh::Mesh(const int n, gll::Basis *basis, double xL, double xR,
+Mesh::Mesh(const int n, base::_Basis *basis, double xL, double xR,
            double *init_u1, double *init_u2, double *init_u3, double u1_L,
            double u2_L, double u3_L, double u1_R, double u2_R, double u3_R)
     : n(n), u1_L(u1_L), u2_L(u2_L), u3_L(u3_L), u1_R(u1_R), u2_R(u2_R),

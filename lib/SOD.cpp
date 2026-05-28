@@ -1,4 +1,4 @@
-#include "base/gll.h"
+#include "base/base.h"
 #include "diffusion/diffusion.h"
 #include "math/math.h"
 #include "space/mesh.h"
@@ -26,7 +26,7 @@ mesh::Mesh* generateMesh(
     
     const double dx   = L / N_elem;
     const int    N_nodes  = N_elem * (P + 1);
-    gll::Basis *basis  = new gll::Basis(P);
+    base::Lagrange *basis  = new base::Lagrange(P);
     double *rho_i  = new double[N_nodes];
     double *rhou_i = new double[N_nodes];
     double *e_i    = new double[N_nodes];

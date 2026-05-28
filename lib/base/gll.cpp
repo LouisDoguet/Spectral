@@ -1,4 +1,4 @@
-#include "gll.h"
+#include "base.h"
 #include <cmath>
 
 /**
@@ -113,23 +113,10 @@ void setWeights(double *weights, const double *quads, const int P) {
   }
 }
 
-namespace gll {
-Basis::Basis(const int p) : p(p) {
-  quads = new double[p + 1];
-  weights = new double[p + 1];
-  D = new double[(p + 1) * (p + 1)];
+namespace base {
+Lagrange::Lagrange(const int p) : _Basis("GaussLegendreLobato", p) {
   setQuads(quads, p);
   setWeights(weights, quads, p);
   computeDerivative(D, quads, p);
 }
-
-Basis::~Basis() {
-  delete[] quads;
-  delete[] weights;
-}
-
-std::ostream &operator<<(std::ostream &os, const Basis &b) {
-  os << "----- BASIS -----" << std::endl << "ORDER  : " << b.p << std::endl;
-  return os;
-}
-} // namespace gll
+} // namespace base

@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <iomanip>
-#include "../base/gll.h"
+#include "../base/base.h"
 
 namespace mat {
     void print(const double* vec, size_t n);
@@ -13,7 +13,7 @@ namespace mat {
     void computeLegendreCoeffs(double* c, const double* u, const double* quads,
                                const double* weights, int P);
     double evalLegendreExpansion(double s, const double* c, int P);
-    void computeLaplacian(gll::Basis *basis, const double invJ, const double *array, double* result);
+    void computeLaplacian(base::_Basis *basis, const double invJ, const double *array, double* result);
 
     double inner_product(const double* vec1, const double* vec2, size_t n);
 }

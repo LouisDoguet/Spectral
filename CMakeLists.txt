@@ -11,7 +11,7 @@ find_package(Boost 1.40 COMPONENTS program_options REQUIRED)
 
 set(elem "lib/space/element.cpp" "lib/space/mesh.cpp")
 set(phy  "lib/phy/physics.cpp")
-set(base "lib/base/gll.cpp")
+set(base "lib/base/gll.cpp" "lib/base/base.cpp")
 set(math "lib/math/math.cpp")
 set(time "lib/time/solver.cpp" "lib/time/rk4.cpp")
 set(diff "lib/diffusion/diffusion.cpp")

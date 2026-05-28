@@ -1,7 +1,7 @@
 #ifndef ELEMENT_H
 #define ELEMENT_H
 
-#include "../base/gll.h"
+#include "../base/base.h"
 #include <cstring>
 
 static const double GAMMA = 1.4;
@@ -15,11 +15,11 @@ public:
   /**
    * @brief Constructor basic (no values) DEV/DEBUG
    */
-  Element(const int id, gll::Basis *sharedBasis, double xL, double xR);
+  Element(const int id, base::_Basis *sharedBasis, double xL, double xR);
   /**
    * @brief Constructor with init values DEV/DEBUG
    */
-  Element(const int id, gll::Basis *sharedBasis, double xL, double xR,
+  Element(const int id, base::_Basis *sharedBasis, double xL, double xR,
           double rho_init, double rhou_init, double e_init);
 
   /**
@@ -35,11 +35,11 @@ public:
    * @param AV2 Pointer to the artificial viscosity of general momentum
    * @param AV3 Pointer to the artificial viscosity of general energy
    */
-  Element(const int id, gll::Basis *sharedBasis, double xL, double xR,
+  Element(const int id, base::_Basis *sharedBasis, double xL, double xR,
           double *external_rho, double *external_rhou, double *external_e, double* artVisc);
 
   /// SETTERS
-  void setBasis(gll::Basis *sharedBasis) { this->basis = sharedBasis; }
+  void setBasis(base::_Basis *sharedBasis) { this->basis = sharedBasis; }
   void setJ(double xL, double xR);
   void setID(int ID) { this->id = ID; }
   void setU1(double *rho) { this->rho = rho; }
@@ -68,7 +68,7 @@ public:
 
   /// GETTERS
   const int *getID() const { return &id; }
-  const gll::Basis *getBasis() const { return basis; };
+  const base::_Basis *getBasis() const { return basis; };
   const double *getInvJ() const { return &invJ; }
   const double *getU1() const { return rho; }
   const double *getU2() const { return rhou; }
@@ -124,7 +124,7 @@ private:
   double xR;
 
   int id;
-  gll::Basis *basis;
+  base::_Basis *basis;
   double J;
   double invJ;
 
@@ -149,7 +149,7 @@ private:
 
 private:
   /// Core constructor: all public constructors delegate to this
-  Element(int id, gll::Basis *basis, double xL, double xR, double *rho,
+  Element(int id, base::_Basis *basis, double xL, double xR, double *rho,
           double *rhou, double *e, double* AV, bool ownsMemory);
 };
 } // namespace elem
