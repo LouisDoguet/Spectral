@@ -11,6 +11,7 @@ _Basis::_Basis(std::string name, const int p) : name(name), p(p) {
 _Basis::~_Basis() {
   delete[] quads;
   delete[] weights;
+  delete[] D;
 }
 
 std::ostream &operator<<(std::ostream &os, const _Basis &b) {

@@ -124,4 +124,19 @@ Lagrange::Lagrange(const int p) : _Basis("GaussLegendreLobato", p) {
   gauss::setWeights(weights, quads, p);
   gauss::computeDerivative(D, quads, p);
 }
+
+void Lagrange::interpolate(const double* u, const double* xi, int n_pts, double* out) const {
+  const int N = p + 1;
+  for (int q = 0; q < n_pts; ++q) {
+    double s = 0.0;
+    for (int i = 0; i < N; ++i) {
+      double Li = 1.0;
+      for (int j = 0; j < N; ++j) {
+        if (i != j) Li *= (xi[q] - quads[j]) / (quads[i] - quads[j]);
+      }
+      s += u[i] * Li;
+    }
+    out[q] = s;
+  }
+}
 } // namespace base

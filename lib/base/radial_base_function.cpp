@@ -1,5 +1,6 @@
 #include "base.h"
 #include "../math/math.h"
+#include <cblas.h>
 #include <cmath>
 
 #define F77NAME(x) x##_
@@ -23,30 +24,59 @@ namespace rad {
         for (int q=0; q<Q; ++q) quads[q] = -1. + q*dx;
     }
 
-    /**
-     * @brief Computes the weights of the quadratures of the RBF base
-     * @param weights Weights of the quadratures
-     * @param quad Quadratures of the LP
-     * @param P Order of the LP
-     * @return void
-     */
-    void setWeights(double *weights, const int P) {
-        std::fill(weights, weights+(P+1), 1.);
-    }
-
 }
 
 base::RBF::RBF(const int p, const double eps, std::string RBF_name) : _Basis("RadialBaseFunction", p), fname(RBF_name), eps(eps) {
     const int N = this->p + 1;
-    this->radial_matrix = new double[N];
-    this->activated_radial_matrix = new double[N];
-    this->inv_activ_radial_matrix = new double[N];
+    this->radial_matrix = new double[N * N];
+    this->activated_radial_matrix = new double[N * N];
+    this->inv_activ_radial_matrix = new double[N * N];
 
     rad::setQuads(this->quads, p);
-    rad::setWeights(this->weights, p);
+}
+
+void base::RBF::initialize() {
     this->computeRadialMatrix();
     this->activateRadialMatrix();
+    this->invertActivatedRadialMatrix();
     this->computeDerivative();
+    this->computeWeights();
+}
+
+void base::RBF::computeWeights() {
+    const int N = this->p + 1;
+    double* I = new double[N];
+    for (int k = 0; k < N; ++k) I[k] = this->kernelIntegral(k);
+    // w = Phi^{-1} * I  (Phi symmetric -> row-/column-equivalent)
+    cblas_dgemv(CblasRowMajor, CblasNoTrans, N, N,
+                1.0, this->inv_activ_radial_matrix, N,
+                     I, 1,
+                0.0, this->weights, 1);
+    delete[] I;
+}
+
+base::RBF::~RBF() {
+    delete[] radial_matrix;
+    delete[] activated_radial_matrix;
+    delete[] inv_activ_radial_matrix;
+}
+
+void base::RBF::interpolate(const double* u, const double* xi, int n_pts, double* out) const {
+    const int N = this->p + 1;
+    double* lambda = new double[N];
+    // lambda = Phi^{-1} u  (one solve, reused for all xi points)
+    cblas_dgemv(CblasRowMajor, CblasNoTrans, N, N,
+                1.0, this->inv_activ_radial_matrix, N,
+                     u, 1,
+                0.0, lambda, 1);
+    for (int q = 0; q < n_pts; ++q) {
+        double s = 0.0;
+        for (int j = 0; j < N; ++j) {
+            s += lambda[j] * this->kernel(xi[q] - this->quads[j]);
+        }
+        out[q] = s;
+    }
+    delete[] lambda;
 }
 
 void base::RBF::computeRadialMatrix() {
@@ -98,8 +128,22 @@ void base::RBF::invertActivatedRadialMatrix() {
     delete[] work;
 }
 
-base::InverseMultiQuadratic::InverseMultiQuadratic(const int p, const double eps) 
-    : base::RBF(p, eps, "InverseMultiQuad") {}
+base::InverseMultiQuadratic::InverseMultiQuadratic(const int p, const double eps)
+    : base::RBF(p, eps, "InverseMultiQuad") {
+    this->initialize();
+}
+
+double base::InverseMultiQuadratic::kernel(double r) const {
+    return 1.0 / std::sqrt(1.0 + (this->eps * r) * (this->eps * r));
+}
+
+double base::InverseMultiQuadratic::kernelIntegral(int k) const {
+    // I_k = int_{-1}^{1} 1/sqrt(1 + (eps*(xi - x_k))^2) dxi
+    //     = (1/eps) * [ asinh(eps*(1 - x_k)) + asinh(eps*(1 + x_k)) ]
+    const double xk = this->quads[k];
+    return (1.0 / this->eps) * (std::asinh(this->eps * (1.0 - xk))
+                              + std::asinh(this->eps * (1.0 + xk)));
+}
 
 void base::InverseMultiQuadratic::activateRadialMatrix() {
     const int N = this->p+1;
@@ -113,12 +157,24 @@ void base::InverseMultiQuadratic::activateRadialMatrix() {
 
 void base::InverseMultiQuadratic::computeDerivative() {
     const int N = this->p+1;
+
+    // Phi' : kernel-derivative matrix evaluated at the collocation nodes
+    double* Phi_prime = new double[N * N];
     for (int i=0 ; i<N ; ++i){
         for (int j=0; j<N ; ++j){
-            this->D[i*N + j] = mat::derivativeInverseMultiQuad(
-                this->eps, 
-                this->quads[i], 
+            Phi_prime[i*N + j] = mat::derivativeInverseMultiQuad(
+                this->eps,
+                this->quads[i],
                 this->quads[j]);
         }
     }
+
+    // D = Phi' * Phi^{-1}  (nodal-to-nodal derivative operator)
+    cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans,
+                N, N, N,
+                1.0, Phi_prime, N,
+                     this->inv_activ_radial_matrix, N,
+                0.0, this->D, N);
+
+    delete[] Phi_prime;
 }

@@ -3,7 +3,6 @@
 #include "../math/math.h"
 #include "../space/element.h"
 #include <algorithm>
-#include <cblas.h>
 #include <fstream>
 #include <iomanip>
 #include <sstream>
@@ -15,7 +14,8 @@ VTUExporter::VTUExporter(mesh::Mesh* mesh, int n_plot) : m(mesh), n_plot(n_plot)
     addField(fieldVelocity());
     addField(fieldPressure());
     addField(fieldAViscosity());
-    addField(fieldLapPressure());
+    // lap_pressure and div_laplacian are opt-in: register them explicitly with
+    // addField(VTUExporter::fieldLapPressure()) or addSensorField(...) when needed.
 }
 
 void VTUExporter::addField(ScalarField field) {
@@ -155,13 +155,9 @@ ScalarField VTUExporter::fieldRho() {
     return {"rho",
             [](elem::Element& elem,
                const double* ref_pts, int n_plot,
-               const double* quads, const double* weights, int P,
+               const double* /*quads*/, const double* /*weights*/, int /*P*/,
                double* out) {
-                double* c = new double[P + 1];
-                mat::computeLegendreCoeffs(c, elem.getU1(), quads, weights, P);
-                for (int i = 0; i < n_plot; ++i)
-                    out[i] = mat::evalLegendreExpansion(ref_pts[i], c, P);
-                delete[] c;
+                elem.getBasis()->interpolate(elem.getU1(), ref_pts, n_plot, out);
             }};
 }
 
@@ -169,19 +165,15 @@ ScalarField VTUExporter::fieldVelocity() {
     return {"velocity",
             [](elem::Element& elem,
                const double* ref_pts, int n_plot,
-               const double* quads, const double* weights, int P,
+               const double* /*quads*/, const double* /*weights*/, int P,
                double* out) {
-                double* c1 = new double[P + 1];
-                double* c2 = new double[P + 1];
-                mat::computeLegendreCoeffs(c1, elem.getU1(), quads, weights, P);
-                mat::computeLegendreCoeffs(c2, elem.getU2(), quads, weights, P);
-                for (int i = 0; i < n_plot; ++i) {
-                    double r = mat::evalLegendreExpansion(ref_pts[i], c1, P);
-                    double ru = mat::evalLegendreExpansion(ref_pts[i], c2, P);
-                    out[i] = ru / r;
-                }
-                delete[] c1;
-                delete[] c2;
+                const int N = P + 1;
+                const double* rho  = elem.getU1();
+                const double* rhou = elem.getU2();
+                double* u_nodes = new double[N];
+                for (int i = 0; i < N; ++i) u_nodes[i] = rhou[i] / rho[i];
+                elem.getBasis()->interpolate(u_nodes, ref_pts, n_plot, out);
+                delete[] u_nodes;
             }};
 }
 
@@ -189,49 +181,40 @@ ScalarField VTUExporter::fieldPressure() {
     return {"pressure",
             [](elem::Element& elem,
                const double* ref_pts, int n_plot,
-               const double* quads, const double* weights, int P,
+               const double* /*quads*/, const double* /*weights*/, int P,
                double* out) {
                 const double gm1 = 0.4;
-                double* c1 = new double[P + 1];
-                double* c2 = new double[P + 1];
-                double* c3 = new double[P + 1];
-                mat::computeLegendreCoeffs(c1, elem.getU1(), quads, weights, P);
-                mat::computeLegendreCoeffs(c2, elem.getU2(), quads, weights, P);
-                mat::computeLegendreCoeffs(c3, elem.getU3(), quads, weights, P);
-                for (int i = 0; i < n_plot; ++i) {
-                    double r  = mat::evalLegendreExpansion(ref_pts[i], c1, P);
-                    double ru = mat::evalLegendreExpansion(ref_pts[i], c2, P);
-                    double e  = mat::evalLegendreExpansion(ref_pts[i], c3, P);
-                    out[i] = gm1 * (e - 0.5 * ru * ru / r);
-                }
-                delete[] c1;
-                delete[] c2;
-                delete[] c3;
+                const int N = P + 1;
+                const double* rho  = elem.getU1();
+                const double* rhou = elem.getU2();
+                const double* e    = elem.getU3();
+                double* p_nodes = new double[N];
+                for (int i = 0; i < N; ++i)
+                    p_nodes[i] = gm1 * (e[i] - 0.5 * rhou[i] * rhou[i] / rho[i]);
+                elem.getBasis()->interpolate(p_nodes, ref_pts, n_plot, out);
+                delete[] p_nodes;
             }};
 }
 
 ScalarField VTUExporter::fieldAViscosity() {
     return {"a_viscosity",
             [](elem::Element& elem,
-               const double* /*ref_pts*/, int n_plot,
+               const double* ref_pts, int n_plot,
                const double* /*quads*/, const double* /*weights*/, int /*P*/,
                double* out) {
-                double av = *elem.getAV(0);
-                double val = av * av;
-                for (int i = 0; i < n_plot; ++i) out[i] = val;
+                elem.getBasis()->interpolate(elem.getAV(), ref_pts, n_plot, out);
             }};
 }
 
 ScalarField VTUExporter::fieldLapPressure() {
     return {"lap_pressure",
             [](elem::Element& elem,
-               const double* /*ref_pts*/, int n_plot,
-               const double* /*quads*/, const double* /*weights*/, int P,
+               const double* ref_pts, int n_plot,
+               const double* /*quads*/, const double* /*weights*/, int /*P*/,
                double* out) {
                 const double* lap = elem.computePressureLaplacian();
-                double nrm = cblas_dnrm2(P + 1, lap, 1);
+                elem.getBasis()->interpolate(lap, ref_pts, n_plot, out);
                 delete[] const_cast<double*>(lap);
-                for (int i = 0; i < n_plot; ++i) out[i] = nrm;
             }};
 }
 

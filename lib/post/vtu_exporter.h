@@ -27,9 +27,10 @@ struct ScalarField {
 /**
  * @brief Writes VTU/PVD output files for a spectral-element mesh.
  *
- * Default fields (rho, velocity, pressure, a_viscosity, lap_pressure) are
- * registered automatically. Call addField() or addElemField() before run()
- * to attach extra sensor outputs.
+ * Default fields (rho, velocity, pressure, a_viscosity) are registered
+ * automatically. `lap_pressure` and any sensor outputs (e.g. `div_laplacian`)
+ * are opt-in: register them with addField(VTUExporter::fieldLapPressure())
+ * or addSensorField(name, sensor) before calling run().
  */
 class VTUExporter {
 public:

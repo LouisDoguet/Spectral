@@ -26,7 +26,7 @@ mesh::Mesh* generateMesh(
     
     const double dx   = L / N_elem;
     const int    N_nodes  = N_elem * (P + 1);
-    base::Lagrange *basis  = new base::Lagrange(P);
+    base::InverseMultiQuadratic *basis  = new base::InverseMultiQuadratic(P,2.);
     double *rho_i  = new double[N_nodes];
     double *rhou_i = new double[N_nodes];
     double *e_i    = new double[N_nodes];
