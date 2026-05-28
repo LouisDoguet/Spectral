@@ -19,7 +19,7 @@ A 1D Spectral Element Method solver for the Euler equations.
 The framework contains a working neural network, ready to be tested with `MNIST` dataset
 
 ## Build & Compile
-Requires BLAS and BOOST_PROGRAM_OPTIONS
+Requires `BLAS`, `LAPACK`, `BOOST_PROGRAM_OPTIONS`
 ```bash
 mkdir build
 cd build
