@@ -9,20 +9,36 @@
 #include "../phy/physics.h"
 #include "element.h"
 
-/**
- * @brief BLAS of the derivative (dgemv)
- * @param dFdx DivFlux to overwrite
- * @param D Derivative matrix
- * @param F Flux
- * @param invJ 1/J, where J jacobian for the base change
- * @param n Size of the vector
- */
-void divF(double *dFdx, const double *D, const double *F, const double invJ,
-          const int n) {
-  cblas_dgemv(CblasRowMajor, CblasNoTrans, n, n, invJ, D, n, F, 1, 0., dFdx, 1);
-}
-
 namespace elem {
+
+void Element::setBasis(base::_Basis* newBasis) {
+  if (newBasis == basis) return;
+  const int N = basis->getOrder() + 1;
+
+  double* new_rho  = new double[N];
+  double* new_rhou = new double[N];
+  double* new_e    = new double[N];
+  double* new_AV   = new double[N];
+
+  const double* new_quads = newBasis->getQuads();
+  basis->interpolate(rho,  new_quads, N, new_rho);
+  basis->interpolate(rhou, new_quads, N, new_rhou);
+  basis->interpolate(e,    new_quads, N, new_e);
+  basis->interpolate(AV,   new_quads, N, new_AV);
+
+  std::copy(new_rho,  new_rho  + N, rho);
+  std::copy(new_rhou, new_rhou + N, rhou);
+  std::copy(new_e,    new_e    + N, e);
+  std::copy(new_AV,   new_AV   + N, AV);
+
+  delete[] new_rho;
+  delete[] new_rhou;
+  delete[] new_e;
+  delete[] new_AV;
+
+  basis = newBasis;
+  setFlux();
+}
 
 /**
  * @brief Sets the Jacobian from the element position
@@ -92,9 +108,37 @@ void Element::computeLegendreCoefficients() {
 }
 
 void Element::computeDivFlux() {
-  divF(divF1, basis->getD(), F1, invJ, basis->getOrder() + 1);
-  divF(divF2, basis->getD(), F2, invJ, basis->getOrder() + 1);
-  divF(divF3, basis->getD(), F3, invJ, basis->getOrder() + 1);
+  const int N = basis->getOrder() + 1;
+  const double* D = basis->getD();
+  const double* w = basis->getWeights();
+
+  // Reference derivative dF/dxi = D * F  (J factor lives in applyMassInverse)
+  cblas_dgemv(CblasRowMajor, CblasNoTrans, N, N, 1.0, D, N, F1, 1, 0.0, divF1, 1);
+  cblas_dgemv(CblasRowMajor, CblasNoTrans, N, N, 1.0, D, N, F2, 1, 0.0, divF2, 1);
+  cblas_dgemv(CblasRowMajor, CblasNoTrans, N, N, 1.0, D, N, F3, 1, 0.0, divF3, 1);
+
+  // Weight by w_i so divFk currently holds the volume residual V_i = w_i * (DF)_i
+  for (int i = 0; i < N; ++i) {
+    divF1[i] *= w[i];
+    divF2[i] *= w[i];
+    divF3[i] *= w[i];
+  }
+}
+
+void Element::applyMassInverse() {
+  const int N = basis->getOrder() + 1;
+  const double* Minv = basis->getMinv();
+
+  double* tmp = new double[N];
+
+  cblas_dgemv(CblasRowMajor, CblasNoTrans, N, N, invJ, Minv, N, divF1, 1, 0.0, tmp, 1);
+  std::copy(tmp, tmp + N, divF1);
+  cblas_dgemv(CblasRowMajor, CblasNoTrans, N, N, invJ, Minv, N, divF2, 1, 0.0, tmp, 1);
+  std::copy(tmp, tmp + N, divF2);
+  cblas_dgemv(CblasRowMajor, CblasNoTrans, N, N, invJ, Minv, N, divF3, 1, 0.0, tmp, 1);
+  std::copy(tmp, tmp + N, divF3);
+
+  delete[] tmp;
 }
 
 double* Element::computePressure() {

@@ -8,6 +8,7 @@
 namespace mesh {
 
 Mesh::Mesh(const int n, base::_Basis *basis, double xL, double xR) : n(n) {
+  primary_basis = basis;
   double dx_mesh = xR - xL;
   double dx = (double)dx_mesh / (n);
 
@@ -35,6 +36,7 @@ Mesh::Mesh(const int n, base::_Basis *basis, double xL, double xR,
            double u2_L, double u3_L, double u1_R, double u2_R, double u3_R)
     : n(n), u1_L(u1_L), u2_L(u2_L), u3_L(u3_L), u1_R(u1_R), u2_R(u2_R),
       u3_R(u3_R) {
+  primary_basis = basis;
 
   double dx_mesh = xR - xL;
   double dx = (double) dx_mesh / (n);
@@ -83,7 +85,6 @@ void Mesh::computeElements() {
 
 void Mesh::computeInterfaces() {
   const int P = elem[0]->getBasis()->getOrder();
-  const double *w = elem[0]->getBasis()->getWeights();
 
   for (int e = 0; e < n - 1; ++e) {
     /// Select iteracting elements
@@ -120,24 +121,20 @@ void Mesh::computeInterfaces() {
     double f2star = reimann::Rusanov(f2L, f2R, u2L, u2R, lambda);
     double f3star = reimann::Rusanov(f3L, f3R, u3L, u3R, lambda);
 
-    /// Apply weight and jacobian
-    double invWJ_L = (1.0 / w[P]) * *(LeftElem->getInvJ());
-    double invWJ_R = (1.0 / w[0]) * *(RightElem->getInvJ());
+    /// Boundary lift L_i = (F* - F^int) at the boundary node; the 1/(J*w)
+    /// scaling is applied later by applyMassInverse.
+    LeftElem->correctDivF1(P, f1star - f1L);
+    LeftElem->correctDivF2(P, f2star - f2L);
+    LeftElem->correctDivF3(P, f3star - f3L);
 
-    /// Add the correction to the elements
-    LeftElem->correctDivF1(P, invWJ_L * (f1star - f1L));
-    LeftElem->correctDivF2(P, invWJ_L * (f2star - f2L));
-    LeftElem->correctDivF3(P, invWJ_L * (f3star - f3L));
-
-    RightElem->correctDivF1(0, invWJ_R * (f1R - f1star));
-    RightElem->correctDivF2(0, invWJ_R * (f2R - f2star));
-    RightElem->correctDivF3(0, invWJ_R * (f3R - f3star));
+    RightElem->correctDivF1(0, f1R - f1star);
+    RightElem->correctDivF2(0, f2R - f2star);
+    RightElem->correctDivF3(0, f3R - f3star);
   }
 }
 
 void Mesh::applyDirichlet() {
   const int P = elem[0]->getBasis()->getOrder();
-  const double *w = elem[0]->getBasis()->getWeights();
 
   // --- LEFT BOUNDARY ---
   double u1_int_L = *(elem[0]->getU1(0));
@@ -165,10 +162,9 @@ void Mesh::applyDirichlet() {
   double f2s_L = reimann::Rusanov(f2_ext_L, f2_int_L, u2_L, u2_int_L, lambda_L);
   double f3s_L = reimann::Rusanov(f3_ext_L, f3_int_L, u3_L, u3_int_L, lambda_L);
 
-  double invWJ_L = (1.0 / w[0]) * *(elem[0]->getInvJ());
-  elem[0]->correctDivF1(0, invWJ_L * (f1_int_L - f1s_L));
-  elem[0]->correctDivF2(0, invWJ_L * (f2_int_L - f2s_L));
-  elem[0]->correctDivF3(0, invWJ_L * (f3_int_L - f3s_L));
+  elem[0]->correctDivF1(0, f1_int_L - f1s_L);
+  elem[0]->correctDivF2(0, f2_int_L - f2s_L);
+  elem[0]->correctDivF3(0, f3_int_L - f3s_L);
 
   // --- RIGHT BOUNDARY ---
   int last = n - 1;
@@ -196,10 +192,9 @@ void Mesh::applyDirichlet() {
   double f2s_R = reimann::Rusanov(f2_int_R, f2_ext_R, u2_int_R, u2_R, lambda_R);
   double f3s_R = reimann::Rusanov(f3_int_R, f3_ext_R, u3_int_R, u3_R, lambda_R);
 
-  double invWJ_R = (1.0 / w[P]) * *(elem[last]->getInvJ());
-  elem[last]->correctDivF1(P, invWJ_R * (f1s_R - f1_int_R));
-  elem[last]->correctDivF2(P, invWJ_R * (f2s_R - f2_int_R));
-  elem[last]->correctDivF3(P, invWJ_R * (f3s_R - f3_int_R));
+  elem[last]->correctDivF1(P, f1s_R - f1_int_R);
+  elem[last]->correctDivF2(P, f2s_R - f2_int_R);
+  elem[last]->correctDivF3(P, f3s_R - f3_int_R);
 }
 
 void Mesh::computeResidual() {
@@ -209,6 +204,31 @@ void Mesh::computeResidual() {
   this->computeElements();
   this->computeInterfaces();
   this->applyDirichlet();
+  // Final stage: divFk <- (1/J) * Minv * divFk on each element.
+  for (int e = 0; e < n; ++e) {
+    elem[e]->applyMassInverse();
+  }
+}
+
+void Mesh::adaptBasis(sens::PerssonPeraire& sensor, int truncation,
+                      double s_shock, double s_smooth) {
+  if (alt_basis == nullptr || primary_basis == nullptr) return;
+
+  for (int e = 0; e < n; ++e) {
+    elem::Element* E = elem[e];
+    // Modal coefficients depend on the current basis -> refresh first.
+    E->computeLegendreCoefficients();
+    const double Se = sensor.SmoothnessIndicator(*E, truncation);
+    if (Se < 1e-30) continue;                  // perfectly smooth -> nothing to do
+    const double logSe = std::log10(Se);
+
+    base::_Basis* current = const_cast<base::_Basis*>(E->getBasis());
+    if (current == primary_basis && logSe > s_shock) {
+      E->setBasis(alt_basis);
+    } else if (current == alt_basis && logSe < s_smooth) {
+      E->setBasis(primary_basis);
+    }
+  }
 }
 
 Mesh::~Mesh() {

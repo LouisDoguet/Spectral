@@ -123,6 +123,13 @@ Lagrange::Lagrange(const int p) : _Basis("GaussLegendreLobato", p) {
   gauss::setQuads(quads, p);
   gauss::setWeights(weights, quads, p);
   gauss::computeDerivative(D, quads, p);
+  // Mass matrix under GLL collocation: M = diag(w_i) (exact up to one
+  // aliased mode for polynomials of degree <= P).
+  const int N = p + 1;
+  for (int i = 0; i < N; ++i) {
+    M[i * N + i]    = weights[i];
+    Minv[i * N + i] = 1.0 / weights[i];
+  }
 }
 
 void Lagrange::interpolate(const double* u, const double* xi, int n_pts, double* out) const {

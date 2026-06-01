@@ -64,10 +64,10 @@ void VTUExporter::write(int step, double time, const std::string& prefix) {
     exported_files.push_back({time, basename});
 
     const int n_elem = m->getNumElements();
-    const base::_Basis* basis = m->getElem(0)->getBasis();
-    const int P = basis->getOrder();
-    const double* quads = basis->getQuads();
-    const double* weights = basis->getWeights();
+    // The mesh's primary basis only fixes P and the geometry; per-element
+    // quadrature data is queried inside the field-fill loop so adaptive meshes
+    // (different elements on different bases) export correctly.
+    const int P = m->getElem(0)->getBasis()->getOrder();
 
     const int n_nodes = n_elem * n_plot;
     const int n_cells = n_elem * (n_plot - 1);
@@ -122,7 +122,9 @@ void VTUExporter::write(int step, double time, const std::string& prefix) {
         file << "        <DataArray type=\"Float64\" Name=\"" << field.name
              << "\" format=\"ascii\">\n";
         for (int e = 0; e < n_elem; ++e) {
-            field.fill(*m->getElem(e), ref_pts, n_plot, quads, weights, P, buf);
+            const base::_Basis* eb = m->getElem(e)->getBasis();
+            field.fill(*m->getElem(e), ref_pts, n_plot,
+                       eb->getQuads(), eb->getWeights(), eb->getOrder(), buf);
             for (int i = 0; i < n_plot; ++i) file << buf[i] << " ";
         }
         file << "\n        </DataArray>\n";

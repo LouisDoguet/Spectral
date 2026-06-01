@@ -2,6 +2,7 @@
 #define MESH_H
 
 #include "../base/base.h"
+#include "../sensor/sensor.h"
 #include "element.h"
 
 namespace mesh {
@@ -68,11 +69,28 @@ public:
   /// Boundary conditions
   void applyDirichlet();
 
+  /// @brief Register the alternative basis (e.g. IMQ) used to resolve
+  ///   discontinuities. Must share the same order P as the primary basis.
+  void setAltBasis(base::_Basis* alt) { alt_basis = alt; }
+  base::_Basis* getPrimaryBasis() const { return primary_basis; }
+  base::_Basis* getAltBasis()    const { return alt_basis; }
+
+  /// @brief Per-element basis switching driven by the Persson-Peraire shock
+  ///   indicator log10(Se):
+  ///     - currently on primary, logSe > s_shock  -> migrate to alt
+  ///     - currently on alt,     logSe < s_smooth -> migrate back to primary
+  ///   Each migration triggers Element::setBasis (re-interpolation + setFlux).
+  ///   Caller is responsible for calling this between time steps only.
+  void adaptBasis(sens::PerssonPeraire& sensor, int truncation,
+                  double s_shock, double s_smooth);
+
   ~Mesh();
 
 private:
   const int n;
   elem::Element **elem;
+  base::_Basis* primary_basis = nullptr;  // smooth-region basis (Lagrange)
+  base::_Basis* alt_basis     = nullptr;  // shock-resolving basis (RBF)
 
   /// Unified variables
   double *global_rho;

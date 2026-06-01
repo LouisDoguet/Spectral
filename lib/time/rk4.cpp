@@ -41,6 +41,11 @@ void RK4::finalize_step(double dt) {
 }
 
 void RK4::step(double dt) {
+  // Basis adaptation must happen BEFORE save_state so rho_n/rhou_n/e_n and the
+  // global U buffers stay consistent throughout the four stages.
+  if (adapt_alt && adapt_pp) {
+    m->adaptBasis(*adapt_pp, adapt_trunc, adapt_s_shock, adapt_s_smooth);
+  }
   save_state();
   m->computeResidual();
   if (diffusion)

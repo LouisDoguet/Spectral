@@ -41,6 +41,63 @@ void base::RBF::initialize() {
     this->invertActivatedRadialMatrix();
     this->computeDerivative();
     this->computeWeights();
+    this->computeMassMatrix();
+}
+
+void base::RBF::computeMassMatrix() {
+    const int N = this->p + 1;
+
+    // K_{kl} = int_{-1}^{1} phi(|xi - x_k|) phi(|xi - x_l|) dxi
+    // Over-refined composite trapezoidal rule. Integrand is smooth -> O(h^2)
+    // convergence, error ~ (2/Q)^2; Q = 4000 gives ~1e-7 — plenty for use.
+    const int Q = 4000;
+    const double dxi = 2.0 / Q;
+    double* K = new double[N * N]();
+    double* phi = new double[N];
+    for (int q = 0; q <= Q; ++q) {
+        const double xi = -1.0 + q * dxi;
+        const double wt = (q == 0 || q == Q) ? 0.5 * dxi : dxi;
+        for (int k = 0; k < N; ++k) phi[k] = this->kernel(xi - quads[k]);
+        for (int k = 0; k < N; ++k)
+            for (int l = 0; l < N; ++l)
+                K[k * N + l] += wt * phi[k] * phi[l];
+    }
+    delete[] phi;
+
+    // M = (Phi^{-1})^T * K * Phi^{-1}
+    double* tmp = new double[N * N];
+    cblas_dgemm(CblasRowMajor, CblasTrans, CblasNoTrans, N, N, N,
+                1.0, inv_activ_radial_matrix, N,
+                     K, N,
+                0.0, tmp, N);
+    cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, N, N, N,
+                1.0, tmp, N,
+                     inv_activ_radial_matrix, N,
+                0.0, M, N);
+    delete[] tmp;
+    delete[] K;
+
+    // Minv = M^{-1} via LAPACK
+    std::copy(M, M + N * N, Minv);
+    int n = N, info = 0;
+    int* ipiv = new int[N];
+    F77NAME(dgetrf)(&n, &n, Minv, &n, ipiv, &info);
+    if (info != 0) {
+        std::cerr << "RBF::computeMassMatrix: dgetrf info=" << info << std::endl;
+        delete[] ipiv;
+        return;
+    }
+    int lwork = -1;
+    double work_size = 0.0;
+    F77NAME(dgetri)(&n, Minv, &n, ipiv, &work_size, &lwork, &info);
+    lwork = (int)work_size;
+    double* work = new double[lwork];
+    F77NAME(dgetri)(&n, Minv, &n, ipiv, work, &lwork, &info);
+    if (info != 0) {
+        std::cerr << "RBF::computeMassMatrix: dgetri info=" << info << std::endl;
+    }
+    delete[] work;
+    delete[] ipiv;
 }
 
 void base::RBF::computeWeights() {

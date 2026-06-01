@@ -35,6 +35,19 @@ namespace solver {
             void setSensor(sens::_Sensor* sensr) { sensor = sensr; }
             void setSnapshotDir(std::string dir) { snapshot_dir = std::move(dir); }
 
+            /// @brief Enable per-element basis adaptation driven by Persson-Peraire.
+            /// At the start of every timestep, elements above `s_shock` switch to
+            /// `alt`; elements on `alt` below `s_smooth` switch back. `alt` must
+            /// share the basis order P of the mesh's primary basis.
+            void enableBasisAdaptation(base::_Basis* alt, sens::PerssonPeraire* pp,
+                                       int truncation, double s_shock, double s_smooth) {
+                adapt_alt = alt;
+                adapt_pp = pp;
+                adapt_trunc = truncation;
+                adapt_s_shock = s_shock;
+                adapt_s_smooth = s_smooth;
+            }
+
             /** Access the VTU exporter to register extra fields before run(). */
             post::VTUExporter& getExporter() { return *exporter; }
 
@@ -53,6 +66,13 @@ namespace solver {
             mesh::Mesh* m;
             diff::_Diffusion* diffusion = nullptr;
             sens::_Sensor* sensor = nullptr;
+
+            // Basis-adaptation params (used by step() between timesteps)
+            base::_Basis*           adapt_alt      = nullptr;
+            sens::PerssonPeraire*   adapt_pp       = nullptr;
+            int                     adapt_trunc    = 1;
+            double                  adapt_s_shock  = 0.0;
+            double                  adapt_s_smooth = 0.0;
 
             post::VTUExporter* exporter;
 

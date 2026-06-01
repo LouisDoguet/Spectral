@@ -24,10 +24,14 @@ public:
 };
 
 class PerssonPeraire : public _Sensor {
-private:
+public:
+    /// @brief Scalar shock indicator Se = (energy in top `truncation` modes) / (total modal energy).
+    /// Caller is expected to have computed the element's Legendre coefficients
+    /// beforehand (via `elem.computeLegendreCoefficients()`) so this method
+    /// stays free of side effects.
     double SmoothnessIndicator(elem::Element& elem, int truncation);
 
-public:
+
     /**
      * @brief Persson-Peraire sensor
      * 

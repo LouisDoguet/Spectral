@@ -39,7 +39,11 @@ public:
           double *external_rho, double *external_rhou, double *external_e, double* artVisc);
 
   /// SETTERS
-  void setBasis(base::_Basis *sharedBasis) { this->basis = sharedBasis; }
+  /// @brief Migrate this element from its current basis to `newBasis`.
+  /// Re-interpolates rho, rhou, e and AV from the old basis's nodes onto the
+  /// new basis's nodes (both must share the same order P), updates the basis
+  /// pointer and recomputes the flux. No-op if `newBasis == current basis`.
+  void setBasis(base::_Basis *newBasis);
   void setJ(double xL, double xR);
   void setID(int ID) { this->id = ID; }
   void setU1(double *rho) { this->rho = rho; }
@@ -106,8 +110,17 @@ public:
   void correctDivF3(int pos, double val) { divF3[pos] += val; }
 
 
-  /// df/dx using the base's derivative matrix
+  /// @brief Accumulates the DG volume residual into divFk:
+  ///   divFk_i = w_i * (D F_k)_i.  No 1/J factor yet — applyMassInverse
+  ///   handles the per-element geometric scaling and the mass-matrix solve.
   void computeDivFlux();
+
+  /// @brief Final stage of the DG residual: divFk <- (1/J) * Minv * divFk.
+  /// Routes the volume term and the boundary lifts through the basis's mass
+  /// matrix. For Lagrange (Minv = diag(1/w)) this collapses back to the
+  /// classical (1/J) * D * F + (1/(J w_b)) * [F*-F]_b form; for RBF the
+  /// boundary correction is spread to interior nodes via Minv.
+  void applyMassInverse();
   /// Computes Legendre coefficients from Lagrange polynomials
   void computeLegendreCoefficients();
   /// Computes element pressure

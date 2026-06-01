@@ -13,6 +13,10 @@ namespace base{
 		virtual const double* getWeights() const = 0;
 		virtual const int getOrder() const = 0;
 		virtual const double* getD() const = 0;
+		/// @brief Reference mass matrix M_ij = int_{-1}^{1} l_i(xi) l_j(xi) dxi
+		virtual const double* getM() const = 0;
+		/// @brief Inverse of the reference mass matrix, precomputed at construction.
+		virtual const double* getMinv() const = 0;
 
 		/// @brief Evaluates the basis interpolant of nodal values `u`
 		///   at `n_pts` reference points `xi[k] in [-1,1]`. Writes results to `out`.
@@ -26,6 +30,8 @@ namespace base{
 		std::string name;
 		const int p;
 	    double* D;
+	    double* M;
+	    double* Minv;
 	    double* quads;
 	    double* weights;
 	};
@@ -41,6 +47,8 @@ namespace base{
 	    const double* getWeights() const override {return weights;}
 	    const int getOrder() const override {return p;}
 	    const double* getD() const override {return D;}
+	    const double* getM() const override {return M;}
+	    const double* getMinv() const override {return Minv;}
 	    void interpolate(const double* u, const double* xi, int n_pts, double* out) const override;
     };
 
@@ -53,6 +61,8 @@ namespace base{
 		const double* getWeights() const override { return weights; }
 		const int     getOrder()   const override { return p;       }
 		const double* getD()       const override { return D;       }
+		const double* getM()       const override { return M;       }
+		const double* getMinv()    const override { return Minv;    }
 
 		/// @brief Generic RBF interpolation: lambda = Phi^{-1} u, then
 		///   s(xi) = sum_j lambda_j * kernel(xi - x_j).
@@ -80,6 +90,9 @@ namespace base{
 		void invertActivatedRadialMatrix();
 		/// @brief w_i = sum_k [Phi^{-1}]_{i,k} * int_{-1}^{1} phi(|xi - x_k|) dxi
 		void computeWeights();
+		/// @brief M_ij = int_{-1}^{1} l_i^{RBF}(xi) l_j^{RBF}(xi) dxi via over-
+		///   refined quadrature; inverse computed with LAPACK.
+		void computeMassMatrix();
 
 		virtual void activateRadialMatrix() = 0;
 		/// @brief Builds the nodal derivative matrix D = Phi' * Phi^{-1}

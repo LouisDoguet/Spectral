@@ -26,7 +26,10 @@ mesh::Mesh* generateMesh(
     
     const double dx   = L / N_elem;
     const int    N_nodes  = N_elem * (P + 1);
-    base::InverseMultiQuadratic *basis  = new base::InverseMultiQuadratic(P,2.);
+    // Primary basis (smooth regions) + alternative basis (shock-resolving).
+    // Same order P so per-element migration is a same-size operation.
+    base::Lagrange*              basis     = new base::Lagrange(P);
+    base::InverseMultiQuadratic* alt_basis = new base::InverseMultiQuadratic(P, 2.0);
     double *rho_i  = new double[N_nodes];
     double *rhou_i = new double[N_nodes];
     double *e_i    = new double[N_nodes];
@@ -69,8 +72,9 @@ mesh::Mesh* generateMesh(
                                       rho_i, rhou_i, e_i,
                                       bc_rhoL, bc_rhouL, bc_eL,
                                       bc_rhoR, bc_rhouR, bc_eR);
+    mesh->setAltBasis(alt_basis);
 
-    return mesh;    
+    return mesh;
 };
 
 void RunShockTube(

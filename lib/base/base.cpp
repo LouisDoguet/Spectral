@@ -1,17 +1,23 @@
 #include "base.h"
+#include "../math/math.h"
 #include <cmath>
 
 namespace base {
 _Basis::_Basis(std::string name, const int p) : name(name), p(p) {
-  quads = new double[p + 1];
-  weights = new double[p + 1];
-  D = new double[(p + 1) * (p + 1)];
+  const int N = p + 1;
+  quads = new double[N];
+  weights = new double[N];
+  D = new double[N * N];
+  M = new double[N * N]();
+  Minv = new double[N * N]();
 }
 
 _Basis::~_Basis() {
   delete[] quads;
   delete[] weights;
   delete[] D;
+  delete[] M;
+  delete[] Minv;
 }
 
 std::ostream &operator<<(std::ostream &os, const _Basis &b) {

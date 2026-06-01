@@ -601,8 +601,8 @@ Timestep :  5980/ 6000
 Timestep :  5990/ 6000 
 Timestep :  6000/ 6000 
 --- Simulation Finished ---
-Mesh size : 60
-Quads     : 21
-Nodes     : 1260
+Mesh size : 50
+Quads     : 7
+Nodes     : 350
 Timesteps : 6000
---- TOTAL OPER : 7560000
+--- TOTAL OPER : 2100000

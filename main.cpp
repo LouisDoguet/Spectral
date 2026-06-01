@@ -72,13 +72,11 @@ int main(int argc, char *argv[]) {
 
   mesh::Mesh* M = S1D::generateMesh(N_elem, P, L, rhoL, uL, pL, rhoR, uR, pR, x0, delta);
   solver::RK4* S = new solver::RK4(M, Q);
-  // diff::PerssonPeraire* diff_PP = new diff::PerssonPeraire(trunc, s0, kappa, eps0);
-  // sens::DivLaplacian* sensor_DL = new sens::DivLaplacian();
+  diff::PerssonPeraire* diff_PP = new diff::PerssonPeraire(trunc, s0, kappa, eps0);
+  sens::PerssonPeraire* sensor_DL = new sens::PerssonPeraire();
 
   // Opt-in extra exports — uncomment as needed:
   //   S->addSensorField("div_laplacian", sensor_DL);
   //   S->getExporter().addField(post::VTUExporter::fieldLapPressure());
-  // S1D::RunShockTube(S, diff_PP, sensor_DL, T_final, dt, output);
-
-  S->run(T_final, dt, 10, output);
+  S1D::RunShockTube(S, diff_PP, sensor_DL, T_final, dt, output);
 }
