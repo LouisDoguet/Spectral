@@ -17,19 +17,20 @@ namespace po = boost::program_options;
 namespace S1D {
 
 mesh::Mesh* generateMesh(
-        const int N_elem, const int P, const double L,
+        base::_Basis* basis,
+        const int N_elem, const double L,
         const double rhoL, const double uL, const double pL, 
         const double rhoR, const double uR, const double pR, 
         double x0, double delta) {
         
     double gamma = 1.4;
+    const int P = basis->getOrder();
     
     const double dx   = L / N_elem;
     const int    N_nodes  = N_elem * (P + 1);
     // Primary basis (smooth regions) + alternative basis (shock-resolving).
     // Same order P so per-element migration is a same-size operation.
-    base::Lagrange*              basis     = new base::Lagrange(P);
-    base::Gaussian* alt_basis = new base::Gaussian(P, 10.);
+
     double *rho_i  = new double[N_nodes];
     double *rhou_i = new double[N_nodes];
     double *e_i    = new double[N_nodes];
@@ -72,14 +73,14 @@ mesh::Mesh* generateMesh(
                                       rho_i, rhou_i, e_i,
                                       bc_rhoL, bc_rhouL, bc_eL,
                                       bc_rhoR, bc_rhouR, bc_eR);
-    mesh->setAltBasis(alt_basis);
 
     return mesh;
 };
 
 void RunShockTube(
-    solver::_Solver* solver, diff::_Diffusion* diffusion, sens::_Sensor* sensor, 
-    double T_final, double dt, std::string case_name) {
+    solver::_Solver* solver,
+    double T_final, double dt, std::string case_name,
+    diff::_Diffusion* diffusion, sens::_Sensor* sensor) {
 
     //-- DIFFUSION MODE --
     if (diffusion) solver->setDiffusion(diffusion);

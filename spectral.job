@@ -8,10 +8,24 @@
 #SBATCH --output=SlurmOutput/Spectral1D.txt
 #SBATCH --account=aero_hpc
 
-./build/spectral --P 6 --N 50 --Q 100 --T 0.4 --dt 5e-5 \
-  --sensor --trunc 3 --s0 -3.0 --kappa 1 --eps0 5e-3 --output GAUSSIAN
 
-#./build/spectral \
-#    --P 6 --N 50 --T 0.4 --dt 5e-5 \
-#    --sensor --trunc 3 --s0 -3.0 --kappa 1 --eps0 5e-3 \
-#    --Q 30 --output PP_test/k1/SOD_P6_E50_t3
+./build/spectral --P 6 --N 50 --Q 100 --T 0.4 --dt 5e-5 --output POLY/SOD_POLY
+
+./build/spectral --P 6 --N 50 --Q 100 --T 0.4 --dt 5e-5 \
+  --sensor "PerssonPeraire" --trunc 3 --s0 -3.0 --kappa 1 --eps0 5e-3 --output POLY/SENSOR_PP/SOD_POLY_PP
+
+./build/spectral --P 6 --N 50 --Q 100 --T 0.4 --dt 5e-5 --eps 2. --base0 "RBF::IMQ" --output IMQ/SOD_IMQ
+
+./build/spectral --P 6 --N 50 --Q 100 --T 0.4 --dt 5e-5 --eps 1. --base0 "RBF::IMQ" \
+    --sensor "PerssonPeraire" --trunc 3 --s0 -3.0 --kappa 1 --eps0 5e-3 --output IMQ/SENSOR_PP/SOD_IMQ_PP
+
+./build/spectral --P 6 --N 50 --Q 100 --T 0.4 --dt 5e-5 --eps 2. --base0 "RBF::GAUSSIAN" --output GAUSS/SOD_GAUSS
+
+./build/spectral --P 6 --N 50 --Q 100 --T 0.4 --dt 5e-5 --eps 1. --base0 "RBF::GAUSSIAN" \
+    --sensor "PerssonPeraire" --trunc 3 --s0 -3.0 --kappa 1 --eps0 5e-3 --output GAUSS/SENSOR_PP/SOD_GAUSS_PP
+
+./build/spectral --P 6 --N 50 --Q 100 --T 0.4 --dt 5e-5 --eps 2. --base1 "RBF::GAUSSIAN"  \
+    --sensor "PerssonPeraire" --trunc 3 --s0 -3.0 --kappa 1 --eps0 5e-3 --output HYBRID/SOD_poly_gauss
+
+./build/spectral --P 6 --N 50 --Q 100 --T 0.4 --dt 5e-5 --eps 2. --base1 "RBF::IMQ" \
+    --sensor "PerssonPeraire" --trunc 3 --s0 -3.0 --kappa 1 --eps0 5e-3 --output HYBRID/SOD_poly_IMQ

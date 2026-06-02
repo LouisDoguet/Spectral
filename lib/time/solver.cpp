@@ -71,6 +71,19 @@ void _Solver::export_snapshot(int step, double time, std::string dir) {
   f.write(reinterpret_cast<const char *>(m->getGlobalU3()), total_points * sizeof(double));
 }
 
+std::ostream &operator<<(std::ostream &os, const _Solver &s) {
+  os << "===== SOLVER =====" << std::endl
+     << "NAME         : " << s.name << std::endl
+     << "TOTAL POINTS : " << s.total_points << std::endl
+     << "PLOT POINTS  : " << s.n_plot << std::endl
+     << "DIFFUSION    : " << (s.diffusion ? "enabled" : "disabled") << std::endl
+     << "SENSOR       : " << (s.sensor ? "enabled" : "disabled") << std::endl
+     << "BASIS ADAPT. : " << (s.adapt_alt ? "enabled" : "disabled") << std::endl;
+  if (s.m)
+    os << *(s.m);
+  return os;
+}
+
 _Solver::~_Solver() {
   delete exporter;
   delete[] rho_n;

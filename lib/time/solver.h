@@ -1,6 +1,7 @@
 #ifndef SOLVER_H
 #define SOLVER_H
 
+#include <ostream>
 #include <string>
 #include "../space/mesh.h"
 #include "../sensor/sensor.h"
@@ -39,10 +40,10 @@ namespace solver {
             /// At the start of every timestep, elements above `s_shock` switch to
             /// `alt`; elements on `alt` below `s_smooth` switch back. `alt` must
             /// share the basis order P of the mesh's primary basis.
-            void enableBasisAdaptation(base::_Basis* alt, sens::PerssonPeraire* pp,
+            void enableBasisAdaptation(base::_Basis* alt, sens::_Sensor* ssor,
                                        int truncation, double s_shock, double s_smooth) {
                 adapt_alt = alt;
-                adapt_pp = pp;
+                adapt_pp = ssor;
                 adapt_trunc = truncation;
                 adapt_s_shock = s_shock;
                 adapt_s_smooth = s_smooth;
@@ -58,6 +59,8 @@ namespace solver {
 
             ~_Solver();
 
+            friend std::ostream &operator<<(std::ostream &, const _Solver &);
+
         protected:
             std::string name;
             int total_points;
@@ -69,7 +72,7 @@ namespace solver {
 
             // Basis-adaptation params (used by step() between timesteps)
             base::_Basis*           adapt_alt      = nullptr;
-            sens::PerssonPeraire*   adapt_pp       = nullptr;
+            sens::_Sensor*          adapt_pp       = nullptr;
             int                     adapt_trunc    = 1;
             double                  adapt_s_shock  = 0.0;
             double                  adapt_s_smooth = 0.0;

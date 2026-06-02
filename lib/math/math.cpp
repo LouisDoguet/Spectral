@@ -112,12 +112,12 @@ double derivativeGaussian(double eps, double x, double xi){
  * @param n size of the vector
  * @return void
  */
-void print(const double *vec, size_t n) {
-  std::cout << "[ ";
+void print(const double *vec, size_t n, std::ostream &os) {
+  os << "[ ";
   for (size_t i = 0; i < n; ++i) {
-    std::cout << std::fixed << vec[i] << "  ";
+    os << std::fixed << vec[i] << "  ";
   }
-  std::cout << " ]" << std::endl;
+  os << " ]" << std::endl;
 }
 
 /**
@@ -127,12 +127,12 @@ void print(const double *vec, size_t n) {
  * @param s_col Size of the columns
  * @return void
  */
-void print(const double *mat, size_t s_row, size_t s_col) {
-  std::cout << std::endl;
+void print(const double *mat, size_t s_row, size_t s_col, std::ostream &os) {
+  os << std::endl;
   for (size_t i = 0; i < s_row; ++i) {
-    print(mat + i * s_col, s_col);
+    print(mat + i * s_col, s_col, os);
   }
-  std::cout << std::endl;
+  os << std::endl;
 }
 
 double inner_product(const double* vec1, const double* vec2, size_t n){

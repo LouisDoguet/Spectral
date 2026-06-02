@@ -242,7 +242,19 @@ Mesh::~Mesh() {
 }
 
 std::ostream &operator<<(std::ostream &os, const Mesh &m) {
-  os << "----- MESH -----" << std::endl << "N. ELEM  : " << m.n << std::endl;
+  os << "----- MESH -----" << std::endl
+     << "N. ELEM      : " << m.n << std::endl
+     << "TOTAL POINTS : " << m.getTotalPoints() << std::endl;
+
+  os << "PRIMARY BASIS:" << std::endl;
+  if (m.primary_basis)
+    os << *(m.primary_basis);
+  else
+    os << "  (none)" << std::endl;
+
+  if (m.alt_basis) {
+    os << "ALT BASIS:" << std::endl << *(m.alt_basis);
+  }
   return os;
 };
 

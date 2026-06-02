@@ -42,9 +42,12 @@ void RK4::finalize_step(double dt) {
 
 void RK4::step(double dt) {
   // Basis adaptation must happen BEFORE save_state so rho_n/rhou_n/e_n and the
-  // global U buffers stay consistent throughout the four stages.
+  // global U buffers stay consistent throughout the four stages. adaptBasis
+  // relies on the Persson-Peraire smoothness indicator, so the registered
+  // sensor must be (or derive from) PerssonPeraire.
   if (adapt_alt && adapt_pp) {
-    m->adaptBasis(*adapt_pp, adapt_trunc, adapt_s_shock, adapt_s_smooth);
+    if (auto* pp = dynamic_cast<sens::PerssonPeraire*>(adapt_pp))
+      m->adaptBasis(*pp, adapt_trunc, adapt_s_shock, adapt_s_smooth);
   }
   save_state();
   m->computeResidual();
@@ -71,10 +74,11 @@ void RK4::step(double dt) {
 
 void RK4::run(double T_final, double dt, int save_freq, std::string prefix) {
   int n_steps = std::ceil(T_final / dt);
+  std::cout << *(this);
   std::cout << "--- Starting Simulation ---" << std::endl;
   for (int step = 0; step <= n_steps; ++step) {
     if (step % save_freq == 0) {
-      std::printf("Timestep : %5d/%5d \n", step, n_steps);
+      // std::printf("Timestep : %5d/%5d \n", step, n_steps);
       exporter->write(step, step * dt, prefix);
       if (!snapshot_dir.empty())
         export_snapshot(step, step * dt, snapshot_dir);
@@ -90,6 +94,7 @@ void RK4::run(double T_final, double dt, int save_freq, std::string prefix) {
   std::cout << "Nodes     : " << nelem * nquad << std::endl;
   std::cout << "Timesteps : " << n_steps << std::endl;
   std::cout << "--- TOTAL OPER : " << n_steps * nelem * nquad << std::endl;
+  std::cout << std::endl << std::endl << std::endl;
 }
 
 } // namespace solver

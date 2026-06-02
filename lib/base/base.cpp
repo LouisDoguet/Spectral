@@ -21,9 +21,27 @@ _Basis::~_Basis() {
 }
 
 std::ostream &operator<<(std::ostream &os, const _Basis &b) {
-  os << "----- BASIS -----" << std::endl 
+  const int N = b.p + 1;
+  os << "----- BASIS -----" << std::endl
      << "NAME   : " << b.name << std::endl
-     << "ORDER  : " << b.p << std::endl;
+     << "ORDER  : " << b.p << std::endl
+     << "NODES  : " << N << std::endl;
+
+  os << "QUADS  : ";
+  mat::print(b.quads, N, os);
+
+  os << "WEIGHTS: ";
+  mat::print(b.weights, N, os);
+
+  os << "DERIVATIVE MATRIX D [" << N << "x" << N << "] :";
+  mat::print(b.D, N, N, os);
+
+  os << "MASS MATRIX M [" << N << "x" << N << "] :";
+  mat::print(b.M, N, N, os);
+
+  os << "INVERSE MASS MATRIX Minv [" << N << "x" << N << "] :";
+  mat::print(b.Minv, N, N, os);
+
   return os;
 }
 } // namespace base

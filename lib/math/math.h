@@ -6,8 +6,8 @@
 #include "../base/base.h"
 
 namespace mat {
-    void print(const double* vec, size_t n);
-    void print(const double* mat, size_t s_row, size_t s_col);
+    void print(const double* vec, size_t n, std::ostream& os = std::cout);
+    void print(const double* mat, size_t s_row, size_t s_col, std::ostream& os = std::cout);
 
     double legendre(int k, double xi);
     void computeLegendreCoeffs(double* c, const double* u, const double* quads,
