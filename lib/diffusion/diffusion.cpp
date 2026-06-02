@@ -71,6 +71,7 @@ void Constant::apply(mesh::Mesh *mesh) {
   const base::_Basis *basis = mesh->getBasis();
   int n = basis->getOrder() + 1;
   const int n_elem = mesh->getNumElements();
+  const base::_Basis* primary = mesh->getPrimaryBasis();
 
   double *eps_array = new double[n];
 
@@ -79,8 +80,11 @@ void Constant::apply(mesh::Mesh *mesh) {
 
   for (int i = 0; i < n_elem; ++i) {
     elem::Element *e = mesh->getElem(i);
+    // Strong-form diffusion is only consistent on the polynomial basis.
+    if (primary && e->getBasis() != primary) continue;
     diffuse(e, eps_array, n);
   }
+  delete[] eps_array;
 }
 
 void Custom::apply(mesh::Mesh *mesh) {
@@ -88,9 +92,11 @@ void Custom::apply(mesh::Mesh *mesh) {
   const base::_Basis *basis = mesh->getBasis();
   int n = basis->getOrder() + 1;
   const int n_elem = mesh->getNumElements();
+  const base::_Basis* primary = mesh->getPrimaryBasis();
 
   for (int i = 0; i < n_elem; ++i) {
     elem::Element *e = mesh->getElem(i);
+    if (primary && e->getBasis() != primary) continue;
     diffuse(e, eps_array + i * n, n);
   }
 }
@@ -98,8 +104,10 @@ void Custom::apply(mesh::Mesh *mesh) {
 void PerssonPeraire::apply(mesh::Mesh *mesh) {
   const int n      = mesh->getBasis()->getOrder() + 1;
   const int n_elem = mesh->getNumElements();
+  const base::_Basis* primary = mesh->getPrimaryBasis();
   for (int i = 0; i < n_elem; ++i) {
     elem::Element *e   = mesh->getElem(i);
+    if (primary && e->getBasis() != primary) continue;
     double        *eps = sensor.getViscosity(*e, truncation, s0, kappa, eps0);
     diffuse(e, eps, n);
     delete[] eps;

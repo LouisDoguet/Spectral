@@ -29,7 +29,7 @@ mesh::Mesh* generateMesh(
     // Primary basis (smooth regions) + alternative basis (shock-resolving).
     // Same order P so per-element migration is a same-size operation.
     base::Lagrange*              basis     = new base::Lagrange(P);
-    base::InverseMultiQuadratic* alt_basis = new base::InverseMultiQuadratic(P, 2.0);
+    base::Gaussian* alt_basis = new base::Gaussian(P, 10.);
     double *rho_i  = new double[N_nodes];
     double *rhou_i = new double[N_nodes];
     double *e_i    = new double[N_nodes];

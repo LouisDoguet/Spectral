@@ -100,6 +100,16 @@ void base::RBF::computeMassMatrix() {
     delete[] ipiv;
 }
 
+void base::RBF::activateRadialMatrix() {
+    const int N = this->p+1;
+    for (int i=0 ; i<N ; ++i){
+        for (int j=0; j<N ; ++j){
+            this->activated_radial_matrix[i*N + j] = 
+                this->kernel(this->radial_matrix[i*N + j]);
+        }
+    }
+}
+
 void base::RBF::computeWeights() {
     const int N = this->p + 1;
     double* I = new double[N];
@@ -202,16 +212,6 @@ double base::InverseMultiQuadratic::kernelIntegral(int k) const {
                               + std::asinh(this->eps * (1.0 + xk)));
 }
 
-void base::InverseMultiQuadratic::activateRadialMatrix() {
-    const int N = this->p+1;
-    for (int i=0 ; i<N ; ++i){
-        for (int j=0; j<N ; ++j){
-            this->activated_radial_matrix[i*N + j] = 
-                1 / sqrt( 1 + pow( this->eps*this->radial_matrix[i*N + j] ,2) );
-        }
-    }
-}
-
 void base::InverseMultiQuadratic::computeDerivative() {
     const int N = this->p+1;
 
@@ -220,6 +220,52 @@ void base::InverseMultiQuadratic::computeDerivative() {
     for (int i=0 ; i<N ; ++i){
         for (int j=0; j<N ; ++j){
             Phi_prime[i*N + j] = mat::derivativeInverseMultiQuad(
+                this->eps,
+                this->quads[i],
+                this->quads[j]);
+        }
+    }
+
+    // D = Phi' * Phi^{-1}  (nodal-to-nodal derivative operator)
+    cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans,
+                N, N, N,
+                1.0, Phi_prime, N,
+                     this->inv_activ_radial_matrix, N,
+                0.0, this->D, N);
+
+    delete[] Phi_prime;
+}
+
+
+
+
+base::Gaussian::Gaussian(const int p, const double eps)
+    : base::RBF(p, eps, "Gaussian") {
+    this->initialize();
+}
+
+double base::Gaussian::kernel(double r) const {
+    return ( exp( - this->eps * r*r ) );
+}
+
+double base::Gaussian::kernelIntegral(int k) const {
+    // I_k = int_{-1}^{1} exp(-eps*(xi - x_k)^2) dxi
+    //     = (1/2) sqrt(pi/eps) [ erf(sqrt(eps)*(1 - x_k)) + erf(sqrt(eps)*(1 + x_k)) ]
+    // (using erf odd: -erf(sqrt(eps)*(-1 - x_k)) = erf(sqrt(eps)*(1 + x_k)))
+    const double xk = this->quads[k];
+    const double s = std::sqrt(this->eps);
+    return 0.5 * std::sqrt(M_PI / this->eps)
+           * (std::erf(s * (1.0 - xk)) + std::erf(s * (1.0 + xk)));
+}
+
+void base::Gaussian::computeDerivative() {
+    const int N = this->p+1;
+
+    // Phi' : kernel-derivative matrix evaluated at the collocation nodes
+    double* Phi_prime = new double[N * N];
+    for (int i=0 ; i<N ; ++i){
+        for (int j=0; j<N ; ++j){
+            Phi_prime[i*N + j] = mat::derivativeGaussian(
                 this->eps,
                 this->quads[i],
                 this->quads[j]);

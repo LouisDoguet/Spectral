@@ -69,6 +69,10 @@ public:
     static ScalarField fieldPressure();
     static ScalarField fieldAViscosity();
     static ScalarField fieldLapPressure();
+    /// @brief Per-element indicator of the active basis: 0 = primary (Lagrange),
+    ///   1 = alternative (RBF). Member (not static) because the lambda must
+    ///   capture the mesh to look up the primary/alt basis pointers.
+    ScalarField fieldBasisIndicator();
 
 private:
     mesh::Mesh* m;

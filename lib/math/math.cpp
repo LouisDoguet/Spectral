@@ -89,6 +89,22 @@ double derivativeInverseMultiQuad(double eps, double x, double xi){
   return ( -eps*eps * (x - xi) ) / pow(( 1 + eps*eps * (x - xi)*(x - xi) ), 1.5);
 }
 
+/**
+ * @brief Derivative of the Gaussian RBF centered in `xi`, at point `x`
+ *
+ * Kernel phi(r) = exp(-eps * r^2) with r = x - xi, so
+ * phi'(x) = -2 * eps * (x - xi) * exp(-eps * (x - xi)^2).
+ *
+ * @param eps Shape parameter of the Gaussian (1/length^2)
+ * @param x Point to evaluate the derivative at
+ * @param xi Center of the Gaussian
+ * @return Derivative value
+ */
+double derivativeGaussian(double eps, double x, double xi){
+  const double r = x - xi;
+  return -2.0 * eps * r * exp( -eps * r * r );
+}
+
 
 /**
  * @brief Helper to print vectors

@@ -94,7 +94,9 @@ namespace base{
 		///   refined quadrature; inverse computed with LAPACK.
 		void computeMassMatrix();
 
-		virtual void activateRadialMatrix() = 0;
+		/// @brief Applies the kernel element-wise to the signed-difference
+		///   matrix. Shared across kernels: the kernel itself is virtual.
+		void activateRadialMatrix();
 		/// @brief Builds the nodal derivative matrix D = Phi' * Phi^{-1}
 		virtual void computeDerivative() = 0;
 		/// @brief Closed-form integral of the kernel centred at node k over [-1,1]
@@ -104,12 +106,22 @@ namespace base{
 	class InverseMultiQuadratic : public RBF {
 	public:
 		InverseMultiQuadratic(const int p, const double eps);
-		void activateRadialMatrix() override;
 		void computeDerivative() override;
 		double kernelIntegral(int k) const override;
 
 	protected:
 		double kernel(double r) const override;
+	};
+
+	class Gaussian : public RBF {
+	public:
+		Gaussian(const int p, const double eps);
+		void computeDerivative() override;
+		double kernelIntegral(int k) const override;
+
+	protected:
+		double kernel(double r) const override;
+
 	};
 
 };

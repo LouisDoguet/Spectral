@@ -16,6 +16,7 @@ namespace mat {
     void computeLaplacian(base::_Basis *basis, const double invJ, const double *array, double* result);
 
     double derivativeInverseMultiQuad(double eps, double x, double xi);
+    double derivativeGaussian(double eps, double x, double xi);
 
     double inner_product(const double* vec1, const double* vec2, size_t n);
 }

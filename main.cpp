@@ -73,10 +73,19 @@ int main(int argc, char *argv[]) {
   mesh::Mesh* M = S1D::generateMesh(N_elem, P, L, rhoL, uL, pL, rhoR, uR, pR, x0, delta);
   solver::RK4* S = new solver::RK4(M, Q);
   diff::PerssonPeraire* diff_PP = new diff::PerssonPeraire(trunc, s0, kappa, eps0);
-  sens::PerssonPeraire* sensor_DL = new sens::PerssonPeraire();
+  sens::PerssonPeraire* sensor_PP = new sens::PerssonPeraire();
+
+  // Per-element basis adaptation driven by the same PP indicator.
+  //   - log10(Se) > s_shock  (= s0 - kappa)   -> Lagrange -> RBF
+  //   - log10(Se) < s_smooth (= s0 - 2*kappa) -> RBF -> Lagrange
+  // The hysteresis gap keeps an element pinned to one basis once it has
+  // switched, avoiding flapping near the shock front.
+  const double s_shock  = s0 - kappa;
+  const double s_smooth = s0 - 2.0 * kappa;
+  S->enableBasisAdaptation(M->getAltBasis(), sensor_PP, trunc, s_shock, s_smooth);
 
   // Opt-in extra exports — uncomment as needed:
-  //   S->addSensorField("div_laplacian", sensor_DL);
+  //   S->addSensorField("div_laplacian", sensor_PP);
   //   S->getExporter().addField(post::VTUExporter::fieldLapPressure());
-  S1D::RunShockTube(S, diff_PP, sensor_DL, T_final, dt, output);
+  S1D::RunShockTube(S, diff_PP, sensor_PP, T_final, dt, output);
 }

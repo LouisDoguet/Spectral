@@ -14,6 +14,7 @@ VTUExporter::VTUExporter(mesh::Mesh* mesh, int n_plot) : m(mesh), n_plot(n_plot)
     addField(fieldVelocity());
     addField(fieldPressure());
     addField(fieldAViscosity());
+    addField(fieldBasisIndicator());
     // lap_pressure and div_laplacian are opt-in: register them explicitly with
     // addField(VTUExporter::fieldLapPressure()) or addSensorField(...) when needed.
 }
@@ -205,6 +206,20 @@ ScalarField VTUExporter::fieldAViscosity() {
                const double* /*quads*/, const double* /*weights*/, int /*P*/,
                double* out) {
                 elem.getBasis()->interpolate(elem.getAV(), ref_pts, n_plot, out);
+            }};
+}
+
+ScalarField VTUExporter::fieldBasisIndicator() {
+    mesh::Mesh* mesh_ptr = m;
+    return {"basis_id",
+            [mesh_ptr](elem::Element& elem,
+                       const double* /*ref_pts*/, int n_plot,
+                       const double* /*quads*/, const double* /*weights*/, int /*P*/,
+                       double* out) {
+                const base::_Basis* eb  = elem.getBasis();
+                const base::_Basis* alt = mesh_ptr->getAltBasis();
+                const double val = (alt != nullptr && eb == alt) ? 1.0 : 0.0;
+                for (int i = 0; i < n_plot; ++i) out[i] = val;
             }};
 }
 

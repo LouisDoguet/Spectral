@@ -8,9 +8,8 @@
 #SBATCH --output=SlurmOutput/Spectral1D.txt
 #SBATCH --account=aero_hpc
 
-./build/spectral --P 6 --N 50 --Q 100 --T 0.3 \
-  --sensor --trunc 3 --s0 -3.0 --kappa 1 --eps0 5e-3 \
-  --output RBF
+./build/spectral --P 6 --N 50 --Q 100 --T 0.4 --dt 5e-5 \
+  --sensor --trunc 3 --s0 -3.0 --kappa 1 --eps0 5e-3 --output GAUSSIAN
 
 #./build/spectral \
 #    --P 6 --N 50 --T 0.4 --dt 5e-5 \
