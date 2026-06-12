@@ -1,0 +1,82 @@
+\doxysection{diffusion.\+h}
+\hypertarget{diffusion_8h_source}{}\label{diffusion_8h_source}\index{lib/diffusion/diffusion.h@{lib/diffusion/diffusion.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ DIFFUSION\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ DIFFUSION\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}../space/mesh.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}../sensor/sensor.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#ifdef\ WITH\_ONNX}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <onnxruntime\_cxx\_api.h>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{namespace\ }diff\ \{}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{keyword}{class\ }\_Diffusion\ \{}
+\DoxyCodeLine{00017\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00018\ \ \ \_Diffusion(\textcolor{keyword}{const}\ std::string\ name)\ :\ name(name)\ \{\};}
+\DoxyCodeLine{00019\ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ apply(\doxymbox{\hyperlink{classmesh_1_1Mesh}{mesh::Mesh}}\ *mesh);}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ std::string\ getName()\ \{\ \textcolor{keywordflow}{return}\ name;\ \}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00024\ \ \ \textcolor{keyword}{const}\ std::string\ name;}
+\DoxyCodeLine{00025\ \};}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{keyword}{class\ }Constant\ :\ \textcolor{keyword}{public}\ \_Diffusion\ \{}
+\DoxyCodeLine{00028\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00029\ \ \ Constant(\textcolor{keywordtype}{double}\ eps)\ :\ \_Diffusion(\textcolor{stringliteral}{"{}CONSTANT"{}}),\ epsilon(eps)\ \{\};}
+\DoxyCodeLine{00030\ \ \ \textcolor{keywordtype}{void}\ apply(\doxymbox{\hyperlink{classmesh_1_1Mesh}{mesh::Mesh}}\ *mesh)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00033\ \ \ \textcolor{keywordtype}{double}\ epsilon;}
+\DoxyCodeLine{00034\ \};}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{keyword}{class\ }Custom\ :\ \textcolor{keyword}{public}\ \_Diffusion\ \{}
+\DoxyCodeLine{00037\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00038\ \ \ Custom(\textcolor{keywordtype}{double}\ *eps\_array)}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ :\ \_Diffusion(\textcolor{stringliteral}{"{}CUSTOM"{}}),\ eps\_array(eps\_array)\ \{\};}
+\DoxyCodeLine{00040\ \ \ \textcolor{keywordtype}{void}\ apply(\doxymbox{\hyperlink{classmesh_1_1Mesh}{mesh::Mesh}}\ *mesh)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00043\ \ \ \textcolor{keywordtype}{double}\ *eps\_array;}
+\DoxyCodeLine{00044\ \};}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{keyword}{class\ }PerssonPeraire\ :\ \textcolor{keyword}{public}\ \_Diffusion\ \{}
+\DoxyCodeLine{00047\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00048\ \ \ PerssonPeraire(\textcolor{keywordtype}{int}\ truncation,\ \textcolor{keywordtype}{double}\ s0,\ \textcolor{keywordtype}{double}\ kappa,\ \textcolor{keywordtype}{double}\ eps0)}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ :\ \_Diffusion(\textcolor{stringliteral}{"{}PERSSON\_PERAIRE"{}}),\ truncation(truncation),\ s0(s0),\ kappa(kappa),\ eps0(eps0)\ \{\}}
+\DoxyCodeLine{00050\ \ \ \textcolor{keywordtype}{void}\ apply(\doxymbox{\hyperlink{classmesh_1_1Mesh}{mesh::Mesh}}\ *mesh)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00053\ \ \ \textcolor{keywordtype}{int}\ truncation;}
+\DoxyCodeLine{00054\ \ \ \textcolor{keywordtype}{double}\ s0,\ kappa,\ eps0;}
+\DoxyCodeLine{00055\ \ \ \doxymbox{\hyperlink{classsens_1_1PerssonPeraire}{sens::PerssonPeraire}}\ sensor;}
+\DoxyCodeLine{00056\ \};}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#ifdef\ WITH\_ONNX}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00064\ \textcolor{keyword}{class\ }ONNX\ :\ \textcolor{keyword}{public}\ Diffusion\ \{}
+\DoxyCodeLine{00065\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00066\ \ \ ONNX(\textcolor{keyword}{const}\ std::string\ \&model\_path,\ \textcolor{keywordtype}{int}\ n\_total);}
+\DoxyCodeLine{00067\ \ \ \textcolor{keywordtype}{void}\ apply(\doxymbox{\hyperlink{classmesh_1_1Mesh}{mesh::Mesh}}\ *mesh)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00070\ \ \ \textcolor{keywordtype}{int}\ n\_total;}
+\DoxyCodeLine{00071\ \ \ std::vector<float>\ \ input\_buf;}
+\DoxyCodeLine{00072\ \ \ std::vector<float>\ \ output\_buf;}
+\DoxyCodeLine{00073\ \ \ std::vector<double>\ eps\_buf;\ \ \ \ \ \ \ \textcolor{comment}{//\ float-\/>double\ conversion\ for\ diffuse()}}
+\DoxyCodeLine{00074\ \ \ std::unique\_ptr<Ort::Env>\ \ \ \ \ env;}
+\DoxyCodeLine{00075\ \ \ std::unique\_ptr<Ort::Session>\ session;}
+\DoxyCodeLine{00076\ \};}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ WITH\_ONNX}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \}\ \textcolor{comment}{//\ namespace\ DIFF}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,64 @@
+\doxysection{LAYER::\+Re\+LU Class Reference}
+\hypertarget{classLAYER_1_1ReLU}{}\label{classLAYER_1_1ReLU}\index{LAYER::ReLU@{LAYER::ReLU}}
+Inheritance diagram for LAYER::\+Re\+LU:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{dc/d29/classLAYER_1_1ReLU}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classLAYER_1_1ReLU_ada2dc6d69c143e318bad0072d0ce12b6}\label{classLAYER_1_1ReLU_ada2dc6d69c143e318bad0072d0ce12b6} 
+{\bfseries Re\+LU} (const size\+\_\+t in, const size\+\_\+t out)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{classLAYER_1_1__Layer}{LAYER::\+\+\_\+\+Layer}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries \+\_\+\+Layer} (const size\+\_\+t in, const size\+\_\+t out, std::\+shared\+\_\+ptr$<$ \doxymbox{\hyperlink{classACTI_1_1Activation}{ACTI::\+\+Activation}} $>$ act)
+\item 
+\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} \doxymbox{\hyperlink{classLAYER_1_1__Layer_a0326d9cc96bae3e0d3cfad5fe21f59e6}{forward}} (const \doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} \&input)
+\item 
+\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} {\bfseries backward} (const \doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} \&grad\+\_\+output)
+\item 
+void {\bfseries update} (double learning\+\_\+rate)
+\item 
+const size\+\_\+t {\bfseries get\+Input\+Size} ()
+\item 
+const size\+\_\+t {\bfseries get\+Output\+Size} ()
+\item 
+void {\bfseries serialize} (std::\+ofstream \&f) const
+\item 
+void {\bfseries load\+Weights\+Bias} (std::\+ifstream \&f)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Attributes inherited from \doxymbox{\hyperlink{classLAYER_1_1__Layer}{LAYER::\+\+\_\+\+Layer}}}
+\begin{DoxyCompactItemize}
+\item 
+const std::\+string {\bfseries name}
+\item 
+const size\+\_\+t {\bfseries in\+\_\+features}
+\item 
+const size\+\_\+t {\bfseries out\+\_\+features}
+\item 
+std::\+shared\+\_\+ptr$<$ \doxymbox{\hyperlink{classACTI_1_1Activation}{ACTI::\+\+Activation}} $>$ {\bfseries activation\+\_\+function}
+\item 
+\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} {\bfseries weights}
+\item 
+\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} {\bfseries bias}
+\item 
+\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} {\bfseries input\+\_\+cache}
+\item 
+\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} {\bfseries grad\+\_\+weights}
+\item 
+\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} {\bfseries grad\+\_\+bias}
+\item 
+\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} {\bfseries preactivation\+\_\+cache}
+\item 
+\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} {\bfseries postactivation\+\_\+cache}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+neural/\+layer.\+h\end{DoxyCompactItemize}

@@ -1,0 +1,57 @@
+\doxysection{LFUN::\+Cross\+Entropy Class Reference}
+\hypertarget{classLFUN_1_1CrossEntropy}{}\label{classLFUN_1_1CrossEntropy}\index{LFUN::CrossEntropy@{LFUN::CrossEntropy}}
+Inheritance diagram for LFUN::\+Cross\+Entropy:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{d3/d9b/classLFUN_1_1CrossEntropy}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+double \doxymbox{\hyperlink{classLFUN_1_1CrossEntropy_ac1f1a42857d3aa6cf5a6089bbd68b440}{residuals}} (\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} val, \doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} ref, \doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} \&res) override
+\item 
+\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} \doxymbox{\hyperlink{classLFUN_1_1CrossEntropy_aa705b89963b7557f911bc980a6296abe}{gradient}} (\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} val, \doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} ref) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{classLFUN_1_1LossFunction}{LFUN::\+\+Loss\+Function}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries Loss\+Function} (std::\+string name)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Attributes inherited from \doxymbox{\hyperlink{classLFUN_1_1LossFunction}{LFUN::\+\+Loss\+Function}}}
+\begin{DoxyCompactItemize}
+\item 
+std::\+string {\bfseries name}
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{classLFUN_1_1CrossEntropy_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classLFUN_1_1CrossEntropy_aa705b89963b7557f911bc980a6296abe}\index{LFUN::CrossEntropy@{LFUN::CrossEntropy}!gradient@{gradient}}
+\index{gradient@{gradient}!LFUN::CrossEntropy@{LFUN::CrossEntropy}}
+\doxysubsubsection{\texorpdfstring{gradient()}{gradient()}}
+{\footnotesize\ttfamily \label{classLFUN_1_1CrossEntropy_aa705b89963b7557f911bc980a6296abe} 
+\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} LFUN::\+\+Cross\+Entropy::\+gradient (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}}}]{val}{, }\item[{\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}}}]{ref}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classLFUN_1_1LossFunction}{LFUN::\+\+Loss\+Function}}.
+
+\Hypertarget{classLFUN_1_1CrossEntropy_ac1f1a42857d3aa6cf5a6089bbd68b440}\index{LFUN::CrossEntropy@{LFUN::CrossEntropy}!residuals@{residuals}}
+\index{residuals@{residuals}!LFUN::CrossEntropy@{LFUN::CrossEntropy}}
+\doxysubsubsection{\texorpdfstring{residuals()}{residuals()}}
+{\footnotesize\ttfamily \label{classLFUN_1_1CrossEntropy_ac1f1a42857d3aa6cf5a6089bbd68b440} 
+double LFUN::\+\+Cross\+Entropy::\+residuals (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}}}]{val}{, }\item[{\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}}}]{ref}{, }\item[{\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} \&}]{res}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classLFUN_1_1LossFunction}{LFUN::\+\+Loss\+Function}}.
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+neural/\+loss\+\_\+function.\+h\item 
+neural/\+loss\+\_\+function.\+cpp\end{DoxyCompactItemize}

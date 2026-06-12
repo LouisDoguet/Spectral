@@ -1,13 +1,20 @@
+from types import SimpleNamespace
+
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.optimize as opt
 
 import case_generator as cg
 import solution as sol
+from burgers import Burgers
 
 # Search bounds for (x0, eps_cluster, eps_solution)
 BOUNDS = [(-1.0, 1.0), (1e-3, 100.0), (1e-2, 200.0)]
 PARAM_NAMES = ["$x_0$", r"$\epsilon_{cluster}$", r"$\epsilon_{solution}$"]
+
+# Search bounds for residual minimization: (x_s, eps_max)
+BOUNDS_RESIDUAL = [(-1.0, 1.0), (1e-3, 100.0)]
+PARAM_NAMES_RESIDUAL = ["$x_s$", r"$\epsilon_{max}$"]
 
 
 def interpolation_error(params, element):
@@ -47,6 +54,68 @@ def optimize_case(element, bounds=BOUNDS, seed=0, **de_kwargs):
 
     history["params"] = np.array(history["params"])
     history["error"] = np.array(history["error"])
+    return result, history
+
+
+def objective_residual(params, element, burgers_obj, cond_penalty_weight=50.0, cond_log10_threshold=8.0):
+    """
+    Objective: ||R(u)||^2 + a penalty for an ill-conditioned collocation matrix.
+
+    The penalty is `cond_penalty_weight * max(0, log10(cond(A)) - cond_log10_threshold)`,
+    i.e. zero while cond(A) stays below 10**cond_log10_threshold and grows linearly
+    in log10(cond(A)) beyond that. This discourages configurations that achieve a
+    small nodal residual only because A is nearly singular (see the RBF interpolant
+    overshoot/ringing observed between nodes for such configurations).
+    """
+    x_s, eps_max = params
+
+    try:
+        element.cluster(x_s, eps_max)
+        S = sol.Solution(element, eps_max)
+
+        R2 = burgers_obj.residual_norm_squared(
+            u_values=element.val,
+            X=element.X,
+            eps_array=S.eps,
+        )
+        if not np.isfinite(R2):
+            return np.inf
+
+        cond = burgers_obj.collocation_condition_number(element.X, S.eps)
+        penalty = cond_penalty_weight * max(0.0, np.log10(cond) - cond_log10_threshold)
+
+        return R2 + penalty
+    except (np.linalg.LinAlgError, ValueError):
+        return np.inf
+
+
+def optimize_residual_case(element, burgers_obj, bounds=BOUNDS_RESIDUAL, seed=0,
+                            cond_penalty_weight=50.0, cond_log10_threshold=8.0, **de_kwargs):
+    """
+    Searches for the (x_s, eps_max) that minimize the DG residual norm
+    ||R(u)||^2 (plus a conditioning penalty, see `objective_residual`) on
+    `element`. Returns the scipy result together with a record of every
+    evaluated point, for plotting the optimization process.
+    """
+    # The objective is `inf` for ill-conditioned configurations, which keeps
+    # differential_evolution's convergence check from triggering early
+    # (it then runs to `maxiter`). 300 generations is ample for this
+    # 2-parameter search, so keep the default modest.
+    de_kwargs.setdefault("maxiter", 300)
+    history = {"params": [], "objective": []}
+
+    def objective(params):
+        obj = objective_residual(params, element, burgers_obj,
+                                  cond_penalty_weight=cond_penalty_weight,
+                                  cond_log10_threshold=cond_log10_threshold)
+        history["params"].append(np.array(params, dtype=float))
+        history["objective"].append(obj)
+        return obj
+
+    result = opt.differential_evolution(objective, bounds, seed=seed, polish=True, **de_kwargs)
+
+    history["params"] = np.array(history["params"])
+    history["objective"] = np.array(history["objective"])
     return result, history
 
 
@@ -132,6 +201,44 @@ def run(P=10, case_seed=None, opt_seed=0, **de_kwargs):
     plot_parameter_history(history)
 
     return element, result, history
+
+
+def run_residual(P=10, case_seed=None, opt_seed=0, **de_kwargs):
+    """
+    Generates a random shock case and finds the (x_s, eps_max) that minimize
+    the DG residual norm ||R(u)||^2. Returns a dict with the initial and
+    optimized element states, ready for `validation.generate_all_plots`.
+    """
+    element = cg.generate_random_case(P=P, seed=case_seed)
+    burgers = Burgers(P=P, shock_intensity=10.0)
+
+    # Initial grid is uniform, so local_spacing() is h0 = 2/P everywhere.
+    element_initial = SimpleNamespace(
+        X=element.X.copy(),
+        val=element.val.copy(),
+        P=element.P,
+        local_spacing=lambda: np.full(element.P + 1, 2.0 / element.P),
+    )
+
+    result, history = optimize_residual_case(element, burgers, seed=opt_seed, **de_kwargs)
+
+    x_s_opt, eps_opt = result.x
+
+    # RBF interpolant on the pre-optimization (uniform) grid, for comparison.
+    solution_initial = sol.Solution(element_initial, eps_opt)
+
+    element.cluster(x_s_opt, eps_opt)
+    solution_optimized = sol.Solution(element, eps_opt)
+
+    return {
+        "element_initial": element_initial,
+        "element_optimized": element,
+        "solution_initial": solution_initial,
+        "solution_optimized": solution_optimized,
+        "result": result,
+        "history": history,
+        "burgers": burgers,
+    }
 
 
 if __name__ == "__main__":

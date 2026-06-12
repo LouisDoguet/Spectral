@@ -1,0 +1,30 @@
+\doxysection{math.\+h}
+\hypertarget{math_8h_source}{}\label{math_8h_source}\index{lib/math/math.h@{lib/math/math.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ MATH\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ MATH\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <iomanip>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}../base/base.h"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{keyword}{namespace\ }mat\ \{}
+\DoxyCodeLine{00009\ \ \ \ \ \textcolor{keywordtype}{void}\ print(\textcolor{keyword}{const}\ \textcolor{keywordtype}{double}*\ vec,\ \textcolor{keywordtype}{size\_t}\ n,\ std::ostream\&\ os\ =\ std::cout);}
+\DoxyCodeLine{00010\ \ \ \ \ \textcolor{keywordtype}{void}\ print(\textcolor{keyword}{const}\ \textcolor{keywordtype}{double}*\ mat,\ \textcolor{keywordtype}{size\_t}\ s\_row,\ \textcolor{keywordtype}{size\_t}\ s\_col,\ std::ostream\&\ os\ =\ std::cout);}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keywordtype}{double}\ legendre(\textcolor{keywordtype}{int}\ k,\ \textcolor{keywordtype}{double}\ xi);}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keywordtype}{void}\ computeLegendreCoeffs(\textcolor{keywordtype}{double}*\ c,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}*\ u,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}*\ quads,}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}*\ weights,\ \textcolor{keywordtype}{int}\ P);}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keywordtype}{double}\ evalLegendreExpansion(\textcolor{keywordtype}{double}\ s,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}*\ c,\ \textcolor{keywordtype}{int}\ P);}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keywordtype}{void}\ computeLaplacian(base::\_Basis\ *basis,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ invJ,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ *array,\ \textcolor{keywordtype}{double}*\ result);}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordtype}{double}\ derivativeInverseMultiQuad(\textcolor{keywordtype}{double}\ eps,\ \textcolor{keywordtype}{double}\ x,\ \textcolor{keywordtype}{double}\ xi);}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keywordtype}{double}\ derivativeGaussian(\textcolor{keywordtype}{double}\ eps,\ \textcolor{keywordtype}{double}\ x,\ \textcolor{keywordtype}{double}\ xi);}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordtype}{double}\ inner\_product(\textcolor{keyword}{const}\ \textcolor{keywordtype}{double}*\ vec1,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}*\ vec2,\ \textcolor{keywordtype}{size\_t}\ n);}
+\DoxyCodeLine{00022\ \}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

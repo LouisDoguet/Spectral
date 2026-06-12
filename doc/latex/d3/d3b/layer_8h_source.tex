@@ -1,0 +1,76 @@
+\doxysection{layer.\+h}
+\hypertarget{layer_8h_source}{}\label{layer_8h_source}\index{neural/layer.h@{neural/layer.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ LAYER\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ LAYER\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}activation.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}memory"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}tensor.h"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <algorithm>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <cstddef>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <fstream>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <random>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{namespace\ }LAYER\ \{}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{class\ }\_Layer\ \{}
+\DoxyCodeLine{00018\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00019\ \ \ \textcolor{keyword}{const}\ std::string\ name;}
+\DoxyCodeLine{00020\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ in\_features;}
+\DoxyCodeLine{00021\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ out\_features;}
+\DoxyCodeLine{00022\ \ \ std::shared\_ptr<ACTI::Activation>\ activation\_function;}
+\DoxyCodeLine{00023\ \ \ \doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ weights;}
+\DoxyCodeLine{00024\ \ \ \doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ bias;}
+\DoxyCodeLine{00025\ \ \ \doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ input\_cache;}
+\DoxyCodeLine{00026\ \ \ \doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ grad\_weights;}
+\DoxyCodeLine{00027\ \ \ \doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ grad\_bias;}
+\DoxyCodeLine{00028\ \ \ \doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ preactivation\_cache;}
+\DoxyCodeLine{00029\ \ \ \doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ postactivation\_cache;}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00032\ \ \ \_Layer(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ in,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ out,}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ std::shared\_ptr<ACTI::Activation>\ act)}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ :\ in\_features(in),\ out\_features(out),\ activation\_function(act),}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ weights(in,\ out),\ bias(1,\ out),\ grad\_weights(in,\ out),}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ grad\_bias(1,\ out)\ \{}
+\DoxyCodeLine{00037\ \ \ \ \ std::mt19937\ rng(std::random\_device\{\}());}
+\DoxyCodeLine{00038\ \ \ \ \ std::normal\_distribution<double>\ dist(0.0,\ std::sqrt(2.0\ /\ (in\ +\ out)));}
+\DoxyCodeLine{00039\ \ \ \ \ std::vector<double>\ w(in\ *\ out);}
+\DoxyCodeLine{00040\ \ \ \ \ std::generate(w.begin(),\ w.end(),\ [\&]()\ \{\ return\ dist(rng);\ \});}
+\DoxyCodeLine{00041\ \ \ \ \ weights.setData(w);}
+\DoxyCodeLine{00042\ \ \ \}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \doxymbox{\hyperlink{classLAYER_1_1__Layer_a0326d9cc96bae3e0d3cfad5fe21f59e6}{forward}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \&input);}
+\DoxyCodeLine{00045\ \ \ \doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ backward(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \&grad\_output);}
+\DoxyCodeLine{00046\ \ \ \textcolor{keywordtype}{void}\ update(\textcolor{keywordtype}{double}\ learning\_rate);}
+\DoxyCodeLine{00047\ \ \ \textcolor{keyword}{virtual}\ \string~\_Layer()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ getInputSize()\ \{\ \textcolor{keywordflow}{return}\ in\_features;\ \}}
+\DoxyCodeLine{00050\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ getOutputSize()\ \{\ \textcolor{keywordflow}{return}\ out\_features;\ \}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \textcolor{keywordtype}{void}\ serialize(std::ofstream\ \&f)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00053\ \ \ \textcolor{keywordtype}{void}\ loadWeightsBias(std::ifstream\ \&f);}
+\DoxyCodeLine{00054\ \};}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{keyword}{class\ }ReLU\ :\ \textcolor{keyword}{public}\ \_Layer\ \{}
+\DoxyCodeLine{00057\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00058\ \ \ ReLU(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ in,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ out)}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ :\ \_Layer(in,\ out,\ std::make\_shared<ACTI::ReLU>())\ \{\}}
+\DoxyCodeLine{00060\ \};}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{keyword}{class\ }Sigmoid\ :\ \textcolor{keyword}{public}\ \_Layer\ \{}
+\DoxyCodeLine{00073\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00074\ \ \ Sigmoid(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ in,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ out)}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ :\ \_Layer(in,\ out,\ std::make\_shared<ACTI::Sigmoid>())\ \{\};}
+\DoxyCodeLine{00076\ \};}
+\DoxyCodeLine{00077\ \}\ \textcolor{comment}{//\ namespace\ LAYER}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

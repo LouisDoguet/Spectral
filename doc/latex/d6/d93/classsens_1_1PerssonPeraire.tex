@@ -1,0 +1,79 @@
+\doxysection{sens::\+Persson\+Peraire Class Reference}
+\hypertarget{classsens_1_1PerssonPeraire}{}\label{classsens_1_1PerssonPeraire}\index{sens::PerssonPeraire@{sens::PerssonPeraire}}
+Inheritance diagram for sens::\+Persson\+Peraire:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{d6/d93/classsens_1_1PerssonPeraire}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classsens_1_1PerssonPeraire_accda3076781a5928619a96e30c128d16}\label{classsens_1_1PerssonPeraire_accda3076781a5928619a96e30c128d16} 
+double {\bfseries Smoothness\+Indicator} (\doxymbox{\hyperlink{classelem_1_1Element}{elem::\+\+Element}} \&elem, int truncation)
+\begin{DoxyCompactList}\small\item\em Scalar shock indicator Se = (energy in top {\ttfamily truncation} modes) /\+ (total modal energy). Caller is expected to have computed the element\textquotesingle{}s Legendre coefficients beforehand (via {\ttfamily elem.\+compute\+Legendre\+Coefficients()}) so this method stays free of side effects. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{classsens_1_1PerssonPeraire_a9551e1d7b11e62775626361a4d603558}{Persson\+Peraire}} ()
+\begin{DoxyCompactList}\small\item\em Persson-\/\+Peraire sensor. \end{DoxyCompactList}\item 
+double \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classsens_1_1PerssonPeraire_a85488b12c5ba1c9f8e17e02b613ec743}{get\+Viscosity}} (\doxymbox{\hyperlink{classelem_1_1Element}{elem::\+\+Element}} \&elem, int truncation, double s0, double kappa, double eps0)
+\begin{DoxyCompactList}\small\item\em Apply the sensor to the element, returning the dissipation value. \end{DoxyCompactList}\item 
+\Hypertarget{classsens_1_1PerssonPeraire_a8a98985f907d066c5dd257e7f2e603fe}\label{classsens_1_1PerssonPeraire_a8a98985f907d066c5dd257e7f2e603fe} 
+double \texorpdfstring{$\ast$}{*} {\bfseries get\+Sensor} (\doxymbox{\hyperlink{classelem_1_1Element}{elem::\+\+Element}} \&elem, int truncation)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{classsens_1_1__Sensor}{sens::\+\+\_\+\+Sensor}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries \+\_\+\+Sensor} (std::\+string name)
+\item 
+std::\+string {\bfseries get\+Name} ()
+\item 
+virtual double \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classsens_1_1__Sensor_ac39f046a9093e3eab2c60f7502178c64}{get\+Sensor}} (\doxymbox{\hyperlink{classelem_1_1Element}{elem::\+\+Element}} \&elem)
+\begin{DoxyCompactList}\small\item\em Returns per-\/node sensor values for the element (size P+1). Caller owns the returned array and must delete\+[]\+ it. Default returns nullptr (sensor does not support direct export). \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\label{doc-constructors}
+\Hypertarget{classsens_1_1PerssonPeraire_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classsens_1_1PerssonPeraire_a9551e1d7b11e62775626361a4d603558}\index{sens::PerssonPeraire@{sens::PerssonPeraire}!PerssonPeraire@{PerssonPeraire}}
+\index{PerssonPeraire@{PerssonPeraire}!sens::PerssonPeraire@{sens::PerssonPeraire}}
+\doxysubsubsection{\texorpdfstring{PerssonPeraire()}{PerssonPeraire()}}
+{\footnotesize\ttfamily \label{classsens_1_1PerssonPeraire_a9551e1d7b11e62775626361a4d603558} 
+sens::\+\+Persson\+Peraire::\+\+Persson\+Peraire (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Persson-\/\+Peraire sensor. 
+
+Sensor based on the decay of the highest modes of of the solution. Highly subject to the parameters ({\ttfamily s0},{\ttfamily kappa},{\ttfamily eps0}) (see {\ttfamily .\doxylink{classsens_1_1PerssonPeraire_a85488b12c5ba1c9f8e17e02b613ec743}{get\+Viscosity}} method)
+
+\begin{DoxyNote}{Note}
+Possibility to change the energy of the modes measured via {\ttfamily truncation} 
+\end{DoxyNote}
+
+
+\label{doc-func-members}
+\Hypertarget{classsens_1_1PerssonPeraire_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classsens_1_1PerssonPeraire_a85488b12c5ba1c9f8e17e02b613ec743}\index{sens::PerssonPeraire@{sens::PerssonPeraire}!getViscosity@{getViscosity}}
+\index{getViscosity@{getViscosity}!sens::PerssonPeraire@{sens::PerssonPeraire}}
+\doxysubsubsection{\texorpdfstring{getViscosity()}{getViscosity()}}
+{\footnotesize\ttfamily \label{classsens_1_1PerssonPeraire_a85488b12c5ba1c9f8e17e02b613ec743} 
+double \texorpdfstring{$\ast$}{*} sens::\+\+Persson\+Peraire::\+get\+Viscosity (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classelem_1_1Element}{elem::\+\+Element}} \&}]{elem}{, }\item[{int}]{truncation}{, }\item[{double}]{s0}{, }\item[{double}]{kappa}{, }\item[{double}]{eps0}{}\end{DoxyParamCaption})}
+
+
+
+Apply the sensor to the element, returning the dissipation value. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em elem} & {\ttfamily Element} to apply the sensor to \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+None 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+lib/\+sensor/\+sensor.\+h\item 
+lib/\+sensor/\+persson\+\_\+peraire.\+cpp\end{DoxyCompactItemize}

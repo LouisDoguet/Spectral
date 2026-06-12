@@ -1,0 +1,150 @@
+\doxysection{solver::\+RK4 Class Reference}
+\hypertarget{classsolver_1_1RK4}{}\label{classsolver_1_1RK4}\index{solver::RK4@{solver::RK4}}
+
+
+Optimized Runge-\/\+Kutta 4th order solver using contiguous buffers and BLAS.  
+
+
+
+
+{\ttfamily \+\#include $<$solver.\+h$>$}
+
+Inheritance diagram for solver::\+RK4:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{d1/d4e/classsolver_1_1RK4}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classsolver_1_1RK4_a0d6f4c2685aeeeb995d6cafde7402de2}\label{classsolver_1_1RK4_a0d6f4c2685aeeeb995d6cafde7402de2} 
+{\bfseries RK4} (\doxymbox{\hyperlink{classmesh_1_1Mesh}{mesh::\+\+Mesh}} \texorpdfstring{$\ast$}{*}mesh, int n\+\_\+plot=0)
+\item 
+void \doxymbox{\hyperlink{classsolver_1_1RK4_af578dfd09e645a234b598a0fb7a9d64e}{step}} (double dt) override
+\item 
+void \doxymbox{\hyperlink{classsolver_1_1RK4_a2658d9482576d8c0ec7fa63931f23946}{run}} (double T\+\_\+final, double dt, int save\+\_\+freq, std::\+string prefix) override
+\begin{DoxyCompactList}\small\item\em Run the simulation loop. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{classsolver_1_1__Solver}{solver::\+\+\_\+\+Solver}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries \+\_\+\+Solver} (std::\+string name, \doxymbox{\hyperlink{classmesh_1_1Mesh}{mesh::\+\+Mesh}} \texorpdfstring{$\ast$}{*}mesh, int n\+\_\+plot=0)
+\item 
+void {\bfseries export\+\_\+snapshot} (int step, double time, std::\+string dir)
+\begin{DoxyCompactList}\small\item\em Export current state as a raw binary snapshot for ML training. Layout:\+ int32 n\+\_\+elem \texorpdfstring{$\vert$}{|} int32 P \texorpdfstring{$\vert$}{|} float64 t \texorpdfstring{$\vert$}{|} float64\+[n\+\_\+total]\+ rho \texorpdfstring{$\vert$}{|} rhou \texorpdfstring{$\vert$}{|} e. \end{DoxyCompactList}\item 
+void {\bfseries set\+Diffusion} (\doxymbox{\hyperlink{classdiff_1_1__Diffusion}{diff::\+\+\_\+\+Diffusion}} \texorpdfstring{$\ast$}{*}diffus)
+\item 
+void {\bfseries set\+Sensor} (\doxymbox{\hyperlink{classsens_1_1__Sensor}{sens::\+\+\_\+\+Sensor}} \texorpdfstring{$\ast$}{*}sensr)
+\item 
+void {\bfseries set\+Snapshot\+Dir} (std::\+string dir)
+\item 
+void {\bfseries enable\+Basis\+Adaptation} (\doxymbox{\hyperlink{classbase_1_1__Basis}{base::\+\+\_\+\+Basis}} \texorpdfstring{$\ast$}{*}alt, \doxymbox{\hyperlink{classsens_1_1__Sensor}{sens::\+\+\_\+\+Sensor}} \texorpdfstring{$\ast$}{*}ssor, int truncation, double s\+\_\+shock, double s\+\_\+smooth)
+\begin{DoxyCompactList}\small\item\em Enable per-\/element basis adaptation driven by Persson-\/\+Peraire. At the start of every timestep, elements above {\ttfamily s\+\_\+shock} switch to {\ttfamily alt}; elements on {\ttfamily alt} below {\ttfamily s\+\_\+smooth} switch back. {\ttfamily alt} must share the basis order P of the mesh\textquotesingle{}s primary basis. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{classpost_1_1VTUExporter}{post::\+\+VTUExporter}} \& \doxymbox{\hyperlink{classsolver_1_1__Solver_a3d466ef67a6dacf1be3cb5ebf6d5ce5c}{get\+Exporter}} ()
+\item 
+void \doxymbox{\hyperlink{classsolver_1_1__Solver_a89828b19e3f1326e4926eb8188e1ffaf}{add\+Sensor\+Field}} (const std::\+string \&name, \doxymbox{\hyperlink{classsens_1_1__Sensor}{sens::\+\+\_\+\+Sensor}} \texorpdfstring{$\ast$}{*}sensor)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Member Functions inherited from \doxymbox{\hyperlink{classsolver_1_1__Solver}{solver::\+\+\_\+\+Solver}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries save\+\_\+state} ()
+\item 
+void {\bfseries collect\+\_\+residuals} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes inherited from \doxymbox{\hyperlink{classsolver_1_1__Solver}{solver::\+\+\_\+\+Solver}}}
+\begin{DoxyCompactItemize}
+\item 
+std::\+string {\bfseries name}
+\item 
+int {\bfseries total\+\_\+points}
+\item 
+int {\bfseries n\+\_\+plot}
+\item 
+std::\+string {\bfseries snapshot\+\_\+dir}
+\item 
+\doxymbox{\hyperlink{classmesh_1_1Mesh}{mesh::\+\+Mesh}} \texorpdfstring{$\ast$}{*} {\bfseries m}
+\item 
+\doxymbox{\hyperlink{classdiff_1_1__Diffusion}{diff::\+\+\_\+\+Diffusion}} \texorpdfstring{$\ast$}{*} {\bfseries diffusion} = nullptr
+\item 
+\doxymbox{\hyperlink{classsens_1_1__Sensor}{sens::\+\+\_\+\+Sensor}} \texorpdfstring{$\ast$}{*} {\bfseries sensor} = nullptr
+\item 
+\doxymbox{\hyperlink{classbase_1_1__Basis}{base::\+\+\_\+\+Basis}} \texorpdfstring{$\ast$}{*} {\bfseries adapt\+\_\+alt} = nullptr
+\item 
+\doxymbox{\hyperlink{classsens_1_1__Sensor}{sens::\+\+\_\+\+Sensor}} \texorpdfstring{$\ast$}{*} {\bfseries adapt\+\_\+pp} = nullptr
+\item 
+int {\bfseries adapt\+\_\+trunc} = 1
+\item 
+double {\bfseries adapt\+\_\+s\+\_\+shock} = 0.\+0
+\item 
+double {\bfseries adapt\+\_\+s\+\_\+smooth} = 0.\+0
+\item 
+\doxymbox{\hyperlink{classpost_1_1VTUExporter}{post::\+\+VTUExporter}} \texorpdfstring{$\ast$}{*} {\bfseries exporter}
+\item 
+double \texorpdfstring{$\ast$}{*} {\bfseries rho\+\_\+n}
+\item 
+double \texorpdfstring{$\ast$}{*} {\bfseries rhou\+\_\+n}
+\item 
+double \texorpdfstring{$\ast$}{*} {\bfseries e\+\_\+n}
+\item 
+double \texorpdfstring{$\ast$}{*} {\bfseries rho\+\_\+acc}
+\item 
+double \texorpdfstring{$\ast$}{*} {\bfseries rhou\+\_\+acc}
+\item 
+double \texorpdfstring{$\ast$}{*} {\bfseries e\+\_\+acc}
+\item 
+double \texorpdfstring{$\ast$}{*} {\bfseries global\+\_\+df1}
+\item 
+double \texorpdfstring{$\ast$}{*} {\bfseries global\+\_\+df2}
+\item 
+double \texorpdfstring{$\ast$}{*} {\bfseries global\+\_\+df3}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Optimized Runge-\/\+Kutta 4th order solver using contiguous buffers and BLAS. 
+
+\label{doc-func-members}
+\Hypertarget{classsolver_1_1RK4_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classsolver_1_1RK4_a2658d9482576d8c0ec7fa63931f23946}\index{solver::RK4@{solver::RK4}!run@{run}}
+\index{run@{run}!solver::RK4@{solver::RK4}}
+\doxysubsubsection{\texorpdfstring{run()}{run()}}
+{\footnotesize\ttfamily \label{classsolver_1_1RK4_a2658d9482576d8c0ec7fa63931f23946} 
+void solver::\+\+RK4::\+run (\begin{DoxyParamCaption}\item[{double}]{T\+\_\+final}{, }\item[{double}]{dt}{, }\item[{int}]{save\+\_\+freq}{, }\item[{std::\+string}]{prefix}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Run the simulation loop. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em T\+\_\+final} & Total simulation time \\
+\hline
+{\em dt} & Time step \\
+\hline
+{\em save\+\_\+freq} & Frequency of data export (every N steps) \\
+\hline
+{\em prefix} & Output file prefix \\
+\hline
+\end{DoxyParams}
+
+
+Implements \doxymbox{\hyperlink{classsolver_1_1__Solver_a9cbac9160fe06aadde5997eb6d442981}{solver::\+\+\_\+\+Solver}}.
+
+\Hypertarget{classsolver_1_1RK4_af578dfd09e645a234b598a0fb7a9d64e}\index{solver::RK4@{solver::RK4}!step@{step}}
+\index{step@{step}!solver::RK4@{solver::RK4}}
+\doxysubsubsection{\texorpdfstring{step()}{step()}}
+{\footnotesize\ttfamily \label{classsolver_1_1RK4_af578dfd09e645a234b598a0fb7a9d64e} 
+void solver::\+\+RK4::\+step (\begin{DoxyParamCaption}\item[{double}]{dt}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classsolver_1_1__Solver}{solver::\+\+\_\+\+Solver}}.
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+lib/\+time/\+solver.\+h\item 
+lib/\+time/\+rk4.\+cpp\end{DoxyCompactItemize}

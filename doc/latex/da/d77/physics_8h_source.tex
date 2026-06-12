@@ -1,0 +1,26 @@
+\doxysection{physics.\+h}
+\hypertarget{physics_8h_source}{}\label{physics_8h_source}\index{lib/phy/physics.h@{lib/phy/physics.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ PHYSICS\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ PHYSICS\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespacephy}{phy}}\ \{}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespacephy_ad73aa56eb56e512cfc47b78790e72ed6}{getP}}(\textcolor{keywordtype}{double}*\ p,\ \textcolor{keywordtype}{double}*\ rho,\ \textcolor{keywordtype}{double}*\ rhou,\ \textcolor{keywordtype}{double}*\ e,\ \textcolor{keywordtype}{int}\ n);}
+\DoxyCodeLine{00017\ \ \ \ \ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespacephy_ad9612813f08bfd90592e96b04f72130c}{computeFlux}}(\textcolor{keywordtype}{double}*\ f1,\ \textcolor{keywordtype}{double}*\ f2,\ \textcolor{keywordtype}{double}*\ f3,\ \textcolor{keywordtype}{double}*\ u1,\ \textcolor{keywordtype}{double}*\ u2,\ \textcolor{keywordtype}{double}*\ u3,\ \textcolor{keywordtype}{double}*\ p,\ \textcolor{keywordtype}{int}\ n);}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{keyword}{namespace\ }reimann\ \{}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{double}\ computeMaxWaveSpeed(\textcolor{keywordtype}{double}\ rho,\ \textcolor{keywordtype}{double}\ u,\ \textcolor{keywordtype}{double}\ p);\ \ \ \ }
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordtype}{double}\ Rusanov(\textcolor{keywordtype}{double}\ FL,\ \textcolor{keywordtype}{double}\ FR,\ \textcolor{keywordtype}{double}\ UL,\ \textcolor{keywordtype}{double}\ UR,\ \textcolor{keywordtype}{double}\ lambda);}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

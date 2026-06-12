@@ -1,0 +1,291 @@
+\doxysection{elem::\+Element Class Reference}
+\hypertarget{classelem_1_1Element}{}\label{classelem_1_1Element}\index{elem::Element@{elem::Element}}
+
+
+Class storing an element.  
+
+
+
+
+{\ttfamily \+\#include $<$element.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{classelem_1_1Element_a7c5d640f770f7c057e0c0761f951e84d}{Element}} (const int id, \doxymbox{\hyperlink{classbase_1_1__Basis}{base::\+\+\_\+\+Basis}} \texorpdfstring{$\ast$}{*}shared\+Basis, double xL, double xR)
+\begin{DoxyCompactList}\small\item\em Constructor basic (no values) DEV/\+\+DEBUG. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{classelem_1_1Element_ad0e814bc56eb85ce841c6863d682ba29}{Element}} (const int id, \doxymbox{\hyperlink{classbase_1_1__Basis}{base::\+\+\_\+\+Basis}} \texorpdfstring{$\ast$}{*}shared\+Basis, double xL, double xR, double rho\+\_\+init, double rhou\+\_\+init, double e\+\_\+init)
+\begin{DoxyCompactList}\small\item\em Constructor with init values DEV/\+\+DEBUG. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{classelem_1_1Element_aa2217c7df8758623c8650b5ac66becc9}{Element}} (const int id, \doxymbox{\hyperlink{classbase_1_1__Basis}{base::\+\+\_\+\+Basis}} \texorpdfstring{$\ast$}{*}shared\+Basis, double xL, double xR, double \texorpdfstring{$\ast$}{*}external\+\_\+rho, double \texorpdfstring{$\ast$}{*}external\+\_\+rhou, double \texorpdfstring{$\ast$}{*}external\+\_\+e, double \texorpdfstring{$\ast$}{*}art\+Visc)
+\begin{DoxyCompactList}\small\item\em Constructor of element object. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{classelem_1_1Element_ab7f579767e0629585e8365034b57d4d2}{set\+Basis}} (\doxymbox{\hyperlink{classbase_1_1__Basis}{base::\+\+\_\+\+Basis}} \texorpdfstring{$\ast$}{*}new\+Basis)
+\begin{DoxyCompactList}\small\item\em Migrate this element from its current basis to {\ttfamily new\+Basis}. Re-\/interpolates rho, rhou, e and AV from the old basis\textquotesingle{}s nodes onto the new basis\textquotesingle{}s nodes (both must share the same order P), updates the basis pointer and recomputes the flux. No-\/op if {\ttfamily new\+Basis == current basis}. \end{DoxyCompactList}\item 
+\Hypertarget{classelem_1_1Element_ac1ff91464ebdffea397c6f879f0fc6de}\label{classelem_1_1Element_ac1ff91464ebdffea397c6f879f0fc6de} 
+void {\bfseries setJ} (double xL, double xR)
+\begin{DoxyCompactList}\small\item\em Sets the Jacobian from the element position. \end{DoxyCompactList}\item 
+\Hypertarget{classelem_1_1Element_a6705645352d05f30bf89f36f54abb57a}\label{classelem_1_1Element_a6705645352d05f30bf89f36f54abb57a} 
+void {\bfseries set\+ID} (int ID)
+\item 
+\Hypertarget{classelem_1_1Element_ab622aa984c4de9c40f5d879330ad9df8}\label{classelem_1_1Element_ab622aa984c4de9c40f5d879330ad9df8} 
+void {\bfseries set\+U1} (double \texorpdfstring{$\ast$}{*}rho)
+\item 
+\Hypertarget{classelem_1_1Element_ad5f7c4c59ab3a8f82a2c3a9862280a28}\label{classelem_1_1Element_ad5f7c4c59ab3a8f82a2c3a9862280a28} 
+void {\bfseries set\+U2} (double \texorpdfstring{$\ast$}{*}rhou)
+\item 
+\Hypertarget{classelem_1_1Element_a36a8994a58cce5e045031398de2c7f15}\label{classelem_1_1Element_a36a8994a58cce5e045031398de2c7f15} 
+void {\bfseries set\+U3} (double \texorpdfstring{$\ast$}{*}e)
+\item 
+void \doxymbox{\hyperlink{classelem_1_1Element_a59fb72df4cf8936595202f2237dd56c4}{set\+AV}} (double \texorpdfstring{$\ast$}{*}arr)
+\begin{DoxyCompactList}\small\item\em Sets the Artificial Viscosity of the element. \end{DoxyCompactList}\item 
+\Hypertarget{classelem_1_1Element_a2219c6d02aab4cb6f8694d6655218627}\label{classelem_1_1Element_a2219c6d02aab4cb6f8694d6655218627} 
+void {\bfseries set\+Rho} (int pos, double val)
+\item 
+\Hypertarget{classelem_1_1Element_afdb7ddd1762275c6b2f1b12d89668cc0}\label{classelem_1_1Element_afdb7ddd1762275c6b2f1b12d89668cc0} 
+void {\bfseries set\+RhoU} (int pos, double val)
+\item 
+\Hypertarget{classelem_1_1Element_aeb0f17066a898e521bbf7aed36fdbc38}\label{classelem_1_1Element_aeb0f17066a898e521bbf7aed36fdbc38} 
+void {\bfseries setE} (int pos, double val)
+\item 
+\Hypertarget{classelem_1_1Element_a5db108e2241def0a5a4880682b66827f}\label{classelem_1_1Element_a5db108e2241def0a5a4880682b66827f} 
+void {\bfseries set\+Div\+F1} (int pos, double val)
+\item 
+\Hypertarget{classelem_1_1Element_a1665c7540768b5cb86e1dbbea7a566ff}\label{classelem_1_1Element_a1665c7540768b5cb86e1dbbea7a566ff} 
+void {\bfseries set\+Div\+F2} (int pos, double val)
+\item 
+\Hypertarget{classelem_1_1Element_ae468c0908d383931d5b1f4167fa65900}\label{classelem_1_1Element_ae468c0908d383931d5b1f4167fa65900} 
+void {\bfseries set\+Div\+F3} (int pos, double val)
+\item 
+\Hypertarget{classelem_1_1Element_a115cec54937132d6721ca14de0a4aa04}\label{classelem_1_1Element_a115cec54937132d6721ca14de0a4aa04} 
+void {\bfseries set\+AV} (int pos, double val)
+\item 
+void \doxymbox{\hyperlink{classelem_1_1Element_a6b2bbe51c0159dc289823210095de63d}{set\+Flux}} ()
+\begin{DoxyCompactList}\small\item\em From U -\/\texorpdfstring{$>$}{>} F. \end{DoxyCompactList}\item 
+\Hypertarget{classelem_1_1Element_a350be2e489ee4c5a8d06b795c12f7cbf}\label{classelem_1_1Element_a350be2e489ee4c5a8d06b795c12f7cbf} 
+const int \texorpdfstring{$\ast$}{*} {\bfseries get\+ID} () const
+\begin{DoxyCompactList}\small\item\em GETTERS. \end{DoxyCompactList}\item 
+\Hypertarget{classelem_1_1Element_a783ce77f9786897ae387c049667adcbd}\label{classelem_1_1Element_a783ce77f9786897ae387c049667adcbd} 
+const \doxymbox{\hyperlink{classbase_1_1__Basis}{base::\+\+\_\+\+Basis}} \texorpdfstring{$\ast$}{*} {\bfseries get\+Basis} () const
+\item 
+\Hypertarget{classelem_1_1Element_a3cafe95429955073dca1ebe4ac2c8987}\label{classelem_1_1Element_a3cafe95429955073dca1ebe4ac2c8987} 
+const double \texorpdfstring{$\ast$}{*} {\bfseries get\+InvJ} () const
+\item 
+\Hypertarget{classelem_1_1Element_af45e68fb892495a1245d390db4bb499c}\label{classelem_1_1Element_af45e68fb892495a1245d390db4bb499c} 
+const double \texorpdfstring{$\ast$}{*} {\bfseries get\+U1} () const
+\item 
+\Hypertarget{classelem_1_1Element_a0dcbf90b33a223ed9c58b11550eedc91}\label{classelem_1_1Element_a0dcbf90b33a223ed9c58b11550eedc91} 
+const double \texorpdfstring{$\ast$}{*} {\bfseries get\+U2} () const
+\item 
+\Hypertarget{classelem_1_1Element_a7255baed80b915ca99225c80fc82f9ba}\label{classelem_1_1Element_a7255baed80b915ca99225c80fc82f9ba} 
+const double \texorpdfstring{$\ast$}{*} {\bfseries get\+U3} () const
+\item 
+\Hypertarget{classelem_1_1Element_a0ab728f3a93f604967379000a68f3ac2}\label{classelem_1_1Element_a0ab728f3a93f604967379000a68f3ac2} 
+const double \texorpdfstring{$\ast$}{*} {\bfseries get\+F1} () const
+\item 
+\Hypertarget{classelem_1_1Element_a50a35b1aed9f6c6c313d448d79195925}\label{classelem_1_1Element_a50a35b1aed9f6c6c313d448d79195925} 
+const double \texorpdfstring{$\ast$}{*} {\bfseries get\+F2} () const
+\item 
+\Hypertarget{classelem_1_1Element_ae8a5d2d0b95528179803d4e18acb15b8}\label{classelem_1_1Element_ae8a5d2d0b95528179803d4e18acb15b8} 
+const double \texorpdfstring{$\ast$}{*} {\bfseries get\+F3} () const
+\item 
+\Hypertarget{classelem_1_1Element_a90d3cf8a7c4d5cf46a348d83aa96af89}\label{classelem_1_1Element_a90d3cf8a7c4d5cf46a348d83aa96af89} 
+const double \texorpdfstring{$\ast$}{*} {\bfseries get\+Div\+F1} () const
+\item 
+\Hypertarget{classelem_1_1Element_a6f2dd57f1be4c6844ad7a82ba729dc7c}\label{classelem_1_1Element_a6f2dd57f1be4c6844ad7a82ba729dc7c} 
+const double \texorpdfstring{$\ast$}{*} {\bfseries get\+Div\+F2} () const
+\item 
+\Hypertarget{classelem_1_1Element_a339f39ad7c912c6d1bac4d3969c70b11}\label{classelem_1_1Element_a339f39ad7c912c6d1bac4d3969c70b11} 
+const double \texorpdfstring{$\ast$}{*} {\bfseries get\+Div\+F3} () const
+\item 
+\Hypertarget{classelem_1_1Element_a117b33ccf6cbfb7f5548c00b81b9bcf7}\label{classelem_1_1Element_a117b33ccf6cbfb7f5548c00b81b9bcf7} 
+double {\bfseries getX} (int q) const
+\item 
+\Hypertarget{classelem_1_1Element_a1123d1198b380b53cb027473561677ea}\label{classelem_1_1Element_a1123d1198b380b53cb027473561677ea} 
+double \texorpdfstring{$\ast$}{*} {\bfseries get\+U1} (int q) const
+\item 
+\Hypertarget{classelem_1_1Element_ae3771cc7e6e641617c352b8de2ee2200}\label{classelem_1_1Element_ae3771cc7e6e641617c352b8de2ee2200} 
+double \texorpdfstring{$\ast$}{*} {\bfseries get\+U2} (int q) const
+\item 
+\Hypertarget{classelem_1_1Element_a5483ee8e6160da88cb964db8491acfb9}\label{classelem_1_1Element_a5483ee8e6160da88cb964db8491acfb9} 
+double \texorpdfstring{$\ast$}{*} {\bfseries get\+U3} (int q) const
+\item 
+\Hypertarget{classelem_1_1Element_aa6ae6c7eafbc50fc58bf9f8f22b229a7}\label{classelem_1_1Element_aa6ae6c7eafbc50fc58bf9f8f22b229a7} 
+double \texorpdfstring{$\ast$}{*} {\bfseries get\+F1} (int q) const
+\item 
+\Hypertarget{classelem_1_1Element_aaba3465686a3ff275053154620b4f9cc}\label{classelem_1_1Element_aaba3465686a3ff275053154620b4f9cc} 
+double \texorpdfstring{$\ast$}{*} {\bfseries get\+F2} (int q) const
+\item 
+\Hypertarget{classelem_1_1Element_a9fcf078eb8f3a8c7be88afe0b3acde9d}\label{classelem_1_1Element_a9fcf078eb8f3a8c7be88afe0b3acde9d} 
+double \texorpdfstring{$\ast$}{*} {\bfseries get\+F3} (int q) const
+\item 
+\Hypertarget{classelem_1_1Element_af35f36d7825e7d78a03b3d179420bd96}\label{classelem_1_1Element_af35f36d7825e7d78a03b3d179420bd96} 
+double {\bfseries getU} (int q) const
+\item 
+\Hypertarget{classelem_1_1Element_ab75ca6e19e66e006320f485275d3b325}\label{classelem_1_1Element_ab75ca6e19e66e006320f485275d3b325} 
+double {\bfseries get\+Rho} (int q) const
+\item 
+\Hypertarget{classelem_1_1Element_a9450eee777df842a7f5d603450358921}\label{classelem_1_1Element_a9450eee777df842a7f5d603450358921} 
+double {\bfseries getP} (int q) const
+\item 
+\Hypertarget{classelem_1_1Element_ab3bb754b9322f1eb1c45cab24ffcd141}\label{classelem_1_1Element_ab3bb754b9322f1eb1c45cab24ffcd141} 
+double \texorpdfstring{$\ast$}{*} {\bfseries get\+Modes} () const
+\item 
+\Hypertarget{classelem_1_1Element_a8e7b51e5c511450e54b8c25597d9bda7}\label{classelem_1_1Element_a8e7b51e5c511450e54b8c25597d9bda7} 
+double \texorpdfstring{$\ast$}{*} {\bfseries get\+Div\+F1} (int q) const
+\begin{DoxyCompactList}\small\item\em Modify the flux (USED FOR REIMANN CORRECTION). \end{DoxyCompactList}\item 
+\Hypertarget{classelem_1_1Element_a11c16e4bd22b1f62e5b0554cc5e27798}\label{classelem_1_1Element_a11c16e4bd22b1f62e5b0554cc5e27798} 
+double \texorpdfstring{$\ast$}{*} {\bfseries get\+Div\+F2} (int q) const
+\item 
+\Hypertarget{classelem_1_1Element_afcd3aeaa050f8ed6789fcf137f1869ed}\label{classelem_1_1Element_afcd3aeaa050f8ed6789fcf137f1869ed} 
+double \texorpdfstring{$\ast$}{*} {\bfseries get\+Div\+F3} (int q) const
+\item 
+\Hypertarget{classelem_1_1Element_add5d5633fef982609cf6e21dddfdfd95}\label{classelem_1_1Element_add5d5633fef982609cf6e21dddfdfd95} 
+double \texorpdfstring{$\ast$}{*} {\bfseries get\+AV} () const
+\item 
+\Hypertarget{classelem_1_1Element_a2b4285caab7be13431e64b7b69c835f9}\label{classelem_1_1Element_a2b4285caab7be13431e64b7b69c835f9} 
+double \texorpdfstring{$\ast$}{*} {\bfseries get\+AV} (int q) const
+\item 
+\Hypertarget{classelem_1_1Element_a0c8735cbe958e751d834cfd995c2d6df}\label{classelem_1_1Element_a0c8735cbe958e751d834cfd995c2d6df} 
+void {\bfseries correct\+Div\+F1} (int pos, double val)
+\item 
+\Hypertarget{classelem_1_1Element_a7cb1a04e5ca5dc986e799f8eadf4fcae}\label{classelem_1_1Element_a7cb1a04e5ca5dc986e799f8eadf4fcae} 
+void {\bfseries correct\+Div\+F2} (int pos, double val)
+\item 
+\Hypertarget{classelem_1_1Element_affa318a919870a94f7b53299ee3591e0}\label{classelem_1_1Element_affa318a919870a94f7b53299ee3591e0} 
+void {\bfseries correct\+Div\+F3} (int pos, double val)
+\item 
+\Hypertarget{classelem_1_1Element_a9421926d081bd5d8882a4ff595431682}\label{classelem_1_1Element_a9421926d081bd5d8882a4ff595431682} 
+void {\bfseries compute\+Div\+Flux} ()
+\begin{DoxyCompactList}\small\item\em Accumulates the DG volume residual into div\+Fk:\+ div\+Fk\+\_\+i = w\+\_\+i \texorpdfstring{$\ast$}{*} (D F\+\_\+k)\+\_\+i. No 1/\+J factor yet — apply\+Mass\+Inverse handles the per-\/element geometric scaling and the mass-\/matrix solve. \end{DoxyCompactList}\item 
+\Hypertarget{classelem_1_1Element_a914b0df79ab6c35145ed363df4d419a8}\label{classelem_1_1Element_a914b0df79ab6c35145ed363df4d419a8} 
+void {\bfseries apply\+Mass\+Inverse} ()
+\begin{DoxyCompactList}\small\item\em Final stage of the DG residual:\+ div\+Fk \texorpdfstring{$<$}{<}-\/ (1/\+J) \texorpdfstring{$\ast$}{*} Minv \texorpdfstring{$\ast$}{*} div\+Fk. Routes the volume term and the boundary lifts through the basis\textquotesingle{}s mass matrix. For Lagrange (Minv = diag(1/\+w)) this collapses back to the classical (1/\+J) \texorpdfstring{$\ast$}{*} D \texorpdfstring{$\ast$}{*} F + (1/\+(J w\+\_\+b)) \texorpdfstring{$\ast$}{*} \+[F\texorpdfstring{$\ast$}{*}-\/F]\+\+\_\+b form; for RBF the boundary correction is spread to interior nodes via Minv. \end{DoxyCompactList}\item 
+\Hypertarget{classelem_1_1Element_a95e98cbac1669a4bf9d4e34f647aa361}\label{classelem_1_1Element_a95e98cbac1669a4bf9d4e34f647aa361} 
+void {\bfseries compute\+Legendre\+Coefficients} ()
+\begin{DoxyCompactList}\small\item\em Computes Legendre coefficients from Lagrange polynomials. \end{DoxyCompactList}\item 
+\Hypertarget{classelem_1_1Element_a41ab46d45c4e28b579f492027c7da0b6}\label{classelem_1_1Element_a41ab46d45c4e28b579f492027c7da0b6} 
+double \texorpdfstring{$\ast$}{*} {\bfseries compute\+Pressure} ()
+\begin{DoxyCompactList}\small\item\em Computes element pressure. \end{DoxyCompactList}\item 
+\Hypertarget{classelem_1_1Element_a02b4fdd657b8787eb0b3aa54d6d6898f}\label{classelem_1_1Element_a02b4fdd657b8787eb0b3aa54d6d6898f} 
+const double \texorpdfstring{$\ast$}{*} {\bfseries compute\+Pressure\+Laplacian} ()
+\begin{DoxyCompactList}\small\item\em Computes the pressure Laplacian. \end{DoxyCompactList}\item 
+\Hypertarget{classelem_1_1Element_a5c5158503e74e588891275d5f3eed769}\label{classelem_1_1Element_a5c5158503e74e588891275d5f3eed769} 
+const double \texorpdfstring{$\ast$}{*} {\bfseries compute\+Velocity\+Divergence} ()
+\begin{DoxyCompactList}\small\item\em Computes the divergence of velocity. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classelem_1_1Element_aa7ae5f08a9fd941c9e7b1996de57cf96}\label{classelem_1_1Element_aa7ae5f08a9fd941c9e7b1996de57cf96} 
+std::\+ostream \& {\bfseries operator$<$$<$} (std::\+ostream \&os, const \doxymbox{\hyperlink{classelem_1_1Element_a7c5d640f770f7c057e0c0761f951e84d}{Element}} \&e)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Class storing an element. 
+
+\label{doc-constructors}
+\Hypertarget{classelem_1_1Element_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classelem_1_1Element_a7c5d640f770f7c057e0c0761f951e84d}\index{elem::Element@{elem::Element}!Element@{Element}}
+\index{Element@{Element}!elem::Element@{elem::Element}}
+\doxysubsubsection{\texorpdfstring{Element()}{Element()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{classelem_1_1Element_a7c5d640f770f7c057e0c0761f951e84d} 
+elem::\+\+Element::\+\+Element (\begin{DoxyParamCaption}\item[{const int}]{id}{, }\item[{\doxymbox{\hyperlink{classbase_1_1__Basis}{base::\+\+\_\+\+Basis}} \texorpdfstring{$\ast$}{*}}]{shared\+Basis}{, }\item[{double}]{xL}{, }\item[{double}]{xR}{}\end{DoxyParamCaption})}
+
+
+
+Constructor basic (no values) DEV/\+\+DEBUG. 
+
+No-\/values:\+ allocates zeroed U arrays, delegates to core. \Hypertarget{classelem_1_1Element_ad0e814bc56eb85ce841c6863d682ba29}\index{elem::Element@{elem::Element}!Element@{Element}}
+\index{Element@{Element}!elem::Element@{elem::Element}}
+\doxysubsubsection{\texorpdfstring{Element()}{Element()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{classelem_1_1Element_ad0e814bc56eb85ce841c6863d682ba29} 
+elem::\+\+Element::\+\+Element (\begin{DoxyParamCaption}\item[{const int}]{id}{, }\item[{\doxymbox{\hyperlink{classbase_1_1__Basis}{base::\+\+\_\+\+Basis}} \texorpdfstring{$\ast$}{*}}]{shared\+Basis}{, }\item[{double}]{xL}{, }\item[{double}]{xR}{, }\item[{double}]{rho\+\_\+init}{, }\item[{double}]{rhou\+\_\+init}{, }\item[{double}]{e\+\_\+init}{}\end{DoxyParamCaption})}
+
+
+
+Constructor with init values DEV/\+\+DEBUG. 
+
+Scalar init:\+ delegates to no-\/values, then fills U arrays. \Hypertarget{classelem_1_1Element_aa2217c7df8758623c8650b5ac66becc9}\index{elem::Element@{elem::Element}!Element@{Element}}
+\index{Element@{Element}!elem::Element@{elem::Element}}
+\doxysubsubsection{\texorpdfstring{Element()}{Element()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{classelem_1_1Element_aa2217c7df8758623c8650b5ac66becc9} 
+elem::\+\+Element::\+\+Element (\begin{DoxyParamCaption}\item[{const int}]{id}{, }\item[{\doxymbox{\hyperlink{classbase_1_1__Basis}{base::\+\+\_\+\+Basis}} \texorpdfstring{$\ast$}{*}}]{shared\+Basis}{, }\item[{double}]{xL}{, }\item[{double}]{xR}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{external\+\_\+rho}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{external\+\_\+rhou}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{external\+\_\+e}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{art\+Visc}{}\end{DoxyParamCaption})}
+
+
+
+Constructor of element object. 
+
+External buffers:\+ delegates to core with owns\+Memory=false.
+
+
+\begin{DoxyParams}{Parameters}
+{\em id} & ID of the element \\
+\hline
+{\em share\+Basis} & Basis of the domain \\
+\hline
+{\em xL} & Position of the left limit of the element \\
+\hline
+{\em xR} & Position of the right limit of the element \\
+\hline
+{\em external\+\_\+rho} & Pointer to the general density \\
+\hline
+{\em external\+\_\+rhou} & Pointer to the general momentum \\
+\hline
+{\em external\+\_\+e} & Pointer to the general energy \\
+\hline
+{\em AV1} & Pointer to the artificial viscosity of general density \\
+\hline
+{\em AV2} & Pointer to the artificial viscosity of general momentum \\
+\hline
+{\em AV3} & Pointer to the artificial viscosity of general energy \\
+\hline
+\end{DoxyParams}
+
+
+\label{doc-func-members}
+\Hypertarget{classelem_1_1Element_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classelem_1_1Element_a59fb72df4cf8936595202f2237dd56c4}\index{elem::Element@{elem::Element}!setAV@{setAV}}
+\index{setAV@{setAV}!elem::Element@{elem::Element}}
+\doxysubsubsection{\texorpdfstring{setAV()}{setAV()}}
+{\footnotesize\ttfamily \label{classelem_1_1Element_a59fb72df4cf8936595202f2237dd56c4} 
+void elem::\+\+Element::\+set\+AV (\begin{DoxyParamCaption}\item[{double \texorpdfstring{$\ast$}{*}}]{arr}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Sets the Artificial Viscosity of the element. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em arr} & Array containing AV values \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+Requires {\ttfamily memcpy} because {\ttfamily diffuse} deletes {\ttfamily eps} array to avoid memory leaks 
+\end{DoxyNote}
+\Hypertarget{classelem_1_1Element_ab7f579767e0629585e8365034b57d4d2}\index{elem::Element@{elem::Element}!setBasis@{setBasis}}
+\index{setBasis@{setBasis}!elem::Element@{elem::Element}}
+\doxysubsubsection{\texorpdfstring{setBasis()}{setBasis()}}
+{\footnotesize\ttfamily \label{classelem_1_1Element_ab7f579767e0629585e8365034b57d4d2} 
+void elem::\+\+Element::\+set\+Basis (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classbase_1_1__Basis}{base::\+\+\_\+\+Basis}} \texorpdfstring{$\ast$}{*}}]{new\+Basis}{}\end{DoxyParamCaption})}
+
+
+
+Migrate this element from its current basis to {\ttfamily new\+Basis}. Re-\/interpolates rho, rhou, e and AV from the old basis\textquotesingle{}s nodes onto the new basis\textquotesingle{}s nodes (both must share the same order P), updates the basis pointer and recomputes the flux. No-\/op if {\ttfamily new\+Basis == current basis}. 
+
+SETTERS \Hypertarget{classelem_1_1Element_a6b2bbe51c0159dc289823210095de63d}\index{elem::Element@{elem::Element}!setFlux@{setFlux}}
+\index{setFlux@{setFlux}!elem::Element@{elem::Element}}
+\doxysubsubsection{\texorpdfstring{setFlux()}{setFlux()}}
+{\footnotesize\ttfamily \label{classelem_1_1Element_a6b2bbe51c0159dc289823210095de63d} 
+void elem::\+\+Element::\+set\+Flux (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+From U -\/\texorpdfstring{$>$}{>} F. 
+
+Sets the flux from the Euler system solved. 
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+lib/\+space/\+element.\+h\item 
+lib/\+space/\+element.\+cpp\end{DoxyCompactItemize}

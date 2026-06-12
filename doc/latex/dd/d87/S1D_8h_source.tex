@@ -1,0 +1,28 @@
+\doxysection{S1\+D.\+h}
+\hypertarget{S1D_8h_source}{}\label{S1D_8h_source}\index{lib/S1D.h@{lib/S1D.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ S1D\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ S1D\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}base/base.h"{}}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{keyword}{namespace\ }S1D}
+\DoxyCodeLine{00007\ \{}
+\DoxyCodeLine{00008\ \ \ \ \ mesh::Mesh*\ generateMesh(}
+\DoxyCodeLine{00009\ \ \ \ \ \ \ \ \ base::\_Basis*\ basis,}
+\DoxyCodeLine{00010\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ N\_elem,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ L,}
+\DoxyCodeLine{00011\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ rhoL,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ uL,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ pL,\ }
+\DoxyCodeLine{00012\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ rhoR,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ uR,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ pR,\ }
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ x0,\ \textcolor{keywordtype}{double}\ delta);}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keywordtype}{void}\ RunShockTube(}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ solver::\_Solver*\ solver,\ }
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ T\_final,\ \textcolor{keywordtype}{double}\ dt,\ std::string\ case\_name,}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ diff::\_Diffusion*\ diffusion\ =\ \textcolor{keyword}{nullptr},\ sens::\_Sensor*\ sensor\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00019\ \}\ \textcolor{comment}{//\ namespace\ S1D}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

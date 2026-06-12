@@ -1,0 +1,46 @@
+\doxysection{loss\+\_\+function.\+h}
+\hypertarget{loss__function_8h_source}{}\label{loss__function_8h_source}\index{neural/loss\_function.h@{neural/loss\_function.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ LOSS\_FUNCTION\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ LOSS\_FUNCTION\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}tensor.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <cmath>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{keyword}{namespace\ }LFUN\ \{}
+\DoxyCodeLine{00009\ \textcolor{keyword}{class\ }LossFunction\ \{}
+\DoxyCodeLine{00010\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00011\ \ \ LossFunction(std::string\ name)\ :\ name(name)\ \{\};}
+\DoxyCodeLine{00012\ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ residuals(\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ val,\ \doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ ref,}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \&res)\ =\ 0;}
+\DoxyCodeLine{00014\ \ \ \textcolor{keyword}{virtual}\ \doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ gradient(\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ val,\ \doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ ref)\ =\ 0;}
+\DoxyCodeLine{00015\ \ \ \textcolor{keyword}{virtual}\ \string~LossFunction()\ =\ \textcolor{keywordflow}{default};\ \textcolor{comment}{//\ also\ add\ this}}
+\DoxyCodeLine{00016\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00017\ \ \ std::string\ name;}
+\DoxyCodeLine{00018\ \};}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{keyword}{class\ }MSE\ :\ \textcolor{keyword}{public}\ LossFunction\ \{}
+\DoxyCodeLine{00021\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00022\ \ \ MSE()\ :\ LossFunction(\textcolor{stringliteral}{"{}MeanSquaredError"{}})\ \{\};}
+\DoxyCodeLine{00023\ \ \ \textcolor{keywordtype}{double}\ residuals(\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ val,\ \doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ ref,}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \&res)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00025\ \ \ \doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ gradient(\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ val,\ \doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ ref)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00026\ \ \ \string~MSE()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00027\ \};}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{keyword}{class\ }CrossEntropy\ :\ \textcolor{keyword}{public}\ LossFunction\ \{}
+\DoxyCodeLine{00030\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00031\ \ \ CrossEntropy()\ :\ LossFunction(\textcolor{stringliteral}{"{}BinaryCrossEntropy"{}})\ \{\};}
+\DoxyCodeLine{00032\ \ \ \textcolor{keywordtype}{double}\ residuals(\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ val,\ \doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ ref,}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \&res)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00034\ \ \ \doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ gradient(\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ val,\ \doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ ref)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00035\ \ \ \string~CrossEntropy()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00036\ \};}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \}\ \textcolor{comment}{//\ namespace\ LFUN}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,130 @@
+\doxysection{element.\+h}
+\hypertarget{element_8h_source}{}\label{element_8h_source}\index{lib/space/element.h@{lib/space/element.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ ELEMENT\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ ELEMENT\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}../base/base.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <cstring>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ GAMMA\ =\ 1.4;}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{namespace\ }elem\ \{}
+\DoxyCodeLine{00013\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classelem_1_1Element_a7c5d640f770f7c057e0c0761f951e84d}{Element}}\ \{}
+\DoxyCodeLine{00014\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00018\ \ \ \doxymbox{\hyperlink{classelem_1_1Element_a7c5d640f770f7c057e0c0761f951e84d}{Element}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id},\ \doxymbox{\hyperlink{classbase_1_1__Basis}{base::\_Basis}}\ *sharedBasis,\ \textcolor{keywordtype}{double}\ xL,\ \textcolor{keywordtype}{double}\ xR);}
+\DoxyCodeLine{00022\ \ \ \doxymbox{\hyperlink{classelem_1_1Element_a7c5d640f770f7c057e0c0761f951e84d}{Element}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id},\ \doxymbox{\hyperlink{classbase_1_1__Basis}{base::\_Basis}}\ *sharedBasis,\ \textcolor{keywordtype}{double}\ xL,\ \textcolor{keywordtype}{double}\ xR,}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ rho\_init,\ \textcolor{keywordtype}{double}\ rhou\_init,\ \textcolor{keywordtype}{double}\ e\_init);}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00038\ \ \ \doxymbox{\hyperlink{classelem_1_1Element_a7c5d640f770f7c057e0c0761f951e84d}{Element}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id},\ \doxymbox{\hyperlink{classbase_1_1__Basis}{base::\_Basis}}\ *sharedBasis,\ \textcolor{keywordtype}{double}\ xL,\ \textcolor{keywordtype}{double}\ xR,}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *external\_rho,\ \textcolor{keywordtype}{double}\ *external\_rhou,\ \textcolor{keywordtype}{double}\ *external\_e,\ \textcolor{keywordtype}{double}*\ artVisc);}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00046\ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classelem_1_1Element_ab7f579767e0629585e8365034b57d4d2}{setBasis}}(\doxymbox{\hyperlink{classbase_1_1__Basis}{base::\_Basis}}\ *newBasis);}
+\DoxyCodeLine{00047\ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classelem_1_1Element_ac1ff91464ebdffea397c6f879f0fc6de}{setJ}}(\textcolor{keywordtype}{double}\ xL,\ \textcolor{keywordtype}{double}\ xR);}
+\DoxyCodeLine{00048\ \ \ \textcolor{keywordtype}{void}\ setID(\textcolor{keywordtype}{int}\ ID)\ \{\ this-\/>\textcolor{keywordtype}{id}\ =\ ID;\ \}}
+\DoxyCodeLine{00049\ \ \ \textcolor{keywordtype}{void}\ setU1(\textcolor{keywordtype}{double}\ *rho)\ \{\ this-\/>rho\ =\ rho;\ \}}
+\DoxyCodeLine{00050\ \ \ \textcolor{keywordtype}{void}\ setU2(\textcolor{keywordtype}{double}\ *rhou)\ \{\ this-\/>rhou\ =\ rhou;\ \}}
+\DoxyCodeLine{00051\ \ \ \textcolor{keywordtype}{void}\ setU3(\textcolor{keywordtype}{double}\ *e)\ \{\ this-\/>e\ =\ e;\ \}}
+\DoxyCodeLine{00052\ \ \ }
+\DoxyCodeLine{00056\ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classelem_1_1Element_a59fb72df4cf8936595202f2237dd56c4}{setAV}}(\textcolor{keywordtype}{double}\ *arr)\ \{}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keywordtype}{int}\ n\ =\ basis-\/>getOrder()\ +\ 1;}
+\DoxyCodeLine{00058\ \ \ \ \ memcpy(this-\/>AV,\ arr,\ n\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{double}));}
+\DoxyCodeLine{00059\ \ \ \}}
+\DoxyCodeLine{00060\ \ \ }
+\DoxyCodeLine{00061\ \ \ \textcolor{keywordtype}{void}\ setRho(\textcolor{keywordtype}{int}\ pos,\ \textcolor{keywordtype}{double}\ val)\ \{\ rho[pos]\ =\ val;\ \}}
+\DoxyCodeLine{00062\ \ \ \textcolor{keywordtype}{void}\ setRhoU(\textcolor{keywordtype}{int}\ pos,\ \textcolor{keywordtype}{double}\ val)\ \{\ rhou[pos]\ =\ val;\ \}}
+\DoxyCodeLine{00063\ \ \ \textcolor{keywordtype}{void}\ setE(\textcolor{keywordtype}{int}\ pos,\ \textcolor{keywordtype}{double}\ val)\ \{\ e[pos]\ =\ val;\ \}}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \textcolor{keywordtype}{void}\ setDivF1(\textcolor{keywordtype}{int}\ pos,\ \textcolor{keywordtype}{double}\ val)\ \{\ divF1[pos]\ =\ val;\ \}}
+\DoxyCodeLine{00066\ \ \ \textcolor{keywordtype}{void}\ setDivF2(\textcolor{keywordtype}{int}\ pos,\ \textcolor{keywordtype}{double}\ val)\ \{\ divF2[pos]\ =\ val;\ \}}
+\DoxyCodeLine{00067\ \ \ \textcolor{keywordtype}{void}\ setDivF3(\textcolor{keywordtype}{int}\ pos,\ \textcolor{keywordtype}{double}\ val)\ \{\ divF3[pos]\ =\ val;\ \}}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classelem_1_1Element_a59fb72df4cf8936595202f2237dd56c4}{setAV}}(\textcolor{keywordtype}{int}\ pos,\ \textcolor{keywordtype}{double}\ val)\ \{\ AV[pos]\ =\ val;\}}
+\DoxyCodeLine{00071\ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classelem_1_1Element_a6b2bbe51c0159dc289823210095de63d}{setFlux}}();}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00074\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\doxymbox{\hyperlink{classelem_1_1Element_a350be2e489ee4c5a8d06b795c12f7cbf}{getID}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \&id;\ \}}
+\DoxyCodeLine{00075\ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classbase_1_1__Basis}{base::\_Basis}}\ *getBasis()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ basis;\ \};}
+\DoxyCodeLine{00076\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ *getInvJ()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \&invJ;\ \}}
+\DoxyCodeLine{00077\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ *getU1()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ rho;\ \}}
+\DoxyCodeLine{00078\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ *getU2()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ rhou;\ \}}
+\DoxyCodeLine{00079\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ *getU3()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ e;\ \}}
+\DoxyCodeLine{00080\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ *getF1()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ F1;\ \}}
+\DoxyCodeLine{00081\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ *getF2()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ F2;\ \}}
+\DoxyCodeLine{00082\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ *getF3()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ F3;\ \}}
+\DoxyCodeLine{00083\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ *getDivF1()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ divF1;\ \}}
+\DoxyCodeLine{00084\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ *getDivF2()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ divF2;\ \}}
+\DoxyCodeLine{00085\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ *getDivF3()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ divF3;\ \}}
+\DoxyCodeLine{00086\ \ \ \textcolor{keywordtype}{double}\ getX(\textcolor{keywordtype}{int}\ q)\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ xL\ +\ (basis-\/>getQuads()[q]\ +\ 1.0)\ *\ J;\ \}}
+\DoxyCodeLine{00087\ \ \ \textcolor{comment}{//\ Variation\ to\ get\ a\ single\ quad\ value}}
+\DoxyCodeLine{00088\ \ \ \textcolor{keywordtype}{double}\ *getU1(\textcolor{keywordtype}{int}\ q)\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ rho\ +\ q;\ \}}
+\DoxyCodeLine{00089\ \ \ \textcolor{keywordtype}{double}\ *getU2(\textcolor{keywordtype}{int}\ q)\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ rhou\ +\ q;\ \}}
+\DoxyCodeLine{00090\ \ \ \textcolor{keywordtype}{double}\ *getU3(\textcolor{keywordtype}{int}\ q)\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ e\ +\ q;\ \}}
+\DoxyCodeLine{00091\ \ \ \textcolor{keywordtype}{double}\ *getF1(\textcolor{keywordtype}{int}\ q)\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ F1\ +\ q;\ \}}
+\DoxyCodeLine{00092\ \ \ \textcolor{keywordtype}{double}\ *getF2(\textcolor{keywordtype}{int}\ q)\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ F2\ +\ q;\ \}}
+\DoxyCodeLine{00093\ \ \ \textcolor{keywordtype}{double}\ *getF3(\textcolor{keywordtype}{int}\ q)\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ F3\ +\ q;\ \}}
+\DoxyCodeLine{00094\ \ \ \textcolor{keywordtype}{double}\ getU(\textcolor{keywordtype}{int}\ q)\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ *(rhou\ +\ q)\ /\ *(rho\ +\ q);\ \}}
+\DoxyCodeLine{00095\ \ \ \textcolor{keywordtype}{double}\ getRho(\textcolor{keywordtype}{int}\ q)\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ *(rho\ +\ q);\ \}}
+\DoxyCodeLine{00096\ \ \ \textcolor{keywordtype}{double}\ getP(\textcolor{keywordtype}{int}\ q)\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ (GAMMA\ -\/\ 1.0)\ *\ (*(e\ +\ q)\ -\/\ 0.5\ *\ *(rhou\ +\ q)\ *\ *(rhou\ +\ q)\ /\ *(rho\ +\ q));\ \}}
+\DoxyCodeLine{00097\ \ \ \textcolor{keywordtype}{double}\ *getModes()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ legendreCoefficients;\ \}}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00100\ \ \ \textcolor{keywordtype}{double}\ *\doxymbox{\hyperlink{classelem_1_1Element_a8e7b51e5c511450e54b8c25597d9bda7}{getDivF1}}(\textcolor{keywordtype}{int}\ q)\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ divF1\ +\ q;\ \}}
+\DoxyCodeLine{00101\ \ \ \textcolor{keywordtype}{double}\ *getDivF2(\textcolor{keywordtype}{int}\ q)\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ divF2\ +\ q;\ \}}
+\DoxyCodeLine{00102\ \ \ \textcolor{keywordtype}{double}\ *getDivF3(\textcolor{keywordtype}{int}\ q)\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ divF3\ +\ q;\ \}}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \ \ \textcolor{keywordtype}{double}\ *getAV()\textcolor{keyword}{\ const\ }\{\textcolor{keywordflow}{return}\ AV;\}}
+\DoxyCodeLine{00105\ \ \ \textcolor{keywordtype}{double}\ *getAV(\textcolor{keywordtype}{int}\ q)\textcolor{keyword}{\ const\ }\{\textcolor{keywordflow}{return}\ AV\ +\ q;\}}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \ \ \textcolor{keywordtype}{void}\ correctDivF1(\textcolor{keywordtype}{int}\ pos,\ \textcolor{keywordtype}{double}\ val)\ \{\ divF1[pos]\ +=\ val;\ \}}
+\DoxyCodeLine{00109\ \ \ \textcolor{keywordtype}{void}\ correctDivF2(\textcolor{keywordtype}{int}\ pos,\ \textcolor{keywordtype}{double}\ val)\ \{\ divF2[pos]\ +=\ val;\ \}}
+\DoxyCodeLine{00110\ \ \ \textcolor{keywordtype}{void}\ correctDivF3(\textcolor{keywordtype}{int}\ pos,\ \textcolor{keywordtype}{double}\ val)\ \{\ divF3[pos]\ +=\ val;\ \}}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00116\ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classelem_1_1Element_a9421926d081bd5d8882a4ff595431682}{computeDivFlux}}();}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00123\ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classelem_1_1Element_a914b0df79ab6c35145ed363df4d419a8}{applyMassInverse}}();}
+\DoxyCodeLine{00125\ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classelem_1_1Element_a95e98cbac1669a4bf9d4e34f647aa361}{computeLegendreCoefficients}}();}
+\DoxyCodeLine{00127\ \ \ \textcolor{keywordtype}{double}*\ \doxymbox{\hyperlink{classelem_1_1Element_a41ab46d45c4e28b579f492027c7da0b6}{computePressure}}();}
+\DoxyCodeLine{00129\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}*\ \doxymbox{\hyperlink{classelem_1_1Element_a02b4fdd657b8787eb0b3aa54d6d6898f}{computePressureLaplacian}}();}
+\DoxyCodeLine{00131\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}*\ \doxymbox{\hyperlink{classelem_1_1Element_a5c5158503e74e588891275d5f3eed769}{computeVelocityDivergence}}();}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \ \ \doxymbox{\hyperlink{classelem_1_1Element_a7c5d640f770f7c057e0c0761f951e84d}{\string~Element}}();}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00136\ \ \ \textcolor{keywordtype}{double}\ xL;}
+\DoxyCodeLine{00137\ \ \ \textcolor{keywordtype}{double}\ xR;}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \ \ \textcolor{keywordtype}{int}\ id;}
+\DoxyCodeLine{00140\ \ \ base::\_Basis\ *basis;}
+\DoxyCodeLine{00141\ \ \ \textcolor{keywordtype}{double}\ J;}
+\DoxyCodeLine{00142\ \ \ \textcolor{keywordtype}{double}\ invJ;}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \ \ \textcolor{keywordtype}{bool}\ ownsMemory;\ \textcolor{comment}{//\ Boolean\ for\ destructor}}
+\DoxyCodeLine{00145\ \ \ \textcolor{keywordtype}{double}\ *rho;}
+\DoxyCodeLine{00146\ \ \ \textcolor{keywordtype}{double}\ *rhou;}
+\DoxyCodeLine{00147\ \ \ \textcolor{keywordtype}{double}\ *e;}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \ \ \textcolor{keywordtype}{double}\ *F1;}
+\DoxyCodeLine{00150\ \ \ \textcolor{keywordtype}{double}\ *F2;}
+\DoxyCodeLine{00151\ \ \ \textcolor{keywordtype}{double}\ *F3;}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \ \ \textcolor{keywordtype}{double}\ *divF1;}
+\DoxyCodeLine{00154\ \ \ \textcolor{keywordtype}{double}\ *divF2;}
+\DoxyCodeLine{00155\ \ \ \textcolor{keywordtype}{double}\ *divF3;}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \ \ \textcolor{keywordtype}{double}\ *AV;}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \ \ \textcolor{keywordtype}{double}\ *legendreCoefficients;}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ \ \ \textcolor{keyword}{friend}\ std::ostream\ \&operator<<(std::ostream\ \&,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classelem_1_1Element_a7c5d640f770f7c057e0c0761f951e84d}{Element}}\ \&);}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00165\ \ \ \doxymbox{\hyperlink{classelem_1_1Element_a7c5d640f770f7c057e0c0761f951e84d}{Element}}(\textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id},\ base::\_Basis\ *basis,\ \textcolor{keywordtype}{double}\ xL,\ \textcolor{keywordtype}{double}\ xR,\ \textcolor{keywordtype}{double}\ *rho,}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *rhou,\ \textcolor{keywordtype}{double}\ *e,\ \textcolor{keywordtype}{double}*\ AV,\ \textcolor{keywordtype}{bool}\ ownsMemory);}
+\DoxyCodeLine{00167\ \};}
+\DoxyCodeLine{00168\ \}\ \textcolor{comment}{//\ namespace\ elem}}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

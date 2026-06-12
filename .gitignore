@@ -9,3 +9,5 @@ main
 **vtune**
 **/neural/**dataset**/**
 **/MachineLearning/**
+**/__pycache__/**
+*.pyc

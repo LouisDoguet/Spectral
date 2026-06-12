@@ -1,0 +1,71 @@
+\doxysection{ACTI::\+Sigmoid Class Reference}
+\hypertarget{classACTI_1_1Sigmoid}{}\label{classACTI_1_1Sigmoid}\index{ACTI::Sigmoid@{ACTI::Sigmoid}}
+Inheritance diagram for ACTI::\+Sigmoid:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{df/db2/classACTI_1_1Sigmoid}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{classACTI_1_1Sigmoid_ac825af7d87817111cc0e5fd46a318335}{apply}} (\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} \&tensor) override
+\item 
+\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} \doxymbox{\hyperlink{classACTI_1_1Sigmoid_a2bd40f39ebdb860b9c6ad67371029a2c}{gradient}} (\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} \&tensor)
+\item 
+uint8\+\_\+t \doxymbox{\hyperlink{classACTI_1_1Sigmoid_ad4bce5a2c9110d9c6018a53ac61af67f}{type\+Id}} () const override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{classACTI_1_1Activation}{ACTI::\+\+Activation}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries Activation} (std::\+string name)
+\item 
+const std::\+string \& {\bfseries get\+Name} () const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Attributes inherited from \doxymbox{\hyperlink{classACTI_1_1Activation}{ACTI::\+\+Activation}}}
+\begin{DoxyCompactItemize}
+\item 
+std::\+string {\bfseries name}
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{classACTI_1_1Sigmoid_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classACTI_1_1Sigmoid_ac825af7d87817111cc0e5fd46a318335}\index{ACTI::Sigmoid@{ACTI::Sigmoid}!apply@{apply}}
+\index{apply@{apply}!ACTI::Sigmoid@{ACTI::Sigmoid}}
+\doxysubsubsection{\texorpdfstring{apply()}{apply()}}
+{\footnotesize\ttfamily \label{classACTI_1_1Sigmoid_ac825af7d87817111cc0e5fd46a318335} 
+void ACTI::\+\+Sigmoid::\+apply (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} \&}]{tensor}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classACTI_1_1Activation}{ACTI::\+\+Activation}}.
+
+\Hypertarget{classACTI_1_1Sigmoid_a2bd40f39ebdb860b9c6ad67371029a2c}\index{ACTI::Sigmoid@{ACTI::Sigmoid}!gradient@{gradient}}
+\index{gradient@{gradient}!ACTI::Sigmoid@{ACTI::Sigmoid}}
+\doxysubsubsection{\texorpdfstring{gradient()}{gradient()}}
+{\footnotesize\ttfamily \label{classACTI_1_1Sigmoid_a2bd40f39ebdb860b9c6ad67371029a2c} 
+\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} ACTI::\+\+Sigmoid::\+gradient (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} \&}]{tensor}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classACTI_1_1Activation}{ACTI::\+\+Activation}}.
+
+\Hypertarget{classACTI_1_1Sigmoid_ad4bce5a2c9110d9c6018a53ac61af67f}\index{ACTI::Sigmoid@{ACTI::Sigmoid}!typeId@{typeId}}
+\index{typeId@{typeId}!ACTI::Sigmoid@{ACTI::Sigmoid}}
+\doxysubsubsection{\texorpdfstring{typeId()}{typeId()}}
+{\footnotesize\ttfamily \label{classACTI_1_1Sigmoid_ad4bce5a2c9110d9c6018a53ac61af67f} 
+uint8\+\_\+t ACTI::\+\+Sigmoid::\+type\+Id (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classACTI_1_1Activation}{ACTI::\+\+Activation}}.
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+neural/\+activation.\+h\item 
+neural/\+activation.\+cpp\end{DoxyCompactItemize}

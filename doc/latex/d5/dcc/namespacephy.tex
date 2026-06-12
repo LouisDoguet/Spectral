@@ -1,0 +1,78 @@
+\doxysection{phy Namespace Reference}
+\hypertarget{namespacephy}{}\label{namespacephy}\index{phy@{phy}}
+
+
+Check page 60 Laizet notes.  
+
+
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{namespacephy_ad73aa56eb56e512cfc47b78790e72ed6}{getP}} (double \texorpdfstring{$\ast$}{*}p, double \texorpdfstring{$\ast$}{*}rho, double \texorpdfstring{$\ast$}{*}rhou, double \texorpdfstring{$\ast$}{*}e, int n)
+\begin{DoxyCompactList}\small\item\em Computes pressure thanks to perfect gas law. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{namespacephy_ad9612813f08bfd90592e96b04f72130c}{compute\+Flux}} (double \texorpdfstring{$\ast$}{*}f1, double \texorpdfstring{$\ast$}{*}f2, double \texorpdfstring{$\ast$}{*}f3, double \texorpdfstring{$\ast$}{*}u1, double \texorpdfstring{$\ast$}{*}u2, double \texorpdfstring{$\ast$}{*}u3, double \texorpdfstring{$\ast$}{*}p, int n)
+\begin{DoxyCompactList}\small\item\em Computes F (Flux) from U (flow field) values. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Check page 60 Laizet notes. 
+
+\label{doc-func-members}
+\Hypertarget{namespacephy_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacephy_ad9612813f08bfd90592e96b04f72130c}\index{phy@{phy}!computeFlux@{computeFlux}}
+\index{computeFlux@{computeFlux}!phy@{phy}}
+\doxysubsubsection{\texorpdfstring{computeFlux()}{computeFlux()}}
+{\footnotesize\ttfamily \label{namespacephy_ad9612813f08bfd90592e96b04f72130c} 
+void phy::\+compute\+Flux (\begin{DoxyParamCaption}\item[{double \texorpdfstring{$\ast$}{*}}]{f1}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{f2}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{f3}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{u1}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{u2}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{u3}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{p}{, }\item[{int}]{n}{}\end{DoxyParamCaption})}
+
+
+
+Computes F (Flux) from U (flow field) values. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em f1} & rho\texorpdfstring{$\ast$}{*}u \\
+\hline
+{\em f2} & rho\texorpdfstring{$\ast$}{*}u\texorpdfstring{$^\wedge$}{\string^}2 + p \\
+\hline
+{\em f3} & u\texorpdfstring{$\ast$}{*}(e+p) \\
+\hline
+{\em u1} & rho \\
+\hline
+{\em u2} & u \\
+\hline
+{\em u3} & E \\
+\hline
+{\em n} & Size \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\Hypertarget{namespacephy_ad73aa56eb56e512cfc47b78790e72ed6}\index{phy@{phy}!getP@{getP}}
+\index{getP@{getP}!phy@{phy}}
+\doxysubsubsection{\texorpdfstring{getP()}{getP()}}
+{\footnotesize\ttfamily \label{namespacephy_ad73aa56eb56e512cfc47b78790e72ed6} 
+void phy::\+getP (\begin{DoxyParamCaption}\item[{double \texorpdfstring{$\ast$}{*}}]{p}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rho}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rhou}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{e}{, }\item[{int}]{n}{}\end{DoxyParamCaption})}
+
+
+
+Computes pressure thanks to perfect gas law. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em p} & Pressure to be filled \\
+\hline
+{\em rho} & \\
+\hline
+{\em u} & \\
+\hline
+{\em e} & \\
+\hline
+{\em n} & Size \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}

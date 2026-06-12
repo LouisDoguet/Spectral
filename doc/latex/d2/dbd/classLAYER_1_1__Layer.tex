@@ -1,0 +1,89 @@
+\doxysection{LAYER::\+\+\_\+\+Layer Class Reference}
+\hypertarget{classLAYER_1_1__Layer}{}\label{classLAYER_1_1__Layer}\index{LAYER::\_Layer@{LAYER::\_Layer}}
+Inheritance diagram for LAYER::\+\+\_\+\+Layer:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{d2/dbd/classLAYER_1_1__Layer}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classLAYER_1_1__Layer_ad37359552c068a1cb773bd0f640b8805}\label{classLAYER_1_1__Layer_ad37359552c068a1cb773bd0f640b8805} 
+{\bfseries \+\_\+\+Layer} (const size\+\_\+t in, const size\+\_\+t out, std::\+shared\+\_\+ptr$<$ \doxymbox{\hyperlink{classACTI_1_1Activation}{ACTI::\+\+Activation}} $>$ act)
+\item 
+\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} \doxymbox{\hyperlink{classLAYER_1_1__Layer_a0326d9cc96bae3e0d3cfad5fe21f59e6}{forward}} (const \doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} \&input)
+\item 
+\Hypertarget{classLAYER_1_1__Layer_af16aedc5ac4ab296c29420210b2b1874}\label{classLAYER_1_1__Layer_af16aedc5ac4ab296c29420210b2b1874} 
+\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} {\bfseries backward} (const \doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} \&grad\+\_\+output)
+\item 
+\Hypertarget{classLAYER_1_1__Layer_a5b741c282813e809d2037806aa38cc15}\label{classLAYER_1_1__Layer_a5b741c282813e809d2037806aa38cc15} 
+void {\bfseries update} (double learning\+\_\+rate)
+\item 
+\Hypertarget{classLAYER_1_1__Layer_a6335bd46bbdcdebffee4c7dfc2983740}\label{classLAYER_1_1__Layer_a6335bd46bbdcdebffee4c7dfc2983740} 
+const size\+\_\+t {\bfseries get\+Input\+Size} ()
+\item 
+\Hypertarget{classLAYER_1_1__Layer_a27874aeda911b9ca979feb82eecc3a3b}\label{classLAYER_1_1__Layer_a27874aeda911b9ca979feb82eecc3a3b} 
+const size\+\_\+t {\bfseries get\+Output\+Size} ()
+\item 
+\Hypertarget{classLAYER_1_1__Layer_a8832343040ceb39d6ca0e5aba4e61e99}\label{classLAYER_1_1__Layer_a8832343040ceb39d6ca0e5aba4e61e99} 
+void {\bfseries serialize} (std::\+ofstream \&f) const
+\item 
+\Hypertarget{classLAYER_1_1__Layer_a543ab5e50a18677d4a73b319f2b82aff}\label{classLAYER_1_1__Layer_a543ab5e50a18677d4a73b319f2b82aff} 
+void {\bfseries load\+Weights\+Bias} (std::\+ifstream \&f)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classLAYER_1_1__Layer_a2f92aec6043091fdea00f40f32ac3279}\label{classLAYER_1_1__Layer_a2f92aec6043091fdea00f40f32ac3279} 
+const std::\+string {\bfseries name}
+\item 
+\Hypertarget{classLAYER_1_1__Layer_a0e5ac12baf3c549cccde91440ec5d0c0}\label{classLAYER_1_1__Layer_a0e5ac12baf3c549cccde91440ec5d0c0} 
+const size\+\_\+t {\bfseries in\+\_\+features}
+\item 
+\Hypertarget{classLAYER_1_1__Layer_a787e9b993d93b26e63ffe3b58073f1dc}\label{classLAYER_1_1__Layer_a787e9b993d93b26e63ffe3b58073f1dc} 
+const size\+\_\+t {\bfseries out\+\_\+features}
+\item 
+\Hypertarget{classLAYER_1_1__Layer_a70643cca30302aba10132eb5131ad4bc}\label{classLAYER_1_1__Layer_a70643cca30302aba10132eb5131ad4bc} 
+std::\+shared\+\_\+ptr$<$ \doxymbox{\hyperlink{classACTI_1_1Activation}{ACTI::\+\+Activation}} $>$ {\bfseries activation\+\_\+function}
+\item 
+\Hypertarget{classLAYER_1_1__Layer_ac563e82fafe1a625d9d0522ba254e47b}\label{classLAYER_1_1__Layer_ac563e82fafe1a625d9d0522ba254e47b} 
+\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} {\bfseries weights}
+\item 
+\Hypertarget{classLAYER_1_1__Layer_ab2e36efd3a8ec9b9003471b015a54d7a}\label{classLAYER_1_1__Layer_ab2e36efd3a8ec9b9003471b015a54d7a} 
+\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} {\bfseries bias}
+\item 
+\Hypertarget{classLAYER_1_1__Layer_a9aca66aa0cef81142873fe66ae7929a2}\label{classLAYER_1_1__Layer_a9aca66aa0cef81142873fe66ae7929a2} 
+\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} {\bfseries input\+\_\+cache}
+\item 
+\Hypertarget{classLAYER_1_1__Layer_ae1a8859825a5b19e744f39f37a7efe9d}\label{classLAYER_1_1__Layer_ae1a8859825a5b19e744f39f37a7efe9d} 
+\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} {\bfseries grad\+\_\+weights}
+\item 
+\Hypertarget{classLAYER_1_1__Layer_a46d0d5f2da0f8b7a1023b44e3c928b31}\label{classLAYER_1_1__Layer_a46d0d5f2da0f8b7a1023b44e3c928b31} 
+\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} {\bfseries grad\+\_\+bias}
+\item 
+\Hypertarget{classLAYER_1_1__Layer_a30828f21adf5ce3e1b239b5352cd382c}\label{classLAYER_1_1__Layer_a30828f21adf5ce3e1b239b5352cd382c} 
+\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} {\bfseries preactivation\+\_\+cache}
+\item 
+\Hypertarget{classLAYER_1_1__Layer_a074ee66c14254b6c0852d4e52c41e3d2}\label{classLAYER_1_1__Layer_a074ee66c14254b6c0852d4e52c41e3d2} 
+\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} {\bfseries postactivation\+\_\+cache}
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{classLAYER_1_1__Layer_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classLAYER_1_1__Layer_a0326d9cc96bae3e0d3cfad5fe21f59e6}\index{LAYER::\_Layer@{LAYER::\_Layer}!forward@{forward}}
+\index{forward@{forward}!LAYER::\_Layer@{LAYER::\_Layer}}
+\doxysubsubsection{\texorpdfstring{forward()}{forward()}}
+{\footnotesize\ttfamily \label{classLAYER_1_1__Layer_a0326d9cc96bae3e0d3cfad5fe21f59e6} 
+\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} LAYER::\+\+\_\+\+Layer::\+forward (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} \&}]{input}{}\end{DoxyParamCaption})}
+
+LINEAR TRANSFORMATION
+
+ACTIVATION
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+neural/\+layer.\+h\item 
+neural/\+layer.\+cpp\end{DoxyCompactItemize}

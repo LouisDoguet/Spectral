@@ -1,0 +1,230 @@
+\doxysection{base::\+RBF Class Reference}
+\hypertarget{classbase_1_1RBF}{}\label{classbase_1_1RBF}\index{base::RBF@{base::RBF}}
+Inheritance diagram for base::\+RBF:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{dd/df8/classbase_1_1RBF}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classbase_1_1RBF_a1da84077afbe7e1671beb67e76dd8b31}\label{classbase_1_1RBF_a1da84077afbe7e1671beb67e76dd8b31} 
+{\bfseries RBF} (const int p, const double eps, std::\+string RBF\+\_\+name)
+\item 
+const double \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classbase_1_1RBF_a135e07867eb456bcc32a1c1fa560be10}{get\+Quads}} () const override
+\item 
+const double \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classbase_1_1RBF_aed7e3d4da48201a415845dda3c4d2ca9}{get\+Weights}} () const override
+\item 
+const int \doxymbox{\hyperlink{classbase_1_1RBF_a8291cab7110728bb09fb13520c8eeaf1}{get\+Order}} () const override
+\item 
+const double \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classbase_1_1RBF_abd01f230eb32fb62fa31447d8cdafb9c}{getD}} () const override
+\item 
+const double \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classbase_1_1RBF_a3f6fe01cfe4e13fe706dc1e55aece694}{getM}} () const override
+\begin{DoxyCompactList}\small\item\em Reference mass matrix M\+\_\+ij = int\+\_\+\{-\/1\}\texorpdfstring{$^\wedge$}{\string^}\{1\} l\+\_\+i(xi) l\+\_\+j(xi) dxi. \end{DoxyCompactList}\item 
+const double \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classbase_1_1RBF_a9151332801f6406f8df111008cbce58d}{get\+Minv}} () const override
+\begin{DoxyCompactList}\small\item\em Inverse of the reference mass matrix, precomputed at construction. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{classbase_1_1RBF_a92265c70295c9ee42c1da4e717090f2f}{interpolate}} (const double \texorpdfstring{$\ast$}{*}u, const double \texorpdfstring{$\ast$}{*}xi, int n\+\_\+pts, double \texorpdfstring{$\ast$}{*}out) const override
+\begin{DoxyCompactList}\small\item\em Generic \doxylink{classbase_1_1RBF}{RBF} interpolation:\+ lambda = Phi\texorpdfstring{$^\wedge$}{\string^}\{-\/1\} u, then s(xi) = sum\+\_\+j lambda\+\_\+j \texorpdfstring{$\ast$}{*} kernel(xi -\/ x\+\_\+j). \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{classbase_1_1__Basis}{base::\+\+\_\+\+Basis}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries \+\_\+\+Basis} (std::\+string name, const int p)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual double \doxymbox{\hyperlink{classbase_1_1RBF_a2873409fa647f1f9f00749142040b400}{kernel}} (double r) const =0
+\begin{DoxyCompactList}\small\item\em Kernel function phi evaluated at the (signed) radial position r. \end{DoxyCompactList}\item 
+\Hypertarget{classbase_1_1RBF_a18149d3f6e76da85fe3c3710cf1c230d}\label{classbase_1_1RBF_a18149d3f6e76da85fe3c3710cf1c230d} 
+void {\bfseries initialize} ()
+\begin{DoxyCompactList}\small\item\em Runs the kernel-\/dependent construction steps in the right order. MUST be called from the derived class\textquotesingle{}s constructor body, not from \doxylink{classbase_1_1RBF}{RBF}\textquotesingle{}s own constructor, so that virtual dispatch reaches the derived overrides. \end{DoxyCompactList}\item 
+\Hypertarget{classbase_1_1RBF_a6ba8e69c1a196c018134ddf78d901d0c}\label{classbase_1_1RBF_a6ba8e69c1a196c018134ddf78d901d0c} 
+void {\bfseries compute\+Radial\+Matrix} ()
+\begin{DoxyCompactList}\small\item\em Forms the matrix of signed differences {\ttfamily quad\+\_\+i -\/ quad\+\_\+j} (signed form is what the kernel-\/derivative formula needs). \end{DoxyCompactList}\item 
+\Hypertarget{classbase_1_1RBF_aae502775e41d2bffac8f35f857325608}\label{classbase_1_1RBF_aae502775e41d2bffac8f35f857325608} 
+void {\bfseries invert\+Activated\+Radial\+Matrix} ()
+\item 
+\Hypertarget{classbase_1_1RBF_a802abf1fb7b03a7c9265aedc042483c8}\label{classbase_1_1RBF_a802abf1fb7b03a7c9265aedc042483c8} 
+void {\bfseries compute\+Weights} ()
+\begin{DoxyCompactList}\small\item\em w\+\_\+i = sum\+\_\+k \+[Phi\texorpdfstring{$^\wedge$}{\string^}\{-\/1\}]\+\+\_\+\{i,k\} \texorpdfstring{$\ast$}{*} int\+\_\+\{-\/1\}\texorpdfstring{$^\wedge$}{\string^}\{1\} phi(\texorpdfstring{$\vert$}{|}xi -\/ x\+\_\+k\texorpdfstring{$\vert$}{|}) dxi \end{DoxyCompactList}\item 
+\Hypertarget{classbase_1_1RBF_a793c29e2721dbd18b05970276136a793}\label{classbase_1_1RBF_a793c29e2721dbd18b05970276136a793} 
+void {\bfseries compute\+Mass\+Matrix} ()
+\begin{DoxyCompactList}\small\item\em M\+\_\+ij = int\+\_\+\{-\/1\}\texorpdfstring{$^\wedge$}{\string^}\{1\} l\+\_\+i\texorpdfstring{$^\wedge$}{\string^}\{\doxylink{classbase_1_1RBF}{RBF}\}(xi) l\+\_\+j\texorpdfstring{$^\wedge$}{\string^}\{\doxylink{classbase_1_1RBF}{RBF}\}(xi) dxi via over-\/ refined quadrature; inverse computed with LAPACK. \end{DoxyCompactList}\item 
+\Hypertarget{classbase_1_1RBF_abac986047ceae55f2b53a7269f51bb56}\label{classbase_1_1RBF_abac986047ceae55f2b53a7269f51bb56} 
+void {\bfseries activate\+Radial\+Matrix} ()
+\begin{DoxyCompactList}\small\item\em Applies the kernel element-\/wise to the signed-\/difference matrix. Shared across kernels:\+ the kernel itself is virtual. \end{DoxyCompactList}\item 
+virtual void \doxymbox{\hyperlink{classbase_1_1RBF_a294c58581d4e644327f87d61b4343a81}{compute\+Derivative}} ()=0
+\begin{DoxyCompactList}\small\item\em Builds the nodal derivative matrix D = Phi\textquotesingle{} \texorpdfstring{$\ast$}{*} Phi\texorpdfstring{$^\wedge$}{\string^}\{-\/1\}. \end{DoxyCompactList}\item 
+virtual double \doxymbox{\hyperlink{classbase_1_1RBF_a6eecd17e8ec7b6080792d5ef442b8f43}{kernel\+Integral}} (int k) const =0
+\begin{DoxyCompactList}\small\item\em Closed-\/form integral of the kernel centred at node k over \+[-\/1,1]\+. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classbase_1_1RBF_a4cc9ea5721f34bfdad0eabc4b248d393}\label{classbase_1_1RBF_a4cc9ea5721f34bfdad0eabc4b248d393} 
+const std::\+string {\bfseries fname}
+\item 
+\Hypertarget{classbase_1_1RBF_a90157278454f85a048cb5d934a574301}\label{classbase_1_1RBF_a90157278454f85a048cb5d934a574301} 
+const double {\bfseries eps}
+\item 
+\Hypertarget{classbase_1_1RBF_ad205249c9a5f26381fe3653bb2b7074a}\label{classbase_1_1RBF_ad205249c9a5f26381fe3653bb2b7074a} 
+double \texorpdfstring{$\ast$}{*} {\bfseries radial\+\_\+matrix}
+\item 
+\Hypertarget{classbase_1_1RBF_a5afcd93ae5839e97e75387862bd677c5}\label{classbase_1_1RBF_a5afcd93ae5839e97e75387862bd677c5} 
+double \texorpdfstring{$\ast$}{*} {\bfseries activated\+\_\+radial\+\_\+matrix}
+\item 
+\Hypertarget{classbase_1_1RBF_a7fbfe15195378eebf43bd557b80e19e9}\label{classbase_1_1RBF_a7fbfe15195378eebf43bd557b80e19e9} 
+double \texorpdfstring{$\ast$}{*} {\bfseries inv\+\_\+activ\+\_\+radial\+\_\+matrix}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes inherited from \doxymbox{\hyperlink{classbase_1_1__Basis}{base::\+\+\_\+\+Basis}}}
+\begin{DoxyCompactItemize}
+\item 
+std::\+string {\bfseries name}
+\item 
+const int {\bfseries p}
+\item 
+double \texorpdfstring{$\ast$}{*} {\bfseries D}
+\item 
+double \texorpdfstring{$\ast$}{*} {\bfseries M}
+\item 
+double \texorpdfstring{$\ast$}{*} {\bfseries Minv}
+\item 
+double \texorpdfstring{$\ast$}{*} {\bfseries quads}
+\item 
+double \texorpdfstring{$\ast$}{*} {\bfseries weights}
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{classbase_1_1RBF_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classbase_1_1RBF_a294c58581d4e644327f87d61b4343a81}\index{base::RBF@{base::RBF}!computeDerivative@{computeDerivative}}
+\index{computeDerivative@{computeDerivative}!base::RBF@{base::RBF}}
+\doxysubsubsection{\texorpdfstring{computeDerivative()}{computeDerivative()}}
+{\footnotesize\ttfamily \label{classbase_1_1RBF_a294c58581d4e644327f87d61b4343a81} 
+virtual void base::\+\+RBF::\+compute\+Derivative (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [pure virtual]}}
+
+
+
+Builds the nodal derivative matrix D = Phi\textquotesingle{} \texorpdfstring{$\ast$}{*} Phi\texorpdfstring{$^\wedge$}{\string^}\{-\/1\}. 
+
+
+
+Implemented in \doxymbox{\hyperlink{classbase_1_1Gaussian_a3732942bd87a93fcc2742839f3a6adf6}{base::\+\+Gaussian}}, and \doxymbox{\hyperlink{classbase_1_1InverseMultiQuadratic_acc87f52f1c65f1c445f20466af995620}{base::\+\+Inverse\+Multi\+Quadratic}}.
+
+\Hypertarget{classbase_1_1RBF_abd01f230eb32fb62fa31447d8cdafb9c}\index{base::RBF@{base::RBF}!getD@{getD}}
+\index{getD@{getD}!base::RBF@{base::RBF}}
+\doxysubsubsection{\texorpdfstring{getD()}{getD()}}
+{\footnotesize\ttfamily \label{classbase_1_1RBF_abd01f230eb32fb62fa31447d8cdafb9c} 
+const double \texorpdfstring{$\ast$}{*} base::\+\+RBF::\+getD (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classbase_1_1__Basis}{base::\+\+\_\+\+Basis}}.
+
+\Hypertarget{classbase_1_1RBF_a3f6fe01cfe4e13fe706dc1e55aece694}\index{base::RBF@{base::RBF}!getM@{getM}}
+\index{getM@{getM}!base::RBF@{base::RBF}}
+\doxysubsubsection{\texorpdfstring{getM()}{getM()}}
+{\footnotesize\ttfamily \label{classbase_1_1RBF_a3f6fe01cfe4e13fe706dc1e55aece694} 
+const double \texorpdfstring{$\ast$}{*} base::\+\+RBF::\+getM (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reference mass matrix M\+\_\+ij = int\+\_\+\{-\/1\}\texorpdfstring{$^\wedge$}{\string^}\{1\} l\+\_\+i(xi) l\+\_\+j(xi) dxi. 
+
+
+
+Implements \doxymbox{\hyperlink{classbase_1_1__Basis_a03c08fee66c57413d20c62f38721e2de}{base::\+\+\_\+\+Basis}}.
+
+\Hypertarget{classbase_1_1RBF_a9151332801f6406f8df111008cbce58d}\index{base::RBF@{base::RBF}!getMinv@{getMinv}}
+\index{getMinv@{getMinv}!base::RBF@{base::RBF}}
+\doxysubsubsection{\texorpdfstring{getMinv()}{getMinv()}}
+{\footnotesize\ttfamily \label{classbase_1_1RBF_a9151332801f6406f8df111008cbce58d} 
+const double \texorpdfstring{$\ast$}{*} base::\+\+RBF::\+get\+Minv (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Inverse of the reference mass matrix, precomputed at construction. 
+
+
+
+Implements \doxymbox{\hyperlink{classbase_1_1__Basis_abc1835c6fbd1d90a51950cf86007a004}{base::\+\+\_\+\+Basis}}.
+
+\Hypertarget{classbase_1_1RBF_a8291cab7110728bb09fb13520c8eeaf1}\index{base::RBF@{base::RBF}!getOrder@{getOrder}}
+\index{getOrder@{getOrder}!base::RBF@{base::RBF}}
+\doxysubsubsection{\texorpdfstring{getOrder()}{getOrder()}}
+{\footnotesize\ttfamily \label{classbase_1_1RBF_a8291cab7110728bb09fb13520c8eeaf1} 
+const int base::\+\+RBF::\+get\+Order (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classbase_1_1__Basis}{base::\+\+\_\+\+Basis}}.
+
+\Hypertarget{classbase_1_1RBF_a135e07867eb456bcc32a1c1fa560be10}\index{base::RBF@{base::RBF}!getQuads@{getQuads}}
+\index{getQuads@{getQuads}!base::RBF@{base::RBF}}
+\doxysubsubsection{\texorpdfstring{getQuads()}{getQuads()}}
+{\footnotesize\ttfamily \label{classbase_1_1RBF_a135e07867eb456bcc32a1c1fa560be10} 
+const double \texorpdfstring{$\ast$}{*} base::\+\+RBF::\+get\+Quads (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classbase_1_1__Basis}{base::\+\+\_\+\+Basis}}.
+
+\Hypertarget{classbase_1_1RBF_aed7e3d4da48201a415845dda3c4d2ca9}\index{base::RBF@{base::RBF}!getWeights@{getWeights}}
+\index{getWeights@{getWeights}!base::RBF@{base::RBF}}
+\doxysubsubsection{\texorpdfstring{getWeights()}{getWeights()}}
+{\footnotesize\ttfamily \label{classbase_1_1RBF_aed7e3d4da48201a415845dda3c4d2ca9} 
+const double \texorpdfstring{$\ast$}{*} base::\+\+RBF::\+get\+Weights (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classbase_1_1__Basis}{base::\+\+\_\+\+Basis}}.
+
+\Hypertarget{classbase_1_1RBF_a92265c70295c9ee42c1da4e717090f2f}\index{base::RBF@{base::RBF}!interpolate@{interpolate}}
+\index{interpolate@{interpolate}!base::RBF@{base::RBF}}
+\doxysubsubsection{\texorpdfstring{interpolate()}{interpolate()}}
+{\footnotesize\ttfamily \label{classbase_1_1RBF_a92265c70295c9ee42c1da4e717090f2f} 
+void base::\+\+RBF::\+interpolate (\begin{DoxyParamCaption}\item[{const double \texorpdfstring{$\ast$}{*}}]{u}{, }\item[{const double \texorpdfstring{$\ast$}{*}}]{xi}{, }\item[{int}]{n\+\_\+pts}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{out}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Generic \doxylink{classbase_1_1RBF}{RBF} interpolation:\+ lambda = Phi\texorpdfstring{$^\wedge$}{\string^}\{-\/1\} u, then s(xi) = sum\+\_\+j lambda\+\_\+j \texorpdfstring{$\ast$}{*} kernel(xi -\/ x\+\_\+j). 
+
+
+
+Implements \doxymbox{\hyperlink{classbase_1_1__Basis_ac9137548fb600ae683c4dbd7fe903bcc}{base::\+\+\_\+\+Basis}}.
+
+\Hypertarget{classbase_1_1RBF_a2873409fa647f1f9f00749142040b400}\index{base::RBF@{base::RBF}!kernel@{kernel}}
+\index{kernel@{kernel}!base::RBF@{base::RBF}}
+\doxysubsubsection{\texorpdfstring{kernel()}{kernel()}}
+{\footnotesize\ttfamily \label{classbase_1_1RBF_a2873409fa647f1f9f00749142040b400} 
+virtual double base::\+\+RBF::\+kernel (\begin{DoxyParamCaption}\item[{double}]{r}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [pure virtual]}}
+
+
+
+Kernel function phi evaluated at the (signed) radial position r. 
+
+
+
+Implemented in \doxymbox{\hyperlink{classbase_1_1Gaussian_a532d98a4900ba8a29f73994847465b19}{base::\+\+Gaussian}}, and \doxymbox{\hyperlink{classbase_1_1InverseMultiQuadratic_a88f441dde5afe0e4da62428662589746}{base::\+\+Inverse\+Multi\+Quadratic}}.
+
+\Hypertarget{classbase_1_1RBF_a6eecd17e8ec7b6080792d5ef442b8f43}\index{base::RBF@{base::RBF}!kernelIntegral@{kernelIntegral}}
+\index{kernelIntegral@{kernelIntegral}!base::RBF@{base::RBF}}
+\doxysubsubsection{\texorpdfstring{kernelIntegral()}{kernelIntegral()}}
+{\footnotesize\ttfamily \label{classbase_1_1RBF_a6eecd17e8ec7b6080792d5ef442b8f43} 
+virtual double base::\+\+RBF::\+kernel\+Integral (\begin{DoxyParamCaption}\item[{int}]{k}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [pure virtual]}}
+
+
+
+Closed-\/form integral of the kernel centred at node k over \+[-\/1,1]\+. 
+
+
+
+Implemented in \doxymbox{\hyperlink{classbase_1_1Gaussian_a03b34f3f77c87519120f10f067cee368}{base::\+\+Gaussian}}, and \doxymbox{\hyperlink{classbase_1_1InverseMultiQuadratic_a83fdbdfd084f37faa6f0d50982d68c37}{base::\+\+Inverse\+Multi\+Quadratic}}.
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+lib/\+base/\+base.\+h\item 
+lib/\+base/\+radial\+\_\+base\+\_\+function.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,63 @@
+\doxysection{solution.\+Solution Class Reference}
+\hypertarget{classsolution_1_1Solution}{}\label{classsolution_1_1Solution}\index{solution.Solution@{solution.Solution}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classsolution_1_1Solution_a0161003d19a8e24f60e9b32de6c198be}\label{classsolution_1_1Solution_a0161003d19a8e24f60e9b32de6c198be} 
+{\bfseries \+\_\+\+\_\+init\+\_\+\+\_\+} (self, el.\+Element element, float eps, rbf=lambda r, np.\+exp(-\/eps \texorpdfstring{$\ast$}{*}r \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}2) eps)
+\item 
+\doxymbox{\hyperlink{classsolution_1_1Solution_aface304c9f7ab12cddbe5e580b5313c7}{plot\+\_\+rbfs}} (self, ax=None, disp=True)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classsolution_1_1Solution_ac50903e33715bb676566c169226ebbbf}\label{classsolution_1_1Solution_ac50903e33715bb676566c169226ebbbf} 
+{\bfseries rbf} = rbf
+\item 
+\Hypertarget{classsolution_1_1Solution_afa6c50098b819c0b41ee36763ac21243}\label{classsolution_1_1Solution_afa6c50098b819c0b41ee36763ac21243} 
+{\bfseries xi} = np.\+linspace(-\/1, 1, 1000)
+\item 
+\Hypertarget{classsolution_1_1Solution_a233220e3dc3fbd4fc2467a754d2730e4}\label{classsolution_1_1Solution_a233220e3dc3fbd4fc2467a754d2730e4} 
+{\bfseries X} = element.\+X
+\item 
+\Hypertarget{classsolution_1_1Solution_a96fd85b08befa0bfd20fbaccebc01ad7}\label{classsolution_1_1Solution_a96fd85b08befa0bfd20fbaccebc01ad7} 
+int {\bfseries eps} = eps \texorpdfstring{$\ast$}{*} (h0 /\+ h) \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*} 2
+\item 
+\Hypertarget{classsolution_1_1Solution_accc1d3af7f60a5fca4d7dec2c254336e}\label{classsolution_1_1Solution_accc1d3af7f60a5fca4d7dec2c254336e} 
+{\bfseries R} = np.\+abs(self.\+X\+[:\+, None]\+ -\/ self.\+X\+[None, :\+]\+)
+\item 
+\Hypertarget{classsolution_1_1Solution_a2767bf7805e52498b1259bf09b0067f4}\label{classsolution_1_1Solution_a2767bf7805e52498b1259bf09b0067f4} 
+{\bfseries A} = rbf(self.\+R, self.\+eps\+[None, :\+]\+)
+\item 
+\Hypertarget{classsolution_1_1Solution_a715a37a83407ed0788a840e926e794c8}\label{classsolution_1_1Solution_a715a37a83407ed0788a840e926e794c8} 
+{\bfseries invA} = np.\+linalg.\+inv(self.\+A)
+\item 
+\Hypertarget{classsolution_1_1Solution_acd2b50cce86d42f82d0026555d08a744}\label{classsolution_1_1Solution_acd2b50cce86d42f82d0026555d08a744} 
+{\bfseries phi} = rbf(dist\+\_\+xi, self.\+eps\+[:\+, None]\+)
+\item 
+\Hypertarget{classsolution_1_1Solution_a5da4fa74be0af605ca82b4fee211dee6}\label{classsolution_1_1Solution_a5da4fa74be0af605ca82b4fee211dee6} 
+{\bfseries c} = self.\+invA @ element.\+val
+\item 
+\Hypertarget{classsolution_1_1Solution_a9e0150418d80bbf0c18b5aadbbad91fd}\label{classsolution_1_1Solution_a9e0150418d80bbf0c18b5aadbbad91fd} 
+{\bfseries values} = self.\+c @ self.\+phi
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{classsolution_1_1Solution_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classsolution_1_1Solution_aface304c9f7ab12cddbe5e580b5313c7}\index{solution.Solution@{solution.Solution}!plot\_rbfs@{plot\_rbfs}}
+\index{plot\_rbfs@{plot\_rbfs}!solution.Solution@{solution.Solution}}
+\doxysubsubsection{\texorpdfstring{plot\_rbfs()}{plot\_rbfs()}}
+{\footnotesize\ttfamily \label{classsolution_1_1Solution_aface304c9f7ab12cddbe5e580b5313c7} 
+solution.\+Solution.\+plot\+\_\+rbfs (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{}]{ax}{ = {\ttfamily None}, }\item[{}]{disp}{ = {\ttfamily True}}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Plot the individual RBF associated with each node together with the
+resulting interpolant, illustrating how each node's shape parameter
+(radius) adapts to the local clustering.
+\end{DoxyVerb}
+ 
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+optimesh/\+solution.\+py\end{DoxyCompactItemize}
