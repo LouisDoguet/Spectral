@@ -28,6 +28,8 @@ int main(int argc, char *argv[]) {
     ("eps",   po::value<double>()->default_value(1.),                "RBF Epsilon value (inactive if no RBF elements)")
     ("output",po::value<std::string>()->default_value("results/"),   "Path to generated output ParaView files")
     ("delta", po::value<double>()->default_value(-1.0),              "Tanh smoothing half-width for initial discontinuity (default: 2*dx, 0=sharp)")
+    ("solver", po::value<std::string>()->default_value("rk4"),        "Solver type: rk4 | hybrid_dgsem")
+    ("alpha_max", po::value<double>()->default_value(0.5),           "hybrid_dgsem: maximum FV blending factor")
     ("sensor", po::value<std::string>()->default_value(""),          "Sensor for the solver")
     ("base0",  po::value<std::string>()->default_value("Lagrange"),  "Original solving base")
     ("base1",  po::value<std::string>()->default_value(""),          "Replacement base (when sensor recognize discontinuity)")
@@ -54,6 +56,8 @@ int main(int argc, char *argv[]) {
   const double T_final       = vm["T"].as<double>();
   const double dt            = vm["dt"].as<double>();
   std::string output         = vm["output"].as<std::string>();
+  const std::string solver_type = vm["solver"].as<std::string>();
+  const double alpha_max     = vm["alpha_max"].as<double>();
   const std::string sensor   = vm["sensor"].as<std::string>();
   const std::string base0    = vm["base0"].as<std::string>();
   const std::string base1    = vm["base1"].as<std::string>();

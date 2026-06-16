@@ -1,0 +1,66 @@
+diff a/main.cpp b/main.cpp	(rejected hunks)
+@@ -4,6 +4,7 @@
+ #include "lib/optimesh/optimesh.h"
+ #include "lib/space/mesh.h"
+ #include "lib/time/solver.h"
++#include "lib/time/hybrid_solver.h"
+ #include "lib/S1D.h"
+ #include "lib/sensor/sensor.h"
+ #include <boost/program_options.hpp>
+@@ -139,28 +144,37 @@ int main(int argc, char *argv[]) {
+     break;
+   }
+ 
+-  mesh::Mesh*   M = S1D::generateMesh(primary_base, N_elem, L, rhoL, uL, pL, rhoR, uR, pR, x0, delta);
+-  solver::RK4*  S = new solver::RK4(M, Q);
++  mesh::Mesh*    M = S1D::generateMesh(primary_base, N_elem, L, rhoL, uL, pL, rhoR, uR, pR, x0, delta);
+ 
+-  //   - log10(Se) > s_shock  (= s0 - kappa)   -> Prim -> shock-resolving basis
+-  //   - log10(Se) < s_smooth (= s0 - 2*kappa) -> shock basis -> Prim
+   const double s_shock  = s0 - kappa;
+   const double s_smooth = s0 - 2.0 * kappa;
+ 
+-  if (base1_id == 3) {
+-    // Residual-driven adaptive RBF: a per-element basis is fitted on each
+-    // up-switch by minimizing the DG residual (no shared alt basis).
+-    optim::DESettings de;
+-    de.maxiter = de_maxiter;
+-    de.popsize = de_popsize;
+-    de.seed    = de_seed;
+-    de.verbose = de_verbose;
+-    S->enableOptimizedBasisAdaptation(ssor, trunc, s_shock, s_smooth, de);
+-  } else if (secondary_base) {
+-    M->setAltBasis(secondary_base);
+-    S->enableBasisAdaptation(M->getAltBasis(), ssor, trunc, s_shock, s_smooth);
++  if (solver_type == "hybrid_dgsem") {
++    // Entropy-stable hybrid DGSEM (Hennemann et al. 2021).
++    // Uses the Chandrashekar EC flux in the volume + ES flux at interfaces.
++    // Per-element blending alpha is computed from the Persson-Peraire indicator.
++    solver::HybridDGSEM* S = new solver::HybridDGSEM(M, Q);
++    S->setIndicatorParams(alpha_max, /*alpha_min=*/0.001, /*diffuse=*/true);
++    S1D::RunShockTube(S, T_final, dt, output, nullptr, nullptr);
++    delete S;
++  } else {
++    // Default: standard RK4 with optional basis adaptation / diffusion.
++    solver::RK4* S = new solver::RK4(M, Q);
++
++    if (base1_id == 3) {
++      optim::DESettings de;
++      de.maxiter = de_maxiter;
++      de.popsize = de_popsize;
++      de.seed    = de_seed;
++      de.verbose = de_verbose;
++      S->enableOptimizedBasisAdaptation(ssor, trunc, s_shock, s_smooth, de);
++    } else if (secondary_base) {
++      M->setAltBasis(secondary_base);
++      S->enableBasisAdaptation(M->getAltBasis(), ssor, trunc, s_shock, s_smooth);
++    }
++
++    S1D::RunShockTube(S, T_final, dt, output, dif, ssor);
++    delete S;
+   }
+ 
+-  S1D::RunShockTube(S, T_final, dt, output, dif, ssor);
+-
+ }
+\ No newline at end of file

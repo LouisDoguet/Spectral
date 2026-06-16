@@ -66,6 +66,25 @@ public:
    */
   void computeResidual();
 
+  /**
+   * @brief Hybrid DGSEM residual (Hennemann et al. 2021).
+   *
+   * Replaces computeResidual() for the entropy-stable hybrid scheme.
+   * For each element, blends a high-order entropy-conservative (EC) split-form
+   * volume term with a first-order entropy-stable (ES) finite-volume subcell
+   * term using the per-element blending factor alpha[e] in [0,1]:
+   *
+   *   R = alpha * R_FV  +  (1-alpha) * R_DG
+   *
+   * At element interfaces the ES flux (Chandrashekar EC + LLF dissipation) is
+   * used instead of the Rusanov flux, providing guaranteed entropy dissipation.
+   *
+   * @param alpha Per-element blending factors, length n.
+   *              alpha=0: pure high-order EC DGSEM.
+   *              alpha=1: pure first-order ES finite volume.
+   */
+  void computeHybridResidual(const double* alpha);
+
   /// Boundary conditions
   void applyDirichlet();
 
