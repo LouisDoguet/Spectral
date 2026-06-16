@@ -66,8 +66,6 @@ mesh::Mesh* generateMesh(
     bc_rhoL  = rhoL; bc_rhouL = 0.0; bc_eL = pL / (gamma - 1.0);
     bc_rhoR  = rhoR; bc_rhouR = 0.0; bc_eR = pR / (gamma - 1.0);
 
-    std::string case_name = "results/sod_shock_tube";
-
     //-- MESH --
     mesh::Mesh *mesh = new mesh::Mesh(N_elem, basis, 0.0, L,
                                       rho_i, rhou_i, e_i,

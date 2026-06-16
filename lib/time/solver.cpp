@@ -4,6 +4,7 @@
 #include <cblas.h>
 #include <cmath>
 #include <cstdint>
+#include <cstdio>
 #include <cstring>
 #include <fstream>
 #include <iomanip>
@@ -82,6 +83,28 @@ std::ostream &operator<<(std::ostream &os, const _Solver &s) {
   if (s.m)
     os << *(s.m);
   return os;
+}
+
+void _Solver::print_start(int n_steps, double dt) const {
+  if (verbose_ < 1) return;
+  int nelem = m->getNumElements();
+  int P     = m->getElem(0)->getBasis()->getOrder();
+  std::printf("[%s] Starting — %d elements, P=%d, %d steps, dt=%.2e\n",
+              name.c_str(), nelem, P, n_steps, dt);
+}
+
+void _Solver::print_progress(int step, int n_steps, double t) const {
+  if (verbose_ < 2) return;
+  std::printf("[%s] step %5d/%d  t=%.6f\n", name.c_str(), step, n_steps, t);
+}
+
+void _Solver::print_end(int n_steps) const {
+  if (verbose_ < 1) return;
+  int nelem = m->getNumElements();
+  int nquad = m->getElem(0)->getBasis()->getOrder() + 1;
+  std::printf("[%s] Finished — %d steps, %d nodes, %lld total ops\n",
+              name.c_str(), n_steps, nelem * nquad,
+              static_cast<long long>(n_steps) * nelem * nquad);
 }
 
 _Solver::~_Solver() {

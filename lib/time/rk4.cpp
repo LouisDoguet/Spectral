@@ -73,12 +73,11 @@ void RK4::step(double dt) {
 }
 
 void RK4::run(double T_final, double dt, int save_freq, std::string prefix) {
-  int n_steps = std::ceil(T_final / dt);
-  std::cout << *(this);
-  std::cout << "--- Starting Simulation ---" << std::endl;
+  int n_steps = static_cast<int>(std::ceil(T_final / dt));
+  print_start(n_steps, dt);
   for (int step = 0; step <= n_steps; ++step) {
     if (step % save_freq == 0) {
-      // std::printf("Timestep : %5d/%5d \n", step, n_steps);
+      print_progress(step, n_steps, step * dt);
       exporter->write(step, step * dt, prefix);
       if (!snapshot_dir.empty())
         export_snapshot(step, step * dt, snapshot_dir);
@@ -86,15 +85,7 @@ void RK4::run(double T_final, double dt, int save_freq, std::string prefix) {
     this->step(dt);
   }
   exporter->writePVD(prefix);
-  std::cout << "--- Simulation Finished ---" << std::endl;
-  int nelem = this->m->getNumElements();
-  int nquad = this->m->getElem(0)->getBasis()->getOrder() + 1;
-  std::cout << "Mesh size : " << nelem << std::endl;
-  std::cout << "Quads     : " << nquad << std::endl;
-  std::cout << "Nodes     : " << nelem * nquad << std::endl;
-  std::cout << "Timesteps : " << n_steps << std::endl;
-  std::cout << "--- TOTAL OPER : " << n_steps * nelem * nquad << std::endl;
-  std::cout << std::endl << std::endl << std::endl;
+  print_end(n_steps);
 }
 
 } // namespace solver

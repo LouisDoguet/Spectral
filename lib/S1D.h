@@ -2,6 +2,10 @@
 #define S1D_H
 
 #include "base/base.h"
+#include "diffusion/diffusion.h"
+#include "sensor/sensor.h"
+#include "space/mesh.h"
+#include "time/solver.h"
 
 namespace S1D
 {

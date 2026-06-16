@@ -136,11 +136,10 @@ void HybridDGSEM::step(double dt) {
 void HybridDGSEM::run(double T_final, double dt, int save_freq,
                       std::string prefix) {
     int n_steps = static_cast<int>(std::ceil(T_final / dt));
-    std::cout << *(static_cast<_Solver*>(this));
-    std::cout << "--- Starting Hybrid DGSEM Simulation ---" << std::endl;
-
+    print_start(n_steps, dt);
     for (int step = 0; step <= n_steps; ++step) {
         if (step % save_freq == 0) {
+            print_progress(step, n_steps, step * dt);
             exporter->write(step, step * dt, prefix);
             if (!snapshot_dir.empty())
                 export_snapshot(step, step * dt, snapshot_dir);
@@ -148,15 +147,7 @@ void HybridDGSEM::run(double T_final, double dt, int save_freq,
         this->step(dt);
     }
     exporter->writePVD(prefix);
-
-    std::cout << "--- Simulation Finished ---" << std::endl;
-    const int nelem  = m->getNumElements();
-    const int nquad  = m->getElem(0)->getBasis()->getOrder() + 1;
-    std::cout << "Mesh size : " << nelem  << "\n"
-              << "Quads     : " << nquad  << "\n"
-              << "Nodes     : " << nelem * nquad << "\n"
-              << "Timesteps : " << n_steps << "\n"
-              << "--- TOTAL OPER : " << n_steps * nelem * nquad << std::endl;
+    print_end(n_steps);
 }
 
 } // namespace solver

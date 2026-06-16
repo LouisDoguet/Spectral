@@ -36,6 +36,12 @@ namespace solver {
             void setSensor(sens::_Sensor* sensr) { sensor = sensr; }
             void setSnapshotDir(std::string dir) { snapshot_dir = std::move(dir); }
 
+            /**
+             * @brief Set output verbosity for run().
+             * 0 = silent, 1 = start/end summary, 2 = progress at every saved iteration.
+             */
+            void setVerbosity(int v) { verbose_ = v; }
+
             /// @brief Enable per-element basis adaptation driven by Persson-Peraire.
             /// At the start of every timestep, elements above `s_shock` switch to
             /// `alt`; elements on `alt` below `s_smooth` switch back. `alt` must
@@ -65,6 +71,7 @@ namespace solver {
             std::string name;
             int total_points;
             int n_plot;
+            int verbose_ = 1;
             std::string snapshot_dir;
             mesh::Mesh* m;
             diff::_Diffusion* diffusion = nullptr;
@@ -96,6 +103,10 @@ namespace solver {
 
             void save_state();
             void collect_residuals();
+
+            void print_start(int n_steps, double dt) const;
+            void print_progress(int step, int n_steps, double t) const;
+            void print_end(int n_steps) const;
     };
 
     /**
