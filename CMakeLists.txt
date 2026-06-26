@@ -15,18 +15,33 @@ set(phy  "lib/phy/physics.cpp" "lib/phy/entropy_flux.cpp")
 set(base "lib/base/gll.cpp" "lib/base/base.cpp" "lib/base/radial_base_function.cpp")
 set(math "lib/math/math.cpp")
 set(time "lib/time/solver.cpp" "lib/time/rk4.cpp" "lib/time/hybrid_solver.cpp")
-set(diff "lib/diffusion/diffusion.cpp")
+set(diff "lib/diffusion/diffusion.cpp" "lib/diffusion/neural_diffusion.cpp" "lib/diffusion/hybrid_alpha_net.cpp")
 set(sensor "lib/sensor/persson_peraire.cpp" "lib/sensor/div_laplacian.cpp")
 set(post   "lib/post/vtu_exporter.cpp")
 set(SOD "lib/SOD.cpp")
-set(neural "neural/activation.cpp" "neural/layer.cpp" "neural/loss_function.cpp" "neural/test_mnist.cpp")
+set(neural_core "neural/activation.cpp" "neural/layer.cpp" "neural/loss_function.cpp")
+set(neural_test "neural/test_mnist.cpp")
+set(neural_train "neural/train_alpha_predictor.cpp")
 
-add_executable(spectral "main.cpp" ${elem} ${phy} ${math} ${time} ${base} ${diff} ${SOD} ${sensor} ${post})
-add_executable(neural "neural/test_mnist" ${neural})
+# Main spectral solver (includes neural network integration)
+add_executable(spectral "main.cpp" ${elem} ${phy} ${math} ${time} ${base} ${diff} ${SOD} ${sensor} ${post} ${neural_core})
+
+# MNIST test executable
+add_executable(neural_test "neural/test_mnist.cpp" ${neural_core})
+
+# Neural network training executable (RK4 artificial-diffusion alpha)
+add_executable(train_alpha_predictor "neural/train_alpha_predictor.cpp" ${neural_core})
+
+# Hybrid-DGSEM alpha policy training (one-step reward RL). Needs the full
+# physics stack because it runs real hybrid-DGSEM trajectories and trial steps.
+add_executable(train_hybrid_alpha "neural/train_hybrid_alpha.cpp"
+    ${elem} ${phy} ${math} ${time} ${base} ${diff} ${SOD} ${sensor} ${post} ${neural_core})
 
 
 target_link_libraries(spectral ${BLAS_LIBRARIES} ${Boost_LIBRARIES} ${LAPACK_LIBRARIES})
-target_link_libraries(neural ${BLAS_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(neural_test ${BLAS_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(train_alpha_predictor ${BLAS_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(train_hybrid_alpha ${BLAS_LIBRARIES} ${Boost_LIBRARIES} ${LAPACK_LIBRARIES})
 
 
 # GCC < 9 needs an explicit link for std::filesystem

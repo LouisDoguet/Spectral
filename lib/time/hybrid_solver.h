@@ -4,6 +4,8 @@
 #include "solver.h"
 #include <vector>
 
+namespace diff { class HybridAlphaNet; }
+
 namespace solver {
 
 /**
@@ -49,8 +51,17 @@ public:
     /** Read-only access to the last computed alpha field. */
     const std::vector<double>& getAlpha() const { return alpha_; }
 
+    /**
+     * @brief Use a trained policy network to predict alpha instead of the
+     *        Persson-Peraire modal indicator. Pass nullptr to revert to PP.
+     * The alpha_max cap, alpha_min clipping and neighbour diffusion are still
+     * applied to the network output for safety.
+     */
+    void setAlphaNet(diff::HybridAlphaNet* net) { alpha_net_ = net; }
+
 private:
     std::vector<double> alpha_;
+    diff::HybridAlphaNet* alpha_net_ = nullptr;
 
     double alpha_max_ = 0.5;
     double alpha_min_ = 0.001;

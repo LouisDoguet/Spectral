@@ -1,4 +1,5 @@
 #include "hybrid_solver.h"
+#include "../diffusion/hybrid_alpha_net.h"
 #include "../math/math.h"
 #include <cblas.h>
 #include <cmath>
@@ -18,6 +19,32 @@ HybridDGSEM::HybridDGSEM(mesh::Mesh* mesh, int n_plot)
 // ---------------------------------------------------------------------------
 void HybridDGSEM::computeAlpha() {
     const int n_elem = m->getNumElements();
+
+    // ---- Policy-network branch (Beck-style learned indicator) --------------
+    // The network predicts a raw alpha in [0,1] per element from the local
+    // density profile; we then apply the same clipping/capping/diffusion tail
+    // used by the Persson-Peraire branch for robustness.
+    if (alpha_net_) {
+        alpha_net_->fillAlpha(m, alpha_);
+        for (int e = 0; e < n_elem; ++e) {
+            double a = alpha_[e];
+            if (a < alpha_min_)              a = 0.0;
+            else if (a > 1.0 - alpha_min_)   a = 1.0;
+            alpha_[e] = std::min(a, alpha_max_);
+        }
+        if (diffuse_ && n_elem > 1) {
+            std::vector<double> tmp(alpha_);
+            for (int e = 0; e < n_elem; ++e) {
+                double nb = 0.0;
+                if (e > 0)        nb = std::max(nb, tmp[e-1]);
+                if (e < n_elem-1) nb = std::max(nb, tmp[e+1]);
+                alpha_[e] = std::max(tmp[e], 0.5 * nb);
+            }
+        }
+        return;
+    }
+
+    // ---- Persson-Peraire modal energy indicator (Eqs. 40-48) ---------------
     const int P      = m->getElem(0)->getBasis()->getOrder();
     const double N1  = static_cast<double>(P + 1);
 

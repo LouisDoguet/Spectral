@@ -1,0 +1,16 @@
+{
+  "test_cases": [
+    "smooth_0",
+    "smooth_1",
+    "shock_0",
+    "shock_1",
+    "multi_shock"
+  ],
+  "num_nodes": 200,
+  "normalizer": {
+    "solution_mean": 0.517415,
+    "solution_std": 0.790335114223707,
+    "alpha_mean": 0.314,
+    "alpha_std": 0.4638857549576346
+  }
+}

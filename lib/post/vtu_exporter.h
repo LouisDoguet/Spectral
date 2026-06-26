@@ -57,6 +57,18 @@ public:
     void addElemField(const std::string& name,
                       std::function<double(elem::Element&)> fn);
 
+    /**
+     * @brief Export at the genuine computed nodes instead of a uniform grid.
+     *
+     * When enabled, each element is sampled at its own basis quadrature nodes
+     * (GLL nodes for Lagrange) at their true physical positions, and field
+     * values are the raw nodal solution (interpolation at the nodes is exact).
+     * This shows the actual computed data, not a uniform re-projection.
+     * In this mode the per-element point count is fixed to P+1 (n_plot is
+     * ignored).
+     */
+    void useComputedNodes(bool enable) { nodal_mode = enable; }
+
     /** Write one VTU snapshot and append it to the PVD index. */
     void write(int step, double time, const std::string& prefix);
 
@@ -77,6 +89,7 @@ public:
 private:
     mesh::Mesh* m;
     int n_plot;
+    bool nodal_mode = false;
     std::vector<ScalarField> fields;
     std::vector<std::pair<double, std::string>> exported_files;
 };

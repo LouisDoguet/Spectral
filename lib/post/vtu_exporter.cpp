@@ -70,12 +70,17 @@ void VTUExporter::write(int step, double time, const std::string& prefix) {
     // (different elements on different bases) export correctly.
     const int P = m->getElem(0)->getBasis()->getOrder();
 
-    const int n_nodes = n_elem * n_plot;
-    const int n_cells = n_elem * (n_plot - 1);
+    // In nodal mode every element is sampled at its own P+1 quadrature nodes;
+    // otherwise at a uniform grid of n_plot points.
+    const int np = nodal_mode ? (P + 1) : n_plot;
 
-    double* ref_pts = new double[n_plot];
-    for (int i = 0; i < n_plot; ++i)
-        ref_pts[i] = -1.0 + 2.0 * i / (n_plot - 1);
+    const int n_nodes = n_elem * np;
+    const int n_cells = n_elem * (np - 1);
+
+    // Uniform reference points (used only when not in nodal mode).
+    double* ref_pts = new double[np];
+    for (int i = 0; i < np; ++i)
+        ref_pts[i] = -1.0 + 2.0 * i / (np - 1);
 
     // ── Header ───────────────────────────────────────────────────────────
     file << "<?xml version=\"1.0\"?>\n"
@@ -90,10 +95,16 @@ void VTUExporter::write(int step, double time, const std::string& prefix) {
          << "        <DataArray type=\"Float64\" Name=\"Points\" "
             "NumberOfComponents=\"3\" format=\"ascii\">\n";
     for (int e = 0; e < n_elem; ++e) {
-        double xL = m->getElem(e)->getX(0);
-        double dx = m->getElem(e)->getX(P) - xL;
-        for (int i = 0; i < n_plot; ++i)
-            file << xL + (ref_pts[i] + 1.0) / 2.0 * dx << " 0.0 0.0 ";
+        if (nodal_mode) {
+            // True physical positions of the computed (quadrature) nodes.
+            for (int i = 0; i < np; ++i)
+                file << m->getElem(e)->getX(i) << " 0.0 0.0 ";
+        } else {
+            double xL = m->getElem(e)->getX(0);
+            double dx = m->getElem(e)->getX(P) - xL;
+            for (int i = 0; i < np; ++i)
+                file << xL + (ref_pts[i] + 1.0) / 2.0 * dx << " 0.0 0.0 ";
+        }
     }
     file << "\n        </DataArray>\n      </Points>\n";
 
@@ -102,8 +113,8 @@ void VTUExporter::write(int step, double time, const std::string& prefix) {
          << "        <DataArray type=\"Int32\" Name=\"connectivity\" "
             "format=\"ascii\">\n";
     for (int e = 0; e < n_elem; ++e) {
-        int offset = e * n_plot;
-        for (int i = 0; i < n_plot - 1; ++i)
+        int offset = e * np;
+        for (int i = 0; i < np - 1; ++i)
             file << offset + i << " " << offset + i + 1 << " ";
     }
     file << "\n        </DataArray>\n"
@@ -117,16 +128,19 @@ void VTUExporter::write(int step, double time, const std::string& prefix) {
     file << "\n        </DataArray>\n      </Cells>\n";
 
     // ── PointData ────────────────────────────────────────────────────────
-    double* buf = new double[n_plot];
+    double* buf = new double[np];
     file << "      <PointData>\n";
     for (const auto& field : fields) {
         file << "        <DataArray type=\"Float64\" Name=\"" << field.name
              << "\" format=\"ascii\">\n";
         for (int e = 0; e < n_elem; ++e) {
             const base::_Basis* eb = m->getElem(e)->getBasis();
-            field.fill(*m->getElem(e), ref_pts, n_plot,
+            // In nodal mode, sampling at the element's own quadrature nodes
+            // makes the interpolation exact -> raw computed nodal values.
+            const double* rp = nodal_mode ? eb->getQuads() : ref_pts;
+            field.fill(*m->getElem(e), rp, np,
                        eb->getQuads(), eb->getWeights(), eb->getOrder(), buf);
-            for (int i = 0; i < n_plot; ++i) file << buf[i] << " ";
+            for (int i = 0; i < np; ++i) file << buf[i] << " ";
         }
         file << "\n        </DataArray>\n";
     }

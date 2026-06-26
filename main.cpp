@@ -1,6 +1,8 @@
 #include "lib/S1D.h"
 #include "lib/base/base.h"
 #include "lib/diffusion/diffusion.h"
+#include "lib/diffusion/hybrid_alpha_net.h"
+#include "lib/diffusion/neural_diffusion.h"
 #include "lib/math/math.h"
 #include "lib/sensor/sensor.h"
 #include "lib/space/mesh.h"
@@ -23,7 +25,8 @@ int main(int argc, char *argv[]) {
                      "Polynomial order")(
       "N", po::value<int>()->default_value(50),
       "Number of elements")("Q", po::value<int>()->default_value(0),
-                            "Output points per element (0 = P+1)")(
+                            "Output points per element on a uniform grid; "
+                            "0 = export the raw P+1 computed (GLL) nodes")(
       "L", po::value<double>()->default_value(2.), "Domain size")(
       "T", po::value<double>()->default_value(0.2),
       "Final time")("dt", po::value<double>()->default_value(5e-5), "Timestep")(
@@ -51,6 +54,8 @@ int main(int argc, char *argv[]) {
       "PP sensor: transition half-width (log10 units)")(
       "eps0", po::value<double>()->default_value(0.01),
       "PP sensor: maximum viscosity")(
+      "nn_model", po::value<std::string>()->default_value(""),
+      "Path to neural network model file (.nn)")(
       "verbose", po::value<int>()->default_value(1),
       "Verbosity level: 0=silent, 1=start/end, 2=all saved iterations")(
       "help", "Print help message.");
@@ -82,6 +87,7 @@ int main(int argc, char *argv[]) {
   const double s0 = vm["s0"].as<double>();
   const double kappa = vm["kappa"].as<double>();
   const double eps0 = vm["eps0"].as<double>();
+  const std::string nn_model = vm["nn_model"].as<std::string>();
   const int verbose = vm["verbose"].as<int>();
 
   if (output != "results/")
@@ -141,14 +147,18 @@ int main(int argc, char *argv[]) {
 
   sens::_Sensor *ssor = nullptr;
   diff::_Diffusion *dif = nullptr;
-  switch (sensor_id) {
-  case 1:
+
+  // The RK4 artificial-diffusion network is only meaningful for the rk4 solver.
+  // For hybrid_dgsem the network drives the blending factor alpha directly and
+  // is loaded further below as a HybridAlphaNet.
+  if (!nn_model.empty() && solver_type != "hybrid_dgsem") {
+    std::cout << "Model loaded" << std::endl;
+    std::string nn_norm = nn_model;
+    nn_norm.replace(nn_norm.rfind(".nn"), 3, ".norm");
+    dif = new diff::NeuralNetwork(nn_model, nn_norm);
+  } else if (sensor_id == 1) {
     ssor = new sens::PerssonPeraire();
     dif = new diff::PerssonPeraire(trunc, s0, kappa, eps0);
-    break;
-
-  default:
-    break;
   }
 
   mesh::Mesh *M = S1D::generateMesh(primary_base, N_elem, L, rhoL, uL, pL, rhoR,
@@ -157,15 +167,32 @@ int main(int argc, char *argv[]) {
   const double s_shock = s0 - kappa;
   const double s_smooth = s0 - 2.0 * kappa;
 
+  // Q == 0 selects "computed-nodes" export: each element is written at its own
+  // P+1 quadrature (GLL) nodes at their true positions, i.e. the raw computed
+  // solution rather than a uniform re-projection.
+  const bool export_nodal = (Q == 0);
+
   if (solver_type == "hybrid_dgsem") {
     solver::HybridDGSEM *S = new solver::HybridDGSEM(M, Q);
     S->setIndicatorParams(alpha_max, /*alpha_min=*/0.001, /*diffuse=*/true);
     S->setVerbosity(verbose);
+    S->getExporter().useComputedNodes(export_nodal);
+
+    diff::HybridAlphaNet *anet = nullptr;
+    if (!nn_model.empty()) {
+      anet = new diff::HybridAlphaNet(nn_model);
+      S->setAlphaNet(anet);
+      std::cout << "hybrid_dgsem: alpha driven by neural network policy"
+                << std::endl;
+    }
+
     S1D::RunShockTube(S, T_final, dt, output, nullptr, nullptr);
     delete S;
+    delete anet;
   } else {
     solver::RK4 *S = new solver::RK4(M, Q);
     S->setVerbosity(verbose);
+    S->getExporter().useComputedNodes(export_nodal);
 
     if (secondary_base) {
       M->setAltBasis(secondary_base);
