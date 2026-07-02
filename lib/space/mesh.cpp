@@ -3,8 +3,8 @@
 #include <iostream>
 #include <vector>
 
-#include "../phy/physics.h"
 #include "../phy/entropy_flux.h"
+#include "../phy/physics.h"
 #include "mesh.h"
 
 namespace mesh {
@@ -24,10 +24,10 @@ Mesh::Mesh(const int n, base::_Basis *basis, double xL, double xR) : n(n) {
 
   double x_iter = xL;
   for (int e = 0; e < n; ++e) {
-    elem[e] = new elem::Element(
-        e, basis, x_iter, x_iter + dx, 
-        &global_rho[e * nquads], &global_rhou[e * nquads], &global_e[e * nquads], 
-        &global_AV[e * nquads]);
+    elem[e] =
+        new elem::Element(e, basis, x_iter, x_iter + dx,
+                          &global_rho[e * nquads], &global_rhou[e * nquads],
+                          &global_e[e * nquads], &global_AV[e * nquads]);
     elem[e]->setFlux();
     x_iter += dx;
   }
@@ -41,7 +41,7 @@ Mesh::Mesh(const int n, base::_Basis *basis, double xL, double xR,
   primary_basis = basis;
 
   double dx_mesh = xR - xL;
-  double dx = (double) dx_mesh / (n);
+  double dx = (double)dx_mesh / (n);
 
   /// Global buffer
   int nquads = basis->getOrder() + 1;
@@ -69,8 +69,8 @@ Mesh::Mesh(const int n, base::_Basis *basis, double xL, double xR,
     /// Construct the element e with for values it's position in the global
     /// buffer
     elem[e] =
-        new elem::Element(e, basis, xL_elem, xR_elem, 
-                          &global_rho[e * nquads], &global_rhou[e * nquads], &global_e[e * nquads], 
+        new elem::Element(e, basis, xL_elem, xR_elem, &global_rho[e * nquads],
+                          &global_rhou[e * nquads], &global_e[e * nquads],
                           &global_AV[e * nquads]);
 
     /// Computes F from U
@@ -212,19 +212,21 @@ void Mesh::computeResidual() {
   }
 }
 
-void Mesh::adaptBasis(sens::PerssonPeraire& sensor, int truncation,
+void Mesh::adaptBasis(sens::PerssonPeraire &sensor, int truncation,
                       double s_shock, double s_smooth) {
-  if (alt_basis == nullptr || primary_basis == nullptr) return;
+  if (alt_basis == nullptr || primary_basis == nullptr)
+    return;
 
   for (int e = 0; e < n; ++e) {
-    elem::Element* E = elem[e];
+    elem::Element *E = elem[e];
     // Modal coefficients depend on the current basis -> refresh first.
     E->computeLegendreCoefficients();
     const double Se = sensor.SmoothnessIndicator(*E, truncation);
-    if (Se < 1e-30) continue;                  // perfectly smooth -> nothing to do
+    if (Se < 1e-30)
+      continue; // perfectly smooth -> nothing to do
     const double logSe = std::log10(Se);
 
-    base::_Basis* current = const_cast<base::_Basis*>(E->getBasis());
+    base::_Basis *current = const_cast<base::_Basis *>(E->getBasis());
     if (current == primary_basis && logSe > s_shock) {
       E->setBasis(alt_basis);
     } else if (current == alt_basis && logSe < s_smooth) {
@@ -233,10 +235,10 @@ void Mesh::adaptBasis(sens::PerssonPeraire& sensor, int truncation,
   }
 }
 
-void Mesh::computeHybridResidual(const double* alpha) {
-  const int Nn  = elem[0]->getBasis()->getOrder() + 1;
-  const double* w = elem[0]->getBasis()->getWeights();
-  const double* D = elem[0]->getBasis()->getD();
+void Mesh::computeHybridResidual(const double *alpha) {
+  const int Nn = elem[0]->getBasis()->getOrder() + 1;
+  const double *w = elem[0]->getBasis()->getWeights();
+  const double *D = elem[0]->getBasis()->getD();
 
   const int stride = Nn + 1;
   std::vector<double> fb1(n * stride, 0.0);
@@ -245,26 +247,27 @@ void Mesh::computeHybridResidual(const double* alpha) {
 
   std::vector<double> ec1(Nn * Nn), ec2(Nn * Nn), ec3(Nn * Nn);
 
-  // ---- Phase 1: element-local blended subcell fluxes -------------------------
+  // ---- Phase 1: element-local blended subcell fluxes
+  // -------------------------
   for (int e = 0; e < n; ++e) {
-    const double* rho  = elem[e]->getU1();
-    const double* rhou = elem[e]->getU2();
-    const double* en   = elem[e]->getU3();
-    const double  alp  = alpha[e];
-    double* B1 = fb1.data() + e * stride;
-    double* B2 = fb2.data() + e * stride;
-    double* B3 = fb3.data() + e * stride;
+    const double *rho = elem[e]->getU1();
+    const double *rhou = elem[e]->getU2();
+    const double *en = elem[e]->getU3();
+    const double alp = alpha[e];
+    double *B1 = fb1.data() + e * stride;
+    double *B2 = fb2.data() + e * stride;
+    double *B3 = fb3.data() + e * stride;
 
     for (int j = 0; j < Nn; ++j)
       for (int k = 0; k < Nn; ++k)
-        entropy::chandrashekar_ec(rho[j], rhou[j], en[j],
-                                  rho[k], rhou[k], en[k],
-                                  ec1[j*Nn+k], ec2[j*Nn+k], ec3[j*Nn+k]);
+        entropy::chandrashekar_ec(rho[j], rhou[j], en[j], rho[k], rhou[k],
+                                  en[k], ec1[j * Nn + k], ec2[j * Nn + k],
+                                  ec3[j * Nn + k]);
 
     {
-      double p0; phy::getP(&p0, const_cast<double*>(rho),
-                               const_cast<double*>(rhou),
-                               const_cast<double*>(en), 1);
+      double p0;
+      phy::getP(&p0, const_cast<double *>(rho), const_cast<double *>(rhou),
+                const_cast<double *>(en), 1);
       B1[0] = rhou[0];
       B2[0] = rhou[0] * rhou[0] / rho[0] + p0;
       B3[0] = rhou[0] / rho[0] * (en[0] + p0);
@@ -284,60 +287,59 @@ void Mesh::computeHybridResidual(const double* alpha) {
       const double fbar3_hi = B3[j] + w2j * d3;
 
       double fv1, fv2, fv3;
-      entropy::entropy_stable_lf(rho[j], rhou[j], en[j],
-                                 rho[j+1], rhou[j+1], en[j+1],
-                                 fv1, fv2, fv3);
+      entropy::entropy_stable_lf(rho[j], rhou[j], en[j], rho[j + 1],
+                                 rhou[j + 1], en[j + 1], fv1, fv2, fv3);
 
-      B1[j+1] = alp * fv1 + (1.0 - alp) * fbar1_hi;
-      B2[j+1] = alp * fv2 + (1.0 - alp) * fbar2_hi;
-      B3[j+1] = alp * fv3 + (1.0 - alp) * fbar3_hi;
+      B1[j + 1] = alp * fv1 + (1.0 - alp) * fbar1_hi;
+      B2[j + 1] = alp * fv2 + (1.0 - alp) * fbar2_hi;
+      B3[j + 1] = alp * fv3 + (1.0 - alp) * fbar3_hi;
     }
-
     {
-      const int NL = Nn - 1;
-      double pN; phy::getP(&pN, const_cast<double*>(rho + NL),
                                 const_cast<double*>(rhou + NL),
                                 const_cast<double*>(en   + NL), 1);
-      B1[Nn] = rhou[NL];
-      B2[Nn] = rhou[NL] * rhou[NL] / rho[NL] + pN;
-      B3[Nn] = rhou[NL] / rho[NL] * (en[NL] + pN);
+                                B1[Nn] = rhou[NL];
+                                B2[Nn] = rhou[NL] * rhou[NL] / rho[NL] + pN;
+                                B3[Nn] = rhou[NL] / rho[NL] * (en[NL] + pN);
     }
 
     for (int j = 0; j < Nn; ++j) {
-      elem[e]->setDivF1(j, B1[j+1] - B1[j]);
-      elem[e]->setDivF2(j, B2[j+1] - B2[j]);
-      elem[e]->setDivF3(j, B3[j+1] - B3[j]);
+      elem[e]->setDivF1(j, B1[j + 1] - B1[j]);
+      elem[e]->setDivF2(j, B2[j + 1] - B2[j]);
+      elem[e]->setDivF3(j, B3[j + 1] - B3[j]);
     }
   }
 
-  // ---- Phase 2: inter-element ES interface flux surface corrections ----------
+  // ---- Phase 2: inter-element ES interface flux surface corrections
+  // ----------
   for (int e = 0; e < n - 1; ++e) {
     const int NL = Nn - 1;
     const double uL1 = elem[e]->getRho(NL);
     const double uL2 = *(elem[e]->getU2(NL));
     const double uL3 = *(elem[e]->getU3(NL));
-    const double uR1 = elem[e+1]->getRho(0);
-    const double uR2 = *(elem[e+1]->getU2(0));
-    const double uR3 = *(elem[e+1]->getU3(0));
+    const double uR1 = elem[e + 1]->getRho(0);
+    const double uR2 = *(elem[e + 1]->getU2(0));
+    const double uR3 = *(elem[e + 1]->getU3(0));
 
     double f1s, f2s, f3s;
     entropy::entropy_stable_lf(uL1, uL2, uL3, uR1, uR2, uR3, f1s, f2s, f3s);
 
     double pL, pR;
-    phy::getP(&pL, const_cast<double*>(&uL1), const_cast<double*>(&uL2),
-                   const_cast<double*>(&uL3), 1);
-    phy::getP(&pR, const_cast<double*>(&uR1), const_cast<double*>(&uR2),
-                   const_cast<double*>(&uR3), 1);
-    const double fL1 = uL2, fL2 = uL2*uL2/uL1 + pL, fL3 = uL2/uL1*(uL3+pL);
-    const double fR1 = uR2, fR2 = uR2*uR2/uR1 + pR, fR3 = uR2/uR1*(uR3+pR);
+    phy::getP(&pL, const_cast<double *>(&uL1), const_cast<double *>(&uL2),
+              const_cast<double *>(&uL3), 1);
+    phy::getP(&pR, const_cast<double *>(&uR1), const_cast<double *>(&uR2),
+              const_cast<double *>(&uR3), 1);
+    const double fL1 = uL2, fL2 = uL2 * uL2 / uL1 + pL,
+                 fL3 = uL2 / uL1 * (uL3 + pL);
+    const double fR1 = uR2, fR2 = uR2 * uR2 / uR1 + pR,
+                 fR3 = uR2 / uR1 * (uR3 + pR);
 
     elem[e]->correctDivF1(NL, f1s - fL1);
     elem[e]->correctDivF2(NL, f2s - fL2);
     elem[e]->correctDivF3(NL, f3s - fL3);
 
-    elem[e+1]->correctDivF1(0, fR1 - f1s);
-    elem[e+1]->correctDivF2(0, fR2 - f2s);
-    elem[e+1]->correctDivF3(0, fR3 - f3s);
+    elem[e + 1]->correctDivF1(0, fR1 - f1s);
+    elem[e + 1]->correctDivF2(0, fR2 - f2s);
+    elem[e + 1]->correctDivF3(0, fR3 - f3s);
   }
 
   // ---- Phase 3: domain boundary ES flux corrections -------------------------
@@ -346,32 +348,38 @@ void Mesh::computeHybridResidual(const double* alpha) {
     const double ui2 = *(elem[0]->getU2(0));
     const double ui3 = *(elem[0]->getU3(0));
     double pi, pe;
-    phy::getP(&pi, const_cast<double*>(&ui1), const_cast<double*>(&ui2),
-                   const_cast<double*>(&ui3), 1);
-    phy::getP(&pe, const_cast<double*>(&u1_L), const_cast<double*>(&u2_L),
-                   const_cast<double*>(&u3_L), 1);
-    const double fe1 = u2_L, fe2 = u2_L*u2_L/u1_L + pe, fe3 = u2_L/u1_L*(u3_L+pe);
-    const double fi1 = ui2,  fi2 = ui2*ui2/ui1 + pi,  fi3 = ui2/ui1*(ui3+pi);
+    phy::getP(&pi, const_cast<double *>(&ui1), const_cast<double *>(&ui2),
+              const_cast<double *>(&ui3), 1);
+    phy::getP(&pe, const_cast<double *>(&u1_L), const_cast<double *>(&u2_L),
+              const_cast<double *>(&u3_L), 1);
+    const double fe1 = u2_L, fe2 = u2_L * u2_L / u1_L + pe,
+                 fe3 = u2_L / u1_L * (u3_L + pe);
+    const double fi1 = ui2, fi2 = ui2 * ui2 / ui1 + pi,
+                 fi3 = ui2 / ui1 * (ui3 + pi);
     double fs1, fs2, fs3;
     entropy::entropy_stable_lf(u1_L, u2_L, u3_L, ui1, ui2, ui3, fs1, fs2, fs3);
     elem[0]->correctDivF1(0, fi1 - fs1);
     elem[0]->correctDivF2(0, fi2 - fs2);
     elem[0]->correctDivF3(0, fi3 - fs3);
-    (void)fe1; (void)fe2; (void)fe3;
+    (void)fe1;
+    (void)fe2;
+    (void)fe3;
 
     const int last = n - 1;
-    const int NL   = Nn - 1;
+    const int NL = Nn - 1;
     const double ui1r = elem[last]->getRho(NL);
     const double ui2r = *(elem[last]->getU2(NL));
     const double ui3r = *(elem[last]->getU3(NL));
     double pir, per;
-    phy::getP(&pir, const_cast<double*>(&ui1r), const_cast<double*>(&ui2r),
-                    const_cast<double*>(&ui3r), 1);
-    phy::getP(&per, const_cast<double*>(&u1_R), const_cast<double*>(&u2_R),
-                    const_cast<double*>(&u3_R), 1);
-    const double fir1 = ui2r, fir2 = ui2r*ui2r/ui1r + pir, fir3 = ui2r/ui1r*(ui3r+pir);
+    phy::getP(&pir, const_cast<double *>(&ui1r), const_cast<double *>(&ui2r),
+              const_cast<double *>(&ui3r), 1);
+    phy::getP(&per, const_cast<double *>(&u1_R), const_cast<double *>(&u2_R),
+              const_cast<double *>(&u3_R), 1);
+    const double fir1 = ui2r, fir2 = ui2r * ui2r / ui1r + pir,
+                 fir3 = ui2r / ui1r * (ui3r + pir);
     double fsr1, fsr2, fsr3;
-    entropy::entropy_stable_lf(ui1r, ui2r, ui3r, u1_R, u2_R, u3_R, fsr1, fsr2, fsr3);
+    entropy::entropy_stable_lf(ui1r, ui2r, ui3r, u1_R, u2_R, u3_R, fsr1, fsr2,
+                               fsr3);
     elem[last]->correctDivF1(NL, fsr1 - fir1);
     elem[last]->correctDivF2(NL, fsr2 - fir2);
     elem[last]->correctDivF3(NL, fsr3 - fir3);
