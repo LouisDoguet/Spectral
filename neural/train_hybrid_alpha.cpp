@@ -61,10 +61,12 @@ int main(int argc, char *argv[]) {
   const double T_final = 0.4;
   const double dt = 1e-4;
 
-  const int EPOCHS = 4000;
+  const int EPOCHS = 40000;
   const double LEARNING_RATE = 1e-3;
   const int SAMPLE_STRIDE = 25;   // capture a training snapshot every N steps
-  const double LAMBDA = 0.08;     // dissipation cost (prefer smaller alpha)
+  double LAMBDA = 0.02;     // dissipation cost (prefer smaller alpha)
+  if (argc > 2)
+      LAMBDA = std::stod(argv[2]);
 
   std::string model_name = "alpha_hybrid.nn";
   if (argc > 1)
@@ -90,7 +92,9 @@ int main(int argc, char *argv[]) {
                                     0.5 * L, -1.0);
 
   solver::HybridDGSEM S(M, P + 1);
-  S.setIndicatorParams(/*alpha_max=*/0.5, /*alpha_min=*/0.001, /*diffuse=*/true);
+  S.setIndicatorParams(/*alpha_max=*/0.5, 
+                       /*alpha_min=*/0.001, 
+                       /*diffuse=*/true);
   S.setVerbosity(0);
 
   const int n = P + 1;       // nodes per element
@@ -108,7 +112,7 @@ int main(int argc, char *argv[]) {
 
   for (int step = 0; step <= n_steps; ++step) {
     if (step > 0 && step % SAMPLE_STRIDE == 0) {
-      // reward[e][c] for current state (U unchanged by residual evaluation).
+      // `reward[e][c]` for current state (U unchanged by residual evaluation).
       std::vector<std::vector<double>> reward(
           n_elem, std::vector<double>(cand.size(), -1e18));
 
@@ -224,7 +228,7 @@ int main(int argc, char *argv[]) {
 
   // ---------------- Save ----------------
   net.save(model_name);
-  std::cout << "\n✓ Model saved to: " << model_name << "\n";
+  std::cout << "\n Model saved to: " << model_name << "\n";
   std::cout << "======================================================\n";
 
   delete M;

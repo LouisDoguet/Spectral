@@ -6,23 +6,27 @@
 \DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ S1D\_H}}
 \DoxyCodeLine{00003\ }
 \DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}base/base.h"{}}}
-\DoxyCodeLine{00005\ }
-\DoxyCodeLine{00006\ \textcolor{keyword}{namespace\ }S1D}
-\DoxyCodeLine{00007\ \{}
-\DoxyCodeLine{00008\ \ \ \ \ mesh::Mesh*\ generateMesh(}
-\DoxyCodeLine{00009\ \ \ \ \ \ \ \ \ base::\_Basis*\ basis,}
-\DoxyCodeLine{00010\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ N\_elem,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ L,}
-\DoxyCodeLine{00011\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ rhoL,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ uL,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ pL,\ }
-\DoxyCodeLine{00012\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ rhoR,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ uR,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ pR,\ }
-\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ x0,\ \textcolor{keywordtype}{double}\ delta);}
-\DoxyCodeLine{00014\ }
-\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keywordtype}{void}\ RunShockTube(}
-\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ solver::\_Solver*\ solver,\ }
-\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ T\_final,\ \textcolor{keywordtype}{double}\ dt,\ std::string\ case\_name,}
-\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ diff::\_Diffusion*\ diffusion\ =\ \textcolor{keyword}{nullptr},\ sens::\_Sensor*\ sensor\ =\ \textcolor{keyword}{nullptr});}
-\DoxyCodeLine{00019\ \}\ \textcolor{comment}{//\ namespace\ S1D}}
-\DoxyCodeLine{00020\ }
-\DoxyCodeLine{00021\ }
-\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}diffusion/diffusion.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}sensor/sensor.h"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}space/mesh.h"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}time/solver.h"{}}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{namespace\ }S1D}
+\DoxyCodeLine{00011\ \{}
+\DoxyCodeLine{00012\ \ \ \ \ \mbox{\hyperlink{classmesh_1_1Mesh}{mesh::Mesh}}*\ generateMesh(}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classbase_1_1__Basis}{base::\_Basis}}*\ basis,}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ N\_elem,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ L,}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ rhoL,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ uL,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ pL,\ }
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ rhoR,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ uR,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ pR,\ }
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ x0,\ \textcolor{keywordtype}{double}\ delta);}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keywordtype}{void}\ RunShockTube(}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classsolver_1_1__Solver}{solver::\_Solver}}*\ solver,\ }
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ T\_final,\ \textcolor{keywordtype}{double}\ dt,\ std::string\ case\_name,}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classdiff_1_1__Diffusion}{diff::\_Diffusion}}*\ diffusion\ =\ \textcolor{keyword}{nullptr},\ \mbox{\hyperlink{classsens_1_1__Sensor}{sens::\_Sensor}}*\ sensor\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00023\ \}\ \textcolor{comment}{//\ namespace\ S1D}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#endif}}
 
 \end{DoxyCode}

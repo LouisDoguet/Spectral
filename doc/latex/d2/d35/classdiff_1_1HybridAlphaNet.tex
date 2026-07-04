@@ -1,0 +1,50 @@
+\doxysection{diff\+::Hybrid\+Alpha\+Net Class Reference}
+\hypertarget{classdiff_1_1HybridAlphaNet}{}\label{classdiff_1_1HybridAlphaNet}\index{diff::HybridAlphaNet@{diff::HybridAlphaNet}}
+
+
+Trained policy network that predicts the hybrid-\/\+DGSEM blending factor.  
+
+
+
+
+{\ttfamily \#include $<$hybrid\+\_\+alpha\+\_\+net.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdiff_1_1HybridAlphaNet_a6fde184016fea1260ec1e4398327b5df}\label{classdiff_1_1HybridAlphaNet_a6fde184016fea1260ec1e4398327b5df} 
+{\bfseries Hybrid\+Alpha\+Net} (const std\+::string \&model\+\_\+path)
+\item 
+void \mbox{\hyperlink{classdiff_1_1HybridAlphaNet_ace5c757563387bb5271dd035bb65473c}{fill\+Alpha}} (\mbox{\hyperlink{classmesh_1_1Mesh}{mesh\+::\+Mesh}} \texorpdfstring{$\ast$}{*}mesh, std\+::vector$<$ double $>$ \&alpha)
+\begin{DoxyCompactList}\small\item\em Fill per-\/element raw alpha predictions in \mbox{[}0,1\mbox{]}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Trained policy network that predicts the hybrid-\/\+DGSEM blending factor. 
+
+Replaces the Persson-\/\+Peraire modal indicator inside Hybrid\+DGSEM. The network is {\itshape per element}\+: its input is the standardized density profile of a single element (P+1 values) and its output is a single alpha in \mbox{[}0,1\mbox{]} (Sigmoid). Because the policy is local it is independent of the number of elements and can be reused across mesh sizes for a fixed polynomial order P. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classdiff_1_1HybridAlphaNet_ace5c757563387bb5271dd035bb65473c}\label{classdiff_1_1HybridAlphaNet_ace5c757563387bb5271dd035bb65473c} 
+\index{diff::HybridAlphaNet@{diff::HybridAlphaNet}!fillAlpha@{fillAlpha}}
+\index{fillAlpha@{fillAlpha}!diff::HybridAlphaNet@{diff::HybridAlphaNet}}
+\doxysubsubsection{\texorpdfstring{fillAlpha()}{fillAlpha()}}
+{\footnotesize\ttfamily void diff\+::\+Hybrid\+Alpha\+Net\+::fill\+Alpha (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classmesh_1_1Mesh}{mesh\+::\+Mesh}} \texorpdfstring{$\ast$}{*}}]{mesh,  }\item[{std\+::vector$<$ double $>$ \&}]{alpha }\end{DoxyParamCaption})}
+
+
+
+Fill per-\/element raw alpha predictions in \mbox{[}0,1\mbox{]}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em mesh} & Mesh whose current state is queried. \\
+\hline
+{\em alpha} & Output vector (resized to number of elements). \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+lib/diffusion/hybrid\+\_\+alpha\+\_\+net.\+h\item 
+lib/diffusion/hybrid\+\_\+alpha\+\_\+net.\+cpp\end{DoxyCompactItemize}

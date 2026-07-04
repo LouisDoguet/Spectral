@@ -294,12 +294,16 @@ void Mesh::computeHybridResidual(const double *alpha) {
       B2[j + 1] = alp * fv2 + (1.0 - alp) * fbar2_hi;
       B3[j + 1] = alp * fv3 + (1.0 - alp) * fbar3_hi;
     }
+
     {
+    const int NL = Nn - 1;
+    double pN; 
+    phy::getP(&pN, const_cast<double*>(rho + NL),      
                                 const_cast<double*>(rhou + NL),
                                 const_cast<double*>(en   + NL), 1);
-                                B1[Nn] = rhou[NL];
-                                B2[Nn] = rhou[NL] * rhou[NL] / rho[NL] + pN;
-                                B3[Nn] = rhou[NL] / rho[NL] * (en[NL] + pN);
+      B1[Nn] = rhou[NL];
+      B2[Nn] = rhou[NL] * rhou[NL] / rho[NL] + pN;
+      B3[Nn] = rhou[NL] / rho[NL] * (en[NL] + pN);
     }
 
     for (int j = 0; j < Nn; ++j) {

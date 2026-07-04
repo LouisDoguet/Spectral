@@ -1,10 +1,10 @@
-\doxysection{LAYER::\+Sigmoid Class Reference}
+\doxysection{LAYER\+::Sigmoid Class Reference}
 \hypertarget{classLAYER_1_1Sigmoid}{}\label{classLAYER_1_1Sigmoid}\index{LAYER::Sigmoid@{LAYER::Sigmoid}}
 
 
-{\ttfamily \+\#include $<$layer.\+h$>$}
+{\ttfamily \#include $<$layer.\+h$>$}
 
-Inheritance diagram for LAYER::\+Sigmoid:\+\begin{figure}[H]
+Inheritance diagram for LAYER\+::Sigmoid\+:\begin{figure}[H]
 \begin{center}
 \leavevmode
 \includegraphics[height=2.000000cm]{db/d86/classLAYER_1_1Sigmoid}
@@ -16,56 +16,56 @@ Inheritance diagram for LAYER::\+Sigmoid:\+\begin{figure}[H]
 \Hypertarget{classLAYER_1_1Sigmoid_a461666fab8e98ca9cc58ad9b7821a638}\label{classLAYER_1_1Sigmoid_a461666fab8e98ca9cc58ad9b7821a638} 
 {\bfseries Sigmoid} (const size\+\_\+t in, const size\+\_\+t out)
 \end{DoxyCompactItemize}
-\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{classLAYER_1_1__Layer}{LAYER::\+\+\_\+\+Layer}}}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classLAYER_1_1__Layer}{LAYER\+::\+\_\+\+Layer}}}
 \begin{DoxyCompactItemize}
 \item 
-{\bfseries \+\_\+\+Layer} (const size\+\_\+t in, const size\+\_\+t out, std::\+shared\+\_\+ptr$<$ \doxymbox{\hyperlink{classACTI_1_1Activation}{ACTI::\+\+Activation}} $>$ act)
-\item 
-\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} \doxymbox{\hyperlink{classLAYER_1_1__Layer_a0326d9cc96bae3e0d3cfad5fe21f59e6}{forward}} (const \doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} \&input)
-\item 
-\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} {\bfseries backward} (const \doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} \&grad\+\_\+output)
-\item 
-void {\bfseries update} (double learning\+\_\+rate)
-\item 
+\mbox{\hyperlink{classLAYER_1_1__Layer_ad37359552c068a1cb773bd0f640b8805}{\+\_\+\+Layer}} (const size\+\_\+t in, const size\+\_\+t out, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classACTI_1_1Activation}{ACTI\+::\+Activation}} $>$ act)
+\begin{DoxyCompactList}\small\item\em Constructor of a Layer. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR\+::\+Tensor}} \mbox{\hyperlink{classLAYER_1_1__Layer_a0326d9cc96bae3e0d3cfad5fe21f59e6}{forward}} (const \mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR\+::\+Tensor}} \&input)
+\begin{DoxyCompactList}\small\item\em Forward propagation of the layer. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR\+::\+Tensor}} \mbox{\hyperlink{classLAYER_1_1__Layer_af16aedc5ac4ab296c29420210b2b1874}{backward}} (const \mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR\+::\+Tensor}} \&grad\+\_\+output)
+\begin{DoxyCompactList}\small\item\em Backward propagation of the layer. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classLAYER_1_1__Layer_a5b741c282813e809d2037806aa38cc15}{update}} (double learning\+\_\+rate)
+\begin{DoxyCompactList}\small\item\em Update the layer. \end{DoxyCompactList}\item 
 const size\+\_\+t {\bfseries get\+Input\+Size} ()
 \item 
 const size\+\_\+t {\bfseries get\+Output\+Size} ()
 \item 
-void {\bfseries serialize} (std::\+ofstream \&f) const
-\item 
-void {\bfseries load\+Weights\+Bias} (std::\+ifstream \&f)
+void {\bfseries serialize} (std\+::ofstream \&f) const
+\begin{DoxyCompactList}\small\item\em OFSTREAM -\/ WRITE/\+READ .NN FILES. \end{DoxyCompactList}\item 
+void {\bfseries load\+Weights\+Bias} (std\+::ifstream \&f)
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Additional Inherited Members}
-\doxysubsection*{Protected Attributes inherited from \doxymbox{\hyperlink{classLAYER_1_1__Layer}{LAYER::\+\+\_\+\+Layer}}}
+\doxysubsection*{Protected Attributes inherited from \mbox{\hyperlink{classLAYER_1_1__Layer}{LAYER\+::\+\_\+\+Layer}}}
 \begin{DoxyCompactItemize}
 \item 
-const std::\+string {\bfseries name}
+const std\+::string {\bfseries name}
 \item 
 const size\+\_\+t {\bfseries in\+\_\+features}
 \item 
 const size\+\_\+t {\bfseries out\+\_\+features}
 \item 
-std::\+shared\+\_\+ptr$<$ \doxymbox{\hyperlink{classACTI_1_1Activation}{ACTI::\+\+Activation}} $>$ {\bfseries activation\+\_\+function}
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classACTI_1_1Activation}{ACTI\+::\+Activation}} $>$ {\bfseries activation\+\_\+function}
 \item 
-\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} {\bfseries weights}
+\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR\+::\+Tensor}} {\bfseries weights}
 \item 
-\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} {\bfseries bias}
+\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR\+::\+Tensor}} {\bfseries bias}
 \item 
-\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} {\bfseries input\+\_\+cache}
+\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR\+::\+Tensor}} {\bfseries input\+\_\+cache}
 \item 
-\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} {\bfseries grad\+\_\+weights}
+\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR\+::\+Tensor}} {\bfseries grad\+\_\+weights}
 \item 
-\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} {\bfseries grad\+\_\+bias}
+\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR\+::\+Tensor}} {\bfseries grad\+\_\+bias}
 \item 
-\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} {\bfseries preactivation\+\_\+cache}
+\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR\+::\+Tensor}} {\bfseries preactivation\+\_\+cache}
 \item 
-\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} {\bfseries postactivation\+\_\+cache}
+\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR\+::\+Tensor}} {\bfseries postactivation\+\_\+cache}
 \end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
-TO BE DEVELOPPED LATER :\+ NEEDS DIFFERENT BACKWARD METHOD class Soft\+Max :\+ public \doxylink{classLAYER_1_1__Layer}{\+\_\+\+Layer} \{ public:\+ Soft\+Max(const size\+\_\+t in, const size\+\_\+t out) :\+ \+\_\+\+Layer(in, out, std::\+make\+\_\+shared$<$\+ACTI::\+\+Soft\+Max$>$()) \{\} \doxylink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor} backward(const TENSOR::\+\+Tensor \&grad\+\_\+output) override; \}; 
+TO BE DEVELOPPED LATER \+: NEEDS DIFFERENT BACKWARD METHOD class Soft\+Max \+: public \doxylink{classLAYER_1_1__Layer}{\+\_\+\+Layer} \{ public\+: Soft\+Max(const size\+\_\+t in, const size\+\_\+t out) \+: \+\_\+\+Layer(in, out, std\+::make\+\_\+shared$<$\+ACTI\+::\+Soft\+Max$>$()) \{\} \doxylink{classTENSOR_1_1Tensor}{TENSOR\+::\+Tensor} \doxylink{classLAYER_1_1__Layer_af16aedc5ac4ab296c29420210b2b1874}{backward(const TENSOR\+::\+Tensor \&grad\+\_\+output)} override; \}; 
 
-The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-neural/\+layer.\+h\end{DoxyCompactItemize}
+neural/layer.\+h\end{DoxyCompactItemize}

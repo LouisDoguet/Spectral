@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['idxdatabase_0',['idxDatabase',['../d0/daa/classidxDatabase.html',1,'']]],
-  ['idxlabeldb_1',['idxLabelDB',['../da/de5/classidxLabelDB.html',1,'']]],
-  ['image_2',['Image',['../d8/d00/classImage.html',1,'']]],
-  ['inversemultiquadratic_3',['InverseMultiQuadratic',['../d0/d88/classbase_1_1InverseMultiQuadratic.html',1,'base']]]
+  ['hybridalphanet_0',['HybridAlphaNet',['../d2/d35/classdiff_1_1HybridAlphaNet.html',1,'diff']]],
+  ['hybriddgsem_1',['HybridDGSEM',['../d3/d82/classsolver_1_1HybridDGSEM.html',1,'solver']]],
+  ['hyperbolictangent_2',['HyperbolicTangent',['../d5/d7c/classACTI_1_1HyperbolicTangent.html',1,'ACTI']]]
 ];

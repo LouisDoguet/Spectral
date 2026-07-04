@@ -10,63 +10,65 @@
 \DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}element.h"{}}}
 \DoxyCodeLine{00007\ }
 \DoxyCodeLine{00008\ \textcolor{keyword}{namespace\ }mesh\ \{}
-\DoxyCodeLine{00012\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classmesh_1_1Mesh_aec868bea598345dbf754bf27690e353b}{Mesh}}\ \{}
+\DoxyCodeLine{00012\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classmesh_1_1Mesh}{Mesh}}\ \{}
 \DoxyCodeLine{00013\ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00021\ \ \ \doxymbox{\hyperlink{classmesh_1_1Mesh_aec868bea598345dbf754bf27690e353b}{Mesh}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \doxymbox{\hyperlink{classbase_1_1__Basis}{base::\_Basis}}\ *basis,\ \textcolor{keywordtype}{double}\ xL,\ \textcolor{keywordtype}{double}\ xR);}
-\DoxyCodeLine{00038\ \ \ \doxymbox{\hyperlink{classmesh_1_1Mesh_aec868bea598345dbf754bf27690e353b}{Mesh}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \doxymbox{\hyperlink{classbase_1_1__Basis}{base::\_Basis}}\ *basis,\ \textcolor{keywordtype}{double}\ xL,\ \textcolor{keywordtype}{double}\ xR,\ \textcolor{keywordtype}{double}\ *init\_u1,}
+\DoxyCodeLine{00021\ \ \ \mbox{\hyperlink{classmesh_1_1Mesh}{Mesh}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \mbox{\hyperlink{classbase_1_1__Basis}{base::\_Basis}}\ *basis,\ \textcolor{keywordtype}{double}\ xL,\ \textcolor{keywordtype}{double}\ xR);}
+\DoxyCodeLine{00038\ \ \ \mbox{\hyperlink{classmesh_1_1Mesh}{Mesh}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \mbox{\hyperlink{classbase_1_1__Basis}{base::\_Basis}}\ *basis,\ \textcolor{keywordtype}{double}\ xL,\ \textcolor{keywordtype}{double}\ xR,\ \textcolor{keywordtype}{double}\ *init\_u1,}
 \DoxyCodeLine{00039\ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *init\_u2,\ \textcolor{keywordtype}{double}\ *init\_u3,\ \textcolor{keywordtype}{double}\ u1\_L,\ \textcolor{keywordtype}{double}\ u2\_L,\ \textcolor{keywordtype}{double}\ u3\_L,}
 \DoxyCodeLine{00040\ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ u1\_R,\ \textcolor{keywordtype}{double}\ u2\_R,\ \textcolor{keywordtype}{double}\ u3\_R);}
 \DoxyCodeLine{00041\ }
-\DoxyCodeLine{00043\ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classelem_1_1Element}{elem::Element}}\ *\doxymbox{\hyperlink{classmesh_1_1Mesh_aed93fb232b6689b2116795771bcedc33}{getElem}}(\textcolor{keywordtype}{int}\ i)\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ elem[i];\ \}}
-\DoxyCodeLine{00044\ \ \ \doxymbox{\hyperlink{classelem_1_1Element}{elem::Element}}\ *\doxymbox{\hyperlink{classmesh_1_1Mesh_aed93fb232b6689b2116795771bcedc33}{getElem}}(\textcolor{keywordtype}{int}\ i)\ \{\ \textcolor{keywordflow}{return}\ elem[i];\ \}}
+\DoxyCodeLine{00043\ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{classelem_1_1Element}{elem::Element}}\ *\mbox{\hyperlink{classmesh_1_1Mesh_aed93fb232b6689b2116795771bcedc33}{getElem}}(\textcolor{keywordtype}{int}\ i)\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ elem[i];\ \}}
+\DoxyCodeLine{00044\ \ \ \mbox{\hyperlink{classelem_1_1Element}{elem::Element}}\ *\mbox{\hyperlink{classmesh_1_1Mesh_aed93fb232b6689b2116795771bcedc33}{getElem}}(\textcolor{keywordtype}{int}\ i)\ \{\ \textcolor{keywordflow}{return}\ elem[i];\ \}}
 \DoxyCodeLine{00045\ \ \ \textcolor{keywordtype}{int}\ getNumElements()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ n;\ \}}
 \DoxyCodeLine{00046\ \ \ \textcolor{comment}{//\ Getters\ for\ global\ contiguous\ buffers}}
 \DoxyCodeLine{00047\ \ \ \textcolor{keywordtype}{double}\ *getGlobalU1()\ \{\ \textcolor{keywordflow}{return}\ global\_rho;\ \}}
 \DoxyCodeLine{00048\ \ \ \textcolor{keywordtype}{double}\ *getGlobalU2()\ \{\ \textcolor{keywordflow}{return}\ global\_rhou;\ \}}
 \DoxyCodeLine{00049\ \ \ \textcolor{keywordtype}{double}\ *getGlobalU3()\ \{\ \textcolor{keywordflow}{return}\ global\_e;\ \}}
-\DoxyCodeLine{00050\ \ \ \textcolor{keyword}{const}\ base::\_Basis\ *getBasis()\ \{\ \textcolor{keywordflow}{return}\ elem[0]-\/>getBasis();\ \}}
+\DoxyCodeLine{00050\ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{classbase_1_1__Basis}{base::\_Basis}}\ *getBasis()\ \{\ \textcolor{keywordflow}{return}\ elem[0]-\/>getBasis();\ \}}
 \DoxyCodeLine{00051\ \ \ \textcolor{keywordtype}{int}\ getTotalPoints()\textcolor{keyword}{\ const\ }\{}
 \DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordflow}{return}\ n\ *\ (elem[0]-\/>getBasis()-\/>getOrder()\ +\ 1);}
 \DoxyCodeLine{00053\ \ \ \}}
 \DoxyCodeLine{00054\ }
-\DoxyCodeLine{00056\ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classmesh_1_1Mesh_a6b1bde6f7564044a86058a9938cb6af9}{computeElements}}();\ \ \ \textcolor{comment}{//\ Computes\ df/dx}}
-\DoxyCodeLine{00057\ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classmesh_1_1Mesh_ab14874b7f37219d321a3a11397824995}{computeInterfaces}}();\ \textcolor{comment}{//\ Computes\ the\ Reimann\ problem\ at\ interface}}
-\DoxyCodeLine{00067\ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classmesh_1_1Mesh_a8c3c8c3e419f484596d0d9c7788177d3}{computeResidual}}();}
+\DoxyCodeLine{00056\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classmesh_1_1Mesh_a6b1bde6f7564044a86058a9938cb6af9}{computeElements}}();\ \ \ \textcolor{comment}{//\ Computes\ df/dx}}
+\DoxyCodeLine{00057\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classmesh_1_1Mesh_ab14874b7f37219d321a3a11397824995}{computeInterfaces}}();\ \textcolor{comment}{//\ Computes\ the\ Reimann\ problem\ at\ interface}}
+\DoxyCodeLine{00067\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classmesh_1_1Mesh_a8c3c8c3e419f484596d0d9c7788177d3}{computeResidual}}();}
 \DoxyCodeLine{00068\ }
-\DoxyCodeLine{00070\ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classmesh_1_1Mesh_a91af7a061f0fab8cc8a4044d1d92f767}{applyDirichlet}}();}
-\DoxyCodeLine{00071\ }
-\DoxyCodeLine{00074\ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classmesh_1_1Mesh_a97887cc8deb6adc251dbb91d21f4f377}{setAltBasis}}(\doxymbox{\hyperlink{classbase_1_1__Basis}{base::\_Basis}}*\ alt)\ \{\ alt\_basis\ =\ alt;\ \}}
-\DoxyCodeLine{00075\ \ \ \doxymbox{\hyperlink{classbase_1_1__Basis}{base::\_Basis}}*\ getPrimaryBasis()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ primary\_basis;\ \}}
-\DoxyCodeLine{00076\ \ \ \doxymbox{\hyperlink{classbase_1_1__Basis}{base::\_Basis}}*\ getAltBasis()\textcolor{keyword}{\ \ \ \ const\ }\{\ \textcolor{keywordflow}{return}\ alt\_basis;\ \}}
-\DoxyCodeLine{00077\ }
-\DoxyCodeLine{00084\ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classmesh_1_1Mesh_aada2c3fc33cd26d625f619fd807b0bd8}{adaptBasis}}(sens::PerssonPeraire\&\ sensor,\ \textcolor{keywordtype}{int}\ truncation,}
-\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ s\_shock,\ \textcolor{keywordtype}{double}\ s\_smooth);}
-\DoxyCodeLine{00086\ }
-\DoxyCodeLine{00087\ \ \ \doxymbox{\hyperlink{classmesh_1_1Mesh_aec868bea598345dbf754bf27690e353b}{\string~Mesh}}();}
-\DoxyCodeLine{00088\ }
-\DoxyCodeLine{00089\ \textcolor{keyword}{private}:}
-\DoxyCodeLine{00090\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n;}
-\DoxyCodeLine{00091\ \ \ elem::Element\ **elem;}
-\DoxyCodeLine{00092\ \ \ base::\_Basis*\ primary\_basis\ =\ \textcolor{keyword}{nullptr};\ \ \textcolor{comment}{//\ smooth-\/region\ basis\ (Lagrange)}}
-\DoxyCodeLine{00093\ \ \ base::\_Basis*\ alt\_basis\ \ \ \ \ =\ \textcolor{keyword}{nullptr};\ \ \textcolor{comment}{//\ shock-\/resolving\ basis\ (RBF)}}
-\DoxyCodeLine{00094\ }
-\DoxyCodeLine{00096\ \ \ \textcolor{keywordtype}{double}\ *global\_rho;}
-\DoxyCodeLine{00097\ \ \ \textcolor{keywordtype}{double}\ *global\_rhou;}
-\DoxyCodeLine{00098\ \ \ \textcolor{keywordtype}{double}\ *global\_e;}
-\DoxyCodeLine{00100\ \ \ \textcolor{keywordtype}{double}\ *global\_AV;}
-\DoxyCodeLine{00101\ }
-\DoxyCodeLine{00102\ }
-\DoxyCodeLine{00104\ \ \ \textcolor{keywordtype}{double}\ u1\_L;}
-\DoxyCodeLine{00105\ \ \ \textcolor{keywordtype}{double}\ u2\_L;}
-\DoxyCodeLine{00106\ \ \ \textcolor{keywordtype}{double}\ u3\_L;}
-\DoxyCodeLine{00107\ \ \ \textcolor{keywordtype}{double}\ u1\_R;}
-\DoxyCodeLine{00108\ \ \ \textcolor{keywordtype}{double}\ u2\_R;}
-\DoxyCodeLine{00109\ \ \ \textcolor{keywordtype}{double}\ u3\_R;}
-\DoxyCodeLine{00110\ }
-\DoxyCodeLine{00111\ \ \ \textcolor{keyword}{friend}\ std::ostream\ \&operator<<(std::ostream\ \&,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classmesh_1_1Mesh_aec868bea598345dbf754bf27690e353b}{Mesh}}\ \&);}
-\DoxyCodeLine{00112\ \};}
-\DoxyCodeLine{00113\ \}\ \textcolor{comment}{//\ namespace\ mesh}}
-\DoxyCodeLine{00114\ }
-\DoxyCodeLine{00115\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00086\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classmesh_1_1Mesh_afffb9bd13c9521df4ba8b059f2d5ea2a}{computeHybridResidual}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{double}*\ alpha);}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00089\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classmesh_1_1Mesh_a91af7a061f0fab8cc8a4044d1d92f767}{applyDirichlet}}();}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00093\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classmesh_1_1Mesh_a97887cc8deb6adc251dbb91d21f4f377}{setAltBasis}}(\mbox{\hyperlink{classbase_1_1__Basis}{base::\_Basis}}*\ alt)\ \{\ alt\_basis\ =\ alt;\ \}}
+\DoxyCodeLine{00094\ \ \ \mbox{\hyperlink{classbase_1_1__Basis}{base::\_Basis}}*\ getPrimaryBasis()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ primary\_basis;\ \}}
+\DoxyCodeLine{00095\ \ \ \mbox{\hyperlink{classbase_1_1__Basis}{base::\_Basis}}*\ getAltBasis()\textcolor{keyword}{\ \ \ \ const\ }\{\ \textcolor{keywordflow}{return}\ alt\_basis;\ \}}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00103\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classmesh_1_1Mesh_aada2c3fc33cd26d625f619fd807b0bd8}{adaptBasis}}(\mbox{\hyperlink{classsens_1_1PerssonPeraire}{sens::PerssonPeraire}}\&\ sensor,\ \textcolor{keywordtype}{int}\ truncation,}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ s\_shock,\ \textcolor{keywordtype}{double}\ s\_smooth);}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \string~Mesh();}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00109\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n;}
+\DoxyCodeLine{00110\ \ \ \mbox{\hyperlink{classelem_1_1Element}{elem::Element}}\ **elem;}
+\DoxyCodeLine{00111\ \ \ \mbox{\hyperlink{classbase_1_1__Basis}{base::\_Basis}}*\ primary\_basis\ =\ \textcolor{keyword}{nullptr};\ \ \textcolor{comment}{//\ smooth-\/region\ basis\ (Lagrange)}}
+\DoxyCodeLine{00112\ \ \ \mbox{\hyperlink{classbase_1_1__Basis}{base::\_Basis}}*\ alt\_basis\ \ \ \ \ =\ \textcolor{keyword}{nullptr};\ \ \textcolor{comment}{//\ shock-\/resolving\ basis\ (RBF)}}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00115\ \ \ \textcolor{keywordtype}{double}\ *global\_rho;}
+\DoxyCodeLine{00116\ \ \ \textcolor{keywordtype}{double}\ *global\_rhou;}
+\DoxyCodeLine{00117\ \ \ \textcolor{keywordtype}{double}\ *global\_e;}
+\DoxyCodeLine{00119\ \ \ \textcolor{keywordtype}{double}\ *global\_AV;}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00123\ \ \ \textcolor{keywordtype}{double}\ u1\_L;}
+\DoxyCodeLine{00124\ \ \ \textcolor{keywordtype}{double}\ u2\_L;}
+\DoxyCodeLine{00125\ \ \ \textcolor{keywordtype}{double}\ u3\_L;}
+\DoxyCodeLine{00126\ \ \ \textcolor{keywordtype}{double}\ u1\_R;}
+\DoxyCodeLine{00127\ \ \ \textcolor{keywordtype}{double}\ u2\_R;}
+\DoxyCodeLine{00128\ \ \ \textcolor{keywordtype}{double}\ u3\_R;}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \ \ \textcolor{keyword}{friend}\ std::ostream\ \&operator<<(std::ostream\ \&,\ \textcolor{keyword}{const}\ Mesh\ \&);}
+\DoxyCodeLine{00131\ \};}
+\DoxyCodeLine{00132\ \}\ \textcolor{comment}{//\ namespace\ mesh}}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \textcolor{preprocessor}{\#endif}}
 
 \end{DoxyCode}

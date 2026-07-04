@@ -1,6 +1,6 @@
-\doxysection{base::\+\+\_\+\+Basis Class Reference}
+\doxysection{base\+::\+\_\+\+Basis Class Reference}
 \hypertarget{classbase_1_1__Basis}{}\label{classbase_1_1__Basis}\index{base::\_Basis@{base::\_Basis}}
-Inheritance diagram for base::\+\+\_\+\+Basis:\+\begin{figure}[H]
+Inheritance diagram for base\+::\+\_\+\+Basis\+:\begin{figure}[H]
 \begin{center}
 \leavevmode
 \includegraphics[height=3.000000cm]{d0/d61/classbase_1_1__Basis}
@@ -10,7 +10,7 @@ Inheritance diagram for base::\+\+\_\+\+Basis:\+\begin{figure}[H]
 \begin{DoxyCompactItemize}
 \item 
 \Hypertarget{classbase_1_1__Basis_a8ff4d61b72de9c50e429939dcb2e3ee1}\label{classbase_1_1__Basis_a8ff4d61b72de9c50e429939dcb2e3ee1} 
-{\bfseries \+\_\+\+Basis} (std::\+string name, const int p)
+{\bfseries \+\_\+\+Basis} (std\+::string name, const int p)
 \item 
 \Hypertarget{classbase_1_1__Basis_a666b3a382f25fac942ffa0dd33e51905}\label{classbase_1_1__Basis_a666b3a382f25fac942ffa0dd33e51905} 
 virtual const double \texorpdfstring{$\ast$}{*} {\bfseries get\+Quads} () const =0
@@ -24,17 +24,17 @@ virtual const int {\bfseries get\+Order} () const =0
 \Hypertarget{classbase_1_1__Basis_a1df4c9494e71844b752d5c19d6fde244}\label{classbase_1_1__Basis_a1df4c9494e71844b752d5c19d6fde244} 
 virtual const double \texorpdfstring{$\ast$}{*} {\bfseries getD} () const =0
 \item 
-virtual const double \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classbase_1_1__Basis_a03c08fee66c57413d20c62f38721e2de}{getM}} () const =0
+virtual const double \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{classbase_1_1__Basis_a03c08fee66c57413d20c62f38721e2de}{getM}} () const =0
 \begin{DoxyCompactList}\small\item\em Reference mass matrix M\+\_\+ij = int\+\_\+\{-\/1\}\texorpdfstring{$^\wedge$}{\string^}\{1\} l\+\_\+i(xi) l\+\_\+j(xi) dxi. \end{DoxyCompactList}\item 
-virtual const double \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classbase_1_1__Basis_abc1835c6fbd1d90a51950cf86007a004}{get\+Minv}} () const =0
+virtual const double \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{classbase_1_1__Basis_abc1835c6fbd1d90a51950cf86007a004}{get\+Minv}} () const =0
 \begin{DoxyCompactList}\small\item\em Inverse of the reference mass matrix, precomputed at construction. \end{DoxyCompactList}\item 
-virtual void \doxymbox{\hyperlink{classbase_1_1__Basis_ac9137548fb600ae683c4dbd7fe903bcc}{interpolate}} (const double \texorpdfstring{$\ast$}{*}u, const double \texorpdfstring{$\ast$}{*}xi, int n\+\_\+pts, double \texorpdfstring{$\ast$}{*}out) const =0
-\begin{DoxyCompactList}\small\item\em Evaluates the basis interpolant of nodal values {\ttfamily u} at {\ttfamily n\+\_\+pts} reference points {\ttfamily xi\+[k]\+ in \+[-\/1,1]\+}. Writes results to {\ttfamily out}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+virtual void \mbox{\hyperlink{classbase_1_1__Basis_ac9137548fb600ae683c4dbd7fe903bcc}{interpolate}} (const double \texorpdfstring{$\ast$}{*}u, const double \texorpdfstring{$\ast$}{*}xi, int n\+\_\+pts, double \texorpdfstring{$\ast$}{*}out) const =0
+\begin{DoxyCompactList}\small\item\em Evaluates the basis interpolant of nodal values {\ttfamily u} at {\ttfamily n\+\_\+pts} reference points {\ttfamily xi\mbox{[}k\mbox{]} in \mbox{[}-\/1,1\mbox{]}}. Writes results to {\ttfamily out}. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Protected Attributes}
 \begin{DoxyCompactItemize}
 \item 
 \Hypertarget{classbase_1_1__Basis_a8e2fb23a27a7417548df6b573ca95618}\label{classbase_1_1__Basis_a8e2fb23a27a7417548df6b573ca95618} 
-std::\+string {\bfseries name}
+std\+::string {\bfseries name}
 \item 
 \Hypertarget{classbase_1_1__Basis_a10b366d80dc43b49f24f4ac8bb261ef7}\label{classbase_1_1__Basis_a10b366d80dc43b49f24f4ac8bb261ef7} 
 const int {\bfseries p}
@@ -57,19 +57,17 @@ double \texorpdfstring{$\ast$}{*} {\bfseries weights}
 \doxysubsubsection*{Friends}
 \begin{DoxyCompactItemize}
 \item 
-\Hypertarget{classbase_1_1__Basis_ae8952ed76332019100ebd0b6c4da77b7}\label{classbase_1_1__Basis_ae8952ed76332019100ebd0b6c4da77b7} 
-std::\+ostream \& {\bfseries operator$<$$<$} (std::\+ostream \&os, const \+\_\+\+Basis \&b)
+\Hypertarget{classbase_1_1__Basis_a228b189be35c80dd6ca283570e1136ba}\label{classbase_1_1__Basis_a228b189be35c80dd6ca283570e1136ba} 
+std\+::ostream \& {\bfseries operator$<$$<$} (std\+::ostream \&, const \mbox{\hyperlink{classbase_1_1__Basis}{\+\_\+\+Basis}} \&)
 \end{DoxyCompactItemize}
 
 
-\label{doc-func-members}
-\Hypertarget{classbase_1_1__Basis_doc-func-members}
 \doxysubsection{Member Function Documentation}
-\Hypertarget{classbase_1_1__Basis_a03c08fee66c57413d20c62f38721e2de}\index{base::\_Basis@{base::\_Basis}!getM@{getM}}
+\Hypertarget{classbase_1_1__Basis_a03c08fee66c57413d20c62f38721e2de}\label{classbase_1_1__Basis_a03c08fee66c57413d20c62f38721e2de} 
+\index{base::\_Basis@{base::\_Basis}!getM@{getM}}
 \index{getM@{getM}!base::\_Basis@{base::\_Basis}}
 \doxysubsubsection{\texorpdfstring{getM()}{getM()}}
-{\footnotesize\ttfamily \label{classbase_1_1__Basis_a03c08fee66c57413d20c62f38721e2de} 
-virtual const double \texorpdfstring{$\ast$}{*} base::\+\+\_\+\+Basis::\+getM (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+{\footnotesize\ttfamily virtual const double \texorpdfstring{$\ast$}{*} base\+::\+\_\+\+Basis\+::getM (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
 
 
 
@@ -77,13 +75,13 @@ Reference mass matrix M\+\_\+ij = int\+\_\+\{-\/1\}\texorpdfstring{$^\wedge$}{\s
 
 
 
-Implemented in \doxymbox{\hyperlink{classbase_1_1Lagrange_a92dad6d8af2b57d0df21c56062fddf87}{base::\+\+Lagrange}}, and \doxymbox{\hyperlink{classbase_1_1RBF_a3f6fe01cfe4e13fe706dc1e55aece694}{base::\+\+RBF}}.
+Implemented in \mbox{\hyperlink{classbase_1_1Lagrange_a92dad6d8af2b57d0df21c56062fddf87}{base\+::\+Lagrange}}, and \mbox{\hyperlink{classbase_1_1RBF_a3f6fe01cfe4e13fe706dc1e55aece694}{base\+::\+RBF}}.
 
-\Hypertarget{classbase_1_1__Basis_abc1835c6fbd1d90a51950cf86007a004}\index{base::\_Basis@{base::\_Basis}!getMinv@{getMinv}}
+\Hypertarget{classbase_1_1__Basis_abc1835c6fbd1d90a51950cf86007a004}\label{classbase_1_1__Basis_abc1835c6fbd1d90a51950cf86007a004} 
+\index{base::\_Basis@{base::\_Basis}!getMinv@{getMinv}}
 \index{getMinv@{getMinv}!base::\_Basis@{base::\_Basis}}
 \doxysubsubsection{\texorpdfstring{getMinv()}{getMinv()}}
-{\footnotesize\ttfamily \label{classbase_1_1__Basis_abc1835c6fbd1d90a51950cf86007a004} 
-virtual const double \texorpdfstring{$\ast$}{*} base::\+\+\_\+\+Basis::\+get\+Minv (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+{\footnotesize\ttfamily virtual const double \texorpdfstring{$\ast$}{*} base\+::\+\_\+\+Basis\+::get\+Minv (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
 
 
 
@@ -91,25 +89,25 @@ Inverse of the reference mass matrix, precomputed at construction.
 
 
 
-Implemented in \doxymbox{\hyperlink{classbase_1_1Lagrange_a95ab363f30c0a3d0d5b0964924af80d6}{base::\+\+Lagrange}}, and \doxymbox{\hyperlink{classbase_1_1RBF_a9151332801f6406f8df111008cbce58d}{base::\+\+RBF}}.
+Implemented in \mbox{\hyperlink{classbase_1_1Lagrange_a95ab363f30c0a3d0d5b0964924af80d6}{base\+::\+Lagrange}}, and \mbox{\hyperlink{classbase_1_1RBF_a9151332801f6406f8df111008cbce58d}{base\+::\+RBF}}.
 
-\Hypertarget{classbase_1_1__Basis_ac9137548fb600ae683c4dbd7fe903bcc}\index{base::\_Basis@{base::\_Basis}!interpolate@{interpolate}}
+\Hypertarget{classbase_1_1__Basis_ac9137548fb600ae683c4dbd7fe903bcc}\label{classbase_1_1__Basis_ac9137548fb600ae683c4dbd7fe903bcc} 
+\index{base::\_Basis@{base::\_Basis}!interpolate@{interpolate}}
 \index{interpolate@{interpolate}!base::\_Basis@{base::\_Basis}}
 \doxysubsubsection{\texorpdfstring{interpolate()}{interpolate()}}
-{\footnotesize\ttfamily \label{classbase_1_1__Basis_ac9137548fb600ae683c4dbd7fe903bcc} 
-virtual void base::\+\+\_\+\+Basis::\+interpolate (\begin{DoxyParamCaption}\item[{const double \texorpdfstring{$\ast$}{*}}]{u}{, }\item[{const double \texorpdfstring{$\ast$}{*}}]{xi}{, }\item[{int}]{n\+\_\+pts}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{out}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+{\footnotesize\ttfamily virtual void base\+::\+\_\+\+Basis\+::interpolate (\begin{DoxyParamCaption}\item[{const double \texorpdfstring{$\ast$}{*}}]{u,  }\item[{const double \texorpdfstring{$\ast$}{*}}]{xi,  }\item[{int}]{n\+\_\+pts,  }\item[{double \texorpdfstring{$\ast$}{*}}]{out }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
 
 
 
-Evaluates the basis interpolant of nodal values {\ttfamily u} at {\ttfamily n\+\_\+pts} reference points {\ttfamily xi\+[k]\+ in \+[-\/1,1]\+}. Writes results to {\ttfamily out}. 
+Evaluates the basis interpolant of nodal values {\ttfamily u} at {\ttfamily n\+\_\+pts} reference points {\ttfamily xi\mbox{[}k\mbox{]} in \mbox{[}-\/1,1\mbox{]}}. Writes results to {\ttfamily out}. 
 
 
 
-Implemented in \doxymbox{\hyperlink{classbase_1_1Lagrange_a15f46586e3bf9e1638141ecf706689af}{base::\+\+Lagrange}}, and \doxymbox{\hyperlink{classbase_1_1RBF_a92265c70295c9ee42c1da4e717090f2f}{base::\+\+RBF}}.
+Implemented in \mbox{\hyperlink{classbase_1_1Lagrange_a15f46586e3bf9e1638141ecf706689af}{base\+::\+Lagrange}}, and \mbox{\hyperlink{classbase_1_1RBF_a92265c70295c9ee42c1da4e717090f2f}{base\+::\+RBF}}.
 
 
 
-The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
-lib/\+base/\+base.\+h\item 
-lib/\+base/\+base.\+cpp\end{DoxyCompactItemize}
+lib/base/base.\+h\item 
+lib/base/base.\+cpp\end{DoxyCompactItemize}

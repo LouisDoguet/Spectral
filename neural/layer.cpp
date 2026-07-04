@@ -33,15 +33,15 @@ void LAYER::_Layer::update(double learning_rate) {
 };
 
 void LAYER::_Layer::serialize(std::ofstream &f) const {
-    uint8_t act_id = activation_function->typeId();
-    uint64_t in = in_features, out = out_features;
-    f.write(reinterpret_cast<const char *>(&act_id), 1);
-    f.write(reinterpret_cast<const char *>(&in), 8);
-    f.write(reinterpret_cast<const char *>(&out), 8);
-    const auto &w = weights.readData();
-    const auto &b = bias.readData();
-    f.write(reinterpret_cast<const char *>(w.data()), (std::streamsize)(w.size() * sizeof(double)));
-    f.write(reinterpret_cast<const char *>(b.data()), (std::streamsize)(b.size() * sizeof(double)));
+  uint8_t act_id = activation_function->typeId();
+  uint64_t in = in_features, out = out_features;
+  f.write(reinterpret_cast<const char *>(&act_id), 1);
+  f.write(reinterpret_cast<const char *>(&in), 8);
+  f.write(reinterpret_cast<const char *>(&out), 8);
+  const auto &w = weights.readData();
+  const auto &b = bias.readData();
+  f.write(reinterpret_cast<const char *>(w.data()), (std::streamsize)(w.size() * sizeof(double)));
+  f.write(reinterpret_cast<const char *>(b.data()), (std::streamsize)(b.size() * sizeof(double)));
 }
 
 void LAYER::_Layer::loadWeightsBias(std::ifstream &f) {

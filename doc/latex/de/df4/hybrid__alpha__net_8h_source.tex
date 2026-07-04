@@ -1,0 +1,48 @@
+\doxysection{hybrid\+\_\+alpha\+\_\+net.\+h}
+\hypertarget{hybrid__alpha__net_8h_source}{}\label{hybrid__alpha__net_8h_source}\index{lib/diffusion/hybrid\_alpha\_net.h@{lib/diffusion/hybrid\_alpha\_net.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ HYBRID\_ALPHA\_NET\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ HYBRID\_ALPHA\_NET\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}../../neural/network.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}../space/mesh.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <cmath>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{namespace\ }diff\ \{}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00033\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ modal\_energy\_features(\mbox{\hyperlink{classelem_1_1Element}{elem::Element}}\ *E,\ \textcolor{keywordtype}{int}\ n,}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<double>\ \&out)\ \{}
+\DoxyCodeLine{00035\ \ \ E-\/>\mbox{\hyperlink{classelem_1_1Element_a95e98cbac1669a4bf9d4e34f647aa361}{computeLegendreCoefficients}}();}
+\DoxyCodeLine{00036\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ *mc\ =\ E-\/>getModes();}
+\DoxyCodeLine{00037\ \ \ out.assign(n,\ 0.0);}
+\DoxyCodeLine{00038\ \ \ \textcolor{keywordtype}{double}\ total\ =\ 0.0;}
+\DoxyCodeLine{00039\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ n;\ ++j)}
+\DoxyCodeLine{00040\ \ \ \ \ total\ +=\ mc[j]\ *\ mc[j];}
+\DoxyCodeLine{00041\ \ \ \textcolor{keywordflow}{if}\ (total\ <\ 1e-\/30)\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ out[0]\ =\ 1.0;\ \textcolor{comment}{//\ perfectly\ flat\ -\/>\ all\ energy\ in\ the\ mean\ mode}}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00044\ \ \ \}}
+\DoxyCodeLine{00045\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ n;\ ++j)}
+\DoxyCodeLine{00046\ \ \ \ \ out[j]\ =\ mc[j]\ *\ mc[j]\ /\ total;}
+\DoxyCodeLine{00047\ \}}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00059\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classdiff_1_1HybridAlphaNet}{HybridAlphaNet}}\ \{}
+\DoxyCodeLine{00060\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00061\ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{classdiff_1_1HybridAlphaNet}{HybridAlphaNet}}(\textcolor{keyword}{const}\ std::string\ \&model\_path);}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00068\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classdiff_1_1HybridAlphaNet_ace5c757563387bb5271dd035bb65473c}{fillAlpha}}(\mbox{\hyperlink{classmesh_1_1Mesh}{mesh::Mesh}}\ *mesh,\ std::vector<double>\ \&alpha);}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00071\ \ \ std::string\ model\_path\_;}
+\DoxyCodeLine{00072\ \ \ std::unique\_ptr<Network>\ network\_;}
+\DoxyCodeLine{00073\ \};}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \}\ \textcolor{comment}{//\ namespace\ diff}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ HYBRID\_ALPHA\_NET\_H}}
+
+\end{DoxyCode}

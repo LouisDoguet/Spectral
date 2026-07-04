@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['mesh_0',['Mesh',['../db/d7d/classmesh_1_1Mesh.html#aec868bea598345dbf754bf27690e353b',1,'mesh::Mesh::Mesh(const int n, base::_Basis *basis, double xL, double xR)'],['../db/d7d/classmesh_1_1Mesh.html#a94d0d6ede90b522ed86e95155ee3a3e9',1,'mesh::Mesh::Mesh(const int n, base::_Basis *basis, double xL, double xR, double *init_u1, double *init_u2, double *init_u3, double u1_L, double u2_L, double u3_L, double u1_R, double u2_R, double u3_R)']]]
+  ['kernel_0',['kernel',['../dd/df8/classbase_1_1RBF.html#a2873409fa647f1f9f00749142040b400',1,'base::RBF::kernel()'],['../d0/d88/classbase_1_1InverseMultiQuadratic.html#a88f441dde5afe0e4da62428662589746',1,'base::InverseMultiQuadratic::kernel()'],['../d1/da7/classbase_1_1Gaussian.html#a532d98a4900ba8a29f73994847465b19',1,'base::Gaussian::kernel()']]],
+  ['kernelintegral_1',['kernelintegral',['../dd/df8/classbase_1_1RBF.html#a6eecd17e8ec7b6080792d5ef442b8f43',1,'base::RBF::kernelIntegral()'],['../d0/d88/classbase_1_1InverseMultiQuadratic.html#a83fdbdfd084f37faa6f0d50982d68c37',1,'base::InverseMultiQuadratic::kernelIntegral()'],['../d1/da7/classbase_1_1Gaussian.html#a03b34f3f77c87519120f10f067cee368',1,'base::Gaussian::kernelIntegral()']]]
 ];

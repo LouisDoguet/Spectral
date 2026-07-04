@@ -14,6 +14,7 @@
 
 namespace LAYER {
 
+/// @brief  Dummy class of a layer
 class _Layer {
 protected:
   const std::string name;
@@ -29,6 +30,10 @@ protected:
   TENSOR::Tensor postactivation_cache;
 
 public:
+  /// @brief Constructor of a Layer
+  /// @param in Size of the input
+  /// @param out Size of the ouput
+  /// @param act Shared pointer to the activation function of the layer
   _Layer(const size_t in, const size_t out,
          std::shared_ptr<ACTI::Activation> act)
       : in_features(in), out_features(out), activation_function(act),
@@ -41,13 +46,25 @@ public:
     weights.setData(w);
   }
 
+  /// @brief Forward propagation of the layer
+  /// @param input Adress to the input tensor
+  /// @return Propagated tensor
   TENSOR::Tensor forward(const TENSOR::Tensor &input);
+
+  /// @brief Backward propagation of the layer
+  /// @param grad_output Address to the output tensor
+  /// @return Propagated tensor
   TENSOR::Tensor backward(const TENSOR::Tensor &grad_output);
+
+  /// @brief Update the layer
+  /// @param learning_rate 
   void update(double learning_rate);
   virtual ~_Layer() = default;
 
   const size_t getInputSize() { return in_features; }
   const size_t getOutputSize() { return out_features; }
+
+  /// OFSTREAM - WRITE/READ .NN FILES
 
   void serialize(std::ofstream &f) const;
   void loadWeightsBias(std::ifstream &f);

@@ -12,63 +12,61 @@
 \Hypertarget{classelement_1_1Element_aca4a2ce553ad0c4f6f2cbeca89e4cf52}\label{classelement_1_1Element_aca4a2ce553ad0c4f6f2cbeca89e4cf52} 
 {\bfseries display} (self, solution)
 \item 
-np.\+ndarray \doxymbox{\hyperlink{classelement_1_1Element_af27aae86e40a950d19c5ac47e38585e4}{local\+\_\+spacing}} (self)
+np.\+ndarray \mbox{\hyperlink{classelement_1_1Element_af27aae86e40a950d19c5ac47e38585e4}{local\+\_\+spacing}} (self)
 \item 
-\doxymbox{\hyperlink{classelement_1_1Element_ad9720713b887afe83d01d8b2089dff80}{cluster}} (self, float x0, float epsilon)
+\mbox{\hyperlink{classelement_1_1Element_ad9720713b887afe83d01d8b2089dff80}{cluster}} (self, float x0, float epsilon)
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
 \Hypertarget{classelement_1_1Element_ad1fc30bc516d68942e0e881f5cbd4c62}\label{classelement_1_1Element_ad1fc30bc516d68942e0e881f5cbd4c62} 
-{\bfseries P} = P
+{\bfseries P}
 \item 
 \Hypertarget{classelement_1_1Element_a96e31077fcd9e6e4218234684a01f0b3}\label{classelement_1_1Element_a96e31077fcd9e6e4218234684a01f0b3} 
-{\bfseries uL} = uL
+{\bfseries uL}
 \item 
 \Hypertarget{classelement_1_1Element_a44de97285b731ece93832c42dda27cda}\label{classelement_1_1Element_a44de97285b731ece93832c42dda27cda} 
-{\bfseries uR} = uR
+{\bfseries uR}
 \item 
 \Hypertarget{classelement_1_1Element_a95f9f9b6fe2699c15c256a54206f9bcc}\label{classelement_1_1Element_a95f9f9b6fe2699c15c256a54206f9bcc} 
-{\bfseries shock\+\_\+pos} = shock\+\_\+pos
+{\bfseries shock\+\_\+pos}
 \item 
 \Hypertarget{classelement_1_1Element_a4ddb0cc7f6f63000c9b8c62dff28280a}\label{classelement_1_1Element_a4ddb0cc7f6f63000c9b8c62dff28280a} 
-{\bfseries shock\+\_\+intensity} = shock\+\_\+intensity
+{\bfseries shock\+\_\+intensity}
 \item 
 \Hypertarget{classelement_1_1Element_a96243ca00d842dcbe11ccf06222937fd}\label{classelement_1_1Element_a96243ca00d842dcbe11ccf06222937fd} 
-{\bfseries eps\+\_\+cluster} = None
+{\bfseries eps\+\_\+cluster}
 \item 
-\Hypertarget{classelement_1_1Element_a383a9be72ab27f8829515a73427e4372}\label{classelement_1_1Element_a383a9be72ab27f8829515a73427e4372} 
-int {\bfseries discontinuity} = lambda x:\+ (uL + uR) /\+ 2 + abs(uL -\/ uR) /\+ 2 \texorpdfstring{$\ast$}{*} -\/np.\+tanh(shock\+\_\+intensity \texorpdfstring{$\ast$}{*} (x -\/ shock\+\_\+pos))
+\Hypertarget{classelement_1_1Element_aac9c7f396703fcc901c6287767c5424e}\label{classelement_1_1Element_aac9c7f396703fcc901c6287767c5424e} 
+{\bfseries discontinuity}
 \item 
 \Hypertarget{classelement_1_1Element_a2a477f74357f67dd8b6834abbe48ccf5}\label{classelement_1_1Element_a2a477f74357f67dd8b6834abbe48ccf5} 
-{\bfseries X} = np.\+linspace(-\/1, 1, P + 1)
+{\bfseries X}
 \item 
 \Hypertarget{classelement_1_1Element_a48f1dfdd72a219f8bfe0ada20278d3c1}\label{classelement_1_1Element_a48f1dfdd72a219f8bfe0ada20278d3c1} 
-int {\bfseries val} = self.\+discontinuity(self.\+X)
+{\bfseries val}
 \item 
-\Hypertarget{classelement_1_1Element_a1eac41860d2d27766c01420ee26cc735}\label{classelement_1_1Element_a1eac41860d2d27766c01420ee26cc735} 
-list {\bfseries nodes} = \+[\doxymbox{\hyperlink{classelement_1_1Node}{Node}}(x, v) for x, v in zip(self.\+X, self.\+val)]\+
+\Hypertarget{classelement_1_1Element_a78887b6674d09d688f8406d8d6d86c39}\label{classelement_1_1Element_a78887b6674d09d688f8406d8d6d86c39} 
+{\bfseries nodes}
 \end{DoxyCompactItemize}
 
 
-\label{doc-func-members}
-\Hypertarget{classelement_1_1Element_doc-func-members}
 \doxysubsection{Member Function Documentation}
-\Hypertarget{classelement_1_1Element_ad9720713b887afe83d01d8b2089dff80}\index{element.Element@{element.Element}!cluster@{cluster}}
+\Hypertarget{classelement_1_1Element_ad9720713b887afe83d01d8b2089dff80}\label{classelement_1_1Element_ad9720713b887afe83d01d8b2089dff80} 
+\index{element.Element@{element.Element}!cluster@{cluster}}
 \index{cluster@{cluster}!element.Element@{element.Element}}
 \doxysubsubsection{\texorpdfstring{cluster()}{cluster()}}
-{\footnotesize\ttfamily \label{classelement_1_1Element_ad9720713b887afe83d01d8b2089dff80} 
-element.\+Element.\+cluster (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{float}]{x0}{, }\item[{float}]{epsilon}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily element.\+Element.\+cluster (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{float}]{x0,  }\item[{float}]{epsilon }\end{DoxyParamCaption})}
 
 \begin{DoxyVerb}Clusters nodes tightly around x0 with intensity epsilon.
 Uses the inverse hyperbolic tangent (arctanh) mapping to concentrate
 grid density at x0 while preserving the exact boundaries [-1, 1].
 \end{DoxyVerb}
- \Hypertarget{classelement_1_1Element_af27aae86e40a950d19c5ac47e38585e4}\index{element.Element@{element.Element}!local\_spacing@{local\_spacing}}
+ \Hypertarget{classelement_1_1Element_af27aae86e40a950d19c5ac47e38585e4}\label{classelement_1_1Element_af27aae86e40a950d19c5ac47e38585e4} 
+\index{element.Element@{element.Element}!local\_spacing@{local\_spacing}}
 \index{local\_spacing@{local\_spacing}!element.Element@{element.Element}}
 \doxysubsubsection{\texorpdfstring{local\_spacing()}{local\_spacing()}}
-{\footnotesize\ttfamily \label{classelement_1_1Element_af27aae86e40a950d19c5ac47e38585e4} 
- np.\+ndarray element.\+Element.\+local\+\_\+spacing (\begin{DoxyParamCaption}\item[{}]{self}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily  np.\+ndarray element.\+Element.\+local\+\_\+spacing (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
 
 \begin{DoxyVerb}Returns the local mesh spacing h_i at each node, defined as the
 average distance to its neighbours (one-sided at the boundaries).
@@ -76,6 +74,6 @@ Used to adapt the RBF shape parameter to local clustering.
 \end{DoxyVerb}
  
 
-The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-optimesh/\+element.\+py\end{DoxyCompactItemize}
+optimesh/element.\+py\end{DoxyCompactItemize}

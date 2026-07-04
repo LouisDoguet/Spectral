@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['perssonperaire_0',['PerssonPeraire',['../d6/d93/classsens_1_1PerssonPeraire.html#a9551e1d7b11e62775626361a4d603558',1,'sens::PerssonPeraire']]],
-  ['plot_5frbfs_1',['plot_rbfs',['../d5/d86/classsolution_1_1Solution.html#aface304c9f7ab12cddbe5e580b5313c7',1,'solution::Solution']]]
+  ['lagrange_0',['Lagrange',['../db/df9/classbase_1_1Lagrange.html#a5d295b78adb4c753e50cd491879e1031',1,'base::Lagrange']]],
+  ['load_1',['load',['../d5/d16/classNetwork.html#a48e56525fdf297b631b204a166a5e26e',1,'Network']]],
+  ['local_5fspacing_2',['local_spacing',['../dc/d34/classelement_1_1Element.html#af27aae86e40a950d19c5ac47e38585e4',1,'element::Element']]]
 ];

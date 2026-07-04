@@ -1,102 +1,112 @@
-\doxysection{post::\+VTUExporter Class Reference}
+\doxysection{post\+::VTUExporter Class Reference}
 \hypertarget{classpost_1_1VTUExporter}{}\label{classpost_1_1VTUExporter}\index{post::VTUExporter@{post::VTUExporter}}
 
 
-Writes VTU/\+\+PVD output files for a spectral-\/element mesh.  
+Writes VTU/\+PVD output files for a spectral-\/element mesh.  
 
 
 
 
-{\ttfamily \+\#include $<$vtu\+\_\+exporter.\+h$>$}
+{\ttfamily \#include $<$vtu\+\_\+exporter.\+h$>$}
 
 \doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
 \Hypertarget{classpost_1_1VTUExporter_ad66ad538b0e2abea7b8a028d6c3b5f7f}\label{classpost_1_1VTUExporter_ad66ad538b0e2abea7b8a028d6c3b5f7f} 
-{\bfseries VTUExporter} (\doxymbox{\hyperlink{classmesh_1_1Mesh}{mesh::\+\+Mesh}} \texorpdfstring{$\ast$}{*}mesh, int n\+\_\+plot)
+{\bfseries VTUExporter} (\mbox{\hyperlink{classmesh_1_1Mesh}{mesh\+::\+Mesh}} \texorpdfstring{$\ast$}{*}mesh, int n\+\_\+plot)
 \item 
-void \doxymbox{\hyperlink{classpost_1_1VTUExporter_af1918f46c97bffcb84a451eb0cdc51cc}{add\+Field}} (\doxymbox{\hyperlink{structpost_1_1ScalarField}{Scalar\+Field}} field)
+void \mbox{\hyperlink{classpost_1_1VTUExporter_af1918f46c97bffcb84a451eb0cdc51cc}{add\+Field}} (\mbox{\hyperlink{structpost_1_1ScalarField}{Scalar\+Field}} field)
 \item 
-void \doxymbox{\hyperlink{classpost_1_1VTUExporter_aee3500798154fe5b7d2193def427b415}{add\+Sensor\+Field}} (const std::\+string \&name, \doxymbox{\hyperlink{classsens_1_1__Sensor}{sens::\+\+\_\+\+Sensor}} \texorpdfstring{$\ast$}{*}sensor)
+void \mbox{\hyperlink{classpost_1_1VTUExporter_aee3500798154fe5b7d2193def427b415}{add\+Sensor\+Field}} (const std\+::string \&name, \mbox{\hyperlink{classsens_1_1__Sensor}{sens\+::\+\_\+\+Sensor}} \texorpdfstring{$\ast$}{*}sensor)
 \begin{DoxyCompactList}\small\item\em Register a sensor for export. \end{DoxyCompactList}\item 
-void \doxymbox{\hyperlink{classpost_1_1VTUExporter_ad62d9fc5cb29f6ac6dd823a7c4dbbae2}{add\+Elem\+Field}} (const std::\+string \&name, std::\+function$<$ double(\doxymbox{\hyperlink{classelem_1_1Element}{elem::\+\+Element}} \&)$>$ fn)
+void \mbox{\hyperlink{classpost_1_1VTUExporter_ad62d9fc5cb29f6ac6dd823a7c4dbbae2}{add\+Elem\+Field}} (const std\+::string \&name, std\+::function$<$ double(\mbox{\hyperlink{classelem_1_1Element}{elem\+::\+Element}} \&)$>$ fn)
 \begin{DoxyCompactList}\small\item\em Convenience wrapper for element-\/constant outputs. \end{DoxyCompactList}\item 
-void \doxymbox{\hyperlink{classpost_1_1VTUExporter_af85b61af4f6fc270e6f7e513b720a2c4}{write}} (int step, double time, const std::\+string \&prefix)
+void \mbox{\hyperlink{classpost_1_1VTUExporter_aa51b9a01272fdbbbb840b6d8e303b50d}{use\+Computed\+Nodes}} (bool enable)
+\begin{DoxyCompactList}\small\item\em Export at the genuine computed nodes instead of a uniform grid. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classpost_1_1VTUExporter_af85b61af4f6fc270e6f7e513b720a2c4}{write}} (int step, double time, const std\+::string \&prefix)
 \item 
-void \doxymbox{\hyperlink{classpost_1_1VTUExporter_ad14f1692aeafac191e470b1a6bf8a288}{write\+PVD}} (const std::\+string \&prefix)
+void \mbox{\hyperlink{classpost_1_1VTUExporter_ad14f1692aeafac191e470b1a6bf8a288}{write\+PVD}} (const std\+::string \&prefix)
 \item 
 \Hypertarget{classpost_1_1VTUExporter_ab3ca9fd11a1650e89d9cd8a74ed55423}\label{classpost_1_1VTUExporter_ab3ca9fd11a1650e89d9cd8a74ed55423} 
-\doxymbox{\hyperlink{structpost_1_1ScalarField}{Scalar\+Field}} {\bfseries field\+Basis\+Indicator} ()
-\begin{DoxyCompactList}\small\item\em Per-\/element indicator of the active basis:\+ 0 = primary (Lagrange), 1 = alternative (RBF). Member (not static) because the lambda must capture the mesh to look up the primary/\+alt basis pointers. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\mbox{\hyperlink{structpost_1_1ScalarField}{Scalar\+Field}} {\bfseries field\+Basis\+Indicator} ()
+\begin{DoxyCompactList}\small\item\em Per-\/element indicator of the active basis\+: 0 = primary (Lagrange), 1 = alternative (RBF). Member (not static) because the lambda must capture the mesh to look up the primary/alt basis pointers. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Static Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
 \Hypertarget{classpost_1_1VTUExporter_a0d5a162e152843f283f0f0a30264c902}\label{classpost_1_1VTUExporter_a0d5a162e152843f283f0f0a30264c902} 
-static \doxymbox{\hyperlink{structpost_1_1ScalarField}{Scalar\+Field}} {\bfseries field\+Rho} ()
+static \mbox{\hyperlink{structpost_1_1ScalarField}{Scalar\+Field}} {\bfseries field\+Rho} ()
 \item 
 \Hypertarget{classpost_1_1VTUExporter_a8a76ca134db505d0eec212d0533a5473}\label{classpost_1_1VTUExporter_a8a76ca134db505d0eec212d0533a5473} 
-static \doxymbox{\hyperlink{structpost_1_1ScalarField}{Scalar\+Field}} {\bfseries field\+Velocity} ()
+static \mbox{\hyperlink{structpost_1_1ScalarField}{Scalar\+Field}} {\bfseries field\+Velocity} ()
 \item 
 \Hypertarget{classpost_1_1VTUExporter_aa050f9a91411600119b7f8a4d609d1d3}\label{classpost_1_1VTUExporter_aa050f9a91411600119b7f8a4d609d1d3} 
-static \doxymbox{\hyperlink{structpost_1_1ScalarField}{Scalar\+Field}} {\bfseries field\+Pressure} ()
+static \mbox{\hyperlink{structpost_1_1ScalarField}{Scalar\+Field}} {\bfseries field\+Pressure} ()
 \item 
 \Hypertarget{classpost_1_1VTUExporter_a62a18e840c4e96417d0a2f9a99b27650}\label{classpost_1_1VTUExporter_a62a18e840c4e96417d0a2f9a99b27650} 
-static \doxymbox{\hyperlink{structpost_1_1ScalarField}{Scalar\+Field}} {\bfseries field\+AViscosity} ()
+static \mbox{\hyperlink{structpost_1_1ScalarField}{Scalar\+Field}} {\bfseries field\+AViscosity} ()
 \item 
 \Hypertarget{classpost_1_1VTUExporter_ad40cfe7ee7a72ee587e0c9166f59f17d}\label{classpost_1_1VTUExporter_ad40cfe7ee7a72ee587e0c9166f59f17d} 
-static \doxymbox{\hyperlink{structpost_1_1ScalarField}{Scalar\+Field}} {\bfseries field\+Lap\+Pressure} ()
+static \mbox{\hyperlink{structpost_1_1ScalarField}{Scalar\+Field}} {\bfseries field\+Lap\+Pressure} ()
 \end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
-Writes VTU/\+\+PVD output files for a spectral-\/element mesh. 
+Writes VTU/\+PVD output files for a spectral-\/element mesh. 
 
-Default fields (rho, velocity, pressure, a\+\_\+viscosity) are registered automatically. {\ttfamily lap\+\_\+pressure} and any sensor outputs (e.\+g. {\ttfamily div\+\_\+laplacian}) are opt-\/in:\+ register them with add\+Field(\+VTUExporter::\+field\+Lap\+Pressure()) or add\+Sensor\+Field(name, sensor) before calling run(). 
+Default fields (rho, velocity, pressure, a\+\_\+viscosity) are registered automatically. {\ttfamily lap\+\_\+pressure} and any sensor outputs (e.\+g. {\ttfamily div\+\_\+laplacian}) are opt-\/in\+: register them with add\+Field(\+VTUExporter\+::field\+Lap\+Pressure()) or add\+Sensor\+Field(name, sensor) before calling run(). 
 
-\label{doc-func-members}
-\Hypertarget{classpost_1_1VTUExporter_doc-func-members}
 \doxysubsection{Member Function Documentation}
-\Hypertarget{classpost_1_1VTUExporter_ad62d9fc5cb29f6ac6dd823a7c4dbbae2}\index{post::VTUExporter@{post::VTUExporter}!addElemField@{addElemField}}
+\Hypertarget{classpost_1_1VTUExporter_ad62d9fc5cb29f6ac6dd823a7c4dbbae2}\label{classpost_1_1VTUExporter_ad62d9fc5cb29f6ac6dd823a7c4dbbae2} 
+\index{post::VTUExporter@{post::VTUExporter}!addElemField@{addElemField}}
 \index{addElemField@{addElemField}!post::VTUExporter@{post::VTUExporter}}
 \doxysubsubsection{\texorpdfstring{addElemField()}{addElemField()}}
-{\footnotesize\ttfamily \label{classpost_1_1VTUExporter_ad62d9fc5cb29f6ac6dd823a7c4dbbae2} 
-void post::\+\+VTUExporter::\+add\+Elem\+Field (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{name}{, }\item[{std::\+function$<$ double(\doxymbox{\hyperlink{classelem_1_1Element}{elem::\+\+Element}} \&)$>$}]{fn}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void post\+::\+VTUExporter\+::add\+Elem\+Field (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name,  }\item[{std\+::function$<$ double(\mbox{\hyperlink{classelem_1_1Element}{elem\+::\+Element}} \&)$>$}]{fn }\end{DoxyParamCaption})}
 
 
 
 Convenience wrapper for element-\/constant outputs. 
 
-{\ttfamily fn(elem)} is evaluated once per element; the value is broadcast to all n\+\_\+plot output points of that element. \Hypertarget{classpost_1_1VTUExporter_af1918f46c97bffcb84a451eb0cdc51cc}\index{post::VTUExporter@{post::VTUExporter}!addField@{addField}}
+{\ttfamily fn(elem)} is evaluated once per element; the value is broadcast to all n\+\_\+plot output points of that element. \Hypertarget{classpost_1_1VTUExporter_af1918f46c97bffcb84a451eb0cdc51cc}\label{classpost_1_1VTUExporter_af1918f46c97bffcb84a451eb0cdc51cc} 
+\index{post::VTUExporter@{post::VTUExporter}!addField@{addField}}
 \index{addField@{addField}!post::VTUExporter@{post::VTUExporter}}
 \doxysubsubsection{\texorpdfstring{addField()}{addField()}}
-{\footnotesize\ttfamily \label{classpost_1_1VTUExporter_af1918f46c97bffcb84a451eb0cdc51cc} 
-void post::\+\+VTUExporter::\+add\+Field (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{structpost_1_1ScalarField}{Scalar\+Field}}}]{field}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void post\+::\+VTUExporter\+::add\+Field (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structpost_1_1ScalarField}{Scalar\+Field}}}]{field }\end{DoxyParamCaption})}
 
-Register a fully custom scalar field. \Hypertarget{classpost_1_1VTUExporter_aee3500798154fe5b7d2193def427b415}\index{post::VTUExporter@{post::VTUExporter}!addSensorField@{addSensorField}}
+Register a fully custom scalar field. \Hypertarget{classpost_1_1VTUExporter_aee3500798154fe5b7d2193def427b415}\label{classpost_1_1VTUExporter_aee3500798154fe5b7d2193def427b415} 
+\index{post::VTUExporter@{post::VTUExporter}!addSensorField@{addSensorField}}
 \index{addSensorField@{addSensorField}!post::VTUExporter@{post::VTUExporter}}
 \doxysubsubsection{\texorpdfstring{addSensorField()}{addSensorField()}}
-{\footnotesize\ttfamily \label{classpost_1_1VTUExporter_aee3500798154fe5b7d2193def427b415} 
-void post::\+\+VTUExporter::\+add\+Sensor\+Field (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{name}{, }\item[{\doxymbox{\hyperlink{classsens_1_1__Sensor}{sens::\+\+\_\+\+Sensor}} \texorpdfstring{$\ast$}{*}}]{sensor}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void post\+::\+VTUExporter\+::add\+Sensor\+Field (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name,  }\item[{\mbox{\hyperlink{classsens_1_1__Sensor}{sens\+::\+\_\+\+Sensor}} \texorpdfstring{$\ast$}{*}}]{sensor }\end{DoxyParamCaption})}
 
 
 
 Register a sensor for export. 
 
-Calls sensor-\/\texorpdfstring{$>$}{>}get\+Sensor(elem) each timestep to get per-\/node values (size P+1 at GLL nodes), then Legendre-\/interpolates them to the output grid so the field is smooth in Para\+View. \Hypertarget{classpost_1_1VTUExporter_af85b61af4f6fc270e6f7e513b720a2c4}\index{post::VTUExporter@{post::VTUExporter}!write@{write}}
+Calls sensor-\/\texorpdfstring{$>$}{>}get\+Sensor(elem) each timestep to get per-\/node values (size P+1 at GLL nodes), then Legendre-\/interpolates them to the output grid so the field is smooth in Para\+View. \Hypertarget{classpost_1_1VTUExporter_aa51b9a01272fdbbbb840b6d8e303b50d}\label{classpost_1_1VTUExporter_aa51b9a01272fdbbbb840b6d8e303b50d} 
+\index{post::VTUExporter@{post::VTUExporter}!useComputedNodes@{useComputedNodes}}
+\index{useComputedNodes@{useComputedNodes}!post::VTUExporter@{post::VTUExporter}}
+\doxysubsubsection{\texorpdfstring{useComputedNodes()}{useComputedNodes()}}
+{\footnotesize\ttfamily void post\+::\+VTUExporter\+::use\+Computed\+Nodes (\begin{DoxyParamCaption}\item[{bool}]{enable }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Export at the genuine computed nodes instead of a uniform grid. 
+
+When enabled, each element is sampled at its own basis quadrature nodes (GLL nodes for Lagrange) at their true physical positions, and field values are the raw nodal solution (interpolation at the nodes is exact). This shows the actual computed data, not a uniform re-\/projection. In this mode the per-\/element point count is fixed to P+1 (n\+\_\+plot is ignored). \Hypertarget{classpost_1_1VTUExporter_af85b61af4f6fc270e6f7e513b720a2c4}\label{classpost_1_1VTUExporter_af85b61af4f6fc270e6f7e513b720a2c4} 
+\index{post::VTUExporter@{post::VTUExporter}!write@{write}}
 \index{write@{write}!post::VTUExporter@{post::VTUExporter}}
 \doxysubsubsection{\texorpdfstring{write()}{write()}}
-{\footnotesize\ttfamily \label{classpost_1_1VTUExporter_af85b61af4f6fc270e6f7e513b720a2c4} 
-void post::\+\+VTUExporter::\+write (\begin{DoxyParamCaption}\item[{int}]{step}{, }\item[{double}]{time}{, }\item[{const std::\+string \&}]{prefix}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void post\+::\+VTUExporter\+::write (\begin{DoxyParamCaption}\item[{int}]{step,  }\item[{double}]{time,  }\item[{const std\+::string \&}]{prefix }\end{DoxyParamCaption})}
 
-Write one VTU snapshot and append it to the PVD index. \Hypertarget{classpost_1_1VTUExporter_ad14f1692aeafac191e470b1a6bf8a288}\index{post::VTUExporter@{post::VTUExporter}!writePVD@{writePVD}}
+Write one VTU snapshot and append it to the PVD index. \Hypertarget{classpost_1_1VTUExporter_ad14f1692aeafac191e470b1a6bf8a288}\label{classpost_1_1VTUExporter_ad14f1692aeafac191e470b1a6bf8a288} 
+\index{post::VTUExporter@{post::VTUExporter}!writePVD@{writePVD}}
 \index{writePVD@{writePVD}!post::VTUExporter@{post::VTUExporter}}
 \doxysubsubsection{\texorpdfstring{writePVD()}{writePVD()}}
-{\footnotesize\ttfamily \label{classpost_1_1VTUExporter_ad14f1692aeafac191e470b1a6bf8a288} 
-void post::\+\+VTUExporter::\+write\+PVD (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{prefix}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void post\+::\+VTUExporter\+::write\+PVD (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{prefix }\end{DoxyParamCaption})}
 
 Flush the PVD collection file. 
 
-The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
-lib/\+post/\+vtu\+\_\+exporter.\+h\item 
-lib/\+post/\+vtu\+\_\+exporter.\+cpp\end{DoxyCompactItemize}
+lib/post/vtu\+\_\+exporter.\+h\item 
+lib/post/vtu\+\_\+exporter.\+cpp\end{DoxyCompactItemize}

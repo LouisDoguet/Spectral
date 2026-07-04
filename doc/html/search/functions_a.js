@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['run_0',['run',['../d9/d46/classsolver_1_1__Solver.html#a9cbac9160fe06aadde5997eb6d442981',1,'solver::_Solver::run()'],['../d1/d4e/classsolver_1_1RK4.html#a2658d9482576d8c0ec7fa63931f23946',1,'solver::RK4::run()']]]
+  ['mesh_0',['mesh',['../db/d7d/classmesh_1_1Mesh.html#aec868bea598345dbf754bf27690e353b',1,'mesh::Mesh::Mesh(const int n, base::_Basis *basis, double xL, double xR)'],['../db/d7d/classmesh_1_1Mesh.html#a94d0d6ede90b522ed86e95155ee3a3e9',1,'mesh::Mesh::Mesh(const int n, base::_Basis *basis, double xL, double xR, double *init_u1, double *init_u2, double *init_u3, double u1_L, double u2_L, double u3_L, double u1_R, double u2_R, double u3_R)']]]
 ];

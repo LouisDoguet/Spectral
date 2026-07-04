@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['euler_20solver_0',['Spectral1D: High-Order Euler Solver',['../d0/d30/md_README.html',1,'']]]
+  ['claude_20code_3a_20atomic_20implementation_20tasks_0',['Claude Code: Atomic Implementation Tasks',['../d7/d6b/md_optimesh_2TASK__LIST.html',1,'']]],
+  ['code_3a_20atomic_20implementation_20tasks_1',['Claude Code: Atomic Implementation Tasks',['../d7/d6b/md_optimesh_2TASK__LIST.html',1,'']]]
 ];

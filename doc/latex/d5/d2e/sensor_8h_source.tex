@@ -10,35 +10,35 @@
 \DoxyCodeLine{00006\ }
 \DoxyCodeLine{00007\ \textcolor{keyword}{namespace\ }sens}
 \DoxyCodeLine{00008\ \{}
-\DoxyCodeLine{00009\ \textcolor{keyword}{class\ }\_Sensor\ \{}
+\DoxyCodeLine{00009\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classsens_1_1__Sensor}{\_Sensor}}\ \{}
 \DoxyCodeLine{00010\ \textcolor{keyword}{private}:}
 \DoxyCodeLine{00011\ \ \ \ \ std::string\ name;}
 \DoxyCodeLine{00012\ }
 \DoxyCodeLine{00013\ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00014\ \ \ \ \ \_Sensor(std::string\ name):\ name(name)\ \{\};}
+\DoxyCodeLine{00014\ \ \ \ \ \mbox{\hyperlink{classsens_1_1__Sensor}{\_Sensor}}(std::string\ name):\ name(name)\ \{\};}
 \DoxyCodeLine{00015\ \ \ \ \ std::string\ getName()\ \{\ \textcolor{keywordflow}{return}\ name;\ \}}
 \DoxyCodeLine{00016\ }
-\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}*\ \doxymbox{\hyperlink{classsens_1_1__Sensor_ac39f046a9093e3eab2c60f7502178c64}{getSensor}}(\doxymbox{\hyperlink{classelem_1_1Element}{elem::Element}}\&\ elem)\ \{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};\ \}}
-\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keyword}{virtual}\ \doxymbox{\hyperlink{classsens_1_1__Sensor}{\string~\_Sensor}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}*\ \mbox{\hyperlink{classsens_1_1__Sensor_ac39f046a9093e3eab2c60f7502178c64}{getSensor}}(\mbox{\hyperlink{classelem_1_1Element}{elem::Element}}\&\ elem)\ \{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};\ \}}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{classsens_1_1__Sensor}{\string~\_Sensor}}()\ =\ \textcolor{keywordflow}{default};}
 \DoxyCodeLine{00024\ \};}
 \DoxyCodeLine{00025\ }
-\DoxyCodeLine{00026\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classsens_1_1PerssonPeraire_a9551e1d7b11e62775626361a4d603558}{PerssonPeraire}}\ :\ \textcolor{keyword}{public}\ \_Sensor\ \{}
+\DoxyCodeLine{00026\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classsens_1_1PerssonPeraire}{PerssonPeraire}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classsens_1_1__Sensor}{\_Sensor}}\ \{}
 \DoxyCodeLine{00027\ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{classsens_1_1PerssonPeraire_accda3076781a5928619a96e30c128d16}{SmoothnessIndicator}}(\doxymbox{\hyperlink{classelem_1_1Element}{elem::Element}}\&\ elem,\ \textcolor{keywordtype}{int}\ truncation);}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classsens_1_1PerssonPeraire_accda3076781a5928619a96e30c128d16}{SmoothnessIndicator}}(\mbox{\hyperlink{classelem_1_1Element}{elem::Element}}\&\ elem,\ \textcolor{keywordtype}{int}\ truncation);}
 \DoxyCodeLine{00033\ }
 \DoxyCodeLine{00034\ }
-\DoxyCodeLine{00043\ \ \ \ \ \doxymbox{\hyperlink{classsens_1_1PerssonPeraire_a9551e1d7b11e62775626361a4d603558}{PerssonPeraire}}()\ :\ \_Sensor(\textcolor{stringliteral}{"{}PerssonPeraire"{}})\ \{\};}
-\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordtype}{double}*\ \doxymbox{\hyperlink{classsens_1_1PerssonPeraire_a85488b12c5ba1c9f8e17e02b613ec743}{getViscosity}}(\doxymbox{\hyperlink{classelem_1_1Element}{elem::Element}}\&\ elem,\ \textcolor{keywordtype}{int}\ truncation,\ \textcolor{keywordtype}{double}\ s0,\ \textcolor{keywordtype}{double}\ kappa,\ \textcolor{keywordtype}{double}\ eps0);}
-\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{double}*\ getSensor(\doxymbox{\hyperlink{classelem_1_1Element}{elem::Element}}\&\ elem,\ \textcolor{keywordtype}{int}\ truncation);}
+\DoxyCodeLine{00043\ \ \ \ \ \mbox{\hyperlink{classsens_1_1PerssonPeraire_a9551e1d7b11e62775626361a4d603558}{PerssonPeraire}}()\ :\ \mbox{\hyperlink{classsens_1_1__Sensor}{\_Sensor}}(\textcolor{stringliteral}{"{}PerssonPeraire"{}})\ \{\};}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordtype}{double}*\ \mbox{\hyperlink{classsens_1_1PerssonPeraire_a85488b12c5ba1c9f8e17e02b613ec743}{getViscosity}}(\mbox{\hyperlink{classelem_1_1Element}{elem::Element}}\&\ elem,\ \textcolor{keywordtype}{int}\ truncation,\ \textcolor{keywordtype}{double}\ s0,\ \textcolor{keywordtype}{double}\ kappa,\ \textcolor{keywordtype}{double}\ eps0);}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{double}*\ getSensor(\mbox{\hyperlink{classelem_1_1Element}{elem::Element}}\&\ elem,\ \textcolor{keywordtype}{int}\ truncation);}
 \DoxyCodeLine{00051\ \};}
 \DoxyCodeLine{00052\ }
-\DoxyCodeLine{00053\ \textcolor{keyword}{class\ }DivLaplacian\ :\ \textcolor{keyword}{public}\ \_Sensor\ \{}
+\DoxyCodeLine{00053\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classsens_1_1DivLaplacian}{DivLaplacian}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classsens_1_1__Sensor}{\_Sensor}}\ \{}
 \DoxyCodeLine{00054\ \textcolor{keyword}{private}:}
-\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordtype}{double}*\ SmoothnessIndicator(\doxymbox{\hyperlink{classelem_1_1Element}{elem::Element}}\&\ elem);}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordtype}{double}*\ SmoothnessIndicator(\mbox{\hyperlink{classelem_1_1Element}{elem::Element}}\&\ elem);}
 \DoxyCodeLine{00056\ }
 \DoxyCodeLine{00057\ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00058\ \ \ \ \ DivLaplacian()\ :\ \_Sensor(\textcolor{stringliteral}{"{}DivLaplacian"{}})\ \{\};}
-\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordtype}{double}*\ \doxymbox{\hyperlink{classsens_1_1DivLaplacian_a051f16b0c9b88f034af167b817d50735}{getSensor}}(\doxymbox{\hyperlink{classelem_1_1Element}{elem::Element}}\&\ elem)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00058\ \ \ \ \ \mbox{\hyperlink{classsens_1_1DivLaplacian}{DivLaplacian}}()\ :\ \mbox{\hyperlink{classsens_1_1__Sensor}{\_Sensor}}(\textcolor{stringliteral}{"{}DivLaplacian"{}})\ \{\};}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordtype}{double}*\ \mbox{\hyperlink{classsens_1_1DivLaplacian_a051f16b0c9b88f034af167b817d50735}{getSensor}}(\mbox{\hyperlink{classelem_1_1Element}{elem::Element}}\&\ elem)\ \textcolor{keyword}{override};}
 \DoxyCodeLine{00060\ \};}
 \DoxyCodeLine{00061\ }
 \DoxyCodeLine{00062\ \}\ \textcolor{comment}{//\ namespace\ sens}}

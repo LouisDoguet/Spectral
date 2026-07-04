@@ -1,0 +1,77 @@
+\doxysection{diff\+::Neural\+Network Class Reference}
+\hypertarget{classdiff_1_1NeuralNetwork}{}\label{classdiff_1_1NeuralNetwork}\index{diff::NeuralNetwork@{diff::NeuralNetwork}}
+
+
+Diffusion driven by a trained neural network.  
+
+
+
+
+{\ttfamily \#include $<$neural\+\_\+diffusion.\+h$>$}
+
+Inheritance diagram for diff\+::Neural\+Network\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{d2/d15/classdiff_1_1NeuralNetwork}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classdiff_1_1NeuralNetwork_aad4f1b6651e052bb0824dd2bd0d6e50a}{Neural\+Network}} (const std\+::string \&model\+\_\+path, const std\+::string \&normalizer\+\_\+path="{}"{})
+\item 
+void \mbox{\hyperlink{classdiff_1_1NeuralNetwork_afe13b76c33750ec0c03bbd1b7a103d65}{apply}} (\mbox{\hyperlink{classmesh_1_1Mesh}{mesh\+::\+Mesh}} \texorpdfstring{$\ast$}{*}mesh) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classdiff_1_1__Diffusion}{diff\+::\+\_\+\+Diffusion}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries \+\_\+\+Diffusion} (const std\+::string name)
+\item 
+std\+::string {\bfseries get\+Name} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Diffusion driven by a trained neural network. 
+
+The network predicts optimal alpha values for the hybrid DGSEM solver. Takes nodal density/energy values and outputs alpha \mbox{[}0,1\mbox{]} for blending between high-\/order and low-\/order (FV) flux computations.
+
+For hybrid DGSEM\+: R = alpha \texorpdfstring{$\ast$}{*} R\+\_\+\+FV + (1-\/alpha) \texorpdfstring{$\ast$}{*} R\+\_\+\+DG
+
+Input\+: Concatenated nodal values \mbox{[}rho\+\_\+elem0, ..., rho\+\_\+elemN\mbox{]} Output\+: Per-\/element alpha values \mbox{[}alpha\+\_\+elem0, ..., alpha\+\_\+elemN\mbox{]} 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classdiff_1_1NeuralNetwork_aad4f1b6651e052bb0824dd2bd0d6e50a}\label{classdiff_1_1NeuralNetwork_aad4f1b6651e052bb0824dd2bd0d6e50a} 
+\index{diff::NeuralNetwork@{diff::NeuralNetwork}!NeuralNetwork@{NeuralNetwork}}
+\index{NeuralNetwork@{NeuralNetwork}!diff::NeuralNetwork@{diff::NeuralNetwork}}
+\doxysubsubsection{\texorpdfstring{NeuralNetwork()}{NeuralNetwork()}}
+{\footnotesize\ttfamily diff\+::\+Neural\+Network\+::\+Neural\+Network (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{model\+\_\+path,  }\item[{const std\+::string \&}]{normalizer\+\_\+path = {\ttfamily "{}"{}} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Load a trained neural network model.
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+path} & Path to the saved .nn model file \\
+\hline
+{\em normalizer\+\_\+path} & Path to the .norm file with mean/std (optional; if empty, no normalization) \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classdiff_1_1NeuralNetwork_afe13b76c33750ec0c03bbd1b7a103d65}\label{classdiff_1_1NeuralNetwork_afe13b76c33750ec0c03bbd1b7a103d65} 
+\index{diff::NeuralNetwork@{diff::NeuralNetwork}!apply@{apply}}
+\index{apply@{apply}!diff::NeuralNetwork@{diff::NeuralNetwork}}
+\doxysubsubsection{\texorpdfstring{apply()}{apply()}}
+{\footnotesize\ttfamily void diff\+::\+Neural\+Network\+::apply (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classmesh_1_1Mesh}{mesh\+::\+Mesh}} \texorpdfstring{$\ast$}{*}}]{mesh }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Apply neural network to compute alpha field. Predicts per-\/element alpha based on nodal density values. 
+
+Reimplemented from \mbox{\hyperlink{classdiff_1_1__Diffusion}{diff\+::\+\_\+\+Diffusion}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+lib/diffusion/neural\+\_\+diffusion.\+h\item 
+lib/diffusion/neural\+\_\+diffusion.\+cpp\end{DoxyCompactItemize}

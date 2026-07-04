@@ -8,14 +8,6 @@
 #SBATCH --output=SlurmOutput/HybridNN.txt
 #SBATCH --account=aero_hpc
 
-set -e
-
-PROJECT_DIR="/home/louis/Imperial/MScProject/2-CODE/Spectral1D"
-cd "$PROJECT_DIR"
-
-echo "================================================================================"
-echo "HYBRID-DGSEM NEURAL ALPHA POLICY TEST  (P=6, N=50)"
-echo "================================================================================"
 
 # --------------------------------------------------------------------------
 # Step 1: Train the alpha policy network (one-step reward RL).
@@ -28,7 +20,8 @@ if [ ! -f "build/train_hybrid_alpha" ]; then
     echo "Error: build/train_hybrid_alpha not found. Run: cd build && make"
     exit 1
 fi
-# ./build/train_hybrid_alpha alpha_hybrid.nn
+
+./build/train_hybrid_alpha "alpha_hybrid.nn" "0.08"
 
 # --------------------------------------------------------------------------
 # Step 2: Run hybrid_dgsem with the learned alpha policy.

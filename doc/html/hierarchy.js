@@ -10,6 +10,7 @@ var hierarchy =
     [ "diff::_Diffusion", "d9/d53/classdiff_1_1__Diffusion.html", [
       [ "diff::Constant", "d0/d1a/classdiff_1_1Constant.html", null ],
       [ "diff::Custom", "d8/dd7/classdiff_1_1Custom.html", null ],
+      [ "diff::NeuralNetwork", "d2/d15/classdiff_1_1NeuralNetwork.html", null ],
       [ "diff::PerssonPeraire", "d0/d8c/classdiff_1_1PerssonPeraire.html", null ]
     ] ],
     [ "LAYER::_Layer", "d2/dbd/classLAYER_1_1__Layer.html", [
@@ -21,6 +22,7 @@ var hierarchy =
       [ "sens::PerssonPeraire", "d6/d93/classsens_1_1PerssonPeraire.html", null ]
     ] ],
     [ "solver::_Solver", "d9/d46/classsolver_1_1__Solver.html", [
+      [ "solver::HybridDGSEM", "d3/d82/classsolver_1_1HybridDGSEM.html", null ],
       [ "solver::RK4", "d1/d4e/classsolver_1_1RK4.html", null ]
     ] ],
     [ "ACTI::Activation", "df/dbc/classACTI_1_1Activation.html", [
@@ -29,8 +31,12 @@ var hierarchy =
       [ "ACTI::Sigmoid", "df/db2/classACTI_1_1Sigmoid.html", null ],
       [ "ACTI::SoftMax", "d1/dc2/classACTI_1_1SoftMax.html", null ]
     ] ],
+    [ "AlphaDataGenerator", "de/d64/classAlphaDataGenerator.html", null ],
+    [ "burgers.Burgers", "de/dff/classburgers_1_1Burgers.html", null ],
+    [ "DataNormalizer", "d2/df3/classDataNormalizer.html", null ],
     [ "elem::Element", "db/d74/classelem_1_1Element.html", null ],
     [ "element.Element", "dc/d34/classelement_1_1Element.html", null ],
+    [ "diff::HybridAlphaNet", "d2/d35/classdiff_1_1HybridAlphaNet.html", null ],
     [ "idxDatabase", "d0/daa/classidxDatabase.html", null ],
     [ "idxLabelDB", "da/de5/classidxLabelDB.html", null ],
     [ "Image", "d8/d00/classImage.html", null ],

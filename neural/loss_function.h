@@ -6,17 +6,19 @@
 #include <string>
 
 namespace LFUN {
+/// @brief Loss function dummy class
 class LossFunction {
 public:
   LossFunction(std::string name) : name(name) {};
   virtual double residuals(TENSOR::Tensor val, TENSOR::Tensor ref,
                            TENSOR::Tensor &res) = 0;
   virtual TENSOR::Tensor gradient(TENSOR::Tensor val, TENSOR::Tensor ref) = 0;
-  virtual ~LossFunction() = default; // also add this
+  virtual ~LossFunction() = default;
 protected:
   std::string name;
 };
 
+/// @brief Mean Squared Error loss function
 class MSE : public LossFunction {
 public:
   MSE() : LossFunction("MeanSquaredError") {};
@@ -26,6 +28,7 @@ public:
   ~MSE() = default;
 };
 
+/// @brief Cross Entropy loss function
 class CrossEntropy : public LossFunction {
 public:
   CrossEntropy() : LossFunction("BinaryCrossEntropy") {};

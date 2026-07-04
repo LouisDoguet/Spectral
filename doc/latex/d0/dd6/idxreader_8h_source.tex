@@ -40,11 +40,11 @@
 \DoxyCodeLine{00036\ \}}
 \DoxyCodeLine{00037\ }
 \DoxyCodeLine{00038\ \textcolor{comment}{//\ Stores\ image\ data\ from\ the\ dataset}}
-\DoxyCodeLine{00039\ \textcolor{keyword}{class\ }Image\ \{}
+\DoxyCodeLine{00039\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classImage}{Image}}\ \{}
 \DoxyCodeLine{00040\ \ \ \ \ \textcolor{keyword}{public}:}
 \DoxyCodeLine{00041\ }
-\DoxyCodeLine{00042\ \ \ \ \ Image()\ =\ \textcolor{keywordflow}{default};}
-\DoxyCodeLine{00043\ \ \ \ \ Image(std::vector<unsigned\ char>\&\&\ pixels,\ \textcolor{keywordtype}{int}\ nrow,\ \textcolor{keywordtype}{int}\ ncol)\ :}
+\DoxyCodeLine{00042\ \ \ \ \ \mbox{\hyperlink{classImage}{Image}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00043\ \ \ \ \ \mbox{\hyperlink{classImage}{Image}}(std::vector<unsigned\ char>\&\&\ pixels,\ \textcolor{keywordtype}{int}\ nrow,\ \textcolor{keywordtype}{int}\ ncol)\ :}
 \DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ pixels(std::move(pixels)),}
 \DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ nrow(nrow),}
 \DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ ncol(ncol),}
@@ -63,7 +63,7 @@
 \DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordtype}{int}\ size()\textcolor{keyword}{\ const\ }\{\textcolor{keywordflow}{return}\ (nrow*ncol);\}}
 \DoxyCodeLine{00060\ }
 \DoxyCodeLine{00061\ \ \ \ \ \textcolor{comment}{//\ Friends}}
-\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keyword}{friend}\ std::ostream\&\ operator<<(std::ostream\&,\ Image\&);}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keyword}{friend}\ std::ostream\&\ operator<<(std::ostream\&,\ \mbox{\hyperlink{classImage}{Image}}\&);}
 \DoxyCodeLine{00063\ }
 \DoxyCodeLine{00064\ \ \ \ \ \textcolor{keyword}{private}:}
 \DoxyCodeLine{00065\ \ \ \ \ \textcolor{keyword}{const}\ std::vector<unsigned\ char>\ pixels;}
@@ -83,11 +83,11 @@
 \DoxyCodeLine{00079\ }
 \DoxyCodeLine{00080\ \textcolor{comment}{//\ Database\ class\ :}}
 \DoxyCodeLine{00081\ \textcolor{comment}{//\ Reads\ idx\ file\ to\ get\ the\ value\ of\ the\ images\ stored\ in\ the\ dataset}}
-\DoxyCodeLine{00082\ \textcolor{keyword}{class\ }idxDatabase\ \{}
+\DoxyCodeLine{00082\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classidxDatabase}{idxDatabase}}\ \{}
 \DoxyCodeLine{00083\ \ \ \ \ \textcolor{keyword}{public}:}
 \DoxyCodeLine{00084\ }
-\DoxyCodeLine{00085\ \ \ \ \ idxDatabase()\ =\ \textcolor{keywordflow}{default};}
-\DoxyCodeLine{00086\ \ \ \ \ idxDatabase(\textcolor{keyword}{const}\ std::string\ \&database\_path):\ path(database\_path),\ file(database\_path,\ std::ios::binary)}
+\DoxyCodeLine{00085\ \ \ \ \ \mbox{\hyperlink{classidxDatabase}{idxDatabase}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00086\ \ \ \ \ \mbox{\hyperlink{classidxDatabase}{idxDatabase}}(\textcolor{keyword}{const}\ std::string\ \&database\_path):\ path(database\_path),\ file(database\_path,\ std::ios::binary)}
 \DoxyCodeLine{00087\ \ \ \ \ \{\ read\_header();\ \};}
 \DoxyCodeLine{00088\ }
 \DoxyCodeLine{00089\ \ \ \ \ \textcolor{comment}{//\ Getters}}
@@ -98,7 +98,7 @@
 \DoxyCodeLine{00094\ \ \ \ \ \textcolor{keywordtype}{int}\ nCols()\textcolor{keyword}{\ const\ }\{\textcolor{keywordflow}{return}\ cols;\}}
 \DoxyCodeLine{00095\ }
 \DoxyCodeLine{00096\ \ \ \ \ \textcolor{comment}{//\ Read\ the\ image\ at\ position\ 'id'\ in\ the\ file}}
-\DoxyCodeLine{00097\ \ \ \ \ \doxymbox{\hyperlink{classImage}{Image}}\ read\_image(\textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id})\{}
+\DoxyCodeLine{00097\ \ \ \ \ \mbox{\hyperlink{classImage}{Image}}\ read\_image(\textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id})\{}
 \DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ total\_shift\ =\ 16;}
 \DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ total\_shift+=\ (\ \textcolor{keywordtype}{id}\ *\ rows\ \ *\ cols\ );}
 \DoxyCodeLine{00100\ }
@@ -106,7 +106,7 @@
 \DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ std::vector<unsigned\ char>\ pixels(rows*cols);}
 \DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ file.read(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{char}*\textcolor{keyword}{>}(pixels.data()),\ rows*cols);}
 \DoxyCodeLine{00104\ }
-\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{classImage}{Image}}(std::move(pixels),rows,cols);}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classImage}{Image}}(std::move(pixels),rows,cols);}
 \DoxyCodeLine{00106\ \ \ \ \ \}}
 \DoxyCodeLine{00107\ }
 \DoxyCodeLine{00108\ \ \ \ \ \textcolor{keyword}{private}:}
@@ -127,10 +127,10 @@
 \DoxyCodeLine{00123\ \};}
 \DoxyCodeLine{00124\ }
 \DoxyCodeLine{00125\ \textcolor{comment}{//\ Reads\ idx1\ label\ file}}
-\DoxyCodeLine{00126\ \textcolor{keyword}{class\ }idxLabelDB\ \{}
+\DoxyCodeLine{00126\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classidxLabelDB}{idxLabelDB}}\ \{}
 \DoxyCodeLine{00127\ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00128\ \ \ \ \ idxLabelDB()\ =\ \textcolor{keywordflow}{default};}
-\DoxyCodeLine{00129\ \ \ \ \ idxLabelDB(\textcolor{keyword}{const}\ std::string\&\ path)\ :\ path(path),\ file(path,\ std::ios::binary)\ \{}
+\DoxyCodeLine{00128\ \ \ \ \ \mbox{\hyperlink{classidxLabelDB}{idxLabelDB}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00129\ \ \ \ \ \mbox{\hyperlink{classidxLabelDB}{idxLabelDB}}(\textcolor{keyword}{const}\ std::string\&\ path)\ :\ path(path),\ file(path,\ std::ios::binary)\ \{}
 \DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ magic\ =\ read\_uint32(file,\ 0);}
 \DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ count\ =\ read\_uint32(file,\ 1);}
 \DoxyCodeLine{00132\ \ \ \ \ \}}
@@ -150,7 +150,7 @@
 \DoxyCodeLine{00146\ \};}
 \DoxyCodeLine{00147\ }
 \DoxyCodeLine{00148\ \textcolor{comment}{//\ Surcharges}}
-\DoxyCodeLine{00149\ \textcolor{keyword}{inline}\ std::ostream\ \&operator<<(std::ostream\ \&os,\ \doxymbox{\hyperlink{classidxDatabase}{idxDatabase}}\ \&db)\ \{}
+\DoxyCodeLine{00149\ \textcolor{keyword}{inline}\ std::ostream\ \&operator<<(std::ostream\ \&os,\ \mbox{\hyperlink{classidxDatabase}{idxDatabase}}\ \&db)\ \{}
 \DoxyCodeLine{00150\ \ \ \ \ os\ <<\ \textcolor{stringliteral}{"{}Path\ \ \ \ :\ \ \ "{}}\ <<\ db.getPath()\ <<\ std::endl}
 \DoxyCodeLine{00151\ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}Mnumber\ :\ \ \ "{}}\ <<\ db.mNumber()\ <<\ std::endl}
 \DoxyCodeLine{00152\ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}Nimages\ :\ \ \ "{}}\ <<\ db.nImage()\ <<\ std::endl}
@@ -158,7 +158,7 @@
 \DoxyCodeLine{00154\ \ \ \ \ \textcolor{keywordflow}{return}\ os;}
 \DoxyCodeLine{00155\ \};}
 \DoxyCodeLine{00156\ }
-\DoxyCodeLine{00157\ \textcolor{keyword}{inline}\ std::ostream\ \&operator<<(std::ostream\ \&os,\ \doxymbox{\hyperlink{classImage}{Image}}\ \&img)\ \{}
+\DoxyCodeLine{00157\ \textcolor{keyword}{inline}\ std::ostream\ \&operator<<(std::ostream\ \&os,\ \mbox{\hyperlink{classImage}{Image}}\ \&img)\ \{}
 \DoxyCodeLine{00158\ }
 \DoxyCodeLine{00159\ \ \ \ \ \textcolor{keyword}{const}\ std::string\ shades\ =\ \textcolor{stringliteral}{"{}\ .:-\/=+*\#\%@"{}};}
 \DoxyCodeLine{00160\ \ \ \ \ \textcolor{keyword}{const}\ std::vector<unsigned\ char>\&\ pixels\ =\ img.getPixels();}

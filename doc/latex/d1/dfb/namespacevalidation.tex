@@ -1,0 +1,70 @@
+\doxysection{validation Namespace Reference}
+\hypertarget{namespacevalidation}{}\label{namespacevalidation}\index{validation@{validation}}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespacevalidation_a55d56246b39a6e7d77a9dc6167130870}{\+\_\+safe\+\_\+residual}} (burgers, val, X, eps\+\_\+array)
+\item 
+\mbox{\hyperlink{namespacevalidation_a3d9511dbf36c3bea1f6fadd8bf9effbd}{plot\+\_\+convergence}} (history, ax=None)
+\item 
+\mbox{\hyperlink{namespacevalidation_a0dc9e5a3184d47075bad0141e25c2783}{plot\+\_\+node\+\_\+positions}} (element\+\_\+initial, element\+\_\+optimized, ax=None)
+\item 
+\mbox{\hyperlink{namespacevalidation_a92cc146bce438cfe8084a06b87b038a7}{plot\+\_\+solution\+\_\+profile}} (element\+\_\+initial, element\+\_\+optimized, solution\+\_\+initial, solution\+\_\+optimized, burgers, ax=None)
+\item 
+\mbox{\hyperlink{namespacevalidation_a19af86f5a5c1e151af81aa8169c5cc03}{plot\+\_\+residual\+\_\+values}} (element\+\_\+initial, element\+\_\+optimized, solution\+\_\+initial, solution\+\_\+optimized, burgers, ax=None)
+\item 
+\mbox{\hyperlink{namespacevalidation_a61542538bdcb331bb410563df9dbc6bc}{generate\+\_\+all\+\_\+plots}} (data, show=True, save\+\_\+dir=None)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}Validation plots for residual-based mesh/RBF optimization (see optimize.run_residual).
+\end{DoxyVerb}
+ 
+
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacevalidation_a55d56246b39a6e7d77a9dc6167130870}\label{namespacevalidation_a55d56246b39a6e7d77a9dc6167130870} 
+\index{validation@{validation}!\_safe\_residual@{\_safe\_residual}}
+\index{\_safe\_residual@{\_safe\_residual}!validation@{validation}}
+\doxysubsubsection{\texorpdfstring{\_safe\_residual()}{\_safe\_residual()}}
+{\footnotesize\ttfamily validation.\+\_\+safe\+\_\+residual (\begin{DoxyParamCaption}\item[{}]{burgers,  }\item[{}]{val,  }\item[{}]{X,  }\item[{}]{eps\+\_\+array }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+\begin{DoxyVerb}Residual at nodes, or NaNs if the RBF system is singular for this config.\end{DoxyVerb}
+ \Hypertarget{namespacevalidation_a61542538bdcb331bb410563df9dbc6bc}\label{namespacevalidation_a61542538bdcb331bb410563df9dbc6bc} 
+\index{validation@{validation}!generate\_all\_plots@{generate\_all\_plots}}
+\index{generate\_all\_plots@{generate\_all\_plots}!validation@{validation}}
+\doxysubsubsection{\texorpdfstring{generate\_all\_plots()}{generate\_all\_plots()}}
+{\footnotesize\ttfamily validation.\+generate\+\_\+all\+\_\+plots (\begin{DoxyParamCaption}\item[{}]{data,  }\item[{}]{show = {\ttfamily True},  }\item[{}]{save\+\_\+dir = {\ttfamily None} }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Build the 2x2 validation figure from the dict returned by
+`optimize.run_residual`.
+\end{DoxyVerb}
+ \Hypertarget{namespacevalidation_a3d9511dbf36c3bea1f6fadd8bf9effbd}\label{namespacevalidation_a3d9511dbf36c3bea1f6fadd8bf9effbd} 
+\index{validation@{validation}!plot\_convergence@{plot\_convergence}}
+\index{plot\_convergence@{plot\_convergence}!validation@{validation}}
+\doxysubsubsection{\texorpdfstring{plot\_convergence()}{plot\_convergence()}}
+{\footnotesize\ttfamily validation.\+plot\+\_\+convergence (\begin{DoxyParamCaption}\item[{}]{history,  }\item[{}]{ax = {\ttfamily None} }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Plot 1: ||R||^2 vs evaluation, with the best-so-far value highlighted.\end{DoxyVerb}
+ \Hypertarget{namespacevalidation_a0dc9e5a3184d47075bad0141e25c2783}\label{namespacevalidation_a0dc9e5a3184d47075bad0141e25c2783} 
+\index{validation@{validation}!plot\_node\_positions@{plot\_node\_positions}}
+\index{plot\_node\_positions@{plot\_node\_positions}!validation@{validation}}
+\doxysubsubsection{\texorpdfstring{plot\_node\_positions()}{plot\_node\_positions()}}
+{\footnotesize\ttfamily validation.\+plot\+\_\+node\+\_\+positions (\begin{DoxyParamCaption}\item[{}]{element\+\_\+initial,  }\item[{}]{element\+\_\+optimized,  }\item[{}]{ax = {\ttfamily None} }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Plot 2: node positions before vs after optimization, with the shock location.\end{DoxyVerb}
+ \Hypertarget{namespacevalidation_a19af86f5a5c1e151af81aa8169c5cc03}\label{namespacevalidation_a19af86f5a5c1e151af81aa8169c5cc03} 
+\index{validation@{validation}!plot\_residual\_values@{plot\_residual\_values}}
+\index{plot\_residual\_values@{plot\_residual\_values}!validation@{validation}}
+\doxysubsubsection{\texorpdfstring{plot\_residual\_values()}{plot\_residual\_values()}}
+{\footnotesize\ttfamily validation.\+plot\+\_\+residual\+\_\+values (\begin{DoxyParamCaption}\item[{}]{element\+\_\+initial,  }\item[{}]{element\+\_\+optimized,  }\item[{}]{solution\+\_\+initial,  }\item[{}]{solution\+\_\+optimized,  }\item[{}]{burgers,  }\item[{}]{ax = {\ttfamily None} }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Plot 4: |R_i| at each node, before vs after optimization.\end{DoxyVerb}
+ \Hypertarget{namespacevalidation_a92cc146bce438cfe8084a06b87b038a7}\label{namespacevalidation_a92cc146bce438cfe8084a06b87b038a7} 
+\index{validation@{validation}!plot\_solution\_profile@{plot\_solution\_profile}}
+\index{plot\_solution\_profile@{plot\_solution\_profile}!validation@{validation}}
+\doxysubsubsection{\texorpdfstring{plot\_solution\_profile()}{plot\_solution\_profile()}}
+{\footnotesize\ttfamily validation.\+plot\+\_\+solution\+\_\+profile (\begin{DoxyParamCaption}\item[{}]{element\+\_\+initial,  }\item[{}]{element\+\_\+optimized,  }\item[{}]{solution\+\_\+initial,  }\item[{}]{solution\+\_\+optimized,  }\item[{}]{burgers,  }\item[{}]{ax = {\ttfamily None} }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Plot 3: RBF interpolant (sum of all RBFs) before/after optimization, against the exact profile.\end{DoxyVerb}
+ 

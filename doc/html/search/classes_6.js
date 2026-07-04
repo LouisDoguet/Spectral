@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['hyperbolictangent_0',['HyperbolicTangent',['../d5/d7c/classACTI_1_1HyperbolicTangent.html',1,'ACTI']]]
+  ['gaussian_0',['Gaussian',['../d1/da7/classbase_1_1Gaussian.html',1,'base']]]
 ];

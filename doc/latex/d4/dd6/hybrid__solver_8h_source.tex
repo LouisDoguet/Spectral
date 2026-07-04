@@ -1,0 +1,54 @@
+\doxysection{hybrid\+\_\+solver.\+h}
+\hypertarget{hybrid__solver_8h_source}{}\label{hybrid__solver_8h_source}\index{lib/time/hybrid\_solver.h@{lib/time/hybrid\_solver.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ HYBRID\_SOLVER\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ HYBRID\_SOLVER\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}solver.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{namespace\ }diff\ \{\ \textcolor{keyword}{class\ }HybridAlphaNet;\ \}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{namespace\ }solver\ \{}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00029\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classsolver_1_1HybridDGSEM}{HybridDGSEM}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classsolver_1_1__Solver}{\_Solver}}\ \{}
+\DoxyCodeLine{00030\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00031\ \ \ \ \ \mbox{\hyperlink{classsolver_1_1HybridDGSEM}{HybridDGSEM}}(\mbox{\hyperlink{classmesh_1_1Mesh}{mesh::Mesh}}*\ mesh,\ \textcolor{keywordtype}{int}\ n\_plot\ =\ 0);}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classsolver_1_1HybridDGSEM_a225a2e2884ab26d984e19ce05c384221}{setIndicatorParams}}(\textcolor{keywordtype}{double}\ alpha\_max\ =\ 0.5,}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ alpha\_min\ =\ 0.001,}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ diffuse\ \ \ =\ \textcolor{keyword}{true})\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ alpha\_max\_\ \ =\ alpha\_max;}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ alpha\_min\_\ \ =\ alpha\_min;}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ diffuse\_\ \ \ \ =\ diffuse;}
+\DoxyCodeLine{00045\ \ \ \ \ \}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{void}\ step(\textcolor{keywordtype}{double}\ dt)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classsolver_1_1HybridDGSEM_a83f997c671a1cb0eb3626018f169e90b}{run}}(\textcolor{keywordtype}{double}\ T\_final,\ \textcolor{keywordtype}{double}\ dt,\ \textcolor{keywordtype}{int}\ save\_freq,}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ prefix)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keyword}{const}\ std::vector<double>\&\ \mbox{\hyperlink{classsolver_1_1HybridDGSEM_a55e90db276e8ab19a3dc91ddbe5f8e9d}{getAlpha}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ alpha\_;\ \}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classsolver_1_1HybridDGSEM_a313893171088bcea258f6acd9739fa85}{setAlphaNet}}(\mbox{\hyperlink{classdiff_1_1HybridAlphaNet}{diff::HybridAlphaNet}}*\ net)\ \{\ alpha\_net\_\ =\ net;\ \}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00063\ \ \ \ \ std::vector<double>\ alpha\_;}
+\DoxyCodeLine{00064\ \ \ \ \ \mbox{\hyperlink{classdiff_1_1HybridAlphaNet}{diff::HybridAlphaNet}}*\ alpha\_net\_\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordtype}{double}\ alpha\_max\_\ =\ 0.5;}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordtype}{double}\ alpha\_min\_\ =\ 0.001;}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ diffuse\_\ \ \ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordtype}{void}\ computeAlpha();}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_stage\_state(\textcolor{keywordtype}{double}\ dt,\ \textcolor{keywordtype}{double}\ coeff);}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keywordtype}{void}\ accumulate\_stage(\textcolor{keywordtype}{double}\ coeff);}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keywordtype}{void}\ finalize\_step(\textcolor{keywordtype}{double}\ dt);}
+\DoxyCodeLine{00076\ \};}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \}\ \textcolor{comment}{//\ namespace\ solver}}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

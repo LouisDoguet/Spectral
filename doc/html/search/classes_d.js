@@ -1,8 +1,6 @@
 var searchData=
 [
-  ['scalarfield_0',['ScalarField',['../db/dbb/structpost_1_1ScalarField.html',1,'post']]],
-  ['sequential_1',['Sequential',['../d9/dc0/classCONT_1_1Sequential.html',1,'CONT']]],
-  ['sigmoid_2',['Sigmoid',['../df/db2/classACTI_1_1Sigmoid.html',1,'ACTI::Sigmoid'],['../db/d86/classLAYER_1_1Sigmoid.html',1,'LAYER::Sigmoid']]],
-  ['softmax_3',['SoftMax',['../d1/dc2/classACTI_1_1SoftMax.html',1,'ACTI']]],
-  ['solution_4',['Solution',['../d5/d86/classsolution_1_1Solution.html',1,'solution']]]
+  ['rbf_0',['RBF',['../dd/df8/classbase_1_1RBF.html',1,'base']]],
+  ['relu_1',['relu',['../d9/d5f/classACTI_1_1ReLU.html',1,'ACTI::ReLU'],['../dc/d29/classLAYER_1_1ReLU.html',1,'LAYER::ReLU']]],
+  ['rk4_2',['RK4',['../d1/d4e/classsolver_1_1RK4.html',1,'solver']]]
 ];

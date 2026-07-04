@@ -10,7 +10,7 @@
 \DoxyCodeLine{00006\ }
 \DoxyCodeLine{00007\ \textcolor{keyword}{namespace\ }TENSOR\ \{}
 \DoxyCodeLine{00008\ }
-\DoxyCodeLine{00009\ \textcolor{keyword}{class\ }Tensor\ \{}
+\DoxyCodeLine{00009\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classTENSOR_1_1Tensor}{Tensor}}\ \{}
 \DoxyCodeLine{00010\ \textcolor{keyword}{private}:}
 \DoxyCodeLine{00011\ \ \ \ \ std::vector<double>\ array;}
 \DoxyCodeLine{00012\ \textcolor{keyword}{public}:}
@@ -18,8 +18,8 @@
 \DoxyCodeLine{00014\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ n\_cols;}
 \DoxyCodeLine{00015\ \ \ \ \ }
 \DoxyCodeLine{00016\ }
-\DoxyCodeLine{00017\ \ \ \ \ Tensor()\ :\ n\_rows(0),\ n\_cols(0)\ \{\}}
-\DoxyCodeLine{00018\ \ \ \ \ Tensor(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ n\_rows,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ n\_cols)}
+\DoxyCodeLine{00017\ \ \ \ \ \mbox{\hyperlink{classTENSOR_1_1Tensor}{Tensor}}()\ :\ n\_rows(0),\ n\_cols(0)\ \{\}}
+\DoxyCodeLine{00018\ \ \ \ \ \mbox{\hyperlink{classTENSOR_1_1Tensor}{Tensor}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ n\_rows,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ n\_cols)}
 \DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ :\ n\_rows(n\_rows),\ n\_cols(n\_cols),\ array(n\_rows\ *\ n\_cols,\ 0.0)\ \{\}}
 \DoxyCodeLine{00020\ }
 \DoxyCodeLine{00021\ \ \ \ \ std::vector<double>\&\ getData()\ \{\ \textcolor{keywordflow}{return}\ array;\ \}}
@@ -32,12 +32,12 @@
 \DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ array.at(i)\ =\ val;}
 \DoxyCodeLine{00029\ \ \ \ \ \}}
 \DoxyCodeLine{00030\ }
-\DoxyCodeLine{00031\ \ \ \ \ Tensor\ operator*(\textcolor{keyword}{const}\ Tensor\&\ other)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00031\ \ \ \ \ \mbox{\hyperlink{classTENSOR_1_1Tensor}{Tensor}}\ operator*(\textcolor{keyword}{const}\ \mbox{\hyperlink{classTENSOR_1_1Tensor}{Tensor}}\&\ other)\textcolor{keyword}{\ const\ }\{}
 \DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (n\_cols\ !=\ other.n\_rows)\ \{}
 \DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::invalid\_argument(\textcolor{stringliteral}{"{}Inner\ dimensions\ must\ match\ for\ GEMM."{}});}
 \DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00035\ }
-\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ Tensor\ result(n\_rows,\ other.n\_cols);}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classTENSOR_1_1Tensor}{Tensor}}\ result(n\_rows,\ other.n\_cols);}
 \DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ cblas\_dgemm(CblasRowMajor,\ CblasNoTrans,\ CblasNoTrans,\ }
 \DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ n\_rows,\ other.n\_cols,\ n\_cols,\ }
 \DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 1.0,\ array.data(),\ n\_cols,\ }
@@ -47,18 +47,18 @@
 \DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
 \DoxyCodeLine{00044\ \ \ \ \ \}}
 \DoxyCodeLine{00045\ }
-\DoxyCodeLine{00046\ \ \ \ \ Tensor\ operator*(\textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ val)\textcolor{keyword}{\ const\ }\{}
-\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ Tensor\ result\ =\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00046\ \ \ \ \ \mbox{\hyperlink{classTENSOR_1_1Tensor}{Tensor}}\ operator*(\textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ val)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classTENSOR_1_1Tensor}{Tensor}}\ result\ =\ *\textcolor{keyword}{this};}
 \DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ cblas\_dscal(n\_rows\ *\ n\_cols,\ val,\ result.array.data(),\ 1);}
 \DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
 \DoxyCodeLine{00050\ \ \ \ \ \}}
 \DoxyCodeLine{00051\ }
-\DoxyCodeLine{00052\ \ \ \ \ Tensor\ add\_bias(\textcolor{keyword}{const}\ Tensor\&\ bias)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00052\ \ \ \ \ \mbox{\hyperlink{classTENSOR_1_1Tensor}{Tensor}}\ add\_bias(\textcolor{keyword}{const}\ \mbox{\hyperlink{classTENSOR_1_1Tensor}{Tensor}}\&\ bias)\textcolor{keyword}{\ const\ }\{}
 \DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (n\_cols\ !=\ bias.n\_cols\ ||\ bias.n\_rows\ !=\ 1)\ \{}
 \DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::invalid\_argument(\textcolor{stringliteral}{"{}Bias\ must\ be\ a\ 1xN\ row\ vector\ matching\ tensor\ columns."{}});}
 \DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00056\ }
-\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ Tensor\ result\ =\ *\textcolor{keyword}{this};\ }
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classTENSOR_1_1Tensor}{Tensor}}\ result\ =\ *\textcolor{keyword}{this};\ }
 \DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0;\ i\ <\ n\_rows;\ ++i)\ \{}
 \DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ cblas\_daxpy(n\_cols,\ 1.0,\ bias.array.data(),\ 1,\ result.array.data()\ +\ i\ *\ n\_cols,\ 1);}
 \DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \}}
@@ -66,45 +66,45 @@
 \DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
 \DoxyCodeLine{00063\ \ \ \ \ \}}
 \DoxyCodeLine{00064\ }
-\DoxyCodeLine{00065\ \ \ \ \ Tensor\ operator+(\textcolor{keyword}{const}\ Tensor\&\ other)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00065\ \ \ \ \ \mbox{\hyperlink{classTENSOR_1_1Tensor}{Tensor}}\ operator+(\textcolor{keyword}{const}\ \mbox{\hyperlink{classTENSOR_1_1Tensor}{Tensor}}\&\ other)\textcolor{keyword}{\ const\ }\{}
 \DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (n\_rows\ !=\ other.n\_rows\ ||\ n\_cols\ !=\ other.n\_cols)}
 \DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::invalid\_argument(\textcolor{stringliteral}{"{}Tensor\ shapes\ must\ match\ for\ element-\/wise\ addition."{}});}
 \DoxyCodeLine{00068\ }
-\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ Tensor\ result\ =\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classTENSOR_1_1Tensor}{Tensor}}\ result\ =\ *\textcolor{keyword}{this};}
 \DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ cblas\_daxpy(n\_rows\ *\ n\_cols,\ 1.0,}
 \DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ other.array.data(),\ 1,}
 \DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ result.array.data(),\ 1);}
 \DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
 \DoxyCodeLine{00074\ \ \ \ \ \}}
 \DoxyCodeLine{00075\ }
-\DoxyCodeLine{00076\ \ \ \ \ Tensor\ operator+(\textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ num)\textcolor{keyword}{\ const\ }\{}
-\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ Tensor\ result\ =\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00076\ \ \ \ \ \mbox{\hyperlink{classTENSOR_1_1Tensor}{Tensor}}\ operator+(\textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ num)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classTENSOR_1_1Tensor}{Tensor}}\ result\ =\ *\textcolor{keyword}{this};}
 \DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0;\ i\ <\ n\_rows\ *\ n\_cols;\ ++i)}
 \DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ result.array[i]\ +=\ num;}
 \DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
 \DoxyCodeLine{00081\ \ \ \ \ \}}
 \DoxyCodeLine{00082\ }
-\DoxyCodeLine{00083\ \ \ \ \ Tensor\ operator-\/(\textcolor{keyword}{const}\ Tensor\&\ other)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00083\ \ \ \ \ \mbox{\hyperlink{classTENSOR_1_1Tensor}{Tensor}}\ operator-\/(\textcolor{keyword}{const}\ \mbox{\hyperlink{classTENSOR_1_1Tensor}{Tensor}}\&\ other)\textcolor{keyword}{\ const\ }\{}
 \DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (n\_rows\ !=\ other.n\_rows\ ||\ n\_cols\ !=\ other.n\_cols)}
 \DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::invalid\_argument(\textcolor{stringliteral}{"{}Tensor\ shapes\ must\ match\ for\ element-\/wise\ subtraction."{}});}
 \DoxyCodeLine{00086\ }
-\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ Tensor\ result\ =\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classTENSOR_1_1Tensor}{Tensor}}\ result\ =\ *\textcolor{keyword}{this};}
 \DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ cblas\_daxpy(n\_rows\ *\ n\_cols,\ -\/1.0,}
 \DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ other.array.data(),\ 1,}
 \DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ result.array.data(),\ 1);}
 \DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
 \DoxyCodeLine{00092\ \ \ \ \ \}}
 \DoxyCodeLine{00093\ }
-\DoxyCodeLine{00094\ \ \ \ \ Tensor\ ln()\textcolor{keyword}{\ const\ }\{}
-\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ Tensor\ result\ =\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00094\ \ \ \ \ \mbox{\hyperlink{classTENSOR_1_1Tensor}{Tensor}}\ ln()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classTENSOR_1_1Tensor}{Tensor}}\ result\ =\ *\textcolor{keyword}{this};}
 \DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i=0;\ i<n\_rows*n\_cols;\ ++i)\{}
 \DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ result.setData(i,\ std::log(array[i]));}
 \DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
 \DoxyCodeLine{00100\ \ \ \ \ \}}
 \DoxyCodeLine{00101\ }
-\DoxyCodeLine{00102\ \ \ \ \ Tensor\ exp()\textcolor{keyword}{\ const\ }\{}
-\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ Tensor\ result\ =\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00102\ \ \ \ \ \mbox{\hyperlink{classTENSOR_1_1Tensor}{Tensor}}\ exp()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classTENSOR_1_1Tensor}{Tensor}}\ result\ =\ *\textcolor{keyword}{this};}
 \DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i=0;\ i<n\_rows*n\_cols;\ ++i)\{}
 \DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ result.setData(i,\ std::exp(array[i]));}
 \DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \}}
@@ -112,16 +112,16 @@
 \DoxyCodeLine{00108\ \ \ \ \ \}}
 \DoxyCodeLine{00109\ }
 \DoxyCodeLine{00110\ }
-\DoxyCodeLine{00115\ \ \ \ \ Tensor\ \doxymbox{\hyperlink{classTENSOR_1_1Tensor_a3e4aee59f5912e18d6d6a7b7463dea06}{sum\_rows}}()\textcolor{keyword}{\ const\ }\{}
-\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ Tensor\ result(1,\ n\_cols);}
+\DoxyCodeLine{00115\ \ \ \ \ \mbox{\hyperlink{classTENSOR_1_1Tensor}{Tensor}}\ \mbox{\hyperlink{classTENSOR_1_1Tensor_a3e4aee59f5912e18d6d6a7b7463dea06}{sum\_rows}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classTENSOR_1_1Tensor}{Tensor}}\ result(1,\ n\_cols);}
 \DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0;\ i\ <\ n\_rows;\ ++i)\ \{}
 \DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ cblas\_daxpy(n\_cols,\ 1.0,\ array.data()\ +\ i\ *\ n\_cols,\ 1,\ result.array.data(),\ 1);}
 \DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
 \DoxyCodeLine{00121\ \ \ \ \ \}}
 \DoxyCodeLine{00122\ }
-\DoxyCodeLine{00126\ \ \ \ \ Tensor\ \doxymbox{\hyperlink{classTENSOR_1_1Tensor_af4d9a9eeeb24a791ffefe31d4715ad87}{T}}()\textcolor{keyword}{\ const\ }\{}
-\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ Tensor\ result(n\_cols,\ n\_rows);}
+\DoxyCodeLine{00126\ \ \ \ \ \mbox{\hyperlink{classTENSOR_1_1Tensor}{Tensor}}\ \mbox{\hyperlink{classTENSOR_1_1Tensor_af4d9a9eeeb24a791ffefe31d4715ad87}{T}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classTENSOR_1_1Tensor}{Tensor}}\ result(n\_cols,\ n\_rows);}
 \DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0;\ i\ <\ n\_rows;\ ++i)\ \{}
 \DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ j\ =\ 0;\ j\ <\ n\_cols;\ ++j)\ \{}
 \DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ result.array[j\ *\ n\_rows\ +\ i]\ =\ array[i\ *\ n\_cols\ +\ j];}

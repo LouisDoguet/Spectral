@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['element_0',['Element',['../db/d74/classelem_1_1Element.html',1,'elem::Element'],['../dc/d34/classelement_1_1Element.html',1,'element.Element']]]
+  ['datanormalizer_0',['DataNormalizer',['../d2/df3/classDataNormalizer.html',1,'']]],
+  ['divlaplacian_1',['DivLaplacian',['../de/d19/classsens_1_1DivLaplacian.html',1,'sens']]]
 ];

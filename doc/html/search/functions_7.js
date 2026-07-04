@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['lagrange_0',['Lagrange',['../db/df9/classbase_1_1Lagrange.html#a5d295b78adb4c753e50cd491879e1031',1,'base::Lagrange']]],
-  ['local_5fspacing_1',['local_spacing',['../dc/d34/classelement_1_1Element.html#af27aae86e40a950d19c5ac47e38585e4',1,'element::Element']]]
+  ['initialize_0',['initialize',['../dd/df8/classbase_1_1RBF.html#a18149d3f6e76da85fe3c3710cf1c230d',1,'base::RBF']]],
+  ['interpolate_1',['interpolate',['../d0/d61/classbase_1_1__Basis.html#ac9137548fb600ae683c4dbd7fe903bcc',1,'base::_Basis::interpolate()'],['../db/df9/classbase_1_1Lagrange.html#a15f46586e3bf9e1638141ecf706689af',1,'base::Lagrange::interpolate()'],['../dd/df8/classbase_1_1RBF.html#a92265c70295c9ee42c1da4e717090f2f',1,'base::RBF::interpolate()']]]
 ];

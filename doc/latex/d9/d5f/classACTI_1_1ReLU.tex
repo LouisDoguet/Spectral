@@ -1,6 +1,15 @@
-\doxysection{ACTI::\+Re\+LU Class Reference}
+\doxysection{ACTI\+::Re\+LU Class Reference}
 \hypertarget{classACTI_1_1ReLU}{}\label{classACTI_1_1ReLU}\index{ACTI::ReLU@{ACTI::ReLU}}
-Inheritance diagram for ACTI::\+Re\+LU:\+\begin{figure}[H]
+
+
+Rectified Linear Unit.  
+
+
+
+
+{\ttfamily \#include $<$activation.\+h$>$}
+
+Inheritance diagram for ACTI\+::Re\+LU\+:\begin{figure}[H]
 \begin{center}
 \leavevmode
 \includegraphics[height=2.000000cm]{d9/d5f/classACTI_1_1ReLU}
@@ -9,63 +18,88 @@ Inheritance diagram for ACTI::\+Re\+LU:\+\begin{figure}[H]
 \doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \doxymbox{\hyperlink{classACTI_1_1ReLU_ab010942a17cf6b3866a2b507c697386d}{apply}} (\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} \&tensor) override
-\item 
-\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} \doxymbox{\hyperlink{classACTI_1_1ReLU_a3fc1d68e3f0718032fb0121b78947775}{gradient}} (\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} \&tensor)
-\item 
-uint8\+\_\+t \doxymbox{\hyperlink{classACTI_1_1ReLU_a3aa09feabc7b16ef89cd8ba6a8a0f431}{type\+Id}} () const override
+void \mbox{\hyperlink{classACTI_1_1ReLU_ab010942a17cf6b3866a2b507c697386d}{apply}} (\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR\+::\+Tensor}} \&tensor) override
+\begin{DoxyCompactList}\small\item\em Activate a tensor. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR\+::\+Tensor}} \mbox{\hyperlink{classACTI_1_1ReLU_a3fc1d68e3f0718032fb0121b78947775}{gradient}} (\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR\+::\+Tensor}} \&tensor)
+\begin{DoxyCompactList}\small\item\em Computes the gradient of a tensor via the analytical solution of the AF differentiation. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{classACTI_1_1ReLU_a3aa09feabc7b16ef89cd8ba6a8a0f431}{type\+Id}} () const override
 \end{DoxyCompactItemize}
-\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{classACTI_1_1Activation}{ACTI::\+\+Activation}}}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classACTI_1_1Activation}{ACTI\+::\+Activation}}}
 \begin{DoxyCompactItemize}
 \item 
-{\bfseries Activation} (std::\+string name)
-\item 
-const std::\+string \& {\bfseries get\+Name} () const
+\mbox{\hyperlink{classACTI_1_1Activation_a9f700a5ec30e1ddd2bc72d1d345cd7f7}{Activation}} (std\+::string name)
+\begin{DoxyCompactList}\small\item\em \doxylink{classACTI_1_1Activation}{Activation} constructor. \end{DoxyCompactList}\item 
+const std\+::string \& {\bfseries get\+Name} () const
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Additional Inherited Members}
-\doxysubsection*{Protected Attributes inherited from \doxymbox{\hyperlink{classACTI_1_1Activation}{ACTI::\+\+Activation}}}
+\doxysubsection*{Protected Attributes inherited from \mbox{\hyperlink{classACTI_1_1Activation}{ACTI\+::\+Activation}}}
 \begin{DoxyCompactItemize}
 \item 
-std::\+string {\bfseries name}
+std\+::string {\bfseries name}
 \end{DoxyCompactItemize}
 
 
-\label{doc-func-members}
-\Hypertarget{classACTI_1_1ReLU_doc-func-members}
+\doxysubsection{Detailed Description}
+Rectified Linear Unit. 
+
 \doxysubsection{Member Function Documentation}
-\Hypertarget{classACTI_1_1ReLU_ab010942a17cf6b3866a2b507c697386d}\index{ACTI::ReLU@{ACTI::ReLU}!apply@{apply}}
+\Hypertarget{classACTI_1_1ReLU_ab010942a17cf6b3866a2b507c697386d}\label{classACTI_1_1ReLU_ab010942a17cf6b3866a2b507c697386d} 
+\index{ACTI::ReLU@{ACTI::ReLU}!apply@{apply}}
 \index{apply@{apply}!ACTI::ReLU@{ACTI::ReLU}}
 \doxysubsubsection{\texorpdfstring{apply()}{apply()}}
-{\footnotesize\ttfamily \label{classACTI_1_1ReLU_ab010942a17cf6b3866a2b507c697386d} 
-void ACTI::\+\+Re\+LU::\+apply (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} \&}]{tensor}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+{\footnotesize\ttfamily void ACTI\+::\+Re\+LU\+::apply (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR\+::\+Tensor}} \&}]{tensor }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
 
 
 
-Implements \doxymbox{\hyperlink{classACTI_1_1Activation}{ACTI::\+\+Activation}}.
+Activate a tensor. 
 
-\Hypertarget{classACTI_1_1ReLU_a3fc1d68e3f0718032fb0121b78947775}\index{ACTI::ReLU@{ACTI::ReLU}!gradient@{gradient}}
+
+\begin{DoxyParams}{Parameters}
+{\em tensor} & Tensor object adress \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+None 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classACTI_1_1Activation_a029abf4836f99abb62e4372eb4fbd992}{ACTI\+::\+Activation}}.
+
+\Hypertarget{classACTI_1_1ReLU_a3fc1d68e3f0718032fb0121b78947775}\label{classACTI_1_1ReLU_a3fc1d68e3f0718032fb0121b78947775} 
+\index{ACTI::ReLU@{ACTI::ReLU}!gradient@{gradient}}
 \index{gradient@{gradient}!ACTI::ReLU@{ACTI::ReLU}}
 \doxysubsubsection{\texorpdfstring{gradient()}{gradient()}}
-{\footnotesize\ttfamily \label{classACTI_1_1ReLU_a3fc1d68e3f0718032fb0121b78947775} 
-\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} ACTI::\+\+Re\+LU::\+gradient (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} \&}]{tensor}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR\+::\+Tensor}} ACTI\+::\+Re\+LU\+::gradient (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR\+::\+Tensor}} \&}]{tensor }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
 
 
 
-Implements \doxymbox{\hyperlink{classACTI_1_1Activation}{ACTI::\+\+Activation}}.
+Computes the gradient of a tensor via the analytical solution of the AF differentiation. 
 
-\Hypertarget{classACTI_1_1ReLU_a3aa09feabc7b16ef89cd8ba6a8a0f431}\index{ACTI::ReLU@{ACTI::ReLU}!typeId@{typeId}}
+
+\begin{DoxyParams}{Parameters}
+{\em tensor} & Tensor object address \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+None 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classACTI_1_1Activation_a86183cd609588b18e44c850a4152c2d0}{ACTI\+::\+Activation}}.
+
+\Hypertarget{classACTI_1_1ReLU_a3aa09feabc7b16ef89cd8ba6a8a0f431}\label{classACTI_1_1ReLU_a3aa09feabc7b16ef89cd8ba6a8a0f431} 
+\index{ACTI::ReLU@{ACTI::ReLU}!typeId@{typeId}}
 \index{typeId@{typeId}!ACTI::ReLU@{ACTI::ReLU}}
 \doxysubsubsection{\texorpdfstring{typeId()}{typeId()}}
-{\footnotesize\ttfamily \label{classACTI_1_1ReLU_a3aa09feabc7b16ef89cd8ba6a8a0f431} 
-uint8\+\_\+t ACTI::\+\+Re\+LU::\+type\+Id (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+{\footnotesize\ttfamily uint8\+\_\+t ACTI\+::\+Re\+LU\+::type\+Id (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
 
 
 
-Implements \doxymbox{\hyperlink{classACTI_1_1Activation}{ACTI::\+\+Activation}}.
+Implements \mbox{\hyperlink{classACTI_1_1Activation}{ACTI\+::\+Activation}}.
 
 
 
-The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
-neural/\+activation.\+h\item 
-neural/\+activation.\+cpp\end{DoxyCompactItemize}
+neural/activation.\+h\item 
+neural/activation.\+cpp\end{DoxyCompactItemize}

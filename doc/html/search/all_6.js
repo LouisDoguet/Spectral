@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['fieldbasisindicator_0',['fieldBasisIndicator',['../d3/d61/classpost_1_1VTUExporter.html#ab3ca9fd11a1650e89d9cd8a74ed55423',1,'post::VTUExporter']]],
-  ['forward_1',['forward',['../d2/dbd/classLAYER_1_1__Layer.html#a0326d9cc96bae3e0d3cfad5fe21f59e6',1,'LAYER::_Layer']]]
+  ['6_20tt_20compute_5fresidual_20self_20u_5fvalues_20x_20eps_5farray_20tt_0',['6. &lt;tt&gt;compute_residual(self, u_values, X, eps_array)&lt;/tt&gt;',['../da/d28/md_optimesh_2IMPLEMENTATION__GUIDE.html#autotoc_md17',1,'']]],
+  ['6_3a_20implement_20generate_5fall_5fplots_1',['Task 3.6: Implement generate_all_plots()',['../d7/d6b/md_optimesh_2TASK__LIST.html#autotoc_md75',1,'']]],
+  ['6_3a_20implement_20tt_20burgers_20compute_5frbf_5fmass_5fmatrix_20tt_2',['Task 1.6: Implement &lt;tt&gt;Burgers.compute_rbf_mass_matrix()&lt;/tt&gt;',['../d7/d6b/md_optimesh_2TASK__LIST.html#autotoc_md58',1,'']]]
 ];

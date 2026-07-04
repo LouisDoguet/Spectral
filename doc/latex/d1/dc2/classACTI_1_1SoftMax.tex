@@ -1,6 +1,15 @@
-\doxysection{ACTI::\+Soft\+Max Class Reference}
+\doxysection{ACTI\+::Soft\+Max Class Reference}
 \hypertarget{classACTI_1_1SoftMax}{}\label{classACTI_1_1SoftMax}\index{ACTI::SoftMax@{ACTI::SoftMax}}
-Inheritance diagram for ACTI::\+Soft\+Max:\+\begin{figure}[H]
+
+
+Softmax.  
+
+
+
+
+{\ttfamily \#include $<$activation.\+h$>$}
+
+Inheritance diagram for ACTI\+::Soft\+Max\+:\begin{figure}[H]
 \begin{center}
 \leavevmode
 \includegraphics[height=2.000000cm]{d1/dc2/classACTI_1_1SoftMax}
@@ -9,63 +18,88 @@ Inheritance diagram for ACTI::\+Soft\+Max:\+\begin{figure}[H]
 \doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \doxymbox{\hyperlink{classACTI_1_1SoftMax_a74d7f9626e3cb62183779d67afbacc71}{apply}} (\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} \&tensor) override
-\item 
-\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} \doxymbox{\hyperlink{classACTI_1_1SoftMax_a9df9d7a1d21624e11ce2549e1a2c7e3b}{gradient}} (\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} \&tensor)
-\item 
-uint8\+\_\+t \doxymbox{\hyperlink{classACTI_1_1SoftMax_a62c2be29863bf005f4e7e84f0e45da17}{type\+Id}} () const override
+void \mbox{\hyperlink{classACTI_1_1SoftMax_a74d7f9626e3cb62183779d67afbacc71}{apply}} (\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR\+::\+Tensor}} \&tensor) override
+\begin{DoxyCompactList}\small\item\em Activate a tensor. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR\+::\+Tensor}} \mbox{\hyperlink{classACTI_1_1SoftMax_a9df9d7a1d21624e11ce2549e1a2c7e3b}{gradient}} (\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR\+::\+Tensor}} \&tensor)
+\begin{DoxyCompactList}\small\item\em Computes the gradient of a tensor via the analytical solution of the AF differentiation. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{classACTI_1_1SoftMax_a62c2be29863bf005f4e7e84f0e45da17}{type\+Id}} () const override
 \end{DoxyCompactItemize}
-\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{classACTI_1_1Activation}{ACTI::\+\+Activation}}}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classACTI_1_1Activation}{ACTI\+::\+Activation}}}
 \begin{DoxyCompactItemize}
 \item 
-{\bfseries Activation} (std::\+string name)
-\item 
-const std::\+string \& {\bfseries get\+Name} () const
+\mbox{\hyperlink{classACTI_1_1Activation_a9f700a5ec30e1ddd2bc72d1d345cd7f7}{Activation}} (std\+::string name)
+\begin{DoxyCompactList}\small\item\em \doxylink{classACTI_1_1Activation}{Activation} constructor. \end{DoxyCompactList}\item 
+const std\+::string \& {\bfseries get\+Name} () const
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Additional Inherited Members}
-\doxysubsection*{Protected Attributes inherited from \doxymbox{\hyperlink{classACTI_1_1Activation}{ACTI::\+\+Activation}}}
+\doxysubsection*{Protected Attributes inherited from \mbox{\hyperlink{classACTI_1_1Activation}{ACTI\+::\+Activation}}}
 \begin{DoxyCompactItemize}
 \item 
-std::\+string {\bfseries name}
+std\+::string {\bfseries name}
 \end{DoxyCompactItemize}
 
 
-\label{doc-func-members}
-\Hypertarget{classACTI_1_1SoftMax_doc-func-members}
+\doxysubsection{Detailed Description}
+Softmax. 
+
 \doxysubsection{Member Function Documentation}
-\Hypertarget{classACTI_1_1SoftMax_a74d7f9626e3cb62183779d67afbacc71}\index{ACTI::SoftMax@{ACTI::SoftMax}!apply@{apply}}
+\Hypertarget{classACTI_1_1SoftMax_a74d7f9626e3cb62183779d67afbacc71}\label{classACTI_1_1SoftMax_a74d7f9626e3cb62183779d67afbacc71} 
+\index{ACTI::SoftMax@{ACTI::SoftMax}!apply@{apply}}
 \index{apply@{apply}!ACTI::SoftMax@{ACTI::SoftMax}}
 \doxysubsubsection{\texorpdfstring{apply()}{apply()}}
-{\footnotesize\ttfamily \label{classACTI_1_1SoftMax_a74d7f9626e3cb62183779d67afbacc71} 
-void ACTI::\+\+Soft\+Max::\+apply (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} \&}]{tensor}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+{\footnotesize\ttfamily void ACTI\+::\+Soft\+Max\+::apply (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR\+::\+Tensor}} \&}]{tensor }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
 
 
 
-Implements \doxymbox{\hyperlink{classACTI_1_1Activation}{ACTI::\+\+Activation}}.
+Activate a tensor. 
 
-\Hypertarget{classACTI_1_1SoftMax_a9df9d7a1d21624e11ce2549e1a2c7e3b}\index{ACTI::SoftMax@{ACTI::SoftMax}!gradient@{gradient}}
+
+\begin{DoxyParams}{Parameters}
+{\em tensor} & Tensor object adress \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+None 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classACTI_1_1Activation_a029abf4836f99abb62e4372eb4fbd992}{ACTI\+::\+Activation}}.
+
+\Hypertarget{classACTI_1_1SoftMax_a9df9d7a1d21624e11ce2549e1a2c7e3b}\label{classACTI_1_1SoftMax_a9df9d7a1d21624e11ce2549e1a2c7e3b} 
+\index{ACTI::SoftMax@{ACTI::SoftMax}!gradient@{gradient}}
 \index{gradient@{gradient}!ACTI::SoftMax@{ACTI::SoftMax}}
 \doxysubsubsection{\texorpdfstring{gradient()}{gradient()}}
-{\footnotesize\ttfamily \label{classACTI_1_1SoftMax_a9df9d7a1d21624e11ce2549e1a2c7e3b} 
-\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} ACTI::\+\+Soft\+Max::\+gradient (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::\+\+Tensor}} \&}]{tensor}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR\+::\+Tensor}} ACTI\+::\+Soft\+Max\+::gradient (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR\+::\+Tensor}} \&}]{tensor }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
 
 
 
-Implements \doxymbox{\hyperlink{classACTI_1_1Activation}{ACTI::\+\+Activation}}.
+Computes the gradient of a tensor via the analytical solution of the AF differentiation. 
 
-\Hypertarget{classACTI_1_1SoftMax_a62c2be29863bf005f4e7e84f0e45da17}\index{ACTI::SoftMax@{ACTI::SoftMax}!typeId@{typeId}}
+
+\begin{DoxyParams}{Parameters}
+{\em tensor} & Tensor object address \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+None 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classACTI_1_1Activation_a86183cd609588b18e44c850a4152c2d0}{ACTI\+::\+Activation}}.
+
+\Hypertarget{classACTI_1_1SoftMax_a62c2be29863bf005f4e7e84f0e45da17}\label{classACTI_1_1SoftMax_a62c2be29863bf005f4e7e84f0e45da17} 
+\index{ACTI::SoftMax@{ACTI::SoftMax}!typeId@{typeId}}
 \index{typeId@{typeId}!ACTI::SoftMax@{ACTI::SoftMax}}
 \doxysubsubsection{\texorpdfstring{typeId()}{typeId()}}
-{\footnotesize\ttfamily \label{classACTI_1_1SoftMax_a62c2be29863bf005f4e7e84f0e45da17} 
-uint8\+\_\+t ACTI::\+\+Soft\+Max::\+type\+Id (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+{\footnotesize\ttfamily uint8\+\_\+t ACTI\+::\+Soft\+Max\+::type\+Id (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
 
 
 
-Implements \doxymbox{\hyperlink{classACTI_1_1Activation}{ACTI::\+\+Activation}}.
+Implements \mbox{\hyperlink{classACTI_1_1Activation}{ACTI\+::\+Activation}}.
 
 
 
-The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
-neural/\+activation.\+h\item 
-neural/\+activation.\+cpp\end{DoxyCompactItemize}
+neural/activation.\+h\item 
+neural/activation.\+cpp\end{DoxyCompactItemize}

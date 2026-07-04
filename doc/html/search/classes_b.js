@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['perssonperaire_0',['PerssonPeraire',['../d0/d8c/classdiff_1_1PerssonPeraire.html',1,'diff::PerssonPeraire'],['../d6/d93/classsens_1_1PerssonPeraire.html',1,'sens::PerssonPeraire']]]
+  ['network_0',['Network',['../d5/d16/classNetwork.html',1,'']]],
+  ['neuralnetwork_1',['NeuralNetwork',['../d2/d15/classdiff_1_1NeuralNetwork.html',1,'diff']]],
+  ['node_2',['Node',['../d0/dce/classelement_1_1Node.html',1,'element']]]
 ];

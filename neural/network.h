@@ -10,6 +10,7 @@
 #include <iostream>
 #include <stdexcept>
 
+/// @brief Class for a Neural Network object
 class Network {
 public:
     Network(std::shared_ptr<CONT::Sequential> container, std::shared_ptr<LFUN::LossFunction> loss_function, double learning_rate) : 
@@ -43,10 +44,16 @@ public:
         }
     };
 
+    /// @brief Predict the output from a given input
+    /// @param input Tensor of input
+    /// @return Tensor of output
     TENSOR::Tensor predict(const TENSOR::Tensor& input) {
         return container->forward(input);
     }
 
+
+    /// @brief Save the neural newtork
+    /// @param path Path of the `.nn` file
     void save(const std::string& path) const {
         std::ofstream f(path, std::ios::binary);
         if (!f) throw std::runtime_error("Cannot open file for writing: " + path);
@@ -66,6 +73,10 @@ public:
         if (!f) throw std::runtime_error("Write error while saving model");
     }
 
+    /// @brief Load an existing neural network
+    /// @param path Path of the `.nn` file
+    /// @param loss Loss function
+    /// @return `Network` object
     static Network load(const std::string& path, std::shared_ptr<LFUN::LossFunction> loss) {
         std::ifstream f(path, std::ios::binary);
         if (!f) throw std::runtime_error("Cannot open model file: " + path);

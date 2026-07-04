@@ -1,10 +1,6 @@
 var searchData=
 [
-  ['activateradialmatrix_0',['activateRadialMatrix',['../dd/df8/classbase_1_1RBF.html#abac986047ceae55f2b53a7269f51bb56',1,'base::RBF']]],
-  ['adaptbasis_1',['adaptBasis',['../db/d7d/classmesh_1_1Mesh.html#aada2c3fc33cd26d625f619fd807b0bd8',1,'mesh::Mesh']]],
-  ['addelemfield_2',['addElemField',['../d3/d61/classpost_1_1VTUExporter.html#ad62d9fc5cb29f6ac6dd823a7c4dbbae2',1,'post::VTUExporter']]],
-  ['addfield_3',['addField',['../d3/d61/classpost_1_1VTUExporter.html#af1918f46c97bffcb84a451eb0cdc51cc',1,'post::VTUExporter']]],
-  ['addsensorfield_4',['addSensorField',['../d3/d61/classpost_1_1VTUExporter.html#aee3500798154fe5b7d2193def427b415',1,'post::VTUExporter::addSensorField()'],['../d9/d46/classsolver_1_1__Solver.html#a89828b19e3f1326e4926eb8188e1ffaf',1,'solver::_Solver::addSensorField()']]],
-  ['applydirichlet_5',['applyDirichlet',['../db/d7d/classmesh_1_1Mesh.html#a91af7a061f0fab8cc8a4044d1d92f767',1,'mesh::Mesh']]],
-  ['applymassinverse_6',['applyMassInverse',['../db/d74/classelem_1_1Element.html#a914b0df79ab6c35145ed363df4d419a8',1,'elem::Element']]]
+  ['_5fcollocation_5fmatrix_0',['_collocation_matrix',['../de/dff/classburgers_1_1Burgers.html#aaa79a2cf8f4388bef2f23cac26714549',1,'burgers::Burgers']]],
+  ['_5flayer_1',['_Layer',['../d2/dbd/classLAYER_1_1__Layer.html#ad37359552c068a1cb773bd0f640b8805',1,'LAYER::_Layer']]],
+  ['_5fsafe_5fresidual_2',['_safe_residual',['../d1/dfb/namespacevalidation.html#a55d56246b39a6e7d77a9dc6167130870',1,'validation']]]
 ];

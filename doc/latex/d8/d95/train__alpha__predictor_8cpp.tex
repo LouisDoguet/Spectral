@@ -1,0 +1,45 @@
+\doxysection{neural/train\+\_\+alpha\+\_\+predictor.cpp File Reference}
+\hypertarget{train__alpha__predictor_8cpp}{}\label{train__alpha__predictor_8cpp}\index{neural/train\_alpha\_predictor.cpp@{neural/train\_alpha\_predictor.cpp}}
+
+
+Train a neural network to predict optimal alpha values for hybrid DGSEM.  
+
+
+{\ttfamily \#include "{}activation.\+h"{}}\newline
+{\ttfamily \#include "{}container.\+h"{}}\newline
+{\ttfamily \#include "{}layer.\+h"{}}\newline
+{\ttfamily \#include "{}loss\+\_\+function.\+h"{}}\newline
+{\ttfamily \#include "{}network.\+h"{}}\newline
+{\ttfamily \#include "{}tensor.\+h"{}}\newline
+{\ttfamily \#include $<$cmath$>$}\newline
+{\ttfamily \#include $<$fstream$>$}\newline
+{\ttfamily \#include $<$iomanip$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$memory$>$}\newline
+{\ttfamily \#include $<$random$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classAlphaDataGenerator}{Alpha\+Data\+Generator}}
+\item 
+class \mbox{\hyperlink{classDataNormalizer}{Data\+Normalizer}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{train__alpha__predictor_8cpp_a0ddf1224851353fc92bfbff6f499fa97}\label{train__alpha__predictor_8cpp_a0ddf1224851353fc92bfbff6f499fa97} 
+int {\bfseries main} (int argc, char \texorpdfstring{$\ast$}{*}argv\mbox{[}$\,$\mbox{]})
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Train a neural network to predict optimal alpha values for hybrid DGSEM. 
+
+This program\+:
+\begin{DoxyEnumerate}
+\item Generates synthetic training data (smooth vs shock regions)
+\item Normalizes the data
+\item Trains a neural network to predict alpha from solution gradients
+\item Saves the trained model 
+\end{DoxyEnumerate}

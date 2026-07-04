@@ -46,6 +46,7 @@ void ACTI::SoftMax::apply(TENSOR::Tensor &tensor) {
                      tensor.getData()[i * tensor.n_cols + j] / sum);
   }
 }
+
 TENSOR::Tensor ACTI::SoftMax::gradient(TENSOR::Tensor &tensor) {
   const size_t N = tensor.n_cols * tensor.n_rows;
   TENSOR::Tensor result(tensor.n_cols, tensor.n_rows);
