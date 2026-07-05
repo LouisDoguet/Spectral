@@ -1,3 +1,8 @@
+/**
+ * @file tensor.h
+ * @brief Tensor header
+ */
+
 #pragma once
 #include <cblas.h>
 #include <stdexcept>

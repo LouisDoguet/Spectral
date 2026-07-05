@@ -1,3 +1,8 @@
+/**
+ * @file base.h
+ * @brief Header for basis definition
+ */
+
 #ifndef BASE_H
 #define BASE_H
 
@@ -6,6 +11,7 @@
 
 namespace base{
 
+	/// @brief Dummy class for Different basis
 	class _Basis {
 	public:
 		_Basis(std::string name, const int p);
@@ -18,8 +24,7 @@ namespace base{
 		/// @brief Inverse of the reference mass matrix, precomputed at construction.
 		virtual const double* getMinv() const = 0;
 
-		/// @brief Evaluates the basis interpolant of nodal values `u`
-		///   at `n_pts` reference points `xi[k] in [-1,1]`. Writes results to `out`.
+		/// @brief Evaluates the basis interpolant of nodal values `u` at `n_pts` reference points `xi[k] in [-1,1]`. Writes results to `out`.
 		virtual void interpolate(const double* u, const double* xi, int n_pts, double* out) const = 0;
 
 		virtual ~_Basis();
@@ -36,12 +41,12 @@ namespace base{
 	    double* weights;
 	};
 
+    /// @brief Lagrange (nodal) Basis
+	/// @note Lagrange/Legendre (nodal/modal) switch possible using the Vandermonde matrix
     class Lagrange : public _Basis {
 	public:
-	    /**
-	     * @brief Constructor of Lagrange basis
-	     * @param p Order of the basis
-	     */
+	    /// @brief Constructor of Lagrange basis
+	    /// @param p Order of the basis
 	    Lagrange(const int p);
 	    const double* getQuads() const override {return quads;}
 	    const double* getWeights() const override {return weights;}
@@ -52,8 +57,13 @@ namespace base{
 	    void interpolate(const double* u, const double* xi, int n_pts, double* out) const override;
     };
 
+	/// @brief Radial Basis Function Basis
 	class RBF : public _Basis {
 	public:
+		/// @brief Constructor of the RBF
+		/// @param p Number of internal nodes
+		/// @param eps Radius
+		/// @param RBF_name `string` of the name of the RBF
 		RBF(const int p, const double eps, std::string RBF_name);
 		~RBF() override;
 
@@ -103,6 +113,7 @@ namespace base{
 		virtual double kernelIntegral(int k) const = 0;
 	};
 
+	/// @brief Inverse Multiquadratic Radial Basis Function
 	class InverseMultiQuadratic : public RBF {
 	public:
 		InverseMultiQuadratic(const int p, const double eps);
@@ -113,6 +124,7 @@ namespace base{
 		double kernel(double r) const override;
 	};
 
+	/// @brief Gaussian Radial Basis Function
 	class Gaussian : public RBF {
 	public:
 		Gaussian(const int p, const double eps);

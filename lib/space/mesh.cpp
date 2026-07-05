@@ -10,18 +10,23 @@
 namespace mesh {
 
 Mesh::Mesh(const int n, base::_Basis *basis, double xL, double xR) : n(n) {
+  /// Basis + space definition
   primary_basis = basis;
   double dx_mesh = xR - xL;
   double dx = (double)dx_mesh / (n);
 
+  /// Definition of global arrays
   int nquads = basis->getOrder() + 1;
   global_rho = new double[n * nquads];
   global_rhou = new double[n * nquads];
   global_e = new double[n * nquads];
   global_AV = new double[n * nquads];
 
+  /// Element creation
   this->elem = new elem::Element *[n];
 
+  /// Mesh generation
+  /// Arrays attributed to the corresponding elements
   double x_iter = xL;
   for (int e = 0; e < n; ++e) {
     elem[e] =
@@ -203,15 +208,19 @@ void Mesh::computeResidual() {
   for (int e = 0; e < n; ++e) {
     elem[e]->setFlux();
   }
+  /// Computes the mesh residuals (-divFlux)
   this->computeElements();
+  /// Apply the Reimann flux
   this->computeInterfaces();
+  /// Apply boundary conditions
   this->applyDirichlet();
-  // Final stage: divFk <- (1/J) * Minv * divFk on each element.
+  /// Final stage: divFk <- (1/J) * Minv * divFk on each element.
   for (int e = 0; e < n; ++e) {
     elem[e]->applyMassInverse();
   }
 }
 
+/// @note NOT USED - FIRST DEV OF HYBRID POLY/RBF BASE SWITCH
 void Mesh::adaptBasis(sens::PerssonPeraire &sensor, int truncation,
                       double s_shock, double s_smooth) {
   if (alt_basis == nullptr || primary_basis == nullptr)
@@ -247,8 +256,7 @@ void Mesh::computeHybridResidual(const double *alpha) {
 
   std::vector<double> ec1(Nn * Nn), ec2(Nn * Nn), ec3(Nn * Nn);
 
-  // ---- Phase 1: element-local blended subcell fluxes
-  // -------------------------
+  // Element-local blended subcell fluxes
   for (int e = 0; e < n; ++e) {
     const double *rho = elem[e]->getU1();
     const double *rhou = elem[e]->getU2();
@@ -313,8 +321,7 @@ void Mesh::computeHybridResidual(const double *alpha) {
     }
   }
 
-  // ---- Phase 2: inter-element ES interface flux surface corrections
-  // ----------
+  // Inter-element ES interface flux surface corrections
   for (int e = 0; e < n - 1; ++e) {
     const int NL = Nn - 1;
     const double uL1 = elem[e]->getRho(NL);
@@ -346,7 +353,7 @@ void Mesh::computeHybridResidual(const double *alpha) {
     elem[e + 1]->correctDivF3(0, fR3 - f3s);
   }
 
-  // ---- Phase 3: domain boundary ES flux corrections -------------------------
+  // Domain boundary ES flux corrections
   {
     const double ui1 = elem[0]->getRho(0);
     const double ui2 = *(elem[0]->getU2(0));
@@ -390,7 +397,7 @@ void Mesh::computeHybridResidual(const double *alpha) {
     (void)per;
   }
 
-  // ---- Phase 4: mass-matrix inverse + Jacobian scaling ----------------------
+  // Mass-matrix inverse + Jacobian scaling
   for (int e = 0; e < n; ++e)
     elem[e]->applyMassInverse();
 }

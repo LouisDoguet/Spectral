@@ -1,3 +1,8 @@
+/**
+ * @file layer.cpp
+ * @brief Contains method definitions for Layer object. `_Layer` is the dummy class for all the developped layer types
+ */
+
 #include "layer.h"
 #include "tensor.h"
 #include <cstddef>

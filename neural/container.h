@@ -1,3 +1,8 @@
+/**
+ * @file container.h
+ * @brief Container header
+ */
+
 #ifndef CONTAINER_H
 #define CONTAINER_H
 

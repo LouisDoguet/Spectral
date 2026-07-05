@@ -1,3 +1,8 @@
+/**
+ * @file radial_base_function.cpp
+ * @brief Methods for RBF base
+ */
+
 #include "base.h"
 #include "../math/math.h"
 #include <cblas.h>

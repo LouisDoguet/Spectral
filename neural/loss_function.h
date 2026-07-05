@@ -1,3 +1,8 @@
+/**
+ * @file loss_function.h
+ * @brief Loss Function header
+ */
+
 #ifndef LOSS_FUNCTION_H
 #define LOSS_FUNCTION_H
 

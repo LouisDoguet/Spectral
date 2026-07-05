@@ -1,3 +1,8 @@
+/**
+ * @file activation.h
+ * @brief Activation header
+ */
+
 #ifndef ACTIVATION_H
 #define ACTIVATION_H
 

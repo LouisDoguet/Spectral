@@ -1,3 +1,8 @@
+/**
+ * @file gll.cpp
+ * @brief Methods for Gauss-Legendre-Lobatto base
+ */
+
 #include "base.h"
 #include <cmath>
 

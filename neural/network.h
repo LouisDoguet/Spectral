@@ -1,3 +1,8 @@
+/**
+ * @file network.h
+ * @brief Full network header
+ */
+
 #ifndef NETWORK_H
 #define NETWORK_H
 

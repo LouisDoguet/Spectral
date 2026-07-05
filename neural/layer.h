@@ -1,3 +1,8 @@
+/**
+ * @file layer.h
+ * @brief Layer header
+ */
+
 #ifndef LAYER_H
 #define LAYER_H
 

@@ -1,3 +1,8 @@
+/**
+ * @file activation.cpp
+ * @brief Contains the definition of the Activation classes object methods
+ */
+
 #include "activation.h"
 #include "tensor.h"
 #include <algorithm>

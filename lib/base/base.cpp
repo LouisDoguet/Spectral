@@ -1,3 +1,8 @@
+/**
+ * @file base.cpp
+ * @brief Definition of the methods for the dummy instance `_Basis`
+ */
+
 #include "base.h"
 #include "../math/math.h"
 #include <cmath>

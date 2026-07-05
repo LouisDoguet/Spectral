@@ -12,7 +12,19 @@ namespace solver {
 
 HybridDGSEM::HybridDGSEM(mesh::Mesh* mesh, int n_plot)
     : _Solver("HybridDGSEM", mesh, n_plot),
-      alpha_(mesh->getNumElements(), 0.0) {}
+      alpha_(mesh->getNumElements(), 0.0) {
+    // Export the per-element blending factor alpha as a piecewise-constant VTU
+    // field, so the hybrid indicator can be inspected in ParaView alongside the
+    // solution. alpha_ is indexed by element position; the exporter only hands
+    // the field lambda an Element reference, so we recover the index by matching
+    // the element pointer (cheap: export is infrequent).
+    exporter->addElemField("alpha", [this](elem::Element& el) -> double {
+        const int n_elem = m->getNumElements();
+        for (int e = 0; e < n_elem; ++e)
+            if (m->getElem(e) == &el) return alpha_[e];
+        return 0.0;
+    });
+}
 
 // ---------------------------------------------------------------------------
 // Alpha computation: Persson-Peraire modal energy indicator (Eqs. 40-48)
@@ -166,6 +178,9 @@ void HybridDGSEM::run(double T_final, double dt, int save_freq,
     print_start(n_steps, dt);
     for (int step = 0; step <= n_steps; ++step) {
         if (step % save_freq == 0) {
+            // Refresh alpha_ from the current state so the exported field is in
+            // sync with the solution being written (step() recomputes it anyway).
+            computeAlpha();
             print_progress(step, n_steps, step * dt);
             exporter->write(step, step * dt, prefix);
             if (!snapshot_dir.empty())

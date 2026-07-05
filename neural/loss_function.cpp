@@ -1,3 +1,8 @@
+/**
+ * @file loss_function.cpp
+ * @brief Loss function classes methods definitions
+ */
+
 #include "loss_function.h"
 #include <algorithm>
 #include <cmath>

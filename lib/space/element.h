@@ -110,9 +110,8 @@ public:
   void correctDivF3(int pos, double val) { divF3[pos] += val; }
 
 
-  /// @brief Accumulates the DG volume residual into divFk:
-  ///   divFk_i = w_i * (D F_k)_i.  No 1/J factor yet — applyMassInverse
-  ///   handles the per-element geometric scaling and the mass-matrix solve.
+  /// @brief Accumulates the DG volume residual into divFk: `divFk_i = w_i * (D F_k)_i`. \n
+  /// Computes the residual of the element
   void computeDivFlux();
 
   /// @brief Final stage of the DG residual: divFk <- (1/J) * Minv * divFk.
