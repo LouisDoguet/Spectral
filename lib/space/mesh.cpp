@@ -1,6 +1,8 @@
+#include <algorithm>
 #include <cmath>
 #include <iomanip>
 #include <iostream>
+#include <limits>
 #include <vector>
 
 #include "../phy/entropy_flux.h"
@@ -55,9 +57,14 @@ Mesh::Mesh(const int n, base::_Basis *basis, double xL, double xR) : n(n) {
 Mesh::Mesh(const int n, base::_Basis *basis, double xL, double xR,
            double *init_u1, double *init_u2, double *init_u3, double u1_L,
            double u2_L, double u3_L, double u1_R, double u2_R, double u3_R)
-    : n(n), u1_L(u1_L), u2_L(u2_L), u3_L(u3_L), u1_R(u1_R), u2_R(u2_R),
-      u3_R(u3_R) {
+    : n(n) {
   primary_basis = basis;
+
+  // Default boundaries: fixed-state (Dirichlet) walls holding the prescribed
+  // ghost states. Cases needing another type (e.g. reflecting walls) override
+  // these via setLeftBC / setRightBC after construction.
+  bc_left = new bc::Wall(u1_L, u2_L, u3_L);
+  bc_right = new bc::Wall(u1_R, u2_R, u3_R);
 
   double dx_mesh = xR - xL;
   double dx = (double)dx_mesh / (n);
@@ -158,64 +165,82 @@ void Mesh::applyDirichlet() {
   const int P = elem[0]->getBasis()->getOrder();
 
   // --- LEFT BOUNDARY ---
-  double u1_int_L = *(elem[0]->getU1(0));
-  double u2_int_L = *(elem[0]->getU2(0));
-  double u3_int_L = *(elem[0]->getU3(0));
-  double f1_int_L = *(elem[0]->getF1(0));
-  double f2_int_L = *(elem[0]->getF2(0));
-  double f3_int_L = *(elem[0]->getF3(0));
+  if (bc_left) {
+    double u1_int_L = *(elem[0]->getU1(0));
+    double u2_int_L = *(elem[0]->getU2(0));
+    double u3_int_L = *(elem[0]->getU3(0));
+    double f1_int_L = *(elem[0]->getF1(0));
+    double f2_int_L = *(elem[0]->getF2(0));
+    double f3_int_L = *(elem[0]->getF3(0));
 
-  // Dynamic lambda with safety factor for stability
-  double p_int_L;
-  double p_ext_L;
-  phy::getP(&p_int_L, &u1_int_L, &u2_int_L, &u3_int_L, 1);
-  phy::getP(&p_ext_L, &u1_L, &u2_L, &u3_L, 1);
-  double f1_ext_L = u2_L;                           // rho * u
-  double f2_ext_L = (u2_L * u2_L / u1_L) + p_ext_L; // rho * u^2 + p
-  double f3_ext_L = (u2_L / u1_L) * (u3_L + p_ext_L);
-  double lam_int_L =
-      reimann::computeMaxWaveSpeed(u1_int_L, u2_int_L / u1_int_L, p_int_L);
-  double lam_ext_L = reimann::computeMaxWaveSpeed(u1_L, u2_L / u1_L, p_ext_L);
-  double lambda_L = std::max(lam_ext_L, lam_int_L); // DIFF COEFF
+    // Ghost (exterior) state supplied by the boundary condition.
+    double u1_L, u2_L, u3_L;
+    bc_left->ghostState(u1_int_L, u2_int_L, u3_int_L, u1_L, u2_L, u3_L);
 
-  /// Imposes same flux at the domain limit
-  double f1s_L = reimann::Rusanov(f1_ext_L, f1_int_L, u1_L, u1_int_L, lambda_L);
-  double f2s_L = reimann::Rusanov(f2_ext_L, f2_int_L, u2_L, u2_int_L, lambda_L);
-  double f3s_L = reimann::Rusanov(f3_ext_L, f3_int_L, u3_L, u3_int_L, lambda_L);
+    // Dynamic lambda with safety factor for stability
+    double p_int_L;
+    double p_ext_L;
+    phy::getP(&p_int_L, &u1_int_L, &u2_int_L, &u3_int_L, 1);
+    phy::getP(&p_ext_L, &u1_L, &u2_L, &u3_L, 1);
+    double f1_ext_L = u2_L;                           // rho * u
+    double f2_ext_L = (u2_L * u2_L / u1_L) + p_ext_L; // rho * u^2 + p
+    double f3_ext_L = (u2_L / u1_L) * (u3_L + p_ext_L);
+    double lam_int_L =
+        reimann::computeMaxWaveSpeed(u1_int_L, u2_int_L / u1_int_L, p_int_L);
+    double lam_ext_L = reimann::computeMaxWaveSpeed(u1_L, u2_L / u1_L, p_ext_L);
+    double lambda_L = std::max(lam_ext_L, lam_int_L); // DIFF COEFF
 
-  elem[0]->correctDivF1(0, f1_int_L - f1s_L);
-  elem[0]->correctDivF2(0, f2_int_L - f2s_L);
-  elem[0]->correctDivF3(0, f3_int_L - f3s_L);
+    /// Imposes same flux at the domain limit
+    double f1s_L =
+        reimann::Rusanov(f1_ext_L, f1_int_L, u1_L, u1_int_L, lambda_L);
+    double f2s_L =
+        reimann::Rusanov(f2_ext_L, f2_int_L, u2_L, u2_int_L, lambda_L);
+    double f3s_L =
+        reimann::Rusanov(f3_ext_L, f3_int_L, u3_L, u3_int_L, lambda_L);
+
+    elem[0]->correctDivF1(0, f1_int_L - f1s_L);
+    elem[0]->correctDivF2(0, f2_int_L - f2s_L);
+    elem[0]->correctDivF3(0, f3_int_L - f3s_L);
+  }
 
   // --- RIGHT BOUNDARY ---
-  int last = n - 1;
-  double u1_int_R = *(elem[last]->getU1(P));
-  double u2_int_R = *(elem[last]->getU2(P));
-  double u3_int_R = *(elem[last]->getU3(P));
-  double f1_int_R = *(elem[last]->getF1(P));
-  double f2_int_R = *(elem[last]->getF2(P));
-  double f3_int_R = *(elem[last]->getF3(P));
+  if (bc_right) {
+    int last = n - 1;
+    double u1_int_R = *(elem[last]->getU1(P));
+    double u2_int_R = *(elem[last]->getU2(P));
+    double u3_int_R = *(elem[last]->getU3(P));
+    double f1_int_R = *(elem[last]->getF1(P));
+    double f2_int_R = *(elem[last]->getF2(P));
+    double f3_int_R = *(elem[last]->getF3(P));
 
-  double p_int_R;
-  double p_ext_R;
-  phy::getP(&p_int_R, &u1_int_R, &u2_int_R, &u3_int_R, 1);
-  phy::getP(&p_ext_R, &u1_R, &u2_R, &u3_R, 1);
-  double f1_ext_R = u2_R;
-  double f2_ext_R = (u2_R * u2_R / u1_R) + p_ext_R;
-  double f3_ext_R = (u2_R / u1_R) * (u3_R + p_ext_R);
+    // Ghost (exterior) state supplied by the boundary condition.
+    double u1_R, u2_R, u3_R;
+    bc_right->ghostState(u1_int_R, u2_int_R, u3_int_R, u1_R, u2_R, u3_R);
 
-  double lam_int_R =
-      reimann::computeMaxWaveSpeed(u1_int_R, u2_int_R / u1_int_R, p_int_R);
-  double lam_ext_R = reimann::computeMaxWaveSpeed(u1_R, u2_R / u1_R, p_ext_R);
-  double lambda_R = std::max(lam_ext_R, lam_int_R); // DIFF COEFF
+    double p_int_R;
+    double p_ext_R;
+    phy::getP(&p_int_R, &u1_int_R, &u2_int_R, &u3_int_R, 1);
+    phy::getP(&p_ext_R, &u1_R, &u2_R, &u3_R, 1);
+    double f1_ext_R = u2_R;
+    double f2_ext_R = (u2_R * u2_R / u1_R) + p_ext_R;
+    double f3_ext_R = (u2_R / u1_R) * (u3_R + p_ext_R);
 
-  double f1s_R = reimann::Rusanov(f1_int_R, f1_ext_R, u1_int_R, u1_R, lambda_R);
-  double f2s_R = reimann::Rusanov(f2_int_R, f2_ext_R, u2_int_R, u2_R, lambda_R);
-  double f3s_R = reimann::Rusanov(f3_int_R, f3_ext_R, u3_int_R, u3_R, lambda_R);
+    double lam_int_R =
+        reimann::computeMaxWaveSpeed(u1_int_R, u2_int_R / u1_int_R, p_int_R);
+    double lam_ext_R = reimann::computeMaxWaveSpeed(u1_R, u2_R / u1_R, p_ext_R);
+    double lambda_R = std::max(lam_ext_R, lam_int_R); // DIFF COEFF
 
-  elem[last]->correctDivF1(P, f1s_R - f1_int_R);
-  elem[last]->correctDivF2(P, f2s_R - f2_int_R);
-  elem[last]->correctDivF3(P, f3s_R - f3_int_R);
+    double f1s_R =
+        reimann::Rusanov(f1_int_R, f1_ext_R, u1_int_R, u1_R, lambda_R);
+    double f2s_R =
+        reimann::Rusanov(f2_int_R, f2_ext_R, u2_int_R, u2_R, lambda_R);
+    double f3s_R =
+        reimann::Rusanov(f3_int_R, f3_ext_R, u3_int_R, u3_R, lambda_R);
+
+    elem[last]->correctDivF1(P, f1s_R - f1_int_R);
+    elem[last]->correctDivF2(P, f2s_R - f2_int_R);
+    elem[last]->correctDivF3(P, f3s_R - f3_int_R);
+  }
 }
 
 void Mesh::computeResidual() {
@@ -372,29 +397,35 @@ void Mesh::applyEntropyStableBoundaries() {
   const int NL = Nn - 1;
 
   // Left domain boundary (element 0, node 0): lift (F^int - F*).
-  {
+  if (bc_left) {
     const double ui1 = elem[0]->getRho(0);
     const double ui2 = *(elem[0]->getU2(0));
     const double ui3 = *(elem[0]->getU3(0));
+    // Ghost (exterior) state supplied by the boundary condition.
+    double ug1, ug2, ug3;
+    bc_left->ghostState(ui1, ui2, ui3, ug1, ug2, ug3);
     double fi1, fi2, fi3;
     physicalFlux(ui1, ui2, ui3, fi1, fi2, fi3);
     double fs1, fs2, fs3;
-    entropy::entropy_stable_lf(u1_L, u2_L, u3_L, ui1, ui2, ui3, fs1, fs2, fs3);
+    entropy::entropy_stable_lf(ug1, ug2, ug3, ui1, ui2, ui3, fs1, fs2, fs3);
     elem[0]->correctDivF1(0, fi1 - fs1);
     elem[0]->correctDivF2(0, fi2 - fs2);
     elem[0]->correctDivF3(0, fi3 - fs3);
   }
 
   // Right domain boundary (last element, node Nn-1): lift (F* - F^int).
-  {
+  if (bc_right) {
     const int last = n - 1;
     const double ui1 = elem[last]->getRho(NL);
     const double ui2 = *(elem[last]->getU2(NL));
     const double ui3 = *(elem[last]->getU3(NL));
+    // Ghost (exterior) state supplied by the boundary condition.
+    double ug1, ug2, ug3;
+    bc_right->ghostState(ui1, ui2, ui3, ug1, ug2, ug3);
     double fi1, fi2, fi3;
     physicalFlux(ui1, ui2, ui3, fi1, fi2, fi3);
     double fs1, fs2, fs3;
-    entropy::entropy_stable_lf(ui1, ui2, ui3, u1_R, u2_R, u3_R, fs1, fs2, fs3);
+    entropy::entropy_stable_lf(ui1, ui2, ui3, ug1, ug2, ug3, fs1, fs2, fs3);
     elem[last]->correctDivF1(NL, fs1 - fi1);
     elem[last]->correctDivF2(NL, fs2 - fi2);
     elem[last]->correctDivF3(NL, fs3 - fi3);
@@ -468,6 +499,45 @@ void Mesh::computeHybridResidual(const double *alpha) {
   }
 }
 
+void Mesh::setLeftBC(bc::_BoundaryConditions *b) {
+  delete bc_left;
+  bc_left = b;
+}
+
+void Mesh::setRightBC(bc::_BoundaryConditions *b) {
+  delete bc_right;
+  bc_right = b;
+}
+
+double Mesh::computeCFLTimeStep(double cfl) const {
+  const int Nn = elem[0]->getBasis()->getOrder() + 1;
+  const int P = Nn - 1;
+
+  double lambda_max = 0.0;
+  double dx_min = std::numeric_limits<double>::max();
+
+  for (int e = 0; e < n; ++e) {
+    // GLL nodes include the element endpoints, so getX(P) - getX(0) is the
+    // element width even after a basis switch; keep the smallest.
+    const double dx_e = elem[e]->getX(P) - elem[e]->getX(0);
+    dx_min = std::min(dx_min, dx_e);
+
+    for (int j = 0; j < Nn; ++j) {
+      const double rho = elem[e]->getRho(j);
+      const double u = elem[e]->getU(j);
+      const double p = elem[e]->getP(j);
+      lambda_max =
+          std::max(lambda_max, reimann::computeMaxWaveSpeed(rho, u, p));
+    }
+  }
+
+  // Degenerate (quiescent, p=0) field: no wave speed -> no CFL restriction.
+  if (lambda_max <= 0.0)
+    return 0.0;
+
+  return cfl * dx_min / ((2.0 * P + 1.0) * lambda_max);
+}
+
 Mesh::~Mesh() {
   for (int e = 0; e < n; e++)
     delete elem[e];
@@ -476,6 +546,8 @@ Mesh::~Mesh() {
   delete[] global_rhou;
   delete[] global_e;
   delete[] global_AV;
+  delete bc_left;
+  delete bc_right;
 }
 
 std::ostream &operator<<(std::ostream &os, const Mesh &m) {

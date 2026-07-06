@@ -1,7 +1,6 @@
-#include "lib/S1D.h"
+#include "lib/test_cases.h"
 #include "lib/base/base.h"
 #include "lib/diffusion/diffusion.h"
-#include "lib/diffusion/hybrid_alpha_net.h"
 #include "lib/diffusion/neural_diffusion.h"
 #include "lib/math/math.h"
 #include "lib/sensor/sensor.h"
@@ -29,14 +28,20 @@ int main(int argc, char *argv[]) {
                             "0 = export the raw P+1 computed (GLL) nodes")(
       "L", po::value<double>()->default_value(2.), "Domain size")(
       "T", po::value<double>()->default_value(0.2),
-      "Final time")("dt", po::value<double>()->default_value(5e-5), "Timestep")(
+      "Final time")("dt", po::value<double>()->default_value(5e-5),
+                    "Timestep; set to -1 for an automatic CFL-based dt")(
+      "cfl", po::value<double>()->default_value(0.5),
+      "Courant number used when dt<0 (auto CFL time step)")(
       "eps", po::value<double>()->default_value(1.),
       "RBF Epsilon value (inactive if no RBF elements)")(
       "output", po::value<std::string>()->default_value("results/"),
       "Path to generated output ParaView files")(
       "delta", po::value<double>()->default_value(-1.0),
       "Tanh smoothing half-width for initial discontinuity (default: 2*dx, "
-      "0=sharp)")("solver", po::value<std::string>()->default_value("rk4"),
+      "0=sharp)")(
+      "case", po::value<std::string>()->default_value("sod"),
+      "1D benchmark case: sod | lax | shu-osher | woodward-colella")(
+      "solver", po::value<std::string>()->default_value("rk4"),
                   "Solver type: rk4 | hybrid_dgsem")(
       "alpha_max", po::value<double>()->default_value(0.5),
       "hybrid_dgsem: maximum FV blending factor")(
@@ -74,8 +79,9 @@ int main(int argc, char *argv[]) {
   const int Q = vm["Q"].as<int>();
   const double L = vm["L"].as<double>();
   const double eps = vm["eps"].as<double>();
-  const double T_final = vm["T"].as<double>();
-  const double dt = vm["dt"].as<double>();
+  double T_final = vm["T"].as<double>();
+  double dt = vm["dt"].as<double>();
+  const double cfl = vm["cfl"].as<double>();
   std::string output = vm["output"].as<std::string>();
   const std::string solver_type = vm["solver"].as<std::string>();
   const double alpha_max = vm["alpha_max"].as<double>();
@@ -89,6 +95,18 @@ int main(int argc, char *argv[]) {
   const double eps0 = vm["eps0"].as<double>();
   const std::string nn_model = vm["nn_model"].as<std::string>();
   const int verbose = vm["verbose"].as<int>();
+  const std::string test_case = vm["case"].as<std::string>();
+
+  // Per-case default final time, applied only when the user left --T at its
+  // default so an explicit --T always wins.
+  if (vm["T"].defaulted()) {
+    if (test_case == "lax")
+      T_final = 0.16;
+    else if (test_case == "shu-osher")
+      T_final = 1.8;
+    else if (test_case == "woodward-colella")
+      T_final = 0.038;
+  }
 
   if (output != "results/")
     output = "results/" + output;
@@ -161,8 +179,30 @@ int main(int argc, char *argv[]) {
     dif = new diff::PerssonPeraire(trunc, s0, kappa, eps0);
   }
 
-  mesh::Mesh *M = S1D::generateMesh(primary_base, N_elem, L, rhoL, uL, pL, rhoR,
-                                    uR, pR, x0, delta);
+  // The Lax/Shu-Osher/Woodward-Colella cases define their own canonical
+  // domain and initial state (the CLI L/x0/rho* arguments only apply to sod).
+  mesh::Mesh *M = nullptr;
+  if (test_case == "lax") {
+    M = S1D::generateLax(primary_base, N_elem, delta);
+  } else if (test_case == "shu-osher") {
+    M = S1D::generateShuOsher(primary_base, N_elem, delta);
+  } else if (test_case == "woodward-colella") {
+    M = S1D::generateWoodwardColella(primary_base, N_elem, delta);
+  } else {
+    if (test_case != "sod")
+      std::cerr << "Unknown --case '" << test_case << "', falling back to sod"
+                << std::endl;
+    M = S1D::generateMesh(primary_base, N_elem, L, rhoL, uL, pL, rhoR, uR, pR,
+                          x0, delta);
+  }
+
+  // dt < 0 -> pick an automatic, stable time step from the CFL condition of the
+  // initial field (see Mesh::computeCFLTimeStep for the formula and its source).
+  if (dt < 0.0) {
+    dt = M->computeCFLTimeStep(cfl);
+    std::cout << "Auto CFL time step (cfl=" << cfl << "): dt=" << dt
+              << std::endl;
+  }
 
   const double s_shock = s0 - kappa;
   const double s_smooth = s0 - 2.0 * kappa;
@@ -178,9 +218,9 @@ int main(int argc, char *argv[]) {
     S->setVerbosity(verbose);
     S->getExporter().useComputedNodes(export_nodal);
 
-    diff::HybridAlphaNet *anet = nullptr;
+    solver::HybridAlphaNet *anet = nullptr;
     if (!nn_model.empty()) {
-      anet = new diff::HybridAlphaNet(nn_model);
+      anet = new solver::HybridAlphaNet(nn_model);
       S->setAlphaNet(anet);
       std::cout << "hybrid_dgsem: alpha driven by neural network policy"
                 << std::endl;

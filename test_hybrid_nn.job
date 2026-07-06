@@ -21,7 +21,7 @@ if [ ! -f "build/train_hybrid_alpha" ]; then
     exit 1
 fi
 
-./build/train_hybrid_alpha "alpha_hybrid.nn" "0.005" > SlurmOutput/RL_training.log
+#./build/train_hybrid_alpha "alpha_hybrid.nn" "0.005" > SlurmOutput/RL_training.log
 
 # --------------------------------------------------------------------------
 # Step 2: Run hybrid_dgsem with the learned alpha policy.

@@ -2,9 +2,8 @@
 #define HYBRID_SOLVER_H
 
 #include "solver.h"
+#include "hybrid_alpha.h"
 #include <vector>
-
-namespace diff { class HybridAlphaNet; }
 
 namespace solver {
 
@@ -59,11 +58,11 @@ public:
      * The alpha_max cap, alpha_min clipping and neighbour diffusion are still
      * applied to the network output for safety.
      */
-    void setAlphaNet(diff::HybridAlphaNet* net) { alpha_net_ = net; }
+    void setAlphaNet(HybridAlphaNet* net) { alpha_net_ = net; }
 
 private:
     std::vector<double> alpha_;
-    diff::HybridAlphaNet* alpha_net_ = nullptr;
+    HybridAlphaNet* alpha_net_ = nullptr;
 
     double alpha_max_ = 0.5;
     double alpha_min_ = 0.001;

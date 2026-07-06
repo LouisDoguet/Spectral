@@ -1,8 +1,8 @@
-#include "hybrid_alpha_net.h"
+#include "hybrid_alpha.h"
 #include <algorithm>
 #include <iostream>
 
-namespace diff {
+namespace solver {
 
 HybridAlphaNet::HybridAlphaNet(const std::string &model_path)
     : model_path_(model_path), network_(nullptr) {
@@ -31,4 +31,4 @@ void HybridAlphaNet::fillAlpha(mesh::Mesh *mesh, std::vector<double> &alpha) {
   }
 }
 
-} // namespace diff
+} // namespace solver

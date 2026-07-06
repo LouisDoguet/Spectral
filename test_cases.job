@@ -1,0 +1,68 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --mem=16GB
+#SBATCH --time=2:00:00
+#SBATCH --job-name=Cases1D
+#SBATCH --partition=short
+#SBATCH --account=aero_hpc
+#SBATCH --array=0-3
+#SBATCH --output=SlurmOutput/case_%a.txt
+
+# ==========================================================================
+# Batch-run the four 1D Euler benchmark cases as a SLURM array job.
+# One array task per case (SLURM_ARRAY_TASK_ID = 0..3):
+#
+#   0: sod                1: lax
+#   2: shu-osher          3: woodward-colella
+#
+# Each task runs the entropy-stable hybrid-DGSEM solver with an automatic
+# CFL-based time step (--dt -1). The final time is chosen automatically per
+# case inside main.cpp, so --T is intentionally left unset here.
+# ==========================================================================
+
+# --- Per-case parameters (indexed by the array task id) -------------------
+CASES=(sod   lax   shu-osher  woodward-colella)  # --case
+PVAL=(5      5     5          2)                 # --P  polynomial order
+NVAL=(100    100   200        256)               # --N  number of elements
+AMAX=(0.5    0.5   0.5        1.0)               # --alpha_max  max FV blending
+CFL=(0.5     0.4   0.4        0.1)               # --cfl  Courant number (dt<0)
+
+i=${SLURM_ARRAY_TASK_ID}
+CASE=${CASES[$i]}
+P=${PVAL[$i]}
+N=${NVAL[$i]}
+A=${AMAX[$i]}
+C=${CFL[$i]}
+
+# --- Sanity check ---------------------------------------------------------
+if [ ! -f "build/spectral" ]; then
+    echo "Error: build/spectral not found. Build first: cmake -S . -B build && cmake --build build -j"
+    exit 1
+fi
+
+mkdir -p SlurmOutput results
+
+echo "================================================================================"
+echo " 1D benchmark case [$i] : $CASE"
+echo "   P=$P  N=$N  alpha_max=$A  cfl=$C  solver=hybrid_dgsem  dt=auto(CFL)"
+echo "================================================================================"
+
+# --- Run ------------------------------------------------------------------
+./build/spectral \
+    --case "$CASE" \
+    --solver "hybrid_dgsem" \
+    --P "$P" --N "$N" --Q 0 \
+    --alpha_max "$A" \
+    --dt -1 --cfl "$C" \
+    --output "$CASE" \
+    --verbose 1 > "SlurmOutput/${CASE}.log" 2>&1
+
+status=$?
+echo ""
+if [ $status -eq 0 ]; then
+    echo "DONE: $CASE  ->  results/${CASE}*   (log: SlurmOutput/${CASE}.log)"
+else
+    echo "FAILED: $CASE  (exit $status)  see SlurmOutput/${CASE}.log"
+fi
+exit $status

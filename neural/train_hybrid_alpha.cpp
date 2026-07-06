@@ -32,9 +32,9 @@
  *     first-order dissipation. This is exactly the desired blending policy.
  */
 
-#include "../lib/S1D.h"
+#include "../lib/test_cases.h"
 #include "../lib/base/base.h"
-#include "../lib/diffusion/hybrid_alpha_net.h"
+#include "../lib/time/hybrid_alpha.h"
 #include "../lib/space/mesh.h"
 #include "../lib/time/hybrid_solver.h"
 
@@ -178,7 +178,7 @@ int main(int argc, char *argv[]) {
           if (reward[e][c] > reward[e][best])
             best = static_cast<int>(c);
 
-        diff::modal_energy_features(M->getElem(e), n, feat);
+        solver::modal_energy_features(M->getElem(e), n, feat);
         X.insert(X.end(), feat.begin(), feat.end());
         Y.push_back(cand[best]);
       }

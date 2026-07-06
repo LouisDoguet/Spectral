@@ -2,6 +2,7 @@
 #define MESH_H
 
 #include "../base/base.h"
+#include "../boundary_conditions/boundary_conditions.h"
 #include "../sensor/sensor.h"
 #include "element.h"
 
@@ -133,6 +134,35 @@ public:
   /// Boundary conditions
   void applyDirichlet();
 
+  /// @brief Replace the left / right boundary condition. The mesh takes
+  ///   ownership of the passed object and deletes any previously held one.
+  ///   Passing nullptr disables the corresponding boundary lift.
+  void setLeftBC(bc::_BoundaryConditions *b);
+  void setRightBC(bc::_BoundaryConditions *b);
+  const bc::_BoundaryConditions *getLeftBC() const { return bc_left; }
+  const bc::_BoundaryConditions *getRightBC() const { return bc_right; }
+
+  /**
+   * @brief Largest explicit time step allowed by the CFL condition for the
+   *        current field.
+   *
+   * For a nodal DG / DGSEM discretisation of polynomial degree P the linear
+   * stability limit of an explicit Runge-Kutta integrator is
+   *
+   *     dt <= CFL * dx / ((2*P + 1) * max|lambda|)
+   *
+   * The (2*P + 1) factor is the RKDG eigenvalue/CFL scaling of Cockburn & Shu,
+   * "Runge-Kutta Discontinuous Galerkin Methods for Convection-Dominated
+   * Problems", J. Sci. Comput. 16 (2001) 173-261: a degree-P DG operator is
+   * stable up to a Courant number of 1/(2*P + 1). Here `dx` is the (smallest)
+   * element width and `lambda = |u| + c`, c = sqrt(gamma*p/rho), is the Euler
+   * spectral radius, maximised over every solution node.
+   *
+   * @param cfl Safety factor (Courant number), typically 0 < cfl <= 1.
+   * @return Maximum stable dt; the caller may pass it straight to run().
+   */
+  double computeCFLTimeStep(double cfl) const;
+
   /// @brief Register the alternative basis (e.g. IMQ) used to resolve
   ///   discontinuities. Must share the same order P as the primary basis.
   void setAltBasis(base::_Basis* alt) { alt_basis = alt; }
@@ -184,13 +214,10 @@ private:
   double *global_AV;
 
 
-  /// Boudary conditions
-  double u1_L;
-  double u2_L;
-  double u3_L;
-  double u1_R;
-  double u2_R;
-  double u3_R;
+  /// Boundary conditions (owned). Default to fixed-state bc::Wall built from the
+  /// ghost states passed to the constructor; swap with setLeft/RightBC.
+  bc::_BoundaryConditions *bc_left = nullptr;
+  bc::_BoundaryConditions *bc_right = nullptr;
 
   friend std::ostream &operator<<(std::ostream &, const Mesh &);
 };

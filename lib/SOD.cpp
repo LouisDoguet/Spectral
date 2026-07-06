@@ -4,7 +4,7 @@
 #include "space/mesh.h"
 #include "time/solver.h"
 #include "sensor/sensor.h"
-#include "S1D.h"
+#include "test_cases.h"
 #include <boost/program_options.hpp>
 #include <cmath>
 #include <cstdlib>
@@ -48,13 +48,13 @@ mesh::Mesh* generateMesh(
         if (delta == 0.0) {
         // Sharp discontinuity (may be unstable for high P)
         rho = (x < x0) ? rhoL : rhoR;
-        u   = 0.0;
+        u   = (x < x0) ? uL   : uR;
         p   = (x < x0) ? pL   : pR;
         } else {
         // Tanh-smoothed discontinuity
         double s = 0.5 * (1.0 - std::tanh((x - x0) / delta));
         rho = rhoR + (rhoL - rhoR) * s;
-        u   = 0.0;
+        u   = uR   + (uL   - uR)   * s;
         p   = pR   + (pL   - pR)   * s;
         }
 
@@ -63,8 +63,8 @@ mesh::Mesh* generateMesh(
         e_i[i]    = p / (gamma - 1.0) + 0.5 * rho * u * u;
     }
 
-    bc_rhoL  = rhoL; bc_rhouL = 0.0; bc_eL = pL / (gamma - 1.0);
-    bc_rhoR  = rhoR; bc_rhouR = 0.0; bc_eR = pR / (gamma - 1.0);
+    bc_rhoL = rhoL; bc_rhouL = rhoL * uL; bc_eL = pL / (gamma - 1.0) + 0.5 * rhoL * uL * uL;
+    bc_rhoR = rhoR; bc_rhouR = rhoR * uR; bc_eR = pR / (gamma - 1.0) + 0.5 * rhoR * uR * uR;
 
     //-- MESH --
     mesh::Mesh *mesh = new mesh::Mesh(N_elem, basis, 0.0, L,

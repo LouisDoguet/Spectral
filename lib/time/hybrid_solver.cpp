@@ -1,5 +1,4 @@
 #include "hybrid_solver.h"
-#include "../diffusion/hybrid_alpha_net.h"
 #include "../math/math.h"
 #include <cblas.h>
 #include <cmath>
