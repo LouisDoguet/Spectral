@@ -1,6 +1,6 @@
 ================================================================================
  1D benchmark case [1] : lax
-   P=5  N=100  alpha_max=0.5  cfl=0.4  solver=hybrid_dgsem  dt=auto(CFL)
+   P=6  N=100  alpha_max=1.0  cfl=0.3  solver=hybrid_dgsem  dt=auto(CFL)
 ================================================================================
 
 DONE: lax  ->  results/lax*   (log: SlurmOutput/lax.log)

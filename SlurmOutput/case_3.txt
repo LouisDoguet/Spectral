@@ -1,6 +1,6 @@
 ================================================================================
  1D benchmark case [3] : woodward-colella
-   P=2  N=256  alpha_max=1.0  cfl=0.1  solver=hybrid_dgsem  dt=auto(CFL)
+   P=6  N=256  alpha_max=1.0  cfl=0.3  solver=hybrid_dgsem  dt=auto(CFL)
 ================================================================================
 
 DONE: woodward-colella  ->  results/woodward-colella*   (log: SlurmOutput/woodward-colella.log)

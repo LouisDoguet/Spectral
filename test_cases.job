@@ -23,10 +23,10 @@
 
 # --- Per-case parameters (indexed by the array task id) -------------------
 CASES=(sod   lax   shu-osher  woodward-colella)  # --case
-PVAL=(5      5     5          2)                 # --P  polynomial order
+PVAL=(6      6     6          6)                 # --P  polynomial order
 NVAL=(100    100   200        256)               # --N  number of elements
-AMAX=(0.5    0.5   0.5        1.0)               # --alpha_max  max FV blending
-CFL=(0.5     0.4   0.4        0.1)               # --cfl  Courant number (dt<0)
+AMAX=(1.0    1.0   1.0        1.0)               # --alpha_max  max FV blending
+CFL=(0.3     0.3   0.3        0.3)               # --cfl  Courant number (dt<0)
 
 i=${SLURM_ARRAY_TASK_ID}
 CASE=${CASES[$i]}
