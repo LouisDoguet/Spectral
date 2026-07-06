@@ -221,6 +221,10 @@ std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operato
   </table>
   </dd>
 </dl>
+<p>Basis + space definition</p>
+<p>Definition of global arrays</p>
+<p>Element creation</p>
+<p><a class="el" href="../../db/d7d/classmesh_1_1Mesh.html" title="Class storing complete mesh.">Mesh</a> generation Arrays attributed to the corresponding elements</p>
 
 </div>
 </div>
@@ -385,8 +389,9 @@ std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operato
 <p>Per-element basis switching driven by the Persson-Peraire shock indicator log10(Se): </p>
 <ul>
 <li>currently on primary, logSe &gt; s_shock -&gt; migrate to alt</li>
-<li>currently on alt, logSe &lt; s_smooth -&gt; migrate back to primary Each migration triggers Element::setBasis (re-interpolation + setFlux). Caller is responsible for calling this between time steps only. </li>
+<li>currently on alt, logSe &lt; s_smooth -&gt; migrate back to primary Each migration triggers Element::setBasis (re-interpolation + setFlux). Caller is responsible for calling this between time steps only.</li>
 </ul>
+<dl class="section note"><dt>Note</dt><dd>NOT USED - FIRST DEV OF HYBRID POLY/RBF BASE SWITCH </dd></dl>
 
 </div>
 </div>
@@ -484,6 +489,10 @@ std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operato
 <li>Applies the Reimann correction at the elements boundaries For the first and last elements:</li>
 <li>Applies Boundary Conditions </li>
 </ul>
+<p>Computes the mesh residuals (-divFlux)</p>
+<p>Apply the Reimann flux</p>
+<p>Apply boundary conditions</p>
+<p>Final stage: divFk &lt;- (1/J) * Minv * divFk on each element.</p>
 
 </div>
 </div>

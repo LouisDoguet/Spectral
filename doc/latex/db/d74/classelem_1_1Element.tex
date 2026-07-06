@@ -155,7 +155,8 @@ void {\bfseries correct\+Div\+F3} (int pos, double val)
 \item 
 \Hypertarget{classelem_1_1Element_a9421926d081bd5d8882a4ff595431682}\label{classelem_1_1Element_a9421926d081bd5d8882a4ff595431682} 
 void {\bfseries compute\+Div\+Flux} ()
-\begin{DoxyCompactList}\small\item\em Accumulates the DG volume residual into div\+Fk\+: div\+Fk\+\_\+i = w\+\_\+i \texorpdfstring{$\ast$}{*} (D F\+\_\+k)\+\_\+i. No 1/J factor yet — apply\+Mass\+Inverse handles the per-\/element geometric scaling and the mass-\/matrix solve. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Accumulates the DG volume residual into div\+Fk\+: {\ttfamily div\+Fk\+\_\+i = w\+\_\+i \texorpdfstring{$\ast$}{*} (D F\+\_\+k)\+\_\+i}. ~\newline
+Computes the residual of the element. \end{DoxyCompactList}\item 
 \Hypertarget{classelem_1_1Element_a914b0df79ab6c35145ed363df4d419a8}\label{classelem_1_1Element_a914b0df79ab6c35145ed363df4d419a8} 
 void {\bfseries apply\+Mass\+Inverse} ()
 \begin{DoxyCompactList}\small\item\em Final stage of the DG residual\+: div\+Fk \texorpdfstring{$<$}{<}-\/ (1/J) \texorpdfstring{$\ast$}{*} Minv \texorpdfstring{$\ast$}{*} div\+Fk. Routes the volume term and the boundary lifts through the basis\textquotesingle{}s mass matrix. For Lagrange (Minv = diag(1/w)) this collapses back to the classical (1/J) \texorpdfstring{$\ast$}{*} D \texorpdfstring{$\ast$}{*} F + (1/(J w\+\_\+b)) \texorpdfstring{$\ast$}{*} \mbox{[}F\texorpdfstring{$\ast$}{*}-\/F\mbox{]}\+\_\+b form; for RBF the boundary correction is spread to interior nodes via Minv. \end{DoxyCompactList}\item 

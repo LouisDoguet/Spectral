@@ -1,47 +1,48 @@
 \doxysection{container.\+h}
 \hypertarget{container_8h_source}{}\label{container_8h_source}\index{neural/container.h@{neural/container.h}}
-
+\mbox{\hyperlink{container_8h}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ CONTAINER\_H}}
-\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ CONTAINER\_H}}
-\DoxyCodeLine{00003\ }
-\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <memory>}}
-\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <vector>}}
-\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}layer.h"{}}}
-\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}tensor.h"{}}}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#ifndef\ CONTAINER\_H}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#define\ CONTAINER\_H}}
 \DoxyCodeLine{00008\ }
-\DoxyCodeLine{00009\ \textcolor{keyword}{namespace\ }CONT\ \{}
-\DoxyCodeLine{00011\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classCONT_1_1Sequential}{Sequential}}\ \{}
-\DoxyCodeLine{00012\ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00013\ \ \ \ \ std::vector<std::shared\_ptr<LAYER::\_Layer>>\ layers;}
-\DoxyCodeLine{00014\ }
-\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classCONT_1_1Sequential_afeb5531313238b592ee6be3256d9ae22}{add}}(std::shared\_ptr<LAYER::\_Layer>\ layer)\ \{}
-\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ layers.push\_back(layer);}
-\DoxyCodeLine{00019\ \ \ \ \ \}}
-\DoxyCodeLine{00020\ }
-\DoxyCodeLine{00023\ \ \ \ \ \mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \mbox{\hyperlink{classCONT_1_1Sequential_ad69de3c220ab29867d20821c0ff2608b}{forward}}(\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ input)\ \{}
-\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ layer\ :\ layers)\{}
-\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \ \ \ \ input\ =\ layer-\/>forward(input);}
-\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ input;}
-\DoxyCodeLine{00028\ \ \ \ \ \}}
-\DoxyCodeLine{00029\ }
-\DoxyCodeLine{00032\ \ \ \ \ \mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \mbox{\hyperlink{classCONT_1_1Sequential_acca92ed5f3dab954fa84e4a4b42b7c24}{backward}}(\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ grad)\ \{}
-\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ layers.size()\ -\/\ 1;\ i\ >=\ 0;\ -\/-\/i)}
-\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ grad\ =\ layers[i]-\/>\mbox{\hyperlink{classCONT_1_1Sequential_acca92ed5f3dab954fa84e4a4b42b7c24}{backward}}(grad);}
-\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ grad;}
-\DoxyCodeLine{00036\ \ \ \ \ \}}
-\DoxyCodeLine{00037\ }
-\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classCONT_1_1Sequential_af0113f18ad9d280ad28ad3b1b8ebd75b}{update}}(\textcolor{keywordtype}{double}\ learning\_rate)\ \{}
-\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ layer\ :\ layers)}
-\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ layer-\/>update(learning\_rate);}
-\DoxyCodeLine{00043\ \ \ \ \ \}}
-\DoxyCodeLine{00044\ }
-\DoxyCodeLine{00045\ \};}
-\DoxyCodeLine{00046\ \ \ \ \ }
-\DoxyCodeLine{00047\ \}\ \textcolor{comment}{//\ namespace\ CONT}}
-\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{layer_8h}{layer.h}}"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{tensor_8h}{tensor.h}}"{}}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{namespace\ }CONT\ \{}
+\DoxyCodeLine{00016\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classCONT_1_1Sequential}{Sequential}}\ \{}
+\DoxyCodeLine{00017\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00018\ \ \ \ \ std::vector<std::shared\_ptr<LAYER::\_Layer>>\ layers;}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classCONT_1_1Sequential_afeb5531313238b592ee6be3256d9ae22}{add}}(std::shared\_ptr<LAYER::\_Layer>\ layer)\ \{}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ layers.push\_back(layer);}
+\DoxyCodeLine{00024\ \ \ \ \ \}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00028\ \ \ \ \ \mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \mbox{\hyperlink{classCONT_1_1Sequential_ad69de3c220ab29867d20821c0ff2608b}{forward}}(\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ input)\ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ layer\ :\ layers)\{}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \ \ \ \ input\ =\ layer-\/>forward(input);}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ input;}
+\DoxyCodeLine{00033\ \ \ \ \ \}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00037\ \ \ \ \ \mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \mbox{\hyperlink{classCONT_1_1Sequential_acca92ed5f3dab954fa84e4a4b42b7c24}{backward}}(\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ grad)\ \{}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ layers.size()\ -\/\ 1;\ i\ >=\ 0;\ -\/-\/i)}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \ \ \ grad\ =\ layers[i]-\/>\mbox{\hyperlink{classCONT_1_1Sequential_acca92ed5f3dab954fa84e4a4b42b7c24}{backward}}(grad);}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ grad;}
+\DoxyCodeLine{00041\ \ \ \ \ \}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classCONT_1_1Sequential_af0113f18ad9d280ad28ad3b1b8ebd75b}{update}}(\textcolor{keywordtype}{double}\ learning\_rate)\ \{}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ layer\ :\ layers)}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ layer-\/>update(learning\_rate);}
+\DoxyCodeLine{00048\ \ \ \ \ \}}
 \DoxyCodeLine{00049\ }
-\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00050\ \};}
+\DoxyCodeLine{00051\ \ \ \ \ }
+\DoxyCodeLine{00052\ \}\ \textcolor{comment}{//\ namespace\ CONT}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#endif}}
 
 \end{DoxyCode}

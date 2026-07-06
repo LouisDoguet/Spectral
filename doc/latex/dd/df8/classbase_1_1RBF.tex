@@ -1,5 +1,14 @@
 \doxysection{base\+::RBF Class Reference}
 \hypertarget{classbase_1_1RBF}{}\label{classbase_1_1RBF}\index{base::RBF@{base::RBF}}
+
+
+Radial Basis Function Basis.  
+
+
+
+
+{\ttfamily \#include $<$base.\+h$>$}
+
 Inheritance diagram for base\+::RBF\+:\begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -9,9 +18,8 @@ Inheritance diagram for base\+::RBF\+:\begin{figure}[H]
 \doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\Hypertarget{classbase_1_1RBF_a1da84077afbe7e1671beb67e76dd8b31}\label{classbase_1_1RBF_a1da84077afbe7e1671beb67e76dd8b31} 
-{\bfseries RBF} (const int p, const double eps, std\+::string RBF\+\_\+name)
-\item 
+\mbox{\hyperlink{classbase_1_1RBF_a1da84077afbe7e1671beb67e76dd8b31}{RBF}} (const int p, const double eps, std\+::string RBF\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Constructor of the \doxylink{classbase_1_1RBF}{RBF}. \end{DoxyCompactList}\item 
 const double \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{classbase_1_1RBF_a135e07867eb456bcc32a1c1fa560be10}{get\+Quads}} () const override
 \item 
 const double \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{classbase_1_1RBF_aed7e3d4da48201a415845dda3c4d2ca9}{get\+Weights}} () const override
@@ -93,6 +101,31 @@ double \texorpdfstring{$\ast$}{*} {\bfseries quads}
 \item 
 double \texorpdfstring{$\ast$}{*} {\bfseries weights}
 \end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Radial Basis Function Basis. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classbase_1_1RBF_a1da84077afbe7e1671beb67e76dd8b31}\label{classbase_1_1RBF_a1da84077afbe7e1671beb67e76dd8b31} 
+\index{base::RBF@{base::RBF}!RBF@{RBF}}
+\index{RBF@{RBF}!base::RBF@{base::RBF}}
+\doxysubsubsection{\texorpdfstring{RBF()}{RBF()}}
+{\footnotesize\ttfamily base\+::\+RBF\+::\+RBF (\begin{DoxyParamCaption}\item[{const int}]{p,  }\item[{const double}]{eps,  }\item[{std\+::string}]{RBF\+\_\+name }\end{DoxyParamCaption})}
+
+
+
+Constructor of the \doxylink{classbase_1_1RBF}{RBF}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em p} & Number of internal nodes \\
+\hline
+{\em eps} & Radius \\
+\hline
+{\em RBF\+\_\+name} & {\ttfamily string} of the name of the \doxylink{classbase_1_1RBF}{RBF} \\
+\hline
+\end{DoxyParams}
 
 
 \doxysubsection{Member Function Documentation}
@@ -224,5 +257,5 @@ Implemented in \mbox{\hyperlink{classbase_1_1InverseMultiQuadratic_a83fdbdfd084f
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
-lib/base/base.\+h\item 
-lib/base/radial\+\_\+base\+\_\+function.\+cpp\end{DoxyCompactItemize}
+lib/base/\mbox{\hyperlink{base_8h}{base.\+h}}\item 
+lib/base/\mbox{\hyperlink{radial__base__function_8cpp}{radial\+\_\+base\+\_\+function.\+cpp}}\end{DoxyCompactItemize}

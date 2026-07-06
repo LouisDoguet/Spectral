@@ -3,9 +3,9 @@ var indexSectionsWithContent =
   0: "012345678_abcdefghiklmnopqrstuvwx",
   1: "_abcdeghilmnprstv",
   2: "bpv",
-  3: "t",
+  3: "abcglnrt",
   4: "_abcefgiklmnprstuw",
-  5: "abcefghilnoprst"
+  5: "abcefghiorst"
 };
 
 var indexSectionNames =

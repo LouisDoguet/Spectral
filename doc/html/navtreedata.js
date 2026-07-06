@@ -115,37 +115,6 @@ var NAVTREE =
       [ "Neural Network", "d0/d30/md_README.html#autotoc_md95", null ],
       [ "Build & Compile", "d0/d30/md_README.html#autotoc_md96", null ]
     ] ],
-    [ "Reinforcement Learning Approach for Neural Network Alpha Prediction", "d6/df5/md_RL__ALPHA__APPROACH.html", [
-      [ "Problem Statement", "d6/df5/md_RL__ALPHA__APPROACH.html#autotoc_md98", null ],
-      [ "Reinforcement Learning Framework", "d6/df5/md_RL__ALPHA__APPROACH.html#autotoc_md100", [
-        [ "1. Core Concept", "d6/df5/md_RL__ALPHA__APPROACH.html#autotoc_md101", null ],
-        [ "2. Training Data Generation", "d6/df5/md_RL__ALPHA__APPROACH.html#autotoc_md102", [
-          [ "Phase 1: Generate Simulation Trajectories", "d6/df5/md_RL__ALPHA__APPROACH.html#autotoc_md103", null ],
-          [ "Phase 2: Define Reward Signals", "d6/df5/md_RL__ALPHA__APPROACH.html#autotoc_md104", null ],
-          [ "Phase 3: Create Training Pairs", "d6/df5/md_RL__ALPHA__APPROACH.html#autotoc_md105", null ]
-        ] ],
-        [ "3. Network Architecture & Training Strategy", "d6/df5/md_RL__ALPHA__APPROACH.html#autotoc_md106", [
-          [ "Network Design", "d6/df5/md_RL__ALPHA__APPROACH.html#autotoc_md107", null ],
-          [ "Supervised Learning from Trajectories", "d6/df5/md_RL__ALPHA__APPROACH.html#autotoc_md108", null ]
-        ] ],
-        [ "4. Detailed Training Loop", "d6/df5/md_RL__ALPHA__APPROACH.html#autotoc_md109", null ],
-        [ "5. Key Components", "d6/df5/md_RL__ALPHA__APPROACH.html#autotoc_md110", [
-          [ "A. Reward Definition", "d6/df5/md_RL__ALPHA__APPROACH.html#autotoc_md111", null ],
-          [ "B. Training Dataset Structure", "d6/df5/md_RL__ALPHA__APPROACH.html#autotoc_md112", null ],
-          [ "C. Loss Function", "d6/df5/md_RL__ALPHA__APPROACH.html#autotoc_md113", null ]
-        ] ]
-      ] ],
-      [ "Implementation Roadmap", "d6/df5/md_RL__ALPHA__APPROACH.html#autotoc_md115", [
-        [ "Stage 1: Data Collection", "d6/df5/md_RL__ALPHA__APPROACH.html#autotoc_md116", null ],
-        [ "Stage 2: Network Training", "d6/df5/md_RL__ALPHA__APPROACH.html#autotoc_md117", null ],
-        [ "Stage 3: Integration with HybridDGSEM", "d6/df5/md_RL__ALPHA__APPROACH.html#autotoc_md118", null ],
-        [ "Stage 4: Validation", "d6/df5/md_RL__ALPHA__APPROACH.html#autotoc_md119", null ]
-      ] ],
-      [ "Advantages of This Approach", "d6/df5/md_RL__ALPHA__APPROACH.html#autotoc_md121", null ],
-      [ "Challenges & Considerations", "d6/df5/md_RL__ALPHA__APPROACH.html#autotoc_md123", null ],
-      [ "Alternative: Simplified Version (Faster to implement)", "d6/df5/md_RL__ALPHA__APPROACH.html#autotoc_md125", null ],
-      [ "Summary", "d6/df5/md_RL__ALPHA__APPROACH.html#autotoc_md127", null ]
-    ] ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [
@@ -171,7 +140,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"dc/d62/classsens_1_1__Sensor.html#ac39f046a9093e3eab2c60f7502178c64"
+"dd/df8/classbase_1_1RBF.html#a2873409fa647f1f9f00749142040b400"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

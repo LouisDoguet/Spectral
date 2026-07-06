@@ -97,22 +97,27 @@ $(document).ready(function(){initNavTree('dd/df8/classbase_1_1RBF.html','../../'
   <div class="headertitle"><div class="title">base::RBF Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Radial Basis Function Basis.  
+ <a href="../../dd/df8/classbase_1_1RBF.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="../../d3/d5a/base_8h_source.html">base.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for base::RBF:</div>
 <div class="dyncontent">
  <div class="center">
   <img src="../../dd/df8/classbase_1_1RBF.png" usemap="#base::RBF_map" alt=""/>
   <map id="base::RBF_map" name="base::RBF_map">
-<area href="../../d0/d61/classbase_1_1__Basis.html" alt="base::_Basis" shape="rect" coords="90,0,260,24"/>
-<area href="../../d1/da7/classbase_1_1Gaussian.html" alt="base::Gaussian" shape="rect" coords="0,112,170,136"/>
-<area href="../../d0/d88/classbase_1_1InverseMultiQuadratic.html" alt="base::InverseMultiQuadratic" shape="rect" coords="180,112,350,136"/>
+<area href="../../d0/d61/classbase_1_1__Basis.html" title="Dummy class for Different basis." alt="base::_Basis" shape="rect" coords="90,0,260,24"/>
+<area href="../../d1/da7/classbase_1_1Gaussian.html" title="Gaussian Radial Basis Function." alt="base::Gaussian" shape="rect" coords="0,112,170,136"/>
+<area href="../../d0/d88/classbase_1_1InverseMultiQuadratic.html" title="Inverse Multiquadratic Radial Basis Function." alt="base::InverseMultiQuadratic" shape="rect" coords="180,112,350,136"/>
   </map>
 </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a1da84077afbe7e1671beb67e76dd8b31" id="r_a1da84077afbe7e1671beb67e76dd8b31"><td class="memItemLeft" align="right" valign="top"><a id="a1da84077afbe7e1671beb67e76dd8b31" name="a1da84077afbe7e1671beb67e76dd8b31"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>RBF</b> (const int p, const double eps, std::string RBF_name)</td></tr>
+<tr class="memitem:a1da84077afbe7e1671beb67e76dd8b31" id="r_a1da84077afbe7e1671beb67e76dd8b31"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/df8/classbase_1_1RBF.html#a1da84077afbe7e1671beb67e76dd8b31">RBF</a> (const int p, const double eps, std::string RBF_name)</td></tr>
+<tr class="memdesc:a1da84077afbe7e1671beb67e76dd8b31"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor of the <a class="el" href="../../dd/df8/classbase_1_1RBF.html" title="Radial Basis Function Basis.">RBF</a>.  <br /></td></tr>
 <tr class="separator:a1da84077afbe7e1671beb67e76dd8b31"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a135e07867eb456bcc32a1c1fa560be10" id="r_a135e07867eb456bcc32a1c1fa560be10"><td class="memItemLeft" align="right" valign="top">const double *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/df8/classbase_1_1RBF.html#a135e07867eb456bcc32a1c1fa560be10">getQuads</a> () const override</td></tr>
 <tr class="separator:a135e07867eb456bcc32a1c1fa560be10"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -129,7 +134,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a9151332801f6406f8df111008cbce58d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inverse of the reference mass matrix, precomputed at construction.  <br /></td></tr>
 <tr class="separator:a9151332801f6406f8df111008cbce58d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92265c70295c9ee42c1da4e717090f2f" id="r_a92265c70295c9ee42c1da4e717090f2f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/df8/classbase_1_1RBF.html#a92265c70295c9ee42c1da4e717090f2f">interpolate</a> (const double *u, const double *xi, int n_pts, double *out) const override</td></tr>
-<tr class="memdesc:a92265c70295c9ee42c1da4e717090f2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generic <a class="el" href="../../dd/df8/classbase_1_1RBF.html">RBF</a> interpolation: lambda = Phi^{-1} u, then s(xi) = sum_j lambda_j * kernel(xi - x_j).  <br /></td></tr>
+<tr class="memdesc:a92265c70295c9ee42c1da4e717090f2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generic <a class="el" href="../../dd/df8/classbase_1_1RBF.html" title="Radial Basis Function Basis.">RBF</a> interpolation: lambda = Phi^{-1} u, then s(xi) = sum_j lambda_j * kernel(xi - x_j).  <br /></td></tr>
 <tr class="separator:a92265c70295c9ee42c1da4e717090f2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classbase_1_1__Basis"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classbase_1_1__Basis')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../d0/d61/classbase_1_1__Basis.html">base::_Basis</a></td></tr>
 <tr class="memitem:a8ff4d61b72de9c50e429939dcb2e3ee1 inherit pub_methods_classbase_1_1__Basis" id="r_a8ff4d61b72de9c50e429939dcb2e3ee1"><td class="memItemLeft" align="right" valign="top">
@@ -143,7 +148,7 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:a2873409fa647f1f9f00749142040b400"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a18149d3f6e76da85fe3c3710cf1c230d" id="r_a18149d3f6e76da85fe3c3710cf1c230d"><td class="memItemLeft" align="right" valign="top"><a id="a18149d3f6e76da85fe3c3710cf1c230d" name="a18149d3f6e76da85fe3c3710cf1c230d"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>initialize</b> ()</td></tr>
-<tr class="memdesc:a18149d3f6e76da85fe3c3710cf1c230d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs the kernel-dependent construction steps in the right order. MUST be called from the derived class's constructor body, not from <a class="el" href="../../dd/df8/classbase_1_1RBF.html">RBF</a>'s own constructor, so that virtual dispatch reaches the derived overrides. <br /></td></tr>
+<tr class="memdesc:a18149d3f6e76da85fe3c3710cf1c230d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs the kernel-dependent construction steps in the right order. MUST be called from the derived class's constructor body, not from <a class="el" href="../../dd/df8/classbase_1_1RBF.html" title="Radial Basis Function Basis.">RBF</a>'s own constructor, so that virtual dispatch reaches the derived overrides. <br /></td></tr>
 <tr class="separator:a18149d3f6e76da85fe3c3710cf1c230d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6ba8e69c1a196c018134ddf78d901d0c" id="r_a6ba8e69c1a196c018134ddf78d901d0c"><td class="memItemLeft" align="right" valign="top"><a id="a6ba8e69c1a196c018134ddf78d901d0c" name="a6ba8e69c1a196c018134ddf78d901d0c"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>computeRadialMatrix</b> ()</td></tr>
@@ -158,7 +163,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>computeWeights</b> ()
 <tr class="separator:a802abf1fb7b03a7c9265aedc042483c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a793c29e2721dbd18b05970276136a793" id="r_a793c29e2721dbd18b05970276136a793"><td class="memItemLeft" align="right" valign="top"><a id="a793c29e2721dbd18b05970276136a793" name="a793c29e2721dbd18b05970276136a793"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>computeMassMatrix</b> ()</td></tr>
-<tr class="memdesc:a793c29e2721dbd18b05970276136a793"><td class="mdescLeft">&#160;</td><td class="mdescRight">M_ij = int_{-1}^{1} l_i^{<a class="el" href="../../dd/df8/classbase_1_1RBF.html">RBF</a>}(xi) l_j^{<a class="el" href="../../dd/df8/classbase_1_1RBF.html">RBF</a>}(xi) dxi via over- refined quadrature; inverse computed with LAPACK. <br /></td></tr>
+<tr class="memdesc:a793c29e2721dbd18b05970276136a793"><td class="mdescLeft">&#160;</td><td class="mdescRight">M_ij = int_{-1}^{1} l_i^{<a class="el" href="../../dd/df8/classbase_1_1RBF.html" title="Radial Basis Function Basis.">RBF</a>}(xi) l_j^{<a class="el" href="../../dd/df8/classbase_1_1RBF.html" title="Radial Basis Function Basis.">RBF</a>}(xi) dxi via over- refined quadrature; inverse computed with LAPACK. <br /></td></tr>
 <tr class="separator:a793c29e2721dbd18b05970276136a793"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abac986047ceae55f2b53a7269f51bb56" id="r_abac986047ceae55f2b53a7269f51bb56"><td class="memItemLeft" align="right" valign="top"><a id="abac986047ceae55f2b53a7269f51bb56" name="abac986047ceae55f2b53a7269f51bb56"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>activateRadialMatrix</b> ()</td></tr>
@@ -211,6 +216,53 @@ double *&#160;</td><td class="memItemRight" valign="bottom"><b>quads</b></td></t
 double *&#160;</td><td class="memItemRight" valign="bottom"><b>weights</b></td></tr>
 <tr class="separator:aa05bc66ce9d49785752c70c79d7de7a5 inherit pro_attribs_classbase_1_1__Basis"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Radial Basis Function Basis. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a1da84077afbe7e1671beb67e76dd8b31" name="a1da84077afbe7e1671beb67e76dd8b31"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1da84077afbe7e1671beb67e76dd8b31">&#9670;&#160;</a></span>RBF()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">base::RBF::RBF </td>
+          <td>(</td>
+          <td class="paramtype">const int&#160;</td>
+          <td class="paramname"><em>p</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>eps</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>RBF_name</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Constructor of the <a class="el" href="../../dd/df8/classbase_1_1RBF.html" title="Radial Basis Function Basis.">RBF</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">p</td><td>Number of internal nodes </td></tr>
+    <tr><td class="paramname">eps</td><td>Radius </td></tr>
+    <tr><td class="paramname">RBF_name</td><td><code>string</code> of the name of the <a class="el" href="../../dd/df8/classbase_1_1RBF.html" title="Radial Basis Function Basis.">RBF</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="a294c58581d4e644327f87d61b4343a81" name="a294c58581d4e644327f87d61b4343a81"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a294c58581d4e644327f87d61b4343a81">&#9670;&#160;</a></span>computeDerivative()</h2>
@@ -453,7 +505,7 @@ double *&#160;</td><td class="memItemRight" valign="bottom"><b>weights</b></td><
 </table>
 </div><div class="memdoc">
 
-<p>Generic <a class="el" href="../../dd/df8/classbase_1_1RBF.html">RBF</a> interpolation: lambda = Phi^{-1} u, then s(xi) = sum_j lambda_j * kernel(xi - x_j). </p>
+<p>Generic <a class="el" href="../../dd/df8/classbase_1_1RBF.html" title="Radial Basis Function Basis.">RBF</a> interpolation: lambda = Phi^{-1} u, then s(xi) = sum_j lambda_j * kernel(xi - x_j). </p>
 
 <p>Implements <a class="el" href="../../d0/d61/classbase_1_1__Basis.html#ac9137548fb600ae683c4dbd7fe903bcc">base::_Basis</a>.</p>
 
@@ -521,7 +573,7 @@ double *&#160;</td><td class="memItemRight" valign="bottom"><b>weights</b></td><
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>lib/base/<a class="el" href="../../d3/d5a/base_8h_source.html">base.h</a></li>
-<li>lib/base/<b>radial_base_function.cpp</b></li>
+<li>lib/base/<a class="el" href="../../db/d24/radial__base__function_8cpp.html">radial_base_function.cpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

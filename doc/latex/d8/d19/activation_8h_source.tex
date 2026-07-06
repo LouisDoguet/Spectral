@@ -1,65 +1,66 @@
 \doxysection{activation.\+h}
 \hypertarget{activation_8h_source}{}\label{activation_8h_source}\index{neural/activation.h@{neural/activation.h}}
-
+\mbox{\hyperlink{activation_8h}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ ACTIVATION\_H}}
-\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ ACTIVATION\_H}}
-\DoxyCodeLine{00003\ }
-\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}tensor.h"{}}}
-\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <cstdint>}}
-\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <string>}}
-\DoxyCodeLine{00007\ }
-\DoxyCodeLine{00008\ \textcolor{keyword}{namespace\ }ACTI\ \{}
-\DoxyCodeLine{00009\ }
-\DoxyCodeLine{00013\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classACTI_1_1Activation}{Activation}}\ \{}
-\DoxyCodeLine{00014\ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00019\ \ \ \mbox{\hyperlink{classACTI_1_1Activation_a9f700a5ec30e1ddd2bc72d1d345cd7f7}{Activation}}(std::string\ name)\ :\ name(name)\ \{\};}
-\DoxyCodeLine{00020\ }
-\DoxyCodeLine{00026\ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classACTI_1_1Activation_a029abf4836f99abb62e4372eb4fbd992}{apply}}(\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \&tensor)\ =\ 0;}
-\DoxyCodeLine{00027\ }
-\DoxyCodeLine{00033\ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \mbox{\hyperlink{classACTI_1_1Activation_a86183cd609588b18e44c850a4152c2d0}{gradient}}(\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \&tensor)\ =\ 0;}
-\DoxyCodeLine{00034\ }
-\DoxyCodeLine{00035\ \ \ \textcolor{keyword}{const}\ std::string\&\ getName()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ name;\ \}}
-\DoxyCodeLine{00036\ \ \ \textcolor{keyword}{virtual}\ uint8\_t\ typeId()\ \textcolor{keyword}{const}\ =\ 0;}
-\DoxyCodeLine{00037\ }
-\DoxyCodeLine{00038\ \textcolor{keyword}{protected}:}
-\DoxyCodeLine{00039\ \ \ std::string\ name;}
-\DoxyCodeLine{00040\ \};}
-\DoxyCodeLine{00041\ }
-\DoxyCodeLine{00043\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classACTI_1_1ReLU}{ReLU}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classACTI_1_1Activation}{Activation}}\ \{}
-\DoxyCodeLine{00044\ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00045\ \ \ \mbox{\hyperlink{classACTI_1_1ReLU}{ReLU}}()\ :\ \mbox{\hyperlink{classACTI_1_1Activation}{Activation}}(\textcolor{stringliteral}{"{}ReLU"{}})\ \{\}}
-\DoxyCodeLine{00046\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classACTI_1_1ReLU_ab010942a17cf6b3866a2b507c697386d}{apply}}(\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \&tensor)\ \textcolor{keyword}{override};}
-\DoxyCodeLine{00047\ \ \ \mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \mbox{\hyperlink{classACTI_1_1ReLU_a3fc1d68e3f0718032fb0121b78947775}{gradient}}(\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \&tensor);}
-\DoxyCodeLine{00048\ \ \ uint8\_t\ typeId()\textcolor{keyword}{\ const\ override\ }\{\ \textcolor{keywordflow}{return}\ 0;\ \}}
-\DoxyCodeLine{00049\ \};}
-\DoxyCodeLine{00050\ }
-\DoxyCodeLine{00052\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classACTI_1_1SoftMax}{SoftMax}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classACTI_1_1Activation}{Activation}}\ \{}
-\DoxyCodeLine{00053\ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00054\ \ \ \mbox{\hyperlink{classACTI_1_1SoftMax}{SoftMax}}()\ :\ \mbox{\hyperlink{classACTI_1_1Activation}{Activation}}(\textcolor{stringliteral}{"{}SoftMax"{}})\ \{\};}
-\DoxyCodeLine{00055\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classACTI_1_1SoftMax_a74d7f9626e3cb62183779d67afbacc71}{apply}}(\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \&tensor)\ \textcolor{keyword}{override};}
-\DoxyCodeLine{00056\ \ \ \mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \mbox{\hyperlink{classACTI_1_1SoftMax_a9df9d7a1d21624e11ce2549e1a2c7e3b}{gradient}}(\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \&tensor);}
-\DoxyCodeLine{00057\ \ \ uint8\_t\ typeId()\textcolor{keyword}{\ const\ override\ }\{\ \textcolor{keywordflow}{return}\ 2;\ \}}
-\DoxyCodeLine{00058\ \};}
-\DoxyCodeLine{00059\ }
-\DoxyCodeLine{00061\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classACTI_1_1Sigmoid}{Sigmoid}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classACTI_1_1Activation}{Activation}}\ \{}
-\DoxyCodeLine{00062\ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00063\ \ \ \mbox{\hyperlink{classACTI_1_1Sigmoid}{Sigmoid}}()\ :\ \mbox{\hyperlink{classACTI_1_1Activation}{Activation}}(\textcolor{stringliteral}{"{}Sigmoid"{}})\ \{\};}
-\DoxyCodeLine{00064\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classACTI_1_1Sigmoid_ac825af7d87817111cc0e5fd46a318335}{apply}}(\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \&tensor)\ \textcolor{keyword}{override};}
-\DoxyCodeLine{00065\ \ \ \mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \mbox{\hyperlink{classACTI_1_1Sigmoid_a2bd40f39ebdb860b9c6ad67371029a2c}{gradient}}(\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \&tensor);}
-\DoxyCodeLine{00066\ \ \ uint8\_t\ typeId()\textcolor{keyword}{\ const\ override\ }\{\ \textcolor{keywordflow}{return}\ 1;\ \}}
-\DoxyCodeLine{00067\ \};}
-\DoxyCodeLine{00068\ }
-\DoxyCodeLine{00070\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classACTI_1_1HyperbolicTangent}{HyperbolicTangent}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classACTI_1_1Activation}{Activation}}\ \{}
-\DoxyCodeLine{00071\ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00072\ \ \ \mbox{\hyperlink{classACTI_1_1HyperbolicTangent}{HyperbolicTangent}}()\ :\ \mbox{\hyperlink{classACTI_1_1Activation}{Activation}}(\textcolor{stringliteral}{"{}HyperbolicTangent"{}})\ \{\};}
-\DoxyCodeLine{00073\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classACTI_1_1HyperbolicTangent_ae56865caa329dfa94c5c07ef1aaa3270}{apply}}(\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \&tensor)\ \textcolor{keyword}{override};}
-\DoxyCodeLine{00074\ \ \ \mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \mbox{\hyperlink{classACTI_1_1HyperbolicTangent_af2ff286141ad20b0d62f5d01d517340c}{gradient}}(\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \&tensor);}
-\DoxyCodeLine{00075\ \ \ uint8\_t\ typeId()\textcolor{keyword}{\ const\ override\ }\{\ \textcolor{keywordflow}{return}\ 3;\ \}}
-\DoxyCodeLine{00076\ \};}
-\DoxyCodeLine{00077\ }
-\DoxyCodeLine{00078\ \}\ \textcolor{comment}{//\ namespace\ ACTI}}
-\DoxyCodeLine{00079\ }
-\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#ifndef\ ACTIVATION\_H}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#define\ ACTIVATION\_H}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{tensor_8h}{tensor.h}}"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{namespace\ }ACTI\ \{}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classACTI_1_1Activation}{Activation}}\ \{}
+\DoxyCodeLine{00019\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00024\ \ \ \mbox{\hyperlink{classACTI_1_1Activation_a9f700a5ec30e1ddd2bc72d1d345cd7f7}{Activation}}(std::string\ name)\ :\ name(name)\ \{\};}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00031\ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classACTI_1_1Activation_a029abf4836f99abb62e4372eb4fbd992}{apply}}(\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \&tensor)\ =\ 0;}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00038\ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \mbox{\hyperlink{classACTI_1_1Activation_a86183cd609588b18e44c850a4152c2d0}{gradient}}(\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \&tensor)\ =\ 0;}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \textcolor{keyword}{const}\ std::string\&\ getName()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ name;\ \}}
+\DoxyCodeLine{00041\ \ \ \textcolor{keyword}{virtual}\ uint8\_t\ typeId()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00044\ \ \ std::string\ name;}
+\DoxyCodeLine{00045\ \};}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00048\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classACTI_1_1ReLU}{ReLU}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classACTI_1_1Activation}{Activation}}\ \{}
+\DoxyCodeLine{00049\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00050\ \ \ \mbox{\hyperlink{classACTI_1_1ReLU}{ReLU}}()\ :\ \mbox{\hyperlink{classACTI_1_1Activation}{Activation}}(\textcolor{stringliteral}{"{}ReLU"{}})\ \{\}}
+\DoxyCodeLine{00051\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classACTI_1_1ReLU_ab010942a17cf6b3866a2b507c697386d}{apply}}(\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \&tensor)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00052\ \ \ \mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \mbox{\hyperlink{classACTI_1_1ReLU_a3fc1d68e3f0718032fb0121b78947775}{gradient}}(\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \&tensor);}
+\DoxyCodeLine{00053\ \ \ uint8\_t\ typeId()\textcolor{keyword}{\ const\ override\ }\{\ \textcolor{keywordflow}{return}\ 0;\ \}}
+\DoxyCodeLine{00054\ \};}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00057\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classACTI_1_1SoftMax}{SoftMax}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classACTI_1_1Activation}{Activation}}\ \{}
+\DoxyCodeLine{00058\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00059\ \ \ \mbox{\hyperlink{classACTI_1_1SoftMax}{SoftMax}}()\ :\ \mbox{\hyperlink{classACTI_1_1Activation}{Activation}}(\textcolor{stringliteral}{"{}SoftMax"{}})\ \{\};}
+\DoxyCodeLine{00060\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classACTI_1_1SoftMax_a74d7f9626e3cb62183779d67afbacc71}{apply}}(\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \&tensor)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00061\ \ \ \mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \mbox{\hyperlink{classACTI_1_1SoftMax_a9df9d7a1d21624e11ce2549e1a2c7e3b}{gradient}}(\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \&tensor);}
+\DoxyCodeLine{00062\ \ \ uint8\_t\ typeId()\textcolor{keyword}{\ const\ override\ }\{\ \textcolor{keywordflow}{return}\ 2;\ \}}
+\DoxyCodeLine{00063\ \};}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00066\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classACTI_1_1Sigmoid}{Sigmoid}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classACTI_1_1Activation}{Activation}}\ \{}
+\DoxyCodeLine{00067\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00068\ \ \ \mbox{\hyperlink{classACTI_1_1Sigmoid}{Sigmoid}}()\ :\ \mbox{\hyperlink{classACTI_1_1Activation}{Activation}}(\textcolor{stringliteral}{"{}Sigmoid"{}})\ \{\};}
+\DoxyCodeLine{00069\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classACTI_1_1Sigmoid_ac825af7d87817111cc0e5fd46a318335}{apply}}(\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \&tensor)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00070\ \ \ \mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \mbox{\hyperlink{classACTI_1_1Sigmoid_a2bd40f39ebdb860b9c6ad67371029a2c}{gradient}}(\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \&tensor);}
+\DoxyCodeLine{00071\ \ \ uint8\_t\ typeId()\textcolor{keyword}{\ const\ override\ }\{\ \textcolor{keywordflow}{return}\ 1;\ \}}
+\DoxyCodeLine{00072\ \};}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00075\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classACTI_1_1HyperbolicTangent}{HyperbolicTangent}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classACTI_1_1Activation}{Activation}}\ \{}
+\DoxyCodeLine{00076\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00077\ \ \ \mbox{\hyperlink{classACTI_1_1HyperbolicTangent}{HyperbolicTangent}}()\ :\ \mbox{\hyperlink{classACTI_1_1Activation}{Activation}}(\textcolor{stringliteral}{"{}HyperbolicTangent"{}})\ \{\};}
+\DoxyCodeLine{00078\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classACTI_1_1HyperbolicTangent_ae56865caa329dfa94c5c07ef1aaa3270}{apply}}(\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \&tensor)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00079\ \ \ \mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \mbox{\hyperlink{classACTI_1_1HyperbolicTangent_af2ff286141ad20b0d62f5d01d517340c}{gradient}}(\mbox{\hyperlink{classTENSOR_1_1Tensor}{TENSOR::Tensor}}\ \&tensor);}
+\DoxyCodeLine{00080\ \ \ uint8\_t\ typeId()\textcolor{keyword}{\ const\ override\ }\{\ \textcolor{keywordflow}{return}\ 3;\ \}}
+\DoxyCodeLine{00081\ \};}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \}\ \textcolor{comment}{//\ namespace\ ACTI}}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#endif}}
 
 \end{DoxyCode}

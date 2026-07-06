@@ -1,0 +1,56 @@
+\doxysection{lib/base/radial\+\_\+base\+\_\+function.cpp File Reference}
+\hypertarget{radial__base__function_8cpp}{}\label{radial__base__function_8cpp}\index{lib/base/radial\_base\_function.cpp@{lib/base/radial\_base\_function.cpp}}
+
+
+Methods for RBF base.  
+
+
+{\ttfamily \#include "{}base.\+h"{}}\newline
+{\ttfamily \#include "{}../math/math.\+h"{}}\newline
+{\ttfamily \#include $<$cblas.\+h$>$}\newline
+{\ttfamily \#include $<$cmath$>$}\newline
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{radial__base__function_8cpp_a9b91c72ded7de2f0b393ea75de53929b}\label{radial__base__function_8cpp_a9b91c72ded7de2f0b393ea75de53929b} 
+\#define {\bfseries F77\+NAME}(x)~x\#\#\+\_\+
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{radial__base__function_8cpp_a43b8800c2136a26dbf4b4beaf0d04a3f}\label{radial__base__function_8cpp_a43b8800c2136a26dbf4b4beaf0d04a3f} 
+void F77\+NAME() {\bfseries dgetrf} (int \texorpdfstring{$\ast$}{*}m, int \texorpdfstring{$\ast$}{*}n, double \texorpdfstring{$\ast$}{*}a, int \texorpdfstring{$\ast$}{*}lda, int \texorpdfstring{$\ast$}{*}ipiv, int \texorpdfstring{$\ast$}{*}info)
+\item 
+\Hypertarget{radial__base__function_8cpp_aadf30d86690a37e57444ed3031985029}\label{radial__base__function_8cpp_aadf30d86690a37e57444ed3031985029} 
+void F77\+NAME() {\bfseries dgetri} (int \texorpdfstring{$\ast$}{*}n, double \texorpdfstring{$\ast$}{*}a, int \texorpdfstring{$\ast$}{*}lda, int \texorpdfstring{$\ast$}{*}ipiv, double \texorpdfstring{$\ast$}{*}work, int \texorpdfstring{$\ast$}{*}lwork, int \texorpdfstring{$\ast$}{*}info)
+\item 
+void \mbox{\hyperlink{radial__base__function_8cpp_a47b6144c388343f0c76fb678f797a979}{rad\+::set\+Quads}} (double \texorpdfstring{$\ast$}{*}quads, const int P)
+\begin{DoxyCompactList}\small\item\em Computes the quadrature points of RBF base. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Methods for RBF base. 
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{radial__base__function_8cpp_a47b6144c388343f0c76fb678f797a979}\label{radial__base__function_8cpp_a47b6144c388343f0c76fb678f797a979} 
+\index{radial\_base\_function.cpp@{radial\_base\_function.cpp}!setQuads@{setQuads}}
+\index{setQuads@{setQuads}!radial\_base\_function.cpp@{radial\_base\_function.cpp}}
+\doxysubsubsection{\texorpdfstring{setQuads()}{setQuads()}}
+{\footnotesize\ttfamily void rad\+::set\+Quads (\begin{DoxyParamCaption}\item[{double \texorpdfstring{$\ast$}{*}}]{quads,  }\item[{const int}]{P }\end{DoxyParamCaption})}
+
+
+
+Computes the quadrature points of RBF base. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em quads} & Quadrature points array \\
+\hline
+{\em P} & Order of the LP \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}

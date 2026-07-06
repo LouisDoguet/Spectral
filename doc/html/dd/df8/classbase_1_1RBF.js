@@ -1,5 +1,6 @@
 var classbase_1_1RBF =
 [
+    [ "RBF", "dd/df8/classbase_1_1RBF.html#a1da84077afbe7e1671beb67e76dd8b31", null ],
     [ "activateRadialMatrix", "dd/df8/classbase_1_1RBF.html#abac986047ceae55f2b53a7269f51bb56", null ],
     [ "computeDerivative", "dd/df8/classbase_1_1RBF.html#a294c58581d4e644327f87d61b4343a81", null ],
     [ "computeMassMatrix", "dd/df8/classbase_1_1RBF.html#a793c29e2721dbd18b05970276136a793", null ],
