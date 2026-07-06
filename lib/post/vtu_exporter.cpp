@@ -25,7 +25,7 @@ void VTUExporter::addField(ScalarField field) {
 
 void VTUExporter::addSensorField(const std::string& name, sens::_Sensor* sensor) {
     addField({name,
-              [sensor](elem::Element& elem,
+              [sensor](elm::Element& elem,
                        const double* ref_pts, int n_plot,
                        const double* quads, const double* weights, int P,
                        double* out) {
@@ -41,9 +41,9 @@ void VTUExporter::addSensorField(const std::string& name, sens::_Sensor* sensor)
 }
 
 void VTUExporter::addElemField(const std::string& name,
-                               std::function<double(elem::Element&)> fn) {
+                               std::function<double(elm::Element&)> fn) {
     addField({name,
-              [fn](elem::Element& elem,
+              [fn](elm::Element& elem,
                    const double* /*ref_pts*/, int n_plot,
                    const double* /*quads*/, const double* /*weights*/, int /*P*/,
                    double* out) {
@@ -170,7 +170,7 @@ void VTUExporter::writePVD(const std::string& prefix) {
 
 ScalarField VTUExporter::fieldRho() {
     return {"rho",
-            [](elem::Element& elem,
+            [](elm::Element& elem,
                const double* ref_pts, int n_plot,
                const double* /*quads*/, const double* /*weights*/, int /*P*/,
                double* out) {
@@ -180,7 +180,7 @@ ScalarField VTUExporter::fieldRho() {
 
 ScalarField VTUExporter::fieldVelocity() {
     return {"velocity",
-            [](elem::Element& elem,
+            [](elm::Element& elem,
                const double* ref_pts, int n_plot,
                const double* /*quads*/, const double* /*weights*/, int P,
                double* out) {
@@ -196,7 +196,7 @@ ScalarField VTUExporter::fieldVelocity() {
 
 ScalarField VTUExporter::fieldPressure() {
     return {"pressure",
-            [](elem::Element& elem,
+            [](elm::Element& elem,
                const double* ref_pts, int n_plot,
                const double* /*quads*/, const double* /*weights*/, int P,
                double* out) {
@@ -215,7 +215,7 @@ ScalarField VTUExporter::fieldPressure() {
 
 ScalarField VTUExporter::fieldAViscosity() {
     return {"a_viscosity",
-            [](elem::Element& elem,
+            [](elm::Element& elem,
                const double* ref_pts, int n_plot,
                const double* /*quads*/, const double* /*weights*/, int /*P*/,
                double* out) {
@@ -226,7 +226,7 @@ ScalarField VTUExporter::fieldAViscosity() {
 ScalarField VTUExporter::fieldBasisIndicator() {
     mesh::Mesh* mesh_ptr = m;
     return {"basis_id",
-            [mesh_ptr](elem::Element& elem,
+            [mesh_ptr](elm::Element& elem,
                        const double* /*ref_pts*/, int n_plot,
                        const double* /*quads*/, const double* /*weights*/, int /*P*/,
                        double* out) {
@@ -239,7 +239,7 @@ ScalarField VTUExporter::fieldBasisIndicator() {
 
 ScalarField VTUExporter::fieldLapPressure() {
     return {"lap_pressure",
-            [](elem::Element& elem,
+            [](elm::Element& elem,
                const double* ref_pts, int n_plot,
                const double* /*quads*/, const double* /*weights*/, int /*P*/,
                double* out) {

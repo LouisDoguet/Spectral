@@ -46,7 +46,7 @@ void _Solver::collect_residuals() {
   int n_elem = m->getNumElements();
   int n_quads = total_points / n_elem;
   for (int e = 0; e < n_elem; ++e) {
-    const elem::Element *el = m->getElem(e);
+    const elm::Element *el = m->getElem(e);
     std::memcpy(&global_df1[e * n_quads], el->getDivF1(),
                 n_quads * sizeof(double));
     std::memcpy(&global_df2[e * n_quads], el->getDivF2(),

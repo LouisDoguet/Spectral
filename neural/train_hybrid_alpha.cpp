@@ -121,7 +121,7 @@ int main(int argc, char *argv[]) {
         M->computeHybridResidual(alpha_all.data());
 
         for (int e = 0; e < n_elem; ++e) {
-          const elem::Element *E = M->getElem(e);
+          const elm::Element *E = M->getElem(e);
           const double *rho = E->getU1();
           const double *rhou = E->getU2();
           const double *en = E->getU3();

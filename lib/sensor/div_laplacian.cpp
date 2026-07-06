@@ -4,7 +4,7 @@
 #include <cmath>
 #include "cblas.h"
 
-double* sens::DivLaplacian::getSensor(elem::Element& elem){
+double* sens::DivLaplacian::getSensor(elm::Element& elem){
     int N = elem.getBasis()->getOrder() + 1;
 
     const double* divV = elem.computeVelocityDivergence();
@@ -21,6 +21,6 @@ double* sens::DivLaplacian::getSensor(elem::Element& elem){
     return S;
 }
 
-double* sens::DivLaplacian::SmoothnessIndicator(elem::Element& elem){
+double* sens::DivLaplacian::SmoothnessIndicator(elm::Element& elem){
     return sens::DivLaplacian::getSensor(elem);
 }

@@ -30,7 +30,7 @@ namespace diff {
  * @param n   Number of modes (P+1).
  * @param out Output buffer (resized to n).
  */
-inline void modal_energy_features(elem::Element *E, int n,
+inline void modal_energy_features(elm::Element *E, int n,
                                   std::vector<double> &out) {
   E->computeLegendreCoefficients();
   const double *mc = E->getModes();

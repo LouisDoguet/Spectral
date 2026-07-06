@@ -19,7 +19,7 @@ public:
      * Caller owns the returned array and must delete[] it.
      * Default returns nullptr (sensor does not support direct export).
      */
-    virtual double* getSensor(elem::Element& elem) { return nullptr; }
+    virtual double* getSensor(elm::Element& elem) { return nullptr; }
     virtual ~_Sensor() = default;
 };
 
@@ -29,7 +29,7 @@ public:
     /// Caller is expected to have computed the element's Legendre coefficients
     /// beforehand (via `elem.computeLegendreCoefficients()`) so this method
     /// stays free of side effects.
-    double SmoothnessIndicator(elem::Element& elem, int truncation);
+    double SmoothnessIndicator(elm::Element& elem, int truncation);
 
 
     /**
@@ -46,17 +46,17 @@ public:
      * @param elem `Element` to apply the sensor to
      * @return None
      */
-    double* getViscosity(elem::Element& elem, int truncation, double s0, double kappa, double eps0);
-    double* getSensor(elem::Element& elem, int truncation);
+    double* getViscosity(elm::Element& elem, int truncation, double s0, double kappa, double eps0);
+    double* getSensor(elm::Element& elem, int truncation);
 };
 
 class DivLaplacian : public _Sensor {
 private:
-    double* SmoothnessIndicator(elem::Element& elem);
+    double* SmoothnessIndicator(elm::Element& elem);
 
 public:
     DivLaplacian() : _Sensor("DivLaplacian") {};
-    double* getSensor(elem::Element& elem) override;
+    double* getSensor(elm::Element& elem) override;
 };
 
 } // namespace sens

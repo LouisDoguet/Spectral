@@ -14,12 +14,14 @@ namespace solver {
  * Each time step:
  *  1. Compute per-element blending factor alpha[e] from the Persson-Peraire
  *     modal energy indicator applied to density (Eqs. 40-48 of the paper).
- *  2. Advance U^n -> U^{n+1} with classical RK4, using
- *     Mesh::computeHybridResidual(alpha) instead of computeResidual().
+ *  2. Advance U^n -> U^{n+1} with classical RK4, using the hybrid residual
+ *     Mesh::computeHybridResidual(alpha) = (1-alpha) R_DG + alpha R_FV, a
+ *     direct convex combination of the entropy-stable DG and FV residuals
+ *     (Mesh::computeDGResidual / Mesh::computeFVResidual).
  *
  * The blending factor controls the amount of first-order FV dissipation:
- *   alpha = 0 -> pure high-order entropy-conservative DGSEM.
- *   alpha = 1 -> pure first-order entropy-stable FV.
+ *   alpha = 0 -> pure high-order entropy-conservative DGSEM (R_DG).
+ *   alpha = 1 -> pure first-order entropy-stable FV (R_FV).
  *
  * Parameters (set via setIndicatorParams):
  *   alpha_max  : cap on alpha (default 0.5, recommended for N=4).

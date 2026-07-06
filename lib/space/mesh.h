@@ -40,48 +40,93 @@ public:
        double u1_R, double u2_R, double u3_R);
 
   /// GETTERS
-  const elem::Element *getElem(int i) const { return elem[i]; }
-  elem::Element *getElem(int i) { return elem[i]; }
+  
+  /// @brief Getter for the element `i`
+  /// @param i Index of the element
+  /// @return const `element` pointer
+  const elm::Element *getElem(int i) const { return elem[i]; }
+
+  /// @brief Getter for the element `i`
+  /// @param i Index of the element
+  /// @return `element` pointer
+  elm::Element *getElem(int i) { return elem[i]; }
+
   int getNumElements() const { return n; }
+
   // Getters for global contiguous buffers
   double *getGlobalU1() { return global_rho; }
   double *getGlobalU2() { return global_rhou; }
   double *getGlobalU3() { return global_e; }
+
+  /// @brief Getter for the mesh basis
+  /// @return `_Basis` pointer
   const base::_Basis *getBasis() { return elem[0]->getBasis(); }
   int getTotalPoints() const {
     return n * (elem[0]->getBasis()->getOrder() + 1);
   }
 
   /// Flux solving routines
-  void computeElements();   // Computes df/dx
+  void computeElements();   // Computes `df/dx`
   void computeInterfaces(); // Computes the Reimann problem at interface
+
   /**
-   * @brief Find R(U) for an element (dU/dt = -dF/dx)
-   * From the initialized U, for all elements:
-   * - Computes F
-   * - Applies the divergence (dFdx)
-   * - Applies the Reimann correction at the elements boundaries
-   * For the first and last elements:
-   * - Applies Boundary Conditions
+   * @brief Standard nodal DG residual `(dU/dt = -dF/dx)`.
+   *
+   * The classical strong-form DGSEM used by the plain RK4 solver: 
+   * 
+   * - volume term :  divergence of the nodal flux `F(U)`          (`computeElements`)
+   * 
+   * - surface term: Rusanov numerical flux at element faces       (`computeInterfaces`)
+   * 
+   * - boundaries:   Dirichlet Rusanov lift                        (`applyDirichlet`)
+   * 
+   * - closure:      `(1/J) * Minv * divF`                         (`applyMassInverse`)
+   *
+   * @note This is NOT entropy stable (Rusanov + strong form). The
+   *       entropy-stable high-order operator is computeDGResidual().
    */
   void computeResidual();
 
   /**
-   * @brief Hybrid DGSEM residual (Hennemann et al. 2021).
+   * @brief Entropy-stable high-order DG residual (Hennemann et al. 2021).
    *
-   * Replaces computeResidual() for the entropy-stable hybrid scheme.
-   * For each element, blends a high-order entropy-conservative (EC) split-form
-   * volume term with a first-order entropy-stable (ES) finite-volume subcell
-   * term using the per-element blending factor alpha[e] in [0,1]:
+   * The alpha = 0 limit of the hybrid scheme:
+   * 
+   * - volume term:  entropy-conservative (Chandrashekar) split-form flux,
+   *                 assembled as subcell fluxes via the SBP recurrence;
+   * 
+   * - surface term: entropy-stable (EC + LLF) flux at element faces / boundaries.
    *
-   *   R = alpha * R_FV  +  (1-alpha) * R_DG
+   * Result is left in each element's divF array (post mass-inverse), ready to be
+   * gathered by the solver exactly like computeResidual().
+   */
+  void computeDGResidual();
+
+  /**
+   * @brief First-order entropy-stable finite-volume residual.
    *
-   * At element interfaces the ES flux (Chandrashekar EC + LLF dissipation) is
-   * used instead of the Rusanov flux, providing guaranteed entropy dissipation.
+   * Each LGL node is treated as a subcell. 
+   * 
+   * The interior subcell fluxes are the entropy-stable two-point flux `f*_ES(u_j, u_{j+1})` and the element faces use the same ES flux as the DG
+   * residual, so the two residuals share an identical surface term.
+   */
+  void computeFVResidual();
+
+  /**
+   * @brief Hybrid DGSEM residual: a direct convex combination of the DG and FV
+   *        residuals (Hennemann et al. 2021, Eqs. 16 & 18).
+   *
+   *   `R = (1 - alpha) * R_DG  +  alpha * R_FV`      (per element)
+   *
+   * Because `R_DG` and `R_FV` share the same entropy-stable surface term and the
+   * mass-inverse is linear, this element-wise blend of the two residuals is
+   * exactly the Eq. 18 blend of the subcell fluxes.
    *
    * @param alpha Per-element blending factors, length n.
-   *              alpha=0: pure high-order EC DGSEM.
-   *              alpha=1: pure first-order ES finite volume.
+   * 
+   *              `alpha=0`: pure high-order EC DGSEM (`computeDGResidual`).
+   * 
+   *              `alpha=1`: pure first-order ES finite volume (`computeFVResidual`).
    */
   void computeHybridResidual(const double* alpha);
 
@@ -94,20 +139,40 @@ public:
   base::_Basis* getPrimaryBasis() const { return primary_basis; }
   base::_Basis* getAltBasis()    const { return alt_basis; }
 
-  /// @brief Per-element basis switching driven by the Persson-Peraire shock
-  ///   indicator log10(Se):
-  ///     - currently on primary, logSe > s_shock  -> migrate to alt
-  ///     - currently on alt,     logSe < s_smooth -> migrate back to primary
-  ///   Each migration triggers Element::setBasis (re-interpolation + setFlux).
+  /// @brief Per-element basis switching driven by the Persson-Peraire shock indicator `log10(Se)`:
+  ///
+  ///     - currently on primary, `logSe > s_shock`  -> migrate to alt
+  ///
+  ///     - currently on alt,     `logSe < s_smooth` -> migrate back to primary
+  ///
+  ///   Each migration triggers `Element::setBasis` (re-interpolation + setFlux).
   ///   Caller is responsible for calling this between time steps only.
+  /// @note NOT USED ANYMORE - Base switch not efficient
   void adaptBasis(sens::PerssonPeraire& sensor, int truncation,
                   double s_shock, double s_smooth);
 
   ~Mesh();
 
 private:
+  /// @name Hybrid-scheme building blocks (shared by the DG / FV / hybrid residuals)
+  /// @{
+  /// Build the Nn+1 high-order (entropy-conservative) subcell interface fluxes
+  /// of element e via the SBP recurrence. B* must have length Nn+1.
+  void buildSubcellFluxDG(int e, double *B1, double *B2, double *B3) const;
+  /// Build the Nn+1 first-order (entropy-stable) subcell interface fluxes of
+  /// element e. B* must have length Nn+1.
+  void buildSubcellFluxFV(int e, double *B1, double *B2, double *B3) const;
+  /// Store the subcell-flux divergence divF_j = B_{j+1} - B_j into element e.
+  void storeSubcellDivergence(int e, const double *B1, const double *B2,
+                              const double *B3);
+  /// Entropy-stable surface lift at interior element faces (shared DG/FV term).
+  void applyEntropyStableInterfaces();
+  /// Entropy-stable surface lift at the two domain boundaries.
+  void applyEntropyStableBoundaries();
+  /// @}
+
   const int n;
-  elem::Element **elem;
+  elm::Element **elem;
   base::_Basis* primary_basis = nullptr;  // smooth-region basis (Lagrange)
   base::_Basis* alt_basis     = nullptr;  // shock-resolving basis (RBF)
 

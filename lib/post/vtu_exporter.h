@@ -18,7 +18,7 @@ namespace post {
  */
 struct ScalarField {
     std::string name;
-    std::function<void(elem::Element& elem,
+    std::function<void(elm::Element& elem,
                        const double* ref_pts, int n_plot,
                        const double* quads, const double* weights, int P,
                        double* out)> fill;
@@ -55,7 +55,7 @@ public:
      * all n_plot output points of that element.
      */
     void addElemField(const std::string& name,
-                      std::function<double(elem::Element&)> fn);
+                      std::function<double(elm::Element&)> fn);
 
     /**
      * @brief Export at the genuine computed nodes instead of a uniform grid.

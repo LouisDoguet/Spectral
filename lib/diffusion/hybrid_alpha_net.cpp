@@ -19,7 +19,7 @@ void HybridAlphaNet::fillAlpha(mesh::Mesh *mesh, std::vector<double> &alpha) {
 
   std::vector<double> feat;
   for (int e = 0; e < n_elem; ++e) {
-    elem::Element *E = mesh->getElem(e);
+    elm::Element *E = mesh->getElem(e);
     modal_energy_features(E, n, feat);
 
     TENSOR::Tensor in(1, n);

@@ -6,7 +6,7 @@
 
 static const double GAMMA = 1.4;
 
-namespace elem {
+namespace elm {
 /**
  * @brief Class storing an element
  */

@@ -9,6 +9,20 @@
 
 namespace mesh {
 
+
+/// @brief Physical 1D Euler flux `F(U)` at a single node.
+///
+/// Used for the subcell-flux endpoints and the entropy-stable surface lifts.
+inline void physicalFlux(double rho, double rhou, double en, double &f1,
+                         double &f2, double &f3) {
+  double p;
+  phy::getP(&p, &rho, &rhou, &en, 1);
+  const double u = rhou / rho;
+  f1 = rhou;             // rho * u
+  f2 = rhou * u + p;     // rho * u^2 + p
+  f3 = u * (en + p);     // u * (E + p)
+}
+
 Mesh::Mesh(const int n, base::_Basis *basis, double xL, double xR) : n(n) {
   /// Basis + space definition
   primary_basis = basis;
@@ -23,14 +37,14 @@ Mesh::Mesh(const int n, base::_Basis *basis, double xL, double xR) : n(n) {
   global_AV = new double[n * nquads];
 
   /// Element creation
-  this->elem = new elem::Element *[n];
+  this->elem = new elm::Element *[n];
 
   /// Mesh generation
   /// Arrays attributed to the corresponding elements
   double x_iter = xL;
   for (int e = 0; e < n; ++e) {
     elem[e] =
-        new elem::Element(e, basis, x_iter, x_iter + dx,
+        new elm::Element(e, basis, x_iter, x_iter + dx,
                           &global_rho[e * nquads], &global_rhou[e * nquads],
                           &global_e[e * nquads], &global_AV[e * nquads]);
     elem[e]->setFlux();
@@ -56,7 +70,7 @@ Mesh::Mesh(const int n, base::_Basis *basis, double xL, double xR,
   global_AV = new double[n * nquads];
 
   /// Pointers to the elements
-  this->elem = new elem::Element *[n];
+  this->elem = new elm::Element *[n];
 
   double x_iter = xL;
   for (int e = 0; e < n; ++e) {
@@ -74,7 +88,7 @@ Mesh::Mesh(const int n, base::_Basis *basis, double xL, double xR,
     /// Construct the element e with for values it's position in the global
     /// buffer
     elem[e] =
-        new elem::Element(e, basis, xL_elem, xR_elem, &global_rho[e * nquads],
+        new elm::Element(e, basis, xL_elem, xR_elem, &global_rho[e * nquads],
                           &global_rhou[e * nquads], &global_e[e * nquads],
                           &global_AV[e * nquads]);
 
@@ -95,8 +109,8 @@ void Mesh::computeInterfaces() {
 
   for (int e = 0; e < n - 1; ++e) {
     /// Select iteracting elements
-    elem::Element *LeftElem = elem[e];
-    elem::Element *RightElem = elem[e + 1];
+    elm::Element *LeftElem = elem[e];
+    elm::Element *RightElem = elem[e + 1];
 
     /// Set up of the useful values
     double u1L = *(LeftElem->getU1(P));
@@ -205,16 +219,18 @@ void Mesh::applyDirichlet() {
 }
 
 void Mesh::computeResidual() {
+  // --- Standard strong-form DG residual (Rusanov, non entropy-stable) --------
+  // U -> F(U)
   for (int e = 0; e < n; ++e) {
     elem[e]->setFlux();
   }
-  /// Computes the mesh residuals (-divFlux)
+  // DG volume term: divF <- divergence of the nodal flux
   this->computeElements();
-  /// Apply the Reimann flux
+  // DG surface term: Rusanov numerical flux at interior faces
   this->computeInterfaces();
-  /// Apply boundary conditions
+  // Boundary term: Dirichlet Rusanov lift
   this->applyDirichlet();
-  /// Final stage: divFk <- (1/J) * Minv * divFk on each element.
+  // Closure: divF <- (1/J) * Minv * divF on each element
   for (int e = 0; e < n; ++e) {
     elem[e]->applyMassInverse();
   }
@@ -227,7 +243,7 @@ void Mesh::adaptBasis(sens::PerssonPeraire &sensor, int truncation,
     return;
 
   for (int e = 0; e < n; ++e) {
-    elem::Element *E = elem[e];
+    elm::Element *E = elem[e];
     // Modal coefficients depend on the current basis -> refresh first.
     E->computeLegendreCoefficients();
     const double Se = sensor.SmoothnessIndicator(*E, truncation);
@@ -244,86 +260,89 @@ void Mesh::adaptBasis(sens::PerssonPeraire &sensor, int truncation,
   }
 }
 
-void Mesh::computeHybridResidual(const double *alpha) {
+// ---------------------------------------------------------------------------
+// Hybrid-scheme building blocks
+// ---------------------------------------------------------------------------
+// Both the DG and the FV residual are assembled from Nn+1 "subcell interface
+// fluxes" B_0 .. B_Nn per element: the residual at node j is the flux jump
+// divF_j = B_{j+1} - B_j (before the mass-inverse). The two schemes differ only
+// in how the interior fluxes B_1 .. B_{Nn-1} are built; the endpoints B_0, B_Nn
+// carry the physical flux and are overwritten by the shared ES surface lift.
+
+void Mesh::buildSubcellFluxDG(int e, double *B1, double *B2, double *B3) const {
   const int Nn = elem[0]->getBasis()->getOrder() + 1;
   const double *w = elem[0]->getBasis()->getWeights();
   const double *D = elem[0]->getBasis()->getD();
+  const double *rho = elem[e]->getU1();
+  const double *rhou = elem[e]->getU2();
+  const double *en = elem[e]->getU3();
 
-  const int stride = Nn + 1;
-  std::vector<double> fb1(n * stride, 0.0);
-  std::vector<double> fb2(n * stride, 0.0);
-  std::vector<double> fb3(n * stride, 0.0);
-
+  // Entropy-conservative (Chandrashekar) two-point flux for every node pair.
   std::vector<double> ec1(Nn * Nn), ec2(Nn * Nn), ec3(Nn * Nn);
+  for (int j = 0; j < Nn; ++j)
+    for (int k = 0; k < Nn; ++k)
+      entropy::chandrashekar_ec(rho[j], rhou[j], en[j], rho[k], rhou[k], en[k],
+                                ec1[j * Nn + k], ec2[j * Nn + k],
+                                ec3[j * Nn + k]);
 
-  // Element-local blended subcell fluxes
-  for (int e = 0; e < n; ++e) {
-    const double *rho = elem[e]->getU1();
-    const double *rhou = elem[e]->getU2();
-    const double *en = elem[e]->getU3();
-    const double alp = alpha[e];
-    double *B1 = fb1.data() + e * stride;
-    double *B2 = fb2.data() + e * stride;
-    double *B3 = fb3.data() + e * stride;
+  // Left endpoint: physical flux.
+  physicalFlux(rho[0], rhou[0], en[0], B1[0], B2[0], B3[0]);
 
-    for (int j = 0; j < Nn; ++j)
-      for (int k = 0; k < Nn; ++k)
-        entropy::chandrashekar_ec(rho[j], rhou[j], en[j], rho[k], rhou[k],
-                                  en[k], ec1[j * Nn + k], ec2[j * Nn + k],
-                                  ec3[j * Nn + k]);
-
-    {
-      double p0;
-      phy::getP(&p0, const_cast<double *>(rho), const_cast<double *>(rhou),
-                const_cast<double *>(en), 1);
-      B1[0] = rhou[0];
-      B2[0] = rhou[0] * rhou[0] / rho[0] + p0;
-      B3[0] = rhou[0] / rho[0] * (en[0] + p0);
+  // SBP recurrence (Hennemann Eq. 7): telescoping of the split-form EC volume
+  //   B_{j+1} = B_j + 2 w_j * sum_k D_{jk} f*_EC(u_j, u_k).
+  for (int j = 0; j < Nn - 1; ++j) {
+    double d1 = 0.0, d2 = 0.0, d3 = 0.0;
+    for (int k = 0; k < Nn; ++k) {
+      const double Djk = D[j * Nn + k];
+      d1 += Djk * ec1[j * Nn + k];
+      d2 += Djk * ec2[j * Nn + k];
+      d3 += Djk * ec3[j * Nn + k];
     }
-
-    for (int j = 0; j < Nn - 1; ++j) {
-      double d1 = 0.0, d2 = 0.0, d3 = 0.0;
-      for (int k = 0; k < Nn; ++k) {
-        const double Djk = D[j * Nn + k];
-        d1 += Djk * ec1[j * Nn + k];
-        d2 += Djk * ec2[j * Nn + k];
-        d3 += Djk * ec3[j * Nn + k];
-      }
-      const double w2j = 2.0 * w[j];
-      const double fbar1_hi = B1[j] + w2j * d1;
-      const double fbar2_hi = B2[j] + w2j * d2;
-      const double fbar3_hi = B3[j] + w2j * d3;
-
-      double fv1, fv2, fv3;
-      entropy::entropy_stable_lf(rho[j], rhou[j], en[j], rho[j + 1],
-                                 rhou[j + 1], en[j + 1], fv1, fv2, fv3);
-
-      B1[j + 1] = alp * fv1 + (1.0 - alp) * fbar1_hi;
-      B2[j + 1] = alp * fv2 + (1.0 - alp) * fbar2_hi;
-      B3[j + 1] = alp * fv3 + (1.0 - alp) * fbar3_hi;
-    }
-
-    {
-    const int NL = Nn - 1;
-    double pN; 
-    phy::getP(&pN, const_cast<double*>(rho + NL),      
-                                const_cast<double*>(rhou + NL),
-                                const_cast<double*>(en   + NL), 1);
-      B1[Nn] = rhou[NL];
-      B2[Nn] = rhou[NL] * rhou[NL] / rho[NL] + pN;
-      B3[Nn] = rhou[NL] / rho[NL] * (en[NL] + pN);
-    }
-
-    for (int j = 0; j < Nn; ++j) {
-      elem[e]->setDivF1(j, B1[j + 1] - B1[j]);
-      elem[e]->setDivF2(j, B2[j + 1] - B2[j]);
-      elem[e]->setDivF3(j, B3[j + 1] - B3[j]);
-    }
+    const double w2j = 2.0 * w[j];
+    B1[j + 1] = B1[j] + w2j * d1;
+    B2[j + 1] = B2[j] + w2j * d2;
+    B3[j + 1] = B3[j] + w2j * d3;
   }
 
-  // Inter-element ES interface flux surface corrections
+  // Right endpoint: physical flux.
+  physicalFlux(rho[Nn - 1], rhou[Nn - 1], en[Nn - 1], B1[Nn], B2[Nn], B3[Nn]);
+}
+
+void Mesh::buildSubcellFluxFV(int e, double *B1, double *B2, double *B3) const {
+  const int Nn = elem[0]->getBasis()->getOrder() + 1;
+  const double *rho = elem[e]->getU1();
+  const double *rhou = elem[e]->getU2();
+  const double *en = elem[e]->getU3();
+
+  // Left endpoint: physical flux.
+  physicalFlux(rho[0], rhou[0], en[0], B1[0], B2[0], B3[0]);
+
+  // Interior: first-order entropy-stable flux across each subcell interface.
+  for (int j = 0; j < Nn - 1; ++j)
+    entropy::entropy_stable_lf(rho[j], rhou[j], en[j], rho[j + 1], rhou[j + 1],
+                               en[j + 1], B1[j + 1], B2[j + 1], B3[j + 1]);
+
+  // Right endpoint: physical flux.
+  physicalFlux(rho[Nn - 1], rhou[Nn - 1], en[Nn - 1], B1[Nn], B2[Nn], B3[Nn]);
+}
+
+void Mesh::storeSubcellDivergence(int e, const double *B1, const double *B2,
+                                  const double *B3) {
+  const int Nn = elem[0]->getBasis()->getOrder() + 1;
+  // divF_j = B_{j+1} - B_j; applyMassInverse() later scales by 1/(J w_j).
+  for (int j = 0; j < Nn; ++j) {
+    elem[e]->setDivF1(j, B1[j + 1] - B1[j]);
+    elem[e]->setDivF2(j, B2[j + 1] - B2[j]);
+    elem[e]->setDivF3(j, B3[j + 1] - B3[j]);
+  }
+}
+
+void Mesh::applyEntropyStableInterfaces() {
+  const int Nn = elem[0]->getBasis()->getOrder() + 1;
+  const int NL = Nn - 1;
+  // Mirrors computeInterfaces() but with the entropy-stable flux instead of
+  // Rusanov: L_i = (F* - F^int) at each interface node.
   for (int e = 0; e < n - 1; ++e) {
-    const int NL = Nn - 1;
     const double uL1 = elem[e]->getRho(NL);
     const double uL2 = *(elem[e]->getU2(NL));
     const double uL3 = *(elem[e]->getU3(NL));
@@ -334,15 +353,9 @@ void Mesh::computeHybridResidual(const double *alpha) {
     double f1s, f2s, f3s;
     entropy::entropy_stable_lf(uL1, uL2, uL3, uR1, uR2, uR3, f1s, f2s, f3s);
 
-    double pL, pR;
-    phy::getP(&pL, const_cast<double *>(&uL1), const_cast<double *>(&uL2),
-              const_cast<double *>(&uL3), 1);
-    phy::getP(&pR, const_cast<double *>(&uR1), const_cast<double *>(&uR2),
-              const_cast<double *>(&uR3), 1);
-    const double fL1 = uL2, fL2 = uL2 * uL2 / uL1 + pL,
-                 fL3 = uL2 / uL1 * (uL3 + pL);
-    const double fR1 = uR2, fR2 = uR2 * uR2 / uR1 + pR,
-                 fR3 = uR2 / uR1 * (uR3 + pR);
+    double fL1, fL2, fL3, fR1, fR2, fR3;
+    physicalFlux(uL1, uL2, uL3, fL1, fL2, fL3);
+    physicalFlux(uR1, uR2, uR3, fR1, fR2, fR3);
 
     elem[e]->correctDivF1(NL, f1s - fL1);
     elem[e]->correctDivF2(NL, f2s - fL2);
@@ -352,54 +365,107 @@ void Mesh::computeHybridResidual(const double *alpha) {
     elem[e + 1]->correctDivF2(0, fR2 - f2s);
     elem[e + 1]->correctDivF3(0, fR3 - f3s);
   }
+}
 
-  // Domain boundary ES flux corrections
+void Mesh::applyEntropyStableBoundaries() {
+  const int Nn = elem[0]->getBasis()->getOrder() + 1;
+  const int NL = Nn - 1;
+
+  // Left domain boundary (element 0, node 0): lift (F^int - F*).
   {
     const double ui1 = elem[0]->getRho(0);
     const double ui2 = *(elem[0]->getU2(0));
     const double ui3 = *(elem[0]->getU3(0));
-    double pi, pe;
-    phy::getP(&pi, const_cast<double *>(&ui1), const_cast<double *>(&ui2),
-              const_cast<double *>(&ui3), 1);
-    phy::getP(&pe, const_cast<double *>(&u1_L), const_cast<double *>(&u2_L),
-              const_cast<double *>(&u3_L), 1);
-    const double fe1 = u2_L, fe2 = u2_L * u2_L / u1_L + pe,
-                 fe3 = u2_L / u1_L * (u3_L + pe);
-    const double fi1 = ui2, fi2 = ui2 * ui2 / ui1 + pi,
-                 fi3 = ui2 / ui1 * (ui3 + pi);
+    double fi1, fi2, fi3;
+    physicalFlux(ui1, ui2, ui3, fi1, fi2, fi3);
     double fs1, fs2, fs3;
     entropy::entropy_stable_lf(u1_L, u2_L, u3_L, ui1, ui2, ui3, fs1, fs2, fs3);
     elem[0]->correctDivF1(0, fi1 - fs1);
     elem[0]->correctDivF2(0, fi2 - fs2);
     elem[0]->correctDivF3(0, fi3 - fs3);
-    (void)fe1;
-    (void)fe2;
-    (void)fe3;
-
-    const int last = n - 1;
-    const int NL = Nn - 1;
-    const double ui1r = elem[last]->getRho(NL);
-    const double ui2r = *(elem[last]->getU2(NL));
-    const double ui3r = *(elem[last]->getU3(NL));
-    double pir, per;
-    phy::getP(&pir, const_cast<double *>(&ui1r), const_cast<double *>(&ui2r),
-              const_cast<double *>(&ui3r), 1);
-    phy::getP(&per, const_cast<double *>(&u1_R), const_cast<double *>(&u2_R),
-              const_cast<double *>(&u3_R), 1);
-    const double fir1 = ui2r, fir2 = ui2r * ui2r / ui1r + pir,
-                 fir3 = ui2r / ui1r * (ui3r + pir);
-    double fsr1, fsr2, fsr3;
-    entropy::entropy_stable_lf(ui1r, ui2r, ui3r, u1_R, u2_R, u3_R, fsr1, fsr2,
-                               fsr3);
-    elem[last]->correctDivF1(NL, fsr1 - fir1);
-    elem[last]->correctDivF2(NL, fsr2 - fir2);
-    elem[last]->correctDivF3(NL, fsr3 - fir3);
-    (void)per;
   }
 
-  // Mass-matrix inverse + Jacobian scaling
+  // Right domain boundary (last element, node Nn-1): lift (F* - F^int).
+  {
+    const int last = n - 1;
+    const double ui1 = elem[last]->getRho(NL);
+    const double ui2 = *(elem[last]->getU2(NL));
+    const double ui3 = *(elem[last]->getU3(NL));
+    double fi1, fi2, fi3;
+    physicalFlux(ui1, ui2, ui3, fi1, fi2, fi3);
+    double fs1, fs2, fs3;
+    entropy::entropy_stable_lf(ui1, ui2, ui3, u1_R, u2_R, u3_R, fs1, fs2, fs3);
+    elem[last]->correctDivF1(NL, fs1 - fi1);
+    elem[last]->correctDivF2(NL, fs2 - fi2);
+    elem[last]->correctDivF3(NL, fs3 - fi3);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Entropy-stable residuals (DG / FV / hybrid)
+// ---------------------------------------------------------------------------
+void Mesh::computeDGResidual() {
+  const int Nn = elem[0]->getBasis()->getOrder() + 1;
+  std::vector<double> B1(Nn + 1); 
+  std::vector<double> B2(Nn + 1); 
+  std::vector<double> B3(Nn + 1);
+  // Volume term: high-order entropy-conservative subcell fluxes.
+  for (int e = 0; e < n; ++e) {
+    buildSubcellFluxDG(e, B1.data(), B2.data(), B3.data());
+    storeSubcellDivergence(e, B1.data(), B2.data(), B3.data());
+  }
+  // Surface term + closure.
+  applyEntropyStableInterfaces();
+  applyEntropyStableBoundaries();
   for (int e = 0; e < n; ++e)
     elem[e]->applyMassInverse();
+}
+
+void Mesh::computeFVResidual() {
+  const int Nn = elem[0]->getBasis()->getOrder() + 1;
+  std::vector<double> B1(Nn + 1); 
+  std::vector<double> B2(Nn + 1); 
+  std::vector<double> B3(Nn + 1);
+  // Volume term: first-order entropy-stable subcell fluxes.
+  for (int e = 0; e < n; ++e) {
+    buildSubcellFluxFV(e, B1.data(), B2.data(), B3.data());
+    storeSubcellDivergence(e, B1.data(), B2.data(), B3.data());
+  }
+  // Surface term + closure (identical to the DG residual).
+  applyEntropyStableInterfaces();
+  applyEntropyStableBoundaries();
+  for (int e = 0; e < n; ++e)
+    elem[e]->applyMassInverse();
+}
+
+void Mesh::computeHybridResidual(const double *alpha) {
+  const int Nn = elem[0]->getBasis()->getOrder() + 1;
+
+  // 1) First-order FV residual -> stash it (per node).
+  computeFVResidual();
+  std::vector<double> fv1(n * Nn), fv2(n * Nn), fv3(n * Nn);
+  for (int e = 0; e < n; ++e)
+    for (int j = 0; j < Nn; ++j) {
+      fv1[e * Nn + j] = *(elem[e]->getDivF1(j));
+      fv2[e * Nn + j] = *(elem[e]->getDivF2(j));
+      fv3[e * Nn + j] = *(elem[e]->getDivF3(j));
+    }
+
+  // 2) High-order DG residual -> left in each element's divF.
+  computeDGResidual();
+
+  // 3) Direct convex combination:  R = (1 - alpha) R_DG + alpha R_FV.
+  for (int e = 0; e < n; ++e) {
+    const double a = alpha[e];
+    for (int j = 0; j < Nn; ++j) {
+      elem[e]->setDivF1(j, (1.0 - a) * (*(elem[e]->getDivF1(j))) +
+                               a * fv1[e * Nn + j]);
+      elem[e]->setDivF2(j, (1.0 - a) * (*(elem[e]->getDivF2(j))) +
+                               a * fv2[e * Nn + j]);
+      elem[e]->setDivF3(j, (1.0 - a) * (*(elem[e]->getDivF3(j))) +
+                               a * fv3[e * Nn + j]);
+    }
+  }
 }
 
 Mesh::~Mesh() {

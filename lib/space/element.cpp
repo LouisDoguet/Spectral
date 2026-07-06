@@ -9,7 +9,7 @@
 #include "../phy/physics.h"
 #include "element.h"
 
-namespace elem {
+namespace elm {
 
 void Element::setBasis(base::_Basis* newBasis) {
   if (newBasis == basis) return;

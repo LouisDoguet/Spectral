@@ -18,7 +18,7 @@ HybridDGSEM::HybridDGSEM(mesh::Mesh* mesh, int n_plot)
     // solution. alpha_ is indexed by element position; the exporter only hands
     // the field lambda an Element reference, so we recover the index by matching
     // the element pointer (cheap: export is infrequent).
-    exporter->addElemField("alpha", [this](elem::Element& el) -> double {
+    exporter->addElemField("alpha", [this](elm::Element& el) -> double {
         const int n_elem = m->getNumElements();
         for (int e = 0; e < n_elem; ++e)
             if (m->getElem(e) == &el) return alpha_[e];
@@ -67,7 +67,7 @@ void HybridDGSEM::computeAlpha() {
     const double s = 9.21024;
 
     for (int e = 0; e < n_elem; ++e) {
-        elem::Element* E = m->getElem(e);
+        elm::Element* E = m->getElem(e);
         E->computeLegendreCoefficients();
         const double* m_coef = E->getModes();   // Legendre modal coefficients
 
