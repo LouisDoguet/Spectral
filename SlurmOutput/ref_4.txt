@@ -1,0 +1,6 @@
+================================================================================
+ Reference run [4] : case=shu-osher  method=pp
+   P=6  N=400  cfl=0.3  dt=auto(CFL)  Q=0 (raw GLL nodes)
+================================================================================
+
+DONE: shu-osher_pp  ->  results/shu-osher_pp*   (log: SlurmOutput/shu-osher_pp.log)

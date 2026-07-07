@@ -1,6 +1,0 @@
-================================================================================
- 1D benchmark case [0] : sod
-   P=6  N=100  alpha_max=1.0  cfl=0.3  solver=hybrid_dgsem  dt=auto(CFL)
-================================================================================
-
-DONE: sod  ->  results/sod*   (log: SlurmOutput/sod.log)

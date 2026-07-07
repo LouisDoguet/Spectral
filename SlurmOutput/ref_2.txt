@@ -1,0 +1,6 @@
+================================================================================
+ Reference run [2] : case=lax  method=pp
+   P=6  N=200  cfl=0.3  dt=auto(CFL)  Q=0 (raw GLL nodes)
+================================================================================
+
+DONE: lax_pp  ->  results/lax_pp*   (log: SlurmOutput/lax_pp.log)

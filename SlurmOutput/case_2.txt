@@ -1,6 +1,0 @@
-================================================================================
- 1D benchmark case [2] : shu-osher
-   P=6  N=200  alpha_max=1.0  cfl=0.3  solver=hybrid_dgsem  dt=auto(CFL)
-================================================================================
-
-DONE: shu-osher  ->  results/shu-osher*   (log: SlurmOutput/shu-osher.log)
