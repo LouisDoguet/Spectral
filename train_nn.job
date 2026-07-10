@@ -1,0 +1,60 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=16GB
+#SBATCH --time=5:59:00
+#SBATCH --job-name=TrainAlphaNN
+#SBATCH --output=SlurmOutput/train_nn_%j.txt
+#SBATCH --account=aero_hpc
+
+# ==========================================================================
+# Train the hybrid-DGSEM alpha policy (JAX differentiable-physics training,
+# Algorithm 1). Extra arguments are forwarded to nn/training/train.py:
+#
+#   sbatch train_nn.job --light                       # fast demo training
+#   sbatch train_nn.job                               # full TrainConfig
+#   sbatch train_nn.job --epochs 60 --seed 3 \
+#          --checkpoint-dir nn/training/ckpt_seed3    # custom run
+#
+# Outputs land in the checkpoint dir (relative to the repo root):
+#   alpha_model_best.eqx / alpha_model_last.eqx   (checkpoints, every epoch)
+#   training_history.npz                          (metrics, every epoch)
+#   training_recap.png                            (rendered at the end;
+#        regenerate anytime: python nn/training/plots.py <history.npz>)
+# A wall-time kill loses nothing but the unfinished epoch.
+# ==========================================================================
+
+module load cuda
+
+cd "${SLURM_SUBMIT_DIR:-$(dirname "$0")}" || exit 1
+mkdir -p SlurmOutput
+
+# --- Python environment ----------------------------------------------------
+# Reuse the local venv if the repo was synced with it; otherwise bootstrap
+# one on the cluster from requirements.txt (needs python >= 3.11 for jax).
+if [ -x ".venv_spectral/bin/python" ]; then
+    PY=".venv_spectral/bin/python"
+else
+    echo "Bootstrapping virtualenv .venv_spectral ..."
+    python3 -m venv .venv_spectral || exit 1
+    .venv_nn/bin/pip install --upgrade pip
+    .venv_nn/bin/pip install -r requirements.txt || exit 1
+    PY=".venv_nn/bin/python"
+fi
+echo "Python: $($PY --version)  ($PY)"
+
+# --- Run --------------------------------------------------------------------
+# -u: unbuffered, so the per-epoch lines appear live in the SLURM log.
+export PYTHONUNBUFFERED=1
+$PY -u nn/training/train.py "$@"
+status=$?
+
+echo ""
+if [ $status -eq 0 ]; then
+    echo "DONE: training finished."
+else
+    echo "FAILED (exit $status) — history/checkpoints up to the last completed"
+    echo "epoch are still in the checkpoint dir."
+fi
+exit $status

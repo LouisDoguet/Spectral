@@ -1,0 +1,47 @@
+Python: Python 3.13.5  (.venv_spectral/bin/python)
+config: TrainConfig(P=5, n_elem=50, xL=0.0, xR=1.0, refine=4, cfl=0.3, n_steps=400, m=32, alpha_max=1.0, alpha_diffuse=True, w_osc=1e-05, w_acc=1.0, w_alpha=1e-05, proj_pts_per_elem=12, epochs=30, K=8, batches_per_epoch=20, batch_size=16, lr=0.001, grad_clip=1.0, seed=0, n_fourier_modes=20, ic_eps=0.1, shock_ic_fraction=0.5, width=16, kernel_size=3, depth=1, n_val=4, checkpoint_dir='nn/training/checkpoints')
+Jax plugin configuration error: Exception when calling jax_plugins.xla_cuda12.initialize()
+Traceback (most recent call last):
+  File "/home/lgd25/Desktop/MSc/Spectral/.venv_spectral/lib/python3.13/site-packages/jax/_src/xla_bridge.py", line 508, in discover_pjrt_plugins
+    plugin_module.initialize()
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/lgd25/Desktop/MSc/Spectral/.venv_spectral/lib/python3.13/site-packages/jax_plugins/xla_cuda12/__init__.py", line 370, in initialize
+    _check_cuda_versions(raise_on_first_error = True)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lgd25/Desktop/MSc/Spectral/.venv_spectral/lib/python3.13/site-packages/jax_plugins/xla_cuda12/__init__.py", line 274, in _check_cuda_versions
+    for d in range(cuda_versions.cuda_device_count())
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+RuntimeError: jaxlib/cuda/versions_helpers.cc:135: operation cuInit(0) failed: Unknown CUDA error 303; cuGetErrorName failed. This probably means that JAX was unable to load the CUDA libraries.
+epoch   0: train 6.104449e-01   val 4.341322e-01   [C_osc 3.688e+04  C_acc 6.529e-02  C_alpha 2.475e+00  alpha mean 0.039 max 0.042]  *best*
+epoch   1: train 5.561500e-01   val 4.346956e-01   [C_osc 3.699e+04  C_acc 6.482e-02  C_alpha 1.024e+00  alpha mean 0.025 max 0.034]
+epoch   2: train 6.649244e-01   val 4.341334e-01   [C_osc 3.694e+04  C_acc 6.472e-02  C_alpha 1.066e+00  alpha mean 0.026 max 0.035]
+epoch   3: train 7.996965e-01   val 4.353790e-01   [C_osc 3.709e+04  C_acc 6.448e-02  C_alpha 2.231e-01  alpha mean 0.011 max 0.025]
+epoch   4: train 8.307354e-01   val 4.339879e-01   [C_osc 3.699e+04  C_acc 6.411e-02  C_alpha 1.851e-01  alpha mean 0.010 max 0.027]  *best*
+epoch   5: train 7.548330e-01   val 4.258814e-01   [C_osc 3.630e+04  C_acc 6.291e-02  C_alpha 8.319e-01  alpha mean 0.021 max 0.050]  *best*
+epoch   6: train 1.040650e+00   val 4.197337e-01   [C_osc 3.584e+04  C_acc 6.133e-02  C_alpha 3.945e-01  alpha mean 0.009 max 0.050]  *best*
+epoch   7: train 5.554890e-01   val 4.192573e-01   [C_osc 3.581e+04  C_acc 6.112e-02  C_alpha 3.409e-01  alpha mean 0.005 max 0.044]  *best*
+epoch   8: train 7.570536e-01   val 4.144297e-01   [C_osc 3.535e+04  C_acc 6.088e-02  C_alpha 6.753e-01  alpha mean 0.010 max 0.061]  *best*
+epoch   9: train 3.043263e-01   val 4.168269e-01   [C_osc 3.560e+04  C_acc 6.081e-02  C_alpha 4.459e-01  alpha mean 0.008 max 0.051]
+epoch  10: train 4.380161e-01   val 4.100353e-01   [C_osc 3.482e+04  C_acc 6.180e-02  C_alpha 1.358e+00  alpha mean 0.011 max 0.084]  *best*
+epoch  11: train 4.319901e-01   val 4.188409e-01   [C_osc 3.578e+04  C_acc 6.109e-02  C_alpha 3.247e-01  alpha mean 0.003 max 0.042]
+epoch  12: train 1.339044e-01   val 4.079134e-01   [C_osc 3.430e+04  C_acc 6.489e-02  C_alpha 3.729e+00  alpha mean 0.031 max 0.136]  *best*
+epoch  13: train 9.130952e-01   val 4.233252e-01   [C_osc 3.617e+04  C_acc 6.164e-02  C_alpha 1.501e-01  alpha mean 0.002 max 0.027]
+epoch  14: train 7.371135e-01   val 4.112573e-01   [C_osc 3.509e+04  C_acc 6.037e-02  C_alpha 7.549e-01  alpha mean 0.009 max 0.066]
+epoch  15: train 6.513275e-01   val 4.134458e-01   [C_osc 3.528e+04  C_acc 6.059e-02  C_alpha 5.824e-01  alpha mean 0.005 max 0.053]
+epoch  16: train 7.838966e-01   val 4.178400e-01   [C_osc 3.570e+04  C_acc 6.086e-02  C_alpha 3.208e-01  alpha mean 0.003 max 0.038]
+epoch  17: train 7.675858e-01   val 4.121508e-01   [C_osc 3.516e+04  C_acc 6.052e-02  C_alpha 6.553e-01  alpha mean 0.006 max 0.060]
+epoch  18: train 8.509754e-01   val 4.074485e-01   [C_osc 3.461e+04  C_acc 6.137e-02  C_alpha 1.309e+00  alpha mean 0.009 max 0.083]  *best*
+epoch  19: train 7.755571e-01   val 4.075591e-01   [C_osc 3.473e+04  C_acc 6.028e-02  C_alpha 1.022e+00  alpha mean 0.010 max 0.075]
+epoch  20: train 7.760383e-01   val 4.091696e-01   [C_osc 3.492e+04  C_acc 5.999e-02  C_alpha 7.807e-01  alpha mean 0.009 max 0.064]
+epoch  21: train 8.286131e-01   val 4.090484e-01   [C_osc 3.491e+04  C_acc 5.992e-02  C_alpha 7.536e-01  alpha mean 0.007 max 0.061]
+epoch  22: train 1.007423e+00   val 4.093839e-01   [C_osc 3.496e+04  C_acc 5.982e-02  C_alpha 7.052e-01  alpha mean 0.008 max 0.061]
+epoch  23: train 4.542256e-01   val 4.113949e-01   [C_osc 3.515e+04  C_acc 5.990e-02  C_alpha 5.452e-01  alpha mean 0.006 max 0.053]
+epoch  24: train 3.750460e-01   val 4.037961e-01   [C_osc 3.429e+04  C_acc 6.091e-02  C_alpha 1.848e+00  alpha mean 0.019 max 0.098]  *best*
+epoch  25: train 7.058762e-01   val 4.109996e-01   [C_osc 3.508e+04  C_acc 6.014e-02  C_alpha 6.050e-01  alpha mean 0.004 max 0.053]
+epoch  26: train 4.919368e-01   val 4.118089e-01   [C_osc 3.516e+04  C_acc 6.020e-02  C_alpha 5.517e-01  alpha mean 0.004 max 0.050]
+epoch  27: train 5.002696e-01   val 4.066899e-01   [C_osc 3.467e+04  C_acc 5.999e-02  C_alpha 9.553e-01  alpha mean 0.007 max 0.069]
+epoch  28: train 4.567792e-01   val 4.045916e-01   [C_osc 3.444e+04  C_acc 6.019e-02  C_alpha 1.234e+00  alpha mean 0.008 max 0.078]
+epoch  29: train 9.856913e-01   val 4.040824e-01   [C_osc 3.439e+04  C_acc 6.021e-02  C_alpha 1.287e+00  alpha mean 0.008 max 0.082]
+training recap figure -> nn/training/checkpoints/training_recap.png
+
+DONE: training finished.
