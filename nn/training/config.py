@@ -7,31 +7,31 @@ from dataclasses import dataclass, field
 class TrainConfig:
     # --- discretization (coarse mesh = the mesh the network trains on) -----
     P: int = 5                # polynomial order (matches C++ default)
-    n_elem: int = 50          # coarse elements
+    n_elem: int = 64          # coarse elements
     xL: float = 0.0
     xR: float = 1.0
-    refine: int = 4           # reference mesh = refine * n_elem elements,
+    refine: int = 64          # reference mesh = refine * n_elem elements,
                               # advanced with dt/refine, sampled every refine
     cfl: float = 0.3          # per-IC dt = cfl_time_step(U0) on the coarse mesh
 
     # --- trajectories (paper Sect. 2.3 / Algorithm 1) -----------------------
-    n_steps: int = 400        # N: reference trajectory length (coarse steps)
-    m: int = 32               # sub-trajectory length the gradient flows through
+    n_steps: int = 4096        # N: reference trajectory length (coarse steps)
+    m: int = 512               # sub-trajectory length the gradient flows through
 
     # --- alpha post-processing during training (soft: no hard clipping) ----
     alpha_max: float = 1.0    # cap (reference_data.job uses 1.0; C++ CLI default 0.5)
-    alpha_diffuse: bool = True
+    alpha_diffuse: bool = False
 
     # --- cost weights (Sect. 3.2; C_vis -> L2 penalty on alpha) ------------
     w_osc: float = 1e-5
     w_acc: float = 1.0
     w_alpha: float = 1e-5
 
-    proj_pts_per_elem: int = 12   # uniform cost-grid points per coarse element
+    proj_pts_per_elem: int = 64   # uniform cost-grid points per coarse element
 
     # --- optimization -------------------------------------------------------
     epochs: int = 30
-    K: int = 8                # initial conditions per epoch
+    K: int = 16               # initial conditions per epoch
     batches_per_epoch: int = 20
     batch_size: int = 16      # I: sub-trajectories per batch
     lr: float = 1e-3
@@ -41,7 +41,7 @@ class TrainConfig:
 
     # --- initial conditions -------------------------------------------------
     n_fourier_modes: int = 20
-    ic_eps: float = 0.1       # positivity shift for rho and p (paper Sect 3.4)
+    ic_eps: float = 1e-3       # positivity shift for rho and p (paper Sect 3.4)
     shock_ic_fraction: float = 0.5   # fraction of epoch ICs drawn as random
                                      # Riemann problems: shocks inside the m
                                      # window punish an alpha->0 policy, so

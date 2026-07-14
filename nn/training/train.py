@@ -28,7 +28,7 @@ import optax
 from jax_dgsem import GLLBasis, Mesh1D
 from jax_dgsem.solver import rk4_step, cfl_time_step
 from jax_dgsem.indicator import modal_energy, postprocess_alpha
-from network.model import AlphaModel, save_model
+from network.model import AlphaModel, save_model, load_model
 from training.config import TrainConfig
 from training.cost import uniform_projector, cost_step, cost_terms
 from training.data_loader import (
@@ -56,6 +56,7 @@ def rollout_loss(model, U0, targets, dt, mesh, project, dx_ref,
     targets: (m, 3, n_pts) reference already projected on the cost grid.
     """
 
+    @eqx.filter_checkpoint
     def body(U, tgt):
         alpha = network_alpha(model, U, mesh, cfg)
         U1 = rk4_step(U, alpha, dt, mesh)
@@ -70,8 +71,11 @@ def rollout_loss(model, U0, targets, dt, mesh, project, dx_ref,
 def rollout_terms(model, U0, targets, dt, mesh, project, dx_ref,
                   cfg: TrainConfig):
     """Same rollout, but returns the summed unweighted cost terms and alpha
-    statistics — the per-epoch training diagnostics."""
+    statistics — the per-epoch training diagnostics. Also checkpointed: it is
+    only used with eqx.filter_jit (no grad), but sharing the same body shape
+    keeps memory behavior identical to rollout_loss for large m."""
 
+    @eqx.filter_checkpoint
     def body(U, tgt):
         alpha = network_alpha(model, U, mesh, cfg)
         U1 = rk4_step(U, alpha, dt, mesh)
@@ -194,8 +198,10 @@ def sample_batch(rng: np.random.Generator, data: EpochData, B_restr,
 # Main training loop
 # ---------------------------------------------------------------------------
 
-def train(cfg: TrainConfig = None):
+def train(cfg: TrainConfig = None, resume: bool = False):
     cfg = cfg or TrainConfig()
+    print(cfg.proj_pts_per_elem)
+    print(cfg.refine)
     assert cfg.proj_pts_per_elem % cfg.refine == 0, \
         "proj_pts_per_elem must be divisible by refine (shared cost grid)"
 
@@ -239,10 +245,60 @@ def train(cfg: TrainConfig = None):
 
     os.makedirs(cfg.checkpoint_dir, exist_ok=True)
     best_val = float("inf")
+    start_epoch = 0
+    history = {"epoch": [], "train_loss": [], "val_loss": [],
+               "val_c_osc": [], "val_c_acc": [], "val_c_alpha": [],
+               "val_alpha_mean": [], "val_alpha_max": [],
+               "batch_loss": [], "batch_epoch": []}
+
+    meta_path = os.path.join(cfg.checkpoint_dir, "model_meta.json")
+    last_path = os.path.join(cfg.checkpoint_dir, "alpha_model_last.eqx")
+    opt_path = os.path.join(cfg.checkpoint_dir, "opt_state.eqx")
+    hist_path = os.path.join(cfg.checkpoint_dir, "training_history.npz")
+    rng_path = os.path.join(cfg.checkpoint_dir, "rng_state.json")
+
+    if resume:
+        missing = [p for p in (meta_path, last_path, opt_path, hist_path,
+                               rng_path) if not os.path.exists(p)]
+        if missing:
+            raise FileNotFoundError(
+                f"--resume requested but checkpoint files are missing: "
+                f"{missing}. Start a fresh run (no --resume) instead.")
+        with open(meta_path) as f:
+            old_meta = json.load(f)
+        arch = {"in_channels": cfg.P + 1, "width": cfg.width,
+                "kernel_size": cfg.kernel_size, "depth": cfg.depth}
+        mismatch = {k: (old_meta[k], v) for k, v in arch.items()
+                   if old_meta[k] != v}
+        if mismatch:
+            raise ValueError(
+                f"--resume: checkpoint architecture does not match cfg "
+                f"(old, new): {mismatch}. Use a different --checkpoint-dir "
+                f"for a differently-shaped model.")
+        model = load_model(last_path, model)
+        opt_state = eqx.tree_deserialise_leaves(opt_path, opt_state)
+        with open(rng_path) as f:
+            rng.bit_generator.state = json.load(f)
+        old = dict(np.load(hist_path))
+        history = {k: list(old[k]) for k in history}
+        start_epoch = int(history["epoch"][-1]) + 1 if history["epoch"] else 0
+        best_val = float(np.min(old["val_loss"])) if len(old["val_loss"]) \
+            else float("inf")
+        # Replay the per-epoch key splits so the RNG stream from here on
+        # matches what an uninterrupted run would have produced (only one
+        # split happens per epoch, in the loop below).
+        for _ in range(start_epoch):
+            key, _ = jax.random.split(key)
+        print(f"resuming from epoch {start_epoch} "
+              f"(best_val so far: {best_val:.6e})")
+        if start_epoch >= cfg.epochs:
+            print(f"cfg.epochs={cfg.epochs} <= start_epoch={start_epoch}: "
+                 f"nothing to do (raise --epochs to continue training)")
+            return model
 
     # Model hyperparameters, so evaluation scripts can rebuild the template
     # for eqx.tree_deserialise_leaves without touching the training config.
-    with open(os.path.join(cfg.checkpoint_dir, "model_meta.json"), "w") as f:
+    with open(meta_path, "w") as f:
         json.dump({"in_channels": cfg.P + 1, "width": cfg.width,
                    "kernel_size": cfg.kernel_size, "depth": cfg.depth,
                    "P": cfg.P, "alpha_max": cfg.alpha_max,
@@ -250,17 +306,12 @@ def train(cfg: TrainConfig = None):
                               if isinstance(v, (int, float, bool, str))}},
                   f, indent=2)
 
-    history = {"epoch": [], "train_loss": [], "val_loss": [],
-               "val_c_osc": [], "val_c_acc": [], "val_c_alpha": [],
-               "val_alpha_mean": [], "val_alpha_max": [],
-               "batch_loss": [], "batch_epoch": []}
-
     def save_history():
-        np.savez(os.path.join(cfg.checkpoint_dir, "training_history.npz"),
-                 w_osc=cfg.w_osc, w_acc=cfg.w_acc, w_alpha=cfg.w_alpha,
+        np.savez(hist_path, w_osc=cfg.w_osc, w_acc=cfg.w_acc,
+                 w_alpha=cfg.w_alpha,
                  **{k: np.asarray(v) for k, v in history.items()})
 
-    for epoch in range(cfg.epochs):
+    for epoch in range(start_epoch, cfg.epochs):
         key, k_epoch = jax.random.split(key)
         data = build_epoch_data(k_epoch, cfg.K, mesh_c, mesh_f, project_f,
                                 cfg)
@@ -296,8 +347,13 @@ def train(cfg: TrainConfig = None):
             save_model(os.path.join(cfg.checkpoint_dir, "alpha_model_best.eqx"),
                        model)
             flag = "  *best*"
-        save_model(os.path.join(cfg.checkpoint_dir, "alpha_model_last.eqx"),
-                   model)
+        save_model(last_path, model)
+        # opt_state (Adam moments, clip/finite-guard counters) is saved too,
+        # so --resume continues optimization smoothly instead of restarting
+        # Adam's momentum from scratch (which would show up as a loss spike).
+        eqx.tree_serialise_leaves(opt_path, opt_state)
+        with open(rng_path, "w") as f:
+            json.dump(rng.bit_generator.state, f)
         skip_note = f"  (skipped {n_skipped} non-finite batches so far)" \
             if n_skipped else ""
         print(f"epoch {epoch:3d}: train {np.nanmean(losses):.6e}   "
@@ -334,6 +390,11 @@ if __name__ == "__main__":
                     help="sub-trajectory length the gradient flows through")
     ap.add_argument("--shock-ic-fraction", type=float, default=None)
     ap.add_argument("--checkpoint-dir", default=None)
+    ap.add_argument("--resume", action="store_true",
+                    help="continue from alpha_model_last.eqx / opt_state.eqx "
+                         "/ training_history.npz in --checkpoint-dir (e.g. "
+                         "after a SLURM wall-time kill). Raise --epochs to "
+                         "train further than the original run's target.")
     args = ap.parse_args()
 
     cfg = TrainConfig.light() if args.light else TrainConfig()
@@ -344,4 +405,4 @@ if __name__ == "__main__":
     if overrides:
         cfg = replace(cfg, **overrides)
     print(f"config: {cfg}")
-    train(cfg)
+    train(cfg, resume=args.resume)

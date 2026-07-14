@@ -1,12 +1,13 @@
 #!/bin/bash
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=8
+#SBATCH --gres=gpu:1
 #SBATCH --mem=16GB
-#SBATCH --time=5:59:00
+#SBATCH --time=6:00:00
 #SBATCH --job-name=TrainAlphaNN
+#SBATCH --partition=gpu
 #SBATCH --output=SlurmOutput/train_nn_%j.txt
-#SBATCH --account=aero_hpc
+#SBATCH --account=aero_research_cantwell
 
 # ==========================================================================
 # Train the hybrid-DGSEM alpha policy (JAX differentiable-physics training,

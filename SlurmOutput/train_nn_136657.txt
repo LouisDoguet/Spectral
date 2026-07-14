@@ -1,0 +1,40 @@
+Python: Python 3.13.5  (.venv_spectral/bin/python)
+config: TrainConfig(P=5, n_elem=50, xL=0.0, xR=1.0, refine=4, cfl=0.3, n_steps=4096, m=512, alpha_max=1.0, alpha_diffuse=True, w_osc=1e-05, w_acc=1.0, w_alpha=1e-05, proj_pts_per_elem=12, epochs=30, K=8, batches_per_epoch=20, batch_size=16, lr=0.001, grad_clip=1.0, seed=0, n_fourier_modes=20, ic_eps=0.1, shock_ic_fraction=0.5, width=16, kernel_size=3, depth=1, n_val=4, checkpoint_dir='nn/training/checkpoints')
+Jax plugin configuration error: Exception when calling jax_plugins.xla_cuda12.initialize()
+Traceback (most recent call last):
+  File "/home/lgd25/Desktop/MSc/Spectral/.venv_spectral/lib/python3.13/site-packages/jax/_src/xla_bridge.py", line 508, in discover_pjrt_plugins
+    plugin_module.initialize()
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/lgd25/Desktop/MSc/Spectral/.venv_spectral/lib/python3.13/site-packages/jax_plugins/xla_cuda12/__init__.py", line 370, in initialize
+    _check_cuda_versions(raise_on_first_error = True)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lgd25/Desktop/MSc/Spectral/.venv_spectral/lib/python3.13/site-packages/jax_plugins/xla_cuda12/__init__.py", line 274, in _check_cuda_versions
+    for d in range(cuda_versions.cuda_device_count())
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+RuntimeError: jaxlib/cuda/versions_helpers.cc:135: operation cuInit(0) failed: Unknown CUDA error 303; cuGetErrorName failed. This probably means that JAX was unable to load the CUDA libraries.
+epoch   0: train 2.840584e+01   val 8.340783e+00   [C_osc 6.409e+05  C_acc 1.931e+00  C_alpha 8.900e+01  alpha mean 0.059 max 0.059]  *best*
+epoch   1: train 2.511038e+01   val 8.100030e+00   [C_osc 5.933e+05  C_acc 2.165e+00  C_alpha 2.349e+02  alpha mean 0.096 max 0.098]  *best*
+epoch   2: train 1.820946e+01   val 8.140646e+00   [C_osc 6.119e+05  C_acc 2.020e+00  C_alpha 1.504e+02  alpha mean 0.077 max 0.083]
+epoch   3: train 3.803934e+01   val 8.040229e+00   [C_osc 5.970e+05  C_acc 2.068e+00  C_alpha 1.852e+02  alpha mean 0.085 max 0.102]  *best*
+epoch   4: train 3.795122e+01   val 8.000702e+00   [C_osc 6.009e+05  C_acc 1.990e+00  C_alpha 1.504e+02  alpha mean 0.076 max 0.105]  *best*
+epoch   5: train 2.223354e+01   val 7.884734e+00   [C_osc 5.901e+05  C_acc 1.983e+00  C_alpha 1.547e+02  alpha mean 0.077 max 0.129]  *best*
+epoch   6: train 4.152948e+01   val 7.825446e+00   [C_osc 5.878e+05  C_acc 1.946e+00  C_alpha 1.663e+02  alpha mean 0.079 max 0.157]  *best*
+epoch   7: train 1.843045e+01   val 7.722322e+00   [C_osc 5.804e+05  C_acc 1.917e+00  C_alpha 1.671e+02  alpha mean 0.076 max 0.206]  *best*
+epoch   8: train 1.839201e+01   val 7.629632e+00   [C_osc 5.756e+05  C_acc 1.871e+00  C_alpha 2.293e+02  alpha mean 0.084 max 0.282]  *best*
+epoch   9: train 1.466160e+01   val 7.564338e+00   [C_osc 5.697e+05  C_acc 1.864e+00  C_alpha 3.704e+02  alpha mean 0.098 max 0.419]  *best*
+epoch  10: train 1.585691e+01   val 7.487861e+00   [C_osc 5.614e+05  C_acc 1.869e+00  C_alpha 4.699e+02  alpha mean 0.104 max 0.493]  *best*
+epoch  11: train 1.857575e+01   val 7.543464e+00   [C_osc 5.762e+05  C_acc 1.779e+00  C_alpha 2.636e+02  alpha mean 0.076 max 0.400]
+epoch  12: train 6.053869e+00   val 7.383230e+00   [C_osc 5.513e+05  C_acc 1.866e+00  C_alpha 3.882e+02  alpha mean 0.093 max 0.476]  *best*
+epoch  13: train 3.822328e+01   val 7.355317e+00   [C_osc 5.470e+05  C_acc 1.881e+00  C_alpha 4.238e+02  alpha mean 0.102 max 0.463]  *best*
+epoch  14: train 3.084628e+01   val 7.321550e+00   [C_osc 5.451e+05  C_acc 1.867e+00  C_alpha 3.528e+02  alpha mean 0.096 max 0.426]  *best*
+epoch  15: train 2.699549e+01   val 7.285304e+00   [C_osc 5.461e+05  C_acc 1.821e+00  C_alpha 2.819e+02  alpha mean 0.083 max 0.410]  *best*
+epoch  16: train 2.996313e+01   val 7.273205e+00   [C_osc 5.441e+05  C_acc 1.829e+00  C_alpha 3.113e+02  alpha mean 0.091 max 0.415]  *best*
+epoch  17: train 3.239808e+01   val 7.263507e+00   [C_osc 5.529e+05  C_acc 1.733e+00  C_alpha 2.158e+02  alpha mean 0.073 max 0.389]  *best*
+epoch  18: train 2.600380e+01   val 7.212547e+00   [C_osc 5.392e+05  C_acc 1.817e+00  C_alpha 3.479e+02  alpha mean 0.095 max 0.482]  *best*
+epoch  19: train 2.776100e+01   val 7.187689e+00   [C_osc 5.428e+05  C_acc 1.757e+00  C_alpha 3.291e+02  alpha mean 0.087 max 0.521]  *best*
+epoch  20: train 2.095624e+01   val 7.154283e+00   [C_osc 5.303e+05  C_acc 1.847e+00  C_alpha 4.540e+02  alpha mean 0.102 max 0.595]  *best*
+epoch  21: train 2.912681e+01   val 7.134748e+00   [C_osc 5.432e+05  C_acc 1.700e+00  C_alpha 3.195e+02  alpha mean 0.076 max 0.570]  *best*
+epoch  22: train 3.111068e+01   val 7.101932e+00   [C_osc 5.357e+05  C_acc 1.740e+00  C_alpha 3.965e+02  alpha mean 0.090 max 0.586]  *best*
+epoch  23: train 2.120707e+01   val 7.110405e+00   [C_osc 5.443e+05  C_acc 1.664e+00  C_alpha 2.890e+02  alpha mean 0.072 max 0.519]
+epoch  24: train 1.029950e+01   val 7.119345e+00   [C_osc 5.234e+05  C_acc 1.879e+00  C_alpha 5.771e+02  alpha mean 0.111 max 0.648]
+slurmstepd-hornet: error: *** JOB 136657 ON hornet CANCELLED AT 2026-07-12T00:27:03 DUE TO TIME LIMIT ***

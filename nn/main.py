@@ -9,5 +9,5 @@ s = lambda u: u
 
 mesh.plot()
 sol = solver.NN_MUSCL_Solver(mesh, f, s, 10e-5)
-sol.solve(0.2)
+sol.solve(0.05)
 mesh.plot()
