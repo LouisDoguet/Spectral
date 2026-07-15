@@ -1,6 +1,0 @@
-================================================================================
- Reference run [1] : case=sod  method=hybrid
-   P=6  N=200  cfl=0.3  dt=auto(CFL)  Q=0 (raw GLL nodes)
-================================================================================
-
-DONE: sod_hybrid  ->  results/sod_hybrid*   (log: SlurmOutput/sod_hybrid.log)

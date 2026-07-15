@@ -1,2 +1,0 @@
-[RungeKutta4] Starting — 50 elements, P=6, 8000 steps, dt=5.00e-05
-[RungeKutta4] Finished — 8000 steps, 350 nodes, 2800000 total ops

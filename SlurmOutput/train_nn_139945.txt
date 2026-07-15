@@ -1,0 +1,30 @@
+Python: Python 3.13.5  (.venv_spectral/bin/python)
+config: TrainConfig(P=4, n_elem=32, xL=0.0, xR=1.0, muscl_cells_per_elem=64, muscl_substeps=4, dt=0.0002, rollout_steps=1024, alpha_max=1.0, alpha_diffuse=False, w_osc=1e-05, w_acc=1.0, w_alpha=1e-05, proj_pts_per_elem=16, epochs=30, K=16, batches_per_epoch=20, batch_size=8, lr=0.001, grad_clip=1.0, seed=0, n_fourier_modes=12, ic_amp=0.4, vel_modes=3, shock_time_fraction=0.5, width=16, kernel_size=3, depth=1, n_val=4, plot_every=1, checkpoint_dir='nn/training/checkpoints')
+epoch   0: train 3.851575e+01   val 3.992333e+01   [C_osc 2.503e+06  C_acc 1.489e+01  C_alpha 1.135e+02  alpha mean 0.059 max 0.061]  *best*
+epoch   1: train 3.901318e+01   val 3.937112e+01   [C_osc 2.380e+06  C_acc 1.557e+01  C_alpha 1.898e+02  alpha mean 0.076 max 0.087]  *best*
+epoch   2: train 3.837954e+01   val 3.848132e+01   [C_osc 2.377e+06  C_acc 1.471e+01  C_alpha 1.450e+02  alpha mean 0.066 max 0.096]  *best*
+epoch   3: train 3.818098e+01   val 3.666418e+01   [C_osc 2.289e+06  C_acc 1.378e+01  C_alpha 1.229e+02  alpha mean 0.061 max 0.141]  *best*
+epoch   4: train 3.931876e+01   val 3.419982e+01   [C_osc 2.177e+06  C_acc 1.243e+01  C_alpha 8.527e+01  alpha mean 0.048 max 0.231]  *best*
+epoch   5: train 3.473044e+01   val 3.197356e+01   [C_osc 2.103e+06  C_acc 1.094e+01  C_alpha 5.015e+01  alpha mean 0.029 max 0.351]  *best*
+epoch   6: train 3.248433e+01   val 3.072843e+01   [C_osc 2.010e+06  C_acc 1.063e+01  C_alpha 6.275e+01  alpha mean 0.020 max 0.493]  *best*
+epoch   7: train 3.116032e+01   val 3.034911e+01   [C_osc 1.978e+06  C_acc 1.057e+01  C_alpha 7.765e+01  alpha mean 0.015 max 0.584]  *best*
+epoch   8: train 2.863203e+01   val 3.027952e+01   [C_osc 1.981e+06  C_acc 1.047e+01  C_alpha 8.096e+01  alpha mean 0.013 max 0.610]  *best*
+epoch   9: train 2.900936e+01   val 3.012438e+01   [C_osc 1.945e+06  C_acc 1.068e+01  C_alpha 9.152e+01  alpha mean 0.015 max 0.625]  *best*
+epoch  10: train 2.790670e+01   val 3.014183e+01   [C_osc 1.917e+06  C_acc 1.097e+01  C_alpha 1.049e+02  alpha mean 0.016 max 0.646]
+epoch  11: train 2.963643e+01   val 3.006287e+01   [C_osc 1.954e+06  C_acc 1.052e+01  C_alpha 9.240e+01  alpha mean 0.014 max 0.626]  *best*
+epoch  12: train 2.821892e+01   val 3.004518e+01   [C_osc 1.935e+06  C_acc 1.069e+01  C_alpha 1.021e+02  alpha mean 0.015 max 0.640]  *best*
+epoch  13: train 3.215336e+01   val 3.004509e+01   [C_osc 1.937e+06  C_acc 1.068e+01  C_alpha 1.009e+02  alpha mean 0.016 max 0.623]  *best*
+epoch  14: train 2.663645e+01   val 3.000144e+01   [C_osc 1.938e+06  C_acc 1.062e+01  C_alpha 1.041e+02  alpha mean 0.015 max 0.642]  *best*
+epoch  15: train 2.954869e+01   val 3.007667e+01   [C_osc 1.915e+06  C_acc 1.092e+01  C_alpha 1.176e+02  alpha mean 0.018 max 0.635]
+epoch  16: train 2.962970e+01   val 3.000729e+01   [C_osc 1.970e+06  C_acc 1.031e+01  C_alpha 9.527e+01  alpha mean 0.014 max 0.614]
+epoch  17: train 3.091177e+01   val 2.999137e+01   [C_osc 1.975e+06  C_acc 1.024e+01  C_alpha 9.250e+01  alpha mean 0.014 max 0.607]  *best*
+epoch  18: train 3.236175e+01   val 2.995884e+01   [C_osc 1.974e+06  C_acc 1.022e+01  C_alpha 9.403e+01  alpha mean 0.015 max 0.607]  *best*
+epoch  19: train 3.158025e+01   val 2.991976e+01   [C_osc 1.962e+06  C_acc 1.030e+01  C_alpha 9.927e+01  alpha mean 0.015 max 0.612]  *best*
+epoch  20: train 3.181140e+01   val 2.991569e+01   [C_osc 1.961e+06  C_acc 1.030e+01  C_alpha 1.020e+02  alpha mean 0.015 max 0.618]  *best*
+epoch  21: train 2.770766e+01   val 2.989452e+01   [C_osc 1.933e+06  C_acc 1.057e+01  C_alpha 1.167e+02  alpha mean 0.016 max 0.645]  *best*
+epoch  22: train 3.081142e+01   val 2.993033e+01   [C_osc 1.916e+06  C_acc 1.077e+01  C_alpha 1.255e+02  alpha mean 0.018 max 0.635]
+epoch  23: train 2.698030e+01   val 2.986306e+01   [C_osc 1.941e+06  C_acc 1.045e+01  C_alpha 1.132e+02  alpha mean 0.016 max 0.635]  *best*
+epoch  24: train 2.989862e+01   val 2.995611e+01   [C_osc 1.977e+06  C_acc 1.019e+01  C_alpha 9.838e+01  alpha mean 0.013 max 0.646]
+epoch  25: train 2.980804e+01   val 3.001153e+01   [C_osc 1.996e+06  C_acc 1.005e+01  C_alpha 9.213e+01  alpha mean 0.013 max 0.644]
+epoch  26: train 3.001290e+01   val 2.984302e+01   [C_osc 1.935e+06  C_acc 1.049e+01  C_alpha 1.136e+02  alpha mean 0.017 max 0.635]  *best*
+slurmstepd-meteor: error: *** JOB 139945 ON meteor CANCELLED AT 2026-07-14T17:53:04 ***

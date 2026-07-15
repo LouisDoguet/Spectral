@@ -1,6 +1,0 @@
-================================================================================
- Reference run [0] : case=sod  method=pp
-   P=6  N=200  cfl=0.3  dt=auto(CFL)  Q=0 (raw GLL nodes)
-================================================================================
-
-DONE: sod_pp  ->  results/sod_pp*   (log: SlurmOutput/sod_pp.log)

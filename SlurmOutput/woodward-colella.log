@@ -1,3 +1,0 @@
-Auto CFL time step (cfl=0.3): dt=2.40921e-06
-[HybridDGSEM] Starting — 256 elements, P=6, 15773 steps, dt=2.41e-06
-[HybridDGSEM] Finished — 15773 steps, 1792 nodes, 28265216 total ops

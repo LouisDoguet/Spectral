@@ -20,9 +20,11 @@ from .physics import physical_flux, chandrashekar_ec, entropy_stable_lf
 class Mesh1D(eqx.Module):
     """Static mesh description (uniform elements on [xL, xR]).
 
-    bc_left/bc_right: ("wall", U_ghost) fixed Dirichlet ghost state, or
-    ("reflective", None) mirror with reversed momentum — exactly the two
-    types in lib/boundary_conditions.
+    bc_left/bc_right: ("wall", U_ghost) fixed Dirichlet ghost state,
+    ("reflective", None) mirror with reversed momentum — the two types in
+    lib/boundary_conditions — or ("periodic", None) on BOTH sides, which
+    couples the last element's right face to the first element's left face
+    (the setup used for the MUSCL-reference training).
     """
 
     quads: jnp.ndarray
@@ -50,9 +52,15 @@ class Mesh1D(eqx.Module):
         self.inv_J = 2.0 / self.dx          # element.cpp setJ: J = dx/2
         self.bc_left_kind = bc_left[0]
         self.bc_right_kind = bc_right[0]
+        if (self.bc_left_kind == "periodic") != (self.bc_right_kind == "periodic"):
+            raise ValueError("periodic BC must be set on BOTH sides")
         zero = jnp.zeros(3)
         self.bc_left_state = zero if bc_left[1] is None else jnp.asarray(bc_left[1])
         self.bc_right_state = zero if bc_right[1] is None else jnp.asarray(bc_right[1])
+
+    @property
+    def periodic(self) -> bool:
+        return self.bc_left_kind == "periodic"
 
     def node_positions(self, xL: float = 0.0) -> jnp.ndarray:
         """Physical x of every node, shape (n_elem, Nn)."""
@@ -120,17 +128,27 @@ def _apply_surface_and_mass_inverse(divF, U, mesh: Mesh1D):
     divF = divF.at[:, :-1, -1].add(fstar - physical_flux(UL))
     divF = divF.at[:, 1:, 0].add(physical_flux(UR) - fstar)
 
-    # Left domain boundary (elem 0, node 0): lift (F_int - F*)
-    Ui = U[:, 0, 0]
-    Ug = _ghost_state(mesh.bc_left_kind, mesh.bc_left_state, Ui)
-    fs = entropy_stable_lf(Ug, Ui)
-    divF = divF.at[:, 0, 0].add(physical_flux(Ui) - fs)
+    if mesh.periodic:
+        # Wrap-around interface: last element's right face <-> first element's
+        # left face, treated exactly like an interior interface. Entropy
+        # stable and freestream preserving (constant U -> zero lift).
+        ULp = U[:, -1, -1]
+        URp = U[:, 0, 0]
+        fp = entropy_stable_lf(ULp, URp)
+        divF = divF.at[:, -1, -1].add(fp - physical_flux(ULp))
+        divF = divF.at[:, 0, 0].add(physical_flux(URp) - fp)
+    else:
+        # Left domain boundary (elem 0, node 0): lift (F_int - F*)
+        Ui = U[:, 0, 0]
+        Ug = _ghost_state(mesh.bc_left_kind, mesh.bc_left_state, Ui)
+        fs = entropy_stable_lf(Ug, Ui)
+        divF = divF.at[:, 0, 0].add(physical_flux(Ui) - fs)
 
-    # Right domain boundary (last elem, node Nn-1): lift (F* - F_int)
-    Ui = U[:, -1, -1]
-    Ug = _ghost_state(mesh.bc_right_kind, mesh.bc_right_state, Ui)
-    fs = entropy_stable_lf(Ui, Ug)
-    divF = divF.at[:, -1, -1].add(fs - physical_flux(Ui))
+        # Right domain boundary (last elem, node Nn-1): lift (F* - F_int)
+        Ui = U[:, -1, -1]
+        Ug = _ghost_state(mesh.bc_right_kind, mesh.bc_right_state, Ui)
+        fs = entropy_stable_lf(Ui, Ug)
+        divF = divF.at[:, -1, -1].add(fs - physical_flux(Ui))
 
     # applyMassInverse: divF <- (1/J) Minv divF with M = diag(w)
     return divF * mesh.inv_J / mesh.weights[None, None, :]

@@ -1,6 +1,0 @@
-================================================================================
- Reference run [6] : case=woodward-colella  method=pp
-   P=3  N=512  cfl=0.2  dt=auto(CFL)  Q=0 (raw GLL nodes)
-================================================================================
-
-DONE: woodward-colella_pp  ->  results/woodward-colella_pp*   (log: SlurmOutput/woodward-colella_pp.log)

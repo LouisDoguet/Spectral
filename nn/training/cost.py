@@ -38,8 +38,13 @@ def uniform_projector(P: int, n_elem: int, pts_per_elem: int):
 
 
 def _dxx(v, dx_ref):
-    """Finite-difference second derivative on the uniform grid (interior)."""
-    return (v[:, :-2] - 2.0 * v[:, 1:-1] + v[:, 2:]) / (dx_ref * dx_ref)
+    """Periodic finite-difference second derivative on the uniform grid.
+
+    The training problem is periodic, so the stencil wraps (jnp.roll) instead
+    of dropping the endpoints; this keeps the oscillation penalty meaningful
+    across the wrap-around interface too."""
+    return (jnp.roll(v, 1, axis=1) - 2.0 * v + jnp.roll(v, -1, axis=1)) \
+        / (dx_ref * dx_ref)
 
 
 def cost_step(U_proj, ref_proj, alpha, dx_ref,

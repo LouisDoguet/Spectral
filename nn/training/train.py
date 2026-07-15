@@ -1,16 +1,20 @@
-"""Algorithm 1 (Bois et al. 2024) for the hybrid-DGSEM alpha policy.
+"""Alpha-policy training against a fine MUSCL Euler reference.
 
-Each epoch:
-  1. draw K random Fourier initial conditions (Sect. 3.4, on primitives),
-  2. compute reference trajectories with the Persson-Peraire hybrid solver on
-     a refine-x finer mesh (targets only -- no gradients flow through them),
-  3. for each batch, sample I sub-trajectories (k, n), start the differentiable
-     coarse solver from the restricted reference state S_ref^n(U0_k), roll m
-     steps with the network alpha, and do one Adam step on
-        J = sum_batch sum_{i=1..m} C(U^i, U_ref^{n+i}).
+Pipeline (per the rewritten design):
+  1. MUSCL_grid  : fine uniform periodic FV grid  (n_elem * muscl_cells_per_elem)
+  2. DGSEM_grid  : coarse periodic hybrid-DGSEM mesh (n_elem, P)  -- the trainee
+  3. a shared periodic random-Fourier Euler IC is applied to BOTH grids
+  4. the fine MUSCL solve is the reference; the coarse DGSEM solve is rolled
+     from the SAME IC with the network alpha, and both are compared on a shared
+     uniform cost grid via the cost function.
+
+Time stepping uses an IMPOSED dt (cfg.dt) everywhere -- no CFL. MUSCL substeps
+dt/muscl_substeps per DGSEM step. Gradients flow only through the DGSEM
+rollout (the MUSCL reference is a fixed NumPy target).
 
 Run from the repo root:
-    .venv_spectral/bin/python nn/training/train.py
+    .venv_spectral/bin/python nn/training/train.py            # full config
+    .venv_spectral/bin/python nn/training/train.py --light    # fast demo
 """
 
 import json
@@ -26,35 +30,41 @@ import equinox as eqx
 import optax
 
 from jax_dgsem import GLLBasis, Mesh1D
-from jax_dgsem.solver import rk4_step, cfl_time_step
+from jax_dgsem.solver import rk4_step
 from jax_dgsem.indicator import modal_energy, postprocess_alpha
 from network.model import AlphaModel, save_model, load_model
 from training.config import TrainConfig
 from training.cost import uniform_projector, cost_step, cost_terms
-from training.data_loader import (
-    random_fourier_ic, random_riemann_ic, wall_states_from_ic, refine_ic,
-    restriction_operator, restrict, generate_reference_trajectory)
+from training.ic import draw_fourier_coeffs, sample_on_dgsem, sample_on_muscl
+from muscl.euler import MusclEulerGrid, MusclEulerSolver
+
+PERIODIC = ("periodic", None)
 
 
 # ---------------------------------------------------------------------------
-# Differentiable rollout
+# Alpha from the network
 # ---------------------------------------------------------------------------
 
 def network_alpha(model, U, mesh, cfg: TrainConfig):
-    """Features -> network -> soft post-processing (no hard clip: keeps
-    gradients alive; the hard clip is only applied at deployment)."""
+    """Modal-energy features -> network -> soft post-processing (no hard clip:
+    keeps gradients alive; the hard clip is only applied at deployment)."""
     feats = modal_energy(U, mesh).T          # (Nn, n_elem) channels-first
     raw = model(feats)
     return postprocess_alpha(raw, alpha_max=cfg.alpha_max,
                              diffuse=cfg.alpha_diffuse, hard_clip=False)
 
 
-def rollout_loss(model, U0, targets, dt, mesh, project, dx_ref,
-                 cfg: TrainConfig):
-    """Sum of per-step costs over one m-step sub-trajectory.
+# ---------------------------------------------------------------------------
+# Differentiable from-IC rollout of the DGSEM trainee
+# ---------------------------------------------------------------------------
 
-    targets: (m, 3, n_pts) reference already projected on the cost grid.
-    """
+def rollout_loss(model, U0, targets, mesh, project, dt, dx_ref, cfg):
+    """Roll the DGSEM solver from U0 for len(targets) steps with the network
+    alpha; accumulate the per-step cost against the MUSCL reference.
+
+    targets: (rollout_steps, 3, N_cost) MUSCL reference already on the cost
+    grid, one row per DGSEM step. eqx.filter_checkpoint keeps rollout memory
+    ~O(1) in the horizon (recompute-on-backward)."""
 
     @eqx.filter_checkpoint
     def body(U, tgt):
@@ -68,130 +78,100 @@ def rollout_loss(model, U0, targets, dt, mesh, project, dx_ref,
     return jnp.sum(cs)
 
 
-def rollout_terms(model, U0, targets, dt, mesh, project, dx_ref,
-                  cfg: TrainConfig):
-    """Same rollout, but returns the summed unweighted cost terms and alpha
-    statistics — the per-epoch training diagnostics. Also checkpointed: it is
-    only used with eqx.filter_jit (no grad), but sharing the same body shape
-    keeps memory behavior identical to rollout_loss for large m."""
+def rollout_terms(model, U0, targets, mesh, project, dt, dx_ref, cfg):
+    """Same rollout, unweighted (C_osc, C_acc, C_alpha) + alpha stats, for the
+    training-analysis logs."""
 
     @eqx.filter_checkpoint
     def body(U, tgt):
         alpha = network_alpha(model, U, mesh, cfg)
         U1 = rk4_step(U, alpha, dt, mesh)
         osc, acc, alph = cost_terms(project(U1), tgt, alpha, dx_ref)
-        return U1, jnp.stack([osc, acc, alph, jnp.mean(alpha),
-                              jnp.max(alpha)])
+        return U1, jnp.stack([osc, acc, alph, jnp.mean(alpha), jnp.max(alpha)])
 
     _, out = jax.lax.scan(body, U0, targets)
     osc, acc, alph = out[:, 0].sum(), out[:, 1].sum(), out[:, 2].sum()
     return jnp.stack([osc, acc, alph, out[:, 3].mean(), out[:, 4].max()])
 
 
-def _mesh_in_axes(mesh):
-    """vmap in_axes pytree: batch only the boundary ghost states."""
-    ax = jax.tree_util.tree_map(lambda _: None, mesh)
-    return eqx.tree_at(lambda m: (m.bc_left_state, m.bc_right_state), ax,
-                       (0, 0), is_leaf=lambda x: x is None)
+def make_train_step(mesh, project, dt, dx_ref, cfg: TrainConfig, optimizer):
+    """With periodic BCs the mesh is identical for every IC, so the batch vmap
+    is just over (U0, targets) -- no per-IC boundary state to map over."""
 
-
-def make_train_step(mesh, project, dx_ref, cfg: TrainConfig, optimizer):
-    mesh_axes = _mesh_in_axes(mesh)
-
-    def batch_loss(model, starts, targets, dts, bcL, bcR):
-        mesh_b = eqx.tree_at(lambda m: (m.bc_left_state, m.bc_right_state),
-                             mesh, (bcL, bcR))
+    def batch_loss(model, U0s, targets_b):
         losses = jax.vmap(
-            lambda U0, tgt, dt, msh: rollout_loss(
-                model, U0, tgt, dt, msh, project, dx_ref, cfg),
-            in_axes=(0, 0, 0, mesh_axes))(starts, targets, dts, mesh_b)
+            lambda U0, tgt: rollout_loss(model, U0, tgt, mesh, project, dt,
+                                         dx_ref, cfg))(U0s, targets_b)
         return jnp.mean(losses)
 
     @eqx.filter_jit
-    def train_step(model, opt_state, starts, targets, dts, bcL, bcR):
+    def train_step(model, opt_state, U0s, targets_b):
         loss, grads = eqx.filter_value_and_grad(batch_loss)(
-            model, starts, targets, dts, bcL, bcR)
+            model, U0s, targets_b)
         updates, opt_state = optimizer.update(grads, opt_state, model)
         model = eqx.apply_updates(model, updates)
         return model, opt_state, loss
 
     @eqx.filter_jit
-    def eval_loss(model, starts, targets, dts, bcL, bcR):
-        return batch_loss(model, starts, targets, dts, bcL, bcR)
+    def eval_loss(model, U0s, targets_b):
+        return batch_loss(model, U0s, targets_b)
 
     @eqx.filter_jit
-    def eval_breakdown(model, starts, targets, dts, bcL, bcR):
-        """(C_osc, C_acc, C_alpha, alpha_mean, alpha_max) averaged over the
-        batch — unweighted terms, for the training-analysis plots."""
-        mesh_b = eqx.tree_at(lambda m: (m.bc_left_state, m.bc_right_state),
-                             mesh, (bcL, bcR))
+    def eval_breakdown(model, U0s, targets_b):
         terms = jax.vmap(
-            lambda U0, tgt, dt, msh: rollout_terms(
-                model, U0, tgt, dt, msh, project, dx_ref, cfg),
-            in_axes=(0, 0, 0, mesh_axes))(starts, targets, dts, mesh_b)
+            lambda U0, tgt: rollout_terms(model, U0, tgt, mesh, project, dt,
+                                          dx_ref, cfg))(U0s, targets_b)
         return terms.mean(axis=0)
 
     return train_step, eval_loss, eval_breakdown
 
 
 # ---------------------------------------------------------------------------
-# Epoch data (reference trajectories + sub-trajectory sampling)
+# MUSCL reference + epoch data
 # ---------------------------------------------------------------------------
 
+def muscl_reference_on_cost_grid(coeffs, cfg: TrainConfig):
+    """Fine MUSCL Euler solve from the shared IC, projected to the cost grid.
+
+    Returns (rollout_steps, 3, N_cost): the reference AFTER each DGSEM step
+    (index i is the target for DGSEM step i+1). NumPy -- no gradients."""
+    grid = MusclEulerGrid(cfg.N_muscl, cfg.xL, cfg.xR)
+    grid.set_state(sample_on_muscl(coeffs, grid))
+    solver = MusclEulerSolver(grid, dt=cfg.dt / cfg.muscl_substeps)
+    traj = solver.trajectory(cfg.rollout_steps, cfg.muscl_substeps)
+    factor = cfg.N_muscl // cfg.N_cost
+    proj = traj.reshape(traj.shape[0], 3, cfg.N_cost, factor).mean(axis=-1)
+    return proj[1:]                      # drop the IC snapshot
+
+
 class EpochData:
-    """References for one epoch: fine states, projected targets, per-IC dt/BCs."""
-
-    def __init__(self, refs_fine, refs_proj, dts, bcLs, bcRs):
-        self.refs_fine = refs_fine    # list of (n_steps+1, 3, n_f, Nn)
-        self.refs_proj = refs_proj    # list of (n_steps+1, 3, n_pts)
-        self.dts = dts
-        self.bcLs = bcLs
-        self.bcRs = bcRs
+    def __init__(self, dgsem_ics, refs_proj, coeffs_list):
+        self.dgsem_ics = dgsem_ics       # (K, 3, n_elem, Nn)
+        self.refs_proj = refs_proj       # (K, rollout_steps, 3, N_cost)
+        self.coeffs_list = coeffs_list   # for visualization
 
 
-def build_epoch_data(key, n_ics, mesh_c, mesh_f, project_f,
-                     cfg: TrainConfig):
-    refs_fine, refs_proj, dts, bcLs, bcRs = [], [], [], [], []
-    gen_ref = eqx.filter_jit(generate_reference_trajectory)
-    for k in jax.random.split(key, n_ics):
-        k_type, k_ic = jax.random.split(k)
-        if bool(jax.random.bernoulli(k_type, cfg.shock_ic_fraction)):
-            U0 = random_riemann_ic(k_ic, mesh_c, cfg.xL)
-        else:
-            U0 = random_fourier_ic(k_ic, mesh_c, cfg.xL, cfg.n_fourier_modes,
-                                   cfg.ic_eps)
-        bcL, bcR = wall_states_from_ic(U0)
-        dt = float(cfl_time_step(U0, mesh_c, cfg.cfl))
-        mesh_f_k = eqx.tree_at(lambda m: (m.bc_left_state, m.bc_right_state),
-                               mesh_f, (bcL, bcR))
-        U0_f = refine_ic(U0, cfg.P, cfg.refine)
-        # dt as an array so filter_jit traces it (a Python float would be a
-        # static arg -> one recompilation per initial condition)
-        ref = gen_ref(U0_f, mesh_f_k, cfg.n_steps, jnp.asarray(dt), cfg.refine,
-                      cfg.alpha_max)
-        if not bool(jnp.isfinite(ref[-1]).all()):
-            continue    # blown-up reference: drop this IC
-        refs_fine.append(ref)
-        refs_proj.append(jax.vmap(project_f)(ref))
-        dts.append(dt)
-        bcLs.append(bcL)
-        bcRs.append(bcR)
-    return EpochData(refs_fine, refs_proj, jnp.asarray(dts),
-                     jnp.stack(bcLs), jnp.stack(bcRs))
+def build_epoch_data(rng: np.random.Generator, n_ics, mesh, cfg: TrainConfig):
+    dgsem_ics, refs_proj, coeffs_list = [], [], []
+    for _ in range(n_ics):
+        coeffs = draw_fourier_coeffs(rng, cfg.n_fourier_modes, cfg.ic_amp,
+                                     cfg.xL, cfg.xR,
+                                     target_compression=cfg.target_compression,
+                                     vel_modes=cfg.vel_modes)
+        ref = muscl_reference_on_cost_grid(coeffs, cfg)
+        if not np.isfinite(ref).all():
+            continue                     # MUSCL blew up (shouldn't for smooth IC)
+        dgsem_ics.append(np.asarray(sample_on_dgsem(coeffs, mesh, cfg.xL)))
+        refs_proj.append(ref)
+        coeffs_list.append(coeffs)
+    return EpochData(jnp.asarray(np.stack(dgsem_ics)),
+                     jnp.asarray(np.stack(refs_proj)), coeffs_list)
 
 
-def sample_batch(rng: np.random.Generator, data: EpochData, B_restr,
-                 cfg: TrainConfig):
-    """Random set of (k, n) sub-trajectories -> stacked batch arrays."""
-    K = len(data.refs_fine)
-    ks = rng.integers(0, K, size=cfg.batch_size)
-    ns = rng.integers(0, cfg.n_steps - cfg.m + 1, size=cfg.batch_size)
-    starts, targets = [], []
-    for k, n in zip(ks, ns):
-        starts.append(restrict(data.refs_fine[k][n], B_restr, cfg.n_elem))
-        targets.append(data.refs_proj[k][n + 1:n + 1 + cfg.m])
-    return (jnp.stack(starts), jnp.stack(targets), data.dts[ks],
-            data.bcLs[ks], data.bcRs[ks])
+def sample_batch(rng: np.random.Generator, data: EpochData, cfg: TrainConfig):
+    K = data.dgsem_ics.shape[0]
+    idx = rng.integers(0, K, size=min(cfg.batch_size, K))
+    return data.dgsem_ics[idx], data.refs_proj[idx]
 
 
 # ---------------------------------------------------------------------------
@@ -200,48 +180,38 @@ def sample_batch(rng: np.random.Generator, data: EpochData, B_restr,
 
 def train(cfg: TrainConfig = None, resume: bool = False):
     cfg = cfg or TrainConfig()
-    print(cfg.proj_pts_per_elem)
-    print(cfg.refine)
-    assert cfg.proj_pts_per_elem % cfg.refine == 0, \
-        "proj_pts_per_elem must be divisible by refine (shared cost grid)"
+    assert cfg.muscl_cells_per_elem % cfg.proj_pts_per_elem == 0, \
+        "muscl_cells_per_elem must be a multiple of proj_pts_per_elem"
+    assert cfg.N_muscl % cfg.N_cost == 0, "N_muscl must be a multiple of N_cost"
 
     key = jax.random.PRNGKey(cfg.seed)
     rng = np.random.default_rng(cfg.seed)
 
     basis = GLLBasis(cfg.P)
-    dummy = ("wall", np.array([1.0, 0.0, 2.5]))
-    mesh_c = Mesh1D(basis, cfg.n_elem, cfg.xL, cfg.xR, dummy, dummy)
-    mesh_f = Mesh1D(basis, cfg.n_elem * cfg.refine, cfg.xL, cfg.xR,
-                    dummy, dummy)
-
-    project_c = uniform_projector(cfg.P, cfg.n_elem, cfg.proj_pts_per_elem)
-    project_f = uniform_projector(cfg.P, cfg.n_elem * cfg.refine,
-                                  cfg.proj_pts_per_elem // cfg.refine)
-    n_pts = cfg.n_elem * cfg.proj_pts_per_elem
-    dx_ref = (cfg.xR - cfg.xL) / n_pts
-    B_restr = restriction_operator(cfg.P, cfg.refine)
+    mesh = Mesh1D(basis, cfg.n_elem, cfg.xL, cfg.xR, PERIODIC, PERIODIC)
+    project = uniform_projector(cfg.P, cfg.n_elem, cfg.proj_pts_per_elem)
+    dx_ref = (cfg.xR - cfg.xL) / cfg.N_cost
 
     key, k_model = jax.random.split(key)
     model = AlphaModel(cfg.P + 1, cfg.width, cfg.kernel_size, cfg.depth,
                        key=k_model)
 
-    # Guarded optimizer: gradients through many RK4 steps spike near the
-    # stability boundary, and one non-finite update would poison the weights
-    # permanently. Clip the spikes, skip the non-finite batches.
+    # Guarded optimizer: a forming shock in the rollout can spike or NaN the
+    # gradient; clip the spikes and skip (never apply) the non-finite batches
+    # so one bad rollout cannot poison the weights permanently.
     optimizer = optax.apply_if_finite(
         optax.chain(optax.clip_by_global_norm(cfg.grad_clip),
                     optax.adam(cfg.lr)),
         max_consecutive_errors=10 * cfg.batches_per_epoch)
     opt_state = optimizer.init(eqx.filter(model, eqx.is_array))
     train_step, eval_loss, eval_breakdown = make_train_step(
-        mesh_c, project_c, dx_ref, cfg, optimizer)
+        mesh, project, cfg.dt, dx_ref, cfg, optimizer)
 
-    # Fixed validation set (paper: generated once at the start of training).
-    key, k_val = jax.random.split(key)
-    val_data = build_epoch_data(k_val, cfg.n_val, mesh_c, mesh_f, project_f,
-                                cfg)
-    val_batch = sample_batch(np.random.default_rng(12345), val_data, B_restr,
-                             cfg)
+    # Fixed validation set (generated once).
+    val_rng = np.random.default_rng(cfg.seed + 10_000)
+    val_data = build_epoch_data(val_rng, cfg.n_val, mesh, cfg)
+    val_batch = (val_data.dgsem_ics, val_data.refs_proj)
+    viz_coeffs = val_data.coeffs_list[0]      # fixed IC for snapshot plots
 
     os.makedirs(cfg.checkpoint_dir, exist_ok=True)
     best_val = float("inf")
@@ -253,6 +223,7 @@ def train(cfg: TrainConfig = None, resume: bool = False):
 
     meta_path = os.path.join(cfg.checkpoint_dir, "model_meta.json")
     last_path = os.path.join(cfg.checkpoint_dir, "alpha_model_last.eqx")
+    best_path = os.path.join(cfg.checkpoint_dir, "alpha_model_best.eqx")
     opt_path = os.path.join(cfg.checkpoint_dir, "opt_state.eqx")
     hist_path = os.path.join(cfg.checkpoint_dir, "training_history.npz")
     rng_path = os.path.join(cfg.checkpoint_dir, "rng_state.json")
@@ -269,12 +240,11 @@ def train(cfg: TrainConfig = None, resume: bool = False):
         arch = {"in_channels": cfg.P + 1, "width": cfg.width,
                 "kernel_size": cfg.kernel_size, "depth": cfg.depth}
         mismatch = {k: (old_meta[k], v) for k, v in arch.items()
-                   if old_meta[k] != v}
+                    if old_meta[k] != v}
         if mismatch:
             raise ValueError(
                 f"--resume: checkpoint architecture does not match cfg "
-                f"(old, new): {mismatch}. Use a different --checkpoint-dir "
-                f"for a differently-shaped model.")
+                f"(old, new): {mismatch}.")
         model = load_model(last_path, model)
         opt_state = eqx.tree_deserialise_leaves(opt_path, opt_state)
         with open(rng_path) as f:
@@ -284,20 +254,11 @@ def train(cfg: TrainConfig = None, resume: bool = False):
         start_epoch = int(history["epoch"][-1]) + 1 if history["epoch"] else 0
         best_val = float(np.min(old["val_loss"])) if len(old["val_loss"]) \
             else float("inf")
-        # Replay the per-epoch key splits so the RNG stream from here on
-        # matches what an uninterrupted run would have produced (only one
-        # split happens per epoch, in the loop below).
-        for _ in range(start_epoch):
-            key, _ = jax.random.split(key)
-        print(f"resuming from epoch {start_epoch} "
-              f"(best_val so far: {best_val:.6e})")
+        print(f"resuming from epoch {start_epoch} (best_val {best_val:.6e})")
         if start_epoch >= cfg.epochs:
-            print(f"cfg.epochs={cfg.epochs} <= start_epoch={start_epoch}: "
-                 f"nothing to do (raise --epochs to continue training)")
+            print("nothing to do (raise --epochs to continue)")
             return model
 
-    # Model hyperparameters, so evaluation scripts can rebuild the template
-    # for eqx.tree_deserialise_leaves without touching the training config.
     with open(meta_path, "w") as f:
         json.dump({"in_channels": cfg.P + 1, "width": cfg.width,
                    "kernel_size": cfg.kernel_size, "depth": cfg.depth,
@@ -312,16 +273,14 @@ def train(cfg: TrainConfig = None, resume: bool = False):
                  **{k: np.asarray(v) for k, v in history.items()})
 
     for epoch in range(start_epoch, cfg.epochs):
-        key, k_epoch = jax.random.split(key)
-        data = build_epoch_data(k_epoch, cfg.K, mesh_c, mesh_f, project_f,
-                                cfg)
-        if not data.refs_fine:
-            print(f"epoch {epoch:3d}: all references blew up, resampling")
+        data = build_epoch_data(rng, cfg.K, mesh, cfg)
+        if data.dgsem_ics.shape[0] == 0:
+            print(f"epoch {epoch:3d}: all references invalid, resampling")
             continue
 
         losses = []
         for _ in range(cfg.batches_per_epoch):
-            batch = sample_batch(rng, data, B_restr, cfg)
+            batch = sample_batch(rng, data, cfg)
             model, opt_state, loss = train_step(model, opt_state, *batch)
             losses.append(float(loss))
             history["batch_loss"].append(float(loss))
@@ -339,35 +298,39 @@ def train(cfg: TrainConfig = None, resume: bool = False):
         history["val_c_alpha"].append(float(alph))
         history["val_alpha_mean"].append(float(a_mean))
         history["val_alpha_max"].append(float(a_max))
-        save_history()   # every epoch: partial runs keep their data
+        save_history()
 
         flag = ""
         if val < best_val:
             best_val = val
-            save_model(os.path.join(cfg.checkpoint_dir, "alpha_model_best.eqx"),
-                       model)
+            save_model(best_path, model)
             flag = "  *best*"
         save_model(last_path, model)
-        # opt_state (Adam moments, clip/finite-guard counters) is saved too,
-        # so --resume continues optimization smoothly instead of restarting
-        # Adam's momentum from scratch (which would show up as a loss spike).
         eqx.tree_serialise_leaves(opt_path, opt_state)
         with open(rng_path, "w") as f:
             json.dump(rng.bit_generator.state, f)
-        skip_note = f"  (skipped {n_skipped} non-finite batches so far)" \
-            if n_skipped else ""
+
+        skip = f"  (skipped {n_skipped} non-finite)" if n_skipped else ""
         print(f"epoch {epoch:3d}: train {np.nanmean(losses):.6e}   "
               f"val {val:.6e}   [C_osc {osc:.3e}  C_acc {acc:.3e}  "
               f"C_alpha {alph:.3e}  alpha mean {a_mean:.3f} max {a_max:.3f}]"
-              f"{flag}{skip_note}")
+              f"{flag}{skip}")
+
+        # During-training visualization: DGSEM (current model) vs MUSCL ref.
+        if cfg.plot_every and epoch % cfg.plot_every == 0:
+            try:
+                from training.viz_snapshot import plot_snapshot
+                plot_snapshot(model, mesh, viz_coeffs, cfg, epoch,
+                              os.path.join(cfg.checkpoint_dir, "snapshots"))
+            except Exception as e:
+                print(f"  snapshot plot failed: {e}")
 
     try:
         from training.plots import plot_training_history
-        fig_path = os.path.join(cfg.checkpoint_dir, "training_recap.png")
-        plot_training_history(
-            os.path.join(cfg.checkpoint_dir, "training_history.npz"), fig_path)
-        print(f"training recap figure -> {fig_path}")
-    except Exception as e:      # plotting must never kill a finished training
+        fig = os.path.join(cfg.checkpoint_dir, "training_recap.png")
+        plot_training_history(hist_path, fig)
+        print(f"training recap figure -> {fig}")
+    except Exception as e:
         print(f"recap plot failed: {e}")
 
     return model
@@ -379,28 +342,21 @@ if __name__ == "__main__":
 
     ap = argparse.ArgumentParser()
     ap.add_argument("--light", action="store_true",
-                    help="fast demonstration training (TrainConfig.light): "
-                         "small mesh, shock-heavy ICs, minutes on a CPU")
-    # overrides applied on top of the chosen base config (for cluster runs:
-    # seed sweeps via job arrays, custom checkpoint dirs, longer trainings)
+                    help="fast demonstration training (TrainConfig.light)")
     ap.add_argument("--epochs", type=int, default=None)
     ap.add_argument("--seed", type=int, default=None)
     ap.add_argument("--lr", type=float, default=None)
-    ap.add_argument("--m", type=int, default=None,
-                    help="sub-trajectory length the gradient flows through")
-    ap.add_argument("--shock-ic-fraction", type=float, default=None)
+    ap.add_argument("--dt", type=float, default=None)
+    ap.add_argument("--rollout-steps", type=int, default=None)
     ap.add_argument("--checkpoint-dir", default=None)
     ap.add_argument("--resume", action="store_true",
-                    help="continue from alpha_model_last.eqx / opt_state.eqx "
-                         "/ training_history.npz in --checkpoint-dir (e.g. "
-                         "after a SLURM wall-time kill). Raise --epochs to "
-                         "train further than the original run's target.")
+                    help="continue from the checkpoint dir after a kill")
     args = ap.parse_args()
 
     cfg = TrainConfig.light() if args.light else TrainConfig()
     overrides = {k: v for k, v in (
         ("epochs", args.epochs), ("seed", args.seed), ("lr", args.lr),
-        ("m", args.m), ("shock_ic_fraction", args.shock_ic_fraction),
+        ("dt", args.dt), ("rollout_steps", args.rollout_steps),
         ("checkpoint_dir", args.checkpoint_dir)) if v is not None}
     if overrides:
         cfg = replace(cfg, **overrides)

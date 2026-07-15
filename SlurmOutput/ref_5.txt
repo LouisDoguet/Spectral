@@ -1,6 +1,0 @@
-================================================================================
- Reference run [5] : case=shu-osher  method=hybrid
-   P=6  N=400  cfl=0.3  dt=auto(CFL)  Q=0 (raw GLL nodes)
-================================================================================
-
-DONE: shu-osher_hybrid  ->  results/shu-osher_hybrid*   (log: SlurmOutput/shu-osher_hybrid.log)

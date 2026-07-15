@@ -1,6 +1,0 @@
-================================================================================
- Reference run [7] : case=woodward-colella  method=hybrid
-   P=3  N=512  cfl=0.2  dt=auto(CFL)  Q=0 (raw GLL nodes)
-================================================================================
-
-DONE: woodward-colella_hybrid  ->  results/woodward-colella_hybrid*   (log: SlurmOutput/woodward-colella_hybrid.log)

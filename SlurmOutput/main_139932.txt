@@ -1,0 +1,4 @@
+[main] saved animation -> out1.gif
+[main] saved animation -> out2.gif
+[main] saved animation -> out3.gif
+[main] saved animation -> out4.gif
