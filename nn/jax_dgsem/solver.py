@@ -167,13 +167,38 @@ def fv_residual(U, mesh: Mesh1D):
     divF = B[:, :, 1:] - B[:, :, :-1]
     return _apply_surface_and_mass_inverse(divF, U, mesh)
 
+def _alpha_on_interfaces(alpha, n_elem, P):
+    """Place the blending factor on the P interior subcell interfaces.
+
+    alpha may be:
+      - (n_elem,)      per element  -> broadcast across the element's P
+                       interfaces, reproducing the classic per-element scheme;
+      - (n_elem, P)    per interior interface -> a nodal / subcell policy.
+    The two element-boundary interfaces are never blended (B_dg == B_fv there,
+    both the physical flux), so they are padded with 0. Returns (1, n_elem, Nn+1).
+    """
+    if alpha.ndim == 1:
+        alpha = jnp.broadcast_to(alpha[:, None], (n_elem, P))
+    z = jnp.zeros((n_elem, 1))
+    a = jnp.concatenate([z, alpha, z], axis=1)   # (n_elem, P+2) = (n_elem, Nn+1)
+    return a[None, :, :]
+
 
 def hybrid_residual(U, alpha, mesh: Mesh1D):
-    """computeHybridResidual: R = (1-alpha) R_DG + alpha R_FV, then the RK4
-    convention rhs = -divF. alpha is per element, shape (n_elem,)."""
-    a = alpha[None, :, None]
-    divF = (1.0 - a) * dg_residual(U, mesh) + a * fv_residual(U, mesh)
-    return -divF
+    """R = difference of the blended subcell fluxes B_hyb = (1-a) B_DG + a B_FV.
+
+    Blending the FLUXES (before differencing) rather than the residuals keeps
+    the scheme conservative and entropy stable for a per-interface alpha; for a
+    per-element alpha it is bit-identical to the old residual blend."""
+    B_dg = _subcell_flux_dg(U, mesh)   # (3, n_elem, Nn+1)  -- UNCHANGED builders
+    B_fv = _subcell_flux_fv(U, mesh)   # (3, n_elem, Nn+1)
+
+    a = _alpha_on_interfaces(alpha, mesh.n_elem, mesh.P)   # (1, n_elem, Nn+1)
+    B_hyb = (1 - a) * B_dg + a * B_fv              # blend the FLUXES
+
+    divF = B_hyb[:, :, 1:] - B_hyb[:, :, :-1]      # difference ONCE, after blending
+    return -_apply_surface_and_mass_inverse(divF, U, mesh)
+
 
 
 # ---------------------------------------------------------------------------
@@ -198,7 +223,6 @@ def time_loop(U0, alpha_fn, n_steps: int, dt, mesh: Mesh1D,
     Returns (U_final, trajectory) with trajectory (n_steps, 3, n_elem, Nn)
     holding the state AFTER each step, or (U_final, None).
     """
-
     def body(U, _):
         alpha = alpha_fn(U)
         U_next = rk4_step(U, alpha, dt, mesh)

@@ -16,7 +16,7 @@ import jax.numpy as jnp
 import equinox as eqx
 
 from jax_dgsem.solver import rk4_step
-from jax_dgsem.indicator import modal_energy, postprocess_alpha
+from jax_dgsem.indicator import postprocess_alpha
 from training.cost import uniform_projector
 from training.ic import sample_on_dgsem, sample_on_muscl
 from muscl.euler import MusclEulerGrid, MusclEulerSolver
@@ -40,7 +40,8 @@ def _dgsem_rollout(model, mesh, U0, cfg):
     """Roll the DGSEM trainee from U0, deployment-mode alpha (hard clip), and
     return (trajectory (n+1,3,n_elem,Nn), alphas (n+1,n_elem))."""
     def alpha_of(U):
-        return postprocess_alpha(model(modal_energy(U, mesh).T),
+        from network.policy import alpha_features
+        return postprocess_alpha(model(alpha_features(U, mesh, cfg.model_type)),
                                  alpha_max=cfg.alpha_max, diffuse=cfg.alpha_diffuse,
                                  hard_clip=True)
 
@@ -78,6 +79,14 @@ def plot_snapshot(model, mesh, coeffs, cfg, epoch, outdir):
     x_plot = cfg.xL + (np.arange(N_plot) + 0.5) * (cfg.xR - cfg.xL) / N_plot
     x_elem = cfg.xL + (np.arange(cfg.n_elem) + 0.5) * mesh.dx
 
+    # alpha axis: nodal (T, n_elem, P) -> interface midpoints, flattened
+    if alphas.ndim == 3:
+        xn = np.asarray(mesh.node_positions(cfg.xL))
+        x_alpha = (0.5 * (xn[:, :-1] + xn[:, 1:])).ravel()
+        alphas = alphas.reshape(alphas.shape[0], -1)
+    else:
+        x_alpha = x_elem
+
     steps = [cfg.rollout_steps // 4, cfg.rollout_steps // 2, cfg.rollout_steps]
     fig, axes = plt.subplots(2, 3, figsize=(14, 7),
                              gridspec_kw={"height_ratios": [2.4, 1]})
@@ -103,8 +112,8 @@ def plot_snapshot(model, mesh, coeffs, cfg, epoch, outdir):
         # alpha field at this time
         axa = axes[1, j]
         s_a = min(s, len(alphas) - 1)
-        axa.plot(x_elem, alphas[s_a], color=BLUE, lw=1.5)
-        axa.fill_between(x_elem, 0, alphas[s_a], color=BLUE, alpha=0.15)
+        axa.plot(x_alpha, alphas[s_a], color=BLUE, lw=1.5)
+        axa.fill_between(x_alpha, 0, alphas[s_a], color=BLUE, alpha=0.15)
         axa.set_ylim(0, max(0.05, float(np.nanmax(alphas)) * 1.1))
         axa.set_xlabel("x"); axa.set_ylabel(r"$\alpha$")
         finish_axes(axa)

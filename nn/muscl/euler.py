@@ -73,25 +73,36 @@ def _minmod(a, b):
 class MusclEulerSolver:
     """SSP-RK2 MUSCL-Rusanov solver on a periodic uniform grid, imposed dt."""
 
-    def __init__(self, grid: MusclEulerGrid, dt: float):
+    def __init__(self, grid: MusclEulerGrid, dt: float, bc: str = "periodic"):
+        """bc: 'periodic' (wrap, np.roll) or 'transmissive' (zero-gradient
+        outflow, edge-clamped ghost) for the classic shock-tube cases."""
         self.grid = grid
         self.dx = grid.dx
         self.dt = dt
+        self.bc = bc
+
+    def _shift(self, A, direction):
+        """A shifted along the cell axis: direction -1 -> A_{i+1}, +1 -> A_{i-1}.
+        Periodic wraps; transmissive clamps to the edge cell (zero gradient)."""
+        if self.bc == "periodic":
+            return np.roll(A, direction, axis=1)
+        if direction == -1:                             # A_{i+1}
+            return np.concatenate([A[:, 1:], A[:, -1:]], axis=1)
+        return np.concatenate([A[:, :1], A[:, :-1]], axis=1)   # A_{i-1}
 
     def compute_rhs(self, U):
         """-dF/dx via component-wise minmod reconstruction + Rusanov flux.
 
-        Periodic everywhere through np.roll along the cell axis (axis=1)."""
-        # slopes on conservative variables (component-wise, periodic)
-        du_fwd = np.roll(U, -1, axis=1) - U            # U_{i+1} - U_i
-        du_bwd = U - np.roll(U, 1, axis=1)             # U_i - U_{i-1}
+        Boundaries via _shift: periodic (wrap) or transmissive (edge-clamp)."""
+        du_fwd = self._shift(U, -1) - U                # U_{i+1} - U_i
+        du_bwd = U - self._shift(U, 1)                 # U_i - U_{i-1}
         slope = _minmod(du_bwd, du_fwd)                # limited cell slope
 
         # reconstructed states at interface i+1/2:
         #   left  from cell i   : U_i   + 0.5 slope_i
         #   right from cell i+1 : U_{i+1} - 0.5 slope_{i+1}
         U_L = U + 0.5 * slope
-        U_R = np.roll(U, -1, axis=1) - 0.5 * np.roll(slope, -1, axis=1)
+        U_R = self._shift(U, -1) - 0.5 * self._shift(slope, -1)
 
         F_L = euler_flux(U_L)
         F_R = euler_flux(U_R)
@@ -101,7 +112,7 @@ class MusclEulerSolver:
         flux = 0.5 * (F_L + F_R) - 0.5 * a[None, :] * (U_R - U_L)
 
         # net difference F_{i+1/2} - F_{i-1/2}
-        flux_diff = flux - np.roll(flux, 1, axis=1)
+        flux_diff = flux - self._shift(flux, 1)
         return -flux_diff / self.dx
 
     def step(self):

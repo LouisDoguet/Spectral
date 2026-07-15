@@ -1,9 +1,10 @@
 {
-  "in_channels": 5,
+  "model_type": "nodal",
+  "P": 4,
   "width": 16,
   "kernel_size": 3,
   "depth": 1,
-  "P": 4,
+  "in_channels": 5,
   "alpha_max": 1.0,
   "config": {
     "P": 4,
@@ -31,6 +32,7 @@
     "ic_amp": 0.4,
     "vel_modes": 3,
     "shock_time_fraction": 0.5,
+    "model_type": "nodal",
     "width": 16,
     "kernel_size": 3,
     "depth": 1,

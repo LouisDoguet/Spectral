@@ -25,7 +25,7 @@ class TrainConfig:
 
     # --- time stepping (IMPOSED dt, no CFL) --------------------------------
     dt: float = 2e-4          # DGSEM coarse step; MUSCL step = dt/muscl_substeps
-    rollout_steps: int = 1024  # DGSEM steps rolled from the IC and compared to
+    rollout_steps: int = 512  # DGSEM steps rolled from the IC and compared to
                               # the MUSCL reference (the training horizon)
 
     # --- alpha post-processing during training (soft: no hard clipping) ----
@@ -62,6 +62,15 @@ class TrainConfig:
                                # None -> no shock control (amplitude-only vel).
 
     # --- model ---------------------------------------------------------------
+    model_type: str = "nodal"  # "nodal": per interior subcell interface,
+                               #   input = [rho, one-hot node position] over the
+                               #   node sequence, output (n_elem, P).
+                               # "element": legacy per-element modal-energy CNN,
+                               #   output (n_elem,).
+    alpha_init: float = 0.2    # untrained-policy alpha. Must be high enough that
+                               # the coarse scheme survives the FORMING shock
+                               # from step 0 (alpha~0.05 blows up), so every
+                               # batch yields a gradient instead of a NaN.
     width: int = 16
     kernel_size: int = 3
     depth: int = 1
@@ -92,6 +101,29 @@ class TrainConfig:
         from training.ic import compression_for_shock_fraction
         return compression_for_shock_fraction(
             self.shock_time_fraction, self.rollout_steps, self.dt)
+
+    @staticmethod
+    def stable_dt(P, n_elem=32, xL=0.0, xR=1.0, lambda_ref=8.0, cfl_fv=1.8,
+                  dt_cap=2e-4):
+        """Largest imposed dt that keeps the SUBCELL FV part stable.
+
+        The blend can push a subcell to pure first-order FV (alpha=1), and the
+        FV CFL is set by the smallest GLL subcell, width ~ dx/(P(P+1)), which
+        shrinks fast with P. Calibrated: cfl_fv~1.8 is stable, ~3.7 blows up.
+        Capped at dt_cap so low orders keep the validated 2e-4."""
+        dx = (xR - xL) / n_elem
+        return min(dt_cap, cfl_fv * dx / (P * (P + 1)) / lambda_ref)
+
+    @classmethod
+    def for_order(cls, P, target_T=0.1024, epochs=100, **kw):
+        """Config for a given polynomial order: a subcell-CFL-stable dt, and
+        rollout_steps scaled to keep the physical horizon target_T fixed, so
+        the shock still forms at ~shock_time_fraction of the rollout."""
+        n_elem = kw.get("n_elem", cls.n_elem)
+        dt = cls.stable_dt(P, n_elem)
+        rollout = max(1, round(target_T / dt))
+        return cls(P=P, dt=dt, rollout_steps=rollout, epochs=epochs,
+                   checkpoint_dir=f"nn/training/checkpoints_P{P}", **kw)
 
     @classmethod
     def light(cls) -> "TrainConfig":

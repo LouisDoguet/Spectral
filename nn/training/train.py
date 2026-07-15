@@ -31,8 +31,9 @@ import optax
 
 from jax_dgsem import GLLBasis, Mesh1D
 from jax_dgsem.solver import rk4_step
-from jax_dgsem.indicator import modal_energy, postprocess_alpha
-from network.model import AlphaModel, save_model, load_model
+from jax_dgsem.indicator import postprocess_alpha
+from network.model import save_model, load_model
+from network.policy import alpha_features, build_alpha_model, model_meta
 from training.config import TrainConfig
 from training.cost import uniform_projector, cost_step, cost_terms
 from training.ic import draw_fourier_coeffs, sample_on_dgsem, sample_on_muscl
@@ -46,10 +47,10 @@ PERIODIC = ("periodic", None)
 # ---------------------------------------------------------------------------
 
 def network_alpha(model, U, mesh, cfg: TrainConfig):
-    """Modal-energy features -> network -> soft post-processing (no hard clip:
-    keeps gradients alive; the hard clip is only applied at deployment)."""
-    feats = modal_energy(U, mesh).T          # (Nn, n_elem) channels-first
-    raw = model(feats)
+    """Features -> network -> soft post-processing (no hard clip: keeps
+    gradients alive; the hard clip is only applied at deployment). alpha is
+    (n_elem,) for the element policy or (n_elem, P) for the nodal policy."""
+    raw = model(alpha_features(U, mesh, cfg.model_type))
     return postprocess_alpha(raw, alpha_max=cfg.alpha_max,
                              diffuse=cfg.alpha_diffuse, hard_clip=False)
 
@@ -193,8 +194,8 @@ def train(cfg: TrainConfig = None, resume: bool = False):
     dx_ref = (cfg.xR - cfg.xL) / cfg.N_cost
 
     key, k_model = jax.random.split(key)
-    model = AlphaModel(cfg.P + 1, cfg.width, cfg.kernel_size, cfg.depth,
-                       key=k_model)
+    model = build_alpha_model(cfg.model_type, cfg.P, cfg.width, cfg.kernel_size,
+                              cfg.depth, k_model, cfg.alpha_init)
 
     # Guarded optimizer: a forming shock in the rollout can spike or NaN the
     # gradient; clip the spikes and skip (never apply) the non-finite batches
@@ -237,10 +238,10 @@ def train(cfg: TrainConfig = None, resume: bool = False):
                 f"{missing}. Start a fresh run (no --resume) instead.")
         with open(meta_path) as f:
             old_meta = json.load(f)
-        arch = {"in_channels": cfg.P + 1, "width": cfg.width,
+        arch = {"model_type": cfg.model_type, "P": cfg.P, "width": cfg.width,
                 "kernel_size": cfg.kernel_size, "depth": cfg.depth}
-        mismatch = {k: (old_meta[k], v) for k, v in arch.items()
-                    if old_meta[k] != v}
+        mismatch = {k: (old_meta.get(k), v) for k, v in arch.items()
+                    if old_meta.get(k) != v}
         if mismatch:
             raise ValueError(
                 f"--resume: checkpoint architecture does not match cfg "
@@ -260,9 +261,7 @@ def train(cfg: TrainConfig = None, resume: bool = False):
             return model
 
     with open(meta_path, "w") as f:
-        json.dump({"in_channels": cfg.P + 1, "width": cfg.width,
-                   "kernel_size": cfg.kernel_size, "depth": cfg.depth,
-                   "P": cfg.P, "alpha_max": cfg.alpha_max,
+        json.dump({**model_meta(cfg),
                    "config": {k: v for k, v in vars(cfg).items()
                               if isinstance(v, (int, float, bool, str))}},
                   f, indent=2)
@@ -343,6 +342,10 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--light", action="store_true",
                     help="fast demonstration training (TrainConfig.light)")
+    ap.add_argument("--P", type=int, default=None,
+                    help="polynomial order (4/6/8 ...)")
+    ap.add_argument("--n-elem", type=int, default=None)
+    ap.add_argument("--model-type", default=None, choices=["nodal", "element"])
     ap.add_argument("--epochs", type=int, default=None)
     ap.add_argument("--seed", type=int, default=None)
     ap.add_argument("--lr", type=float, default=None)
@@ -353,8 +356,15 @@ if __name__ == "__main__":
                     help="continue from the checkpoint dir after a kill")
     args = ap.parse_args()
 
-    cfg = TrainConfig.light() if args.light else TrainConfig()
+    if args.light:
+        cfg = TrainConfig.light()
+    elif args.P is not None:
+        # for_order picks a subcell-CFL-stable dt and matching rollout_steps
+        cfg = TrainConfig.for_order(args.P, epochs=args.epochs or 100)
+    else:
+        cfg = TrainConfig()
     overrides = {k: v for k, v in (
+        ("n_elem", args.n_elem), ("model_type", args.model_type),
         ("epochs", args.epochs), ("seed", args.seed), ("lr", args.lr),
         ("dt", args.dt), ("rollout_steps", args.rollout_steps),
         ("checkpoint_dir", args.checkpoint_dir)) if v is not None}

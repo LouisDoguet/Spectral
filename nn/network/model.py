@@ -45,7 +45,8 @@ class AlphaModel(eqx.Module):
     head: eqx.nn.Conv1d
 
     def __init__(self, in_channels: int, width: int = 16, kernel_size: int = 3,
-                 depth: int = 1, *, key, head_bias: float = -3.0):
+                 depth: int = 1, *, key, alpha_init: float = 0.05):
+        head_bias = float(jnp.log(alpha_init / (1.0 - alpha_init)))
         keys = jax.random.split(key, depth + 2)
         pad = kernel_size // 2
         self.lift = eqx.nn.Conv1d(in_channels, width, kernel_size, padding=pad,
@@ -70,10 +71,73 @@ class AlphaModel(eqx.Module):
         return jax.nn.sigmoid(self.head(x))[0]
 
 
-def save_model(path: str, model: AlphaModel):
+class NodalAlphaModel(eqx.Module):
+    """Nodal / subcell alpha policy.
+
+    Input  : (1 + Nn, n_elem*Nn)  -- per node, channel 0 = density, channels
+             1..Nn = one-hot position within the element (subcell-position
+             awareness). The spatial axis is the GLOBAL node sequence, so the
+             convolution sees neighbouring nodes AND neighbouring elements.
+    Output : (n_elem, P)  -- one alpha in (0,1) per interior subcell interface,
+             formed by combining each adjacent node pair's latent features.
+             This is exactly the shape the flux-blend hybrid_residual consumes.
+
+    Still fully convolutional over the node axis, so it runs on any n_elem; it
+    is tied to a fixed P (the one-hot width and the interface count depend on
+    Nn = P+1)."""
+
+    lift: eqx.nn.Conv1d
+    blocks: tuple
+    proj_w: jnp.ndarray            # (width,) interface readout weight
+    proj_b: jnp.ndarray            # scalar bias
+    Nn: int = eqx.field(static=True)
+
+    def __init__(self, P: int, width: int = 16, kernel_size: int = 3,
+                 depth: int = 1, *, key, alpha_init: float = 0.05):
+        Nn = P + 1
+        in_channels = 1 + Nn
+        keys = jax.random.split(key, depth + 1)
+        pad = kernel_size // 2
+        self.lift = eqx.nn.Conv1d(in_channels, width, kernel_size, padding=pad,
+                                  key=keys[0])
+        self.blocks = tuple(
+            ResBlock(width, kernel_size, key=keys[1 + i]) for i in range(depth))
+        # Zero readout weight + logit(alpha_init) bias: the untrained policy
+        # outputs the constant alpha_init ~ 0.05 (almost pure DG) so the solver
+        # is stable at the start of training.
+        self.proj_w = jnp.zeros((width,))
+        self.proj_b = jnp.array(jnp.log(alpha_init / (1.0 - alpha_init)))
+        self.Nn = Nn
+
+    def __call__(self, features):
+        """features: (1+Nn, n_elem*Nn) -> alpha (n_elem, P) in (0, 1)."""
+        x = jax.nn.relu(self.lift(features))
+        for block in self.blocks:
+            x = block(x)                       # (width, n_elem*Nn)
+        width = x.shape[0]
+        h = x.T.reshape(-1, self.Nn, width)    # (n_elem, Nn, width)
+        hi = 0.5 * (h[:, :-1, :] + h[:, 1:, :])  # (n_elem, P, width) interface feats
+        logit = hi @ self.proj_w + self.proj_b   # (n_elem, P)
+        return jax.nn.sigmoid(logit)
+
+
+def nodal_features(U, mesh):
+    """Network input for NodalAlphaModel: (1 + Nn, n_elem*Nn).
+
+    Channel 0 is the nodal density; channels 1..Nn are a one-hot of the node's
+    position within its element (repeats every Nn nodes). Built with jnp so
+    gradients flow through the density channel."""
+    rho = U[0]                                 # (n_elem, Nn)
+    n_elem, Nn = rho.shape
+    rho_row = rho.reshape(1, -1)               # (1, n_elem*Nn)
+    onehot = jnp.tile(jnp.eye(Nn), (1, n_elem))  # (Nn, n_elem*Nn)
+    return jnp.concatenate([rho_row, onehot], axis=0)
+
+
+def save_model(path: str, model):
     eqx.tree_serialise_leaves(path, model)
 
 
-def load_model(path: str, template: AlphaModel) -> AlphaModel:
+def load_model(path: str, template):
     """template: a model built with the same hyperparameters (any key)."""
     return eqx.tree_deserialise_leaves(path, template)

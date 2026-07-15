@@ -37,7 +37,9 @@ def postprocess_alpha(raw, alpha_min: float = 0.001, alpha_max: float = 0.5,
         a = jnp.where(a < alpha_min, 0.0, a)
         a = jnp.where(a > 1.0 - alpha_min, 1.0, a)
     a = jnp.minimum(a, alpha_max)
-    if diffuse and a.shape[0] > 1:
+    # Neighbour diffusion is only defined for the per-element (1D) policy; the
+    # nodal policy (2D, (n_elem, P)) skips it.
+    if diffuse and a.ndim == 1 and a.shape[0] > 1:
         left = jnp.concatenate([a[1:2] * 0.0, a[:-1]])   # neighbour to the left
         right = jnp.concatenate([a[1:], a[-2:-1] * 0.0])  # neighbour to the right
         a = jnp.maximum(a, 0.5 * jnp.maximum(left, right))

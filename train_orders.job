@@ -1,0 +1,83 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --gres=gpu:1
+#SBATCH --mem=16GB
+#SBATCH --time=12:00:00
+#SBATCH --job-name=TrainOrders
+#SBATCH --partition=gpu
+#SBATCH --account=aero_research_cantwell
+#SBATCH --array=0-2
+#SBATCH --output=SlurmOutput/train_order_%A_%a.txt
+
+# ==========================================================================
+# Train several hybrid-DGSEM alpha policies overnight, one polynomial order
+# per SLURM array task (they queue independently and run as GPUs free up):
+#
+#   array task 0 -> P=4  -> nn/training/checkpoints_P4
+#   array task 1 -> P=6  -> nn/training/checkpoints_P6
+#   array task 2 -> P=8  -> nn/training/checkpoints_P8
+#
+# Each runs 100 epochs. Every epoch draws cfg.K (=16) FRESH random shock-
+# forming initial conditions, so each model sees ~1600 distinct problems.
+#
+#   sbatch train_orders.job                 # train all three orders
+#   sbatch --array=1 train_orders.job       # just P=6
+#
+# Auto-resume: if a checkpoint dir already has a saved model, the job
+# continues from it (restores weights + optimizer + RNG + history exactly),
+# so a wall-time kill just needs the same sbatch again.
+#
+# Outputs in each checkpoint dir:
+#   alpha_model_best.eqx / alpha_model_last.eqx   (every epoch)
+#   opt_state.eqx / rng_state.json                (for --resume)
+#   training_history.npz + training_recap.png     (metrics + plot)
+#   model_meta.json                               (architecture, incl. P)
+#   snapshots/epoch_XXXX.png                      (DGSEM-vs-MUSCL, plot_every)
+# ==========================================================================
+
+module load cuda
+
+cd "${SLURM_SUBMIT_DIR:-$(dirname "$0")}" || exit 1
+mkdir -p SlurmOutput
+
+# --- polynomial order for this array task ----------------------------------
+ORDERS=(4 6 8)
+P=${ORDERS[$SLURM_ARRAY_TASK_ID]}
+EPOCHS=100
+CKPT="nn/training/checkpoints_P${P}"
+echo "=== array task ${SLURM_ARRAY_TASK_ID}: P=${P}, ${EPOCHS} epochs -> ${CKPT} ==="
+
+# --- Python environment ----------------------------------------------------
+if [ -x ".venv_spectral/bin/python" ]; then
+    PY=".venv_spectral/bin/python"
+else
+    echo "Bootstrapping virtualenv .venv_spectral ..."
+    python3 -m venv .venv_spectral || exit 1
+    .venv_spectral/bin/pip install --upgrade pip
+    .venv_spectral/bin/pip install -r requirements.txt || exit 1
+    PY=".venv_spectral/bin/python"
+fi
+echo "Python: $($PY --version)  ($PY)"
+
+# --- auto-resume if a checkpoint already exists ----------------------------
+RESUME=""
+if [ -f "${CKPT}/alpha_model_last.eqx" ]; then
+    RESUME="--resume"
+    echo "found existing checkpoint -> resuming"
+fi
+
+# --- Run --------------------------------------------------------------------
+export PYTHONUNBUFFERED=1
+$PY -u nn/training/train.py --P "$P" --epochs "$EPOCHS" \
+    --checkpoint-dir "$CKPT" $RESUME
+status=$?
+
+echo ""
+if [ $status -eq 0 ]; then
+    echo "DONE: P=${P} training finished."
+else
+    echo "FAILED (exit $status) — checkpoints up to the last completed epoch"
+    echo "are in ${CKPT}; resubmit the same sbatch to resume."
+fi
+exit $status

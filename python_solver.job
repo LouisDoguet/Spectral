@@ -1,0 +1,14 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --gres=gpu:1
+#SBATCH --mem=8GB
+#SBATCH --time=1:00:00
+#SBATCH --job-name=DGSEM
+#SBATCH --partition=gpu
+#SBATCH --output=SlurmOutput/pyhton_solver_%j.txt
+#SBATCH --account=aero_research_cantwell
+
+module load cuda
+python3 nn/main.py --solver dg --save dg.gif --seed 67
+python3 nn/main.py --solver muscl --save muscl.gif --seed 67
