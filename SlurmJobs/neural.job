@@ -1,0 +1,29 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --gres=gpu:1
+#SBATCH --mem=16GB
+#SBATCH --time=6:00:00
+#SBATCH --job-name=NNrun
+#SBATCH --array=0
+#SBATCH --partition=gpu
+#SBATCH --output=SlurmOutput/run_%j_%a.txt
+#SBATCH --account=aero_research_cantwell
+
+module load cuda
+
+source .venv_spectral/bin/activate
+
+MOD_PATH="nn/training/checkpoints"
+COMPARE_PATH="nn/evaluation/compare.py"
+SUBNAME=("_P4")
+POLY=(4)
+MOD_BEST="alpha_model_best.eqx"
+OUT_DIR="nn/evaluation/256_elem"
+
+MOD="${MOD_PATH}${SUBNAME[$SLURM_ARRAY_TASK_ID]}/${MOD_BEST}"
+
+echo "MODEL - ${MOD}"
+
+python3 ${COMPARE_PATH} --model ${MOD} --case sod --outdir ${OUT_DIR} --P ${POLY[${SLURM_ARRAY_TASK_ID}]} --n-elem 256
+

@@ -1,0 +1,2 @@
+/var/lib/slurm/slurmd/job142963/slurm_script: line 20: ${"${MOD_PATH}${SUBNAME[$SLURM_ARRAY_TASK_ID]}${MOD_BEST}"}: bad substitution
+

@@ -1,0 +1,6 @@
+MODEL - nn/training/checkpoints_P8/alpha_model_best.eqx
+usage: compare.py [-h] [--P P] [--case {random,sod,lax,shu-osher}]
+                  [--seed SEED] [--model MODEL] [--n-elem N_ELEM]
+                  [--rollout-steps ROLLOUT_STEPS] [--alpha-max ALPHA_MAX]
+                  [--n-save N_SAVE] [--outdir OUTDIR]
+compare.py: error: unrecognized arguments: --n_elem 512

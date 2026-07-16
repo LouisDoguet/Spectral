@@ -11,3 +11,9 @@ main
 **/MachineLearning/**
 **/__pycache__/**
 *.pyc
+**/GIFs/**
+*.gif
+*.png
+*.jpg
+*.eqx
+*.npz

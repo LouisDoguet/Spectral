@@ -392,6 +392,7 @@ def _write_metrics(path, times, runs, errors):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    ap.add_argument("--P", type=int, default=4, help="Polynomial order of the config")
     ap.add_argument("--case", default="sod", choices=CASES)
     ap.add_argument("--seed", type=int, default=0,
                     help="IC seed (only used by --case random)")
@@ -407,7 +408,7 @@ def main():
     ap.add_argument("--outdir", default="nn/evaluation/figures")
     args = ap.parse_args()
 
-    cfg = TrainConfig()
+    cfg = TrainConfig(P=args.P)
     if args.n_elem is not None:
         cfg = replace(cfg, n_elem=args.n_elem)
     compare_schemes(cfg, args.case, args.seed, args.model, args.alpha_max,

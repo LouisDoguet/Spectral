@@ -1,0 +1,70 @@
+MODEL - nn/training/checkpoints_P8/alpha_model_best.eqx
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:69: RuntimeWarning: overflow encountered in multiply
+  return np.where(a * b > 0.0, np.sign(a) * np.minimum(np.abs(a), np.abs(b)),
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:29: RuntimeWarning: overflow encountered in multiply
+  return GM1 * (E - 0.5 * rhou * rhou / rho)
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:37: RuntimeWarning: overflow encountered in multiply
+  return np.stack([rhou, rhou * u + p, u * (E + p)])
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:112: RuntimeWarning: overflow encountered in multiply
+  flux = 0.5 * (F_L + F_R) - 0.5 * a[None, :] * (U_R - U_L)
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:112: RuntimeWarning: invalid value encountered in subtract
+  flux = 0.5 * (F_L + F_R) - 0.5 * a[None, :] * (U_R - U_L)
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:36: RuntimeWarning: overflow encountered in multiply
+  p = GM1 * (E - 0.5 * rhou * u)
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:37: RuntimeWarning: invalid value encountered in add
+  return np.stack([rhou, rhou * u + p, u * (E + p)])
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:36: RuntimeWarning: invalid value encountered in subtract
+  p = GM1 * (E - 0.5 * rhou * u)
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:29: RuntimeWarning: invalid value encountered in subtract
+  return GM1 * (E - 0.5 * rhou * rhou / rho)
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:115: RuntimeWarning: invalid value encountered in subtract
+  flux_diff = flux - self._shift(flux, 1)
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:116: RuntimeWarning: overflow encountered in divide
+  return -flux_diff / self.dx
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:112: RuntimeWarning: invalid value encountered in add
+  flux = 0.5 * (F_L + F_R) - 0.5 * a[None, :] * (U_R - U_L)
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:35: RuntimeWarning: divide by zero encountered in divide
+  u = rhou / rho
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:43: RuntimeWarning: divide by zero encountered in divide
+  u = rhou / rho
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:29: RuntimeWarning: divide by zero encountered in divide
+  return GM1 * (E - 0.5 * rhou * rhou / rho)
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:35: RuntimeWarning: invalid value encountered in divide
+  u = rhou / rho
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:43: RuntimeWarning: invalid value encountered in divide
+  u = rhou / rho
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:29: RuntimeWarning: invalid value encountered in divide
+  return GM1 * (E - 0.5 * rhou * rhou / rho)
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:97: RuntimeWarning: invalid value encountered in subtract
+  du_fwd = self._shift(U, -1) - U                # U_{i+1} - U_i
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:98: RuntimeWarning: invalid value encountered in subtract
+  du_bwd = U - self._shift(U, 1)                 # U_i - U_{i-1}
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:69: RuntimeWarning: invalid value encountered in multiply
+  return np.where(a * b > 0.0, np.sign(a) * np.minimum(np.abs(a), np.abs(b)),
+[sod] n_elem=512 P=8 dt=2.0e-04 steps=1000 (T=0.2000) model=nodal alpha_max=1.0
+  DGSEM (no stabilization)         BLEW UP at t=0.0020
+  Hybrid + Persson-Peraire         BLEW UP at t=0.0020
+  Hybrid + NN policy               BLEW UP at t=0.0010
+Traceback (most recent call last):
+  File "/home/lgd25/Desktop/MSc/Spectral/nn/evaluation/compare.py", line 419, in <module>
+    main()
+    ~~~~^^
+  File "/home/lgd25/Desktop/MSc/Spectral/nn/evaluation/compare.py", line 414, in main
+    compare_schemes(cfg, args.case, args.seed, args.model, args.alpha_max,
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    args.n_save, args.rollout_steps, args.outdir)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lgd25/Desktop/MSc/Spectral/nn/evaluation/compare.py", line 248, in compare_schemes
+    fig1 = _figure_comparison(tag, cfg, mesh, xL, xR, times, runs, errors,
+                              x_muscl, muscl_traj, xc_zoom)
+  File "/home/lgd25/Desktop/MSc/Spectral/nn/evaluation/compare.py", line 308, in _figure_comparison
+    ax.set_ylim(lo - pad, hi + pad); ax.ticklabel_format(useOffset=False)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/home/lgd25/Desktop/MSc/Spectral/.venv_spectral/lib/python3.13/site-packages/matplotlib/axes/_base.py", line 4219, in set_ylim
+    return self.yaxis._set_lim(bottom, top, emit=emit, auto=auto)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lgd25/Desktop/MSc/Spectral/.venv_spectral/lib/python3.13/site-packages/matplotlib/axis.py", line 1263, in _set_lim
+    v0 = self.axes._validate_converted_limits(v0, self.convert_units)
+  File "/home/lgd25/Desktop/MSc/Spectral/.venv_spectral/lib/python3.13/site-packages/matplotlib/axes/_base.py", line 3891, in _validate_converted_limits
+    raise ValueError("Axis limits cannot be NaN or Inf")
+ValueError: Axis limits cannot be NaN or Inf
