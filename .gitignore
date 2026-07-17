@@ -13,8 +13,9 @@ main
 *.pyc
 **/GIFs/**
 *.gif
-*.png
+**epoch**.png
 *.jpg
 *.eqx
 *.npz
 **SlurmOutput**
+**/evaluation/comp_**/**.png
