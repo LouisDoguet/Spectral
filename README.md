@@ -27,7 +27,7 @@ The *flux blending* hybrid FV/DGSEM is developped only in python for `JAX` train
 ## Hybrid Flux Blending FV/DGSEM solver
 `JAX`-differentiable solver for CNN backpropagation.
 
-![hDGSEM](./img/hDGSEM.drawio.png)
+![hDGSEM](./img/hDGSEM.drawio.png =250x)[]
 
 ## `JAX` Neural Network
 
