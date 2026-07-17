@@ -17,3 +17,4 @@ main
 *.jpg
 *.eqx
 *.npz
+**SlurmOutput**
