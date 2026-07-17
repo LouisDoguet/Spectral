@@ -19,3 +19,4 @@ main
 *.npz
 **SlurmOutput**
 **/evaluation/comp_**/**.png
+**/.ipynb**/**
