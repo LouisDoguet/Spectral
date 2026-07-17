@@ -1,0 +1,49 @@
+MODEL - nn/training/checkpoints_P6/alpha_model_best.eqx
+[sod] n_elem=32 P=6 dt=2.0e-04 steps=1000 (T=0.2000) model=nodal alpha_max=1.0
+  DGSEM (no stabilization)         stable
+  Hybrid + Persson-Peraire         stable
+  Hybrid + NN policy               stable
+
+  scheme  |  stable  |  blowup_time  |  final_rel_L2_density  |  max_rel_L2_density  |  mean_alpha  |  max_alpha
+  DGSEM (no stabilization)  |  True  |    |  5.55501e-03  |  6.53546e-03  |  0.00000  |  0.00000
+  Hybrid + Persson-Peraire  |  True  |    |  5.36995e-03  |  5.93888e-03  |  0.00530  |  1.00000
+  Hybrid + NN policy  |  True  |    |  3.80560e-03  |  4.20923e-03  |  0.12024  |  0.93084
+figures -> nn/evaluation/comp_P6/sod_comparison.png
+           nn/evaluation/comp_P6/sod_alpha_spacetime.png
+metrics -> nn/evaluation/comp_P6/sod_metrics.csv
+[lax] n_elem=32 P=6 dt=2.0e-04 steps=800 (T=0.1600) model=nodal alpha_max=1.0
+  DGSEM (no stabilization)         BLEW UP at t=0.1000
+  Hybrid + Persson-Peraire         stable
+  Hybrid + NN policy               stable
+
+  scheme  |  stable  |  blowup_time  |  final_rel_L2_density  |  max_rel_L2_density  |  mean_alpha  |  max_alpha
+  DGSEM (no stabilization)  |  False  |  0.10000  |  6.22177e-02  |  7.32567e-02  |  0.00000  |  0.00000
+  Hybrid + Persson-Peraire  |  True  |    |  4.79214e-02  |  5.37286e-02  |  0.01952  |  1.00000
+  Hybrid + NN policy  |  True  |    |  2.90676e-02  |  3.15750e-02  |  0.01600  |  0.90303
+figures -> nn/evaluation/comp_P6/lax_comparison.png
+           nn/evaluation/comp_P6/lax_alpha_spacetime.png
+metrics -> nn/evaluation/comp_P6/lax_metrics.csv
+[shu-osher] n_elem=32 P=6 dt=2.0e-04 steps=9000 (T=1.8000) model=nodal alpha_max=1.0
+  DGSEM (no stabilization)         BLEW UP at t=0.5850
+  Hybrid + Persson-Peraire         stable
+  Hybrid + NN policy               stable
+
+  scheme  |  stable  |  blowup_time  |  final_rel_L2_density  |  max_rel_L2_density  |  mean_alpha  |  max_alpha
+  DGSEM (no stabilization)  |  False  |  0.58500  |  6.20814e-02  |  6.20814e-02  |  0.00000  |  0.00000
+  Hybrid + Persson-Peraire  |  True  |    |  6.06507e-02  |  7.74065e-02  |  0.03503  |  1.00000
+  Hybrid + NN policy  |  True  |    |  4.00662e-02  |  4.90222e-02  |  0.02477  |  0.97947
+figures -> nn/evaluation/comp_P6/shu-osher_comparison.png
+           nn/evaluation/comp_P6/shu-osher_alpha_spacetime.png
+metrics -> nn/evaluation/comp_P6/shu-osher_metrics.csv
+[random_seed34] n_elem=32 P=6 dt=2.0e-04 steps=512 (T=0.1024) model=nodal alpha_max=1.0
+  DGSEM (no stabilization)         BLEW UP at t=0.0768
+  Hybrid + Persson-Peraire         stable
+  Hybrid + NN policy               stable
+
+  scheme  |  stable  |  blowup_time  |  final_rel_L2_density  |  max_rel_L2_density  |  mean_alpha  |  max_alpha
+  DGSEM (no stabilization)  |  False  |  0.07680  |  1.53015e-01  |  1.89330e-01  |  0.00000  |  0.00000
+  Hybrid + Persson-Peraire  |  True  |    |  8.10701e-02  |  1.23519e-01  |  0.05699  |  1.00000
+  Hybrid + NN policy  |  True  |    |  5.16118e-02  |  7.80109e-02  |  0.01687  |  0.99864
+figures -> nn/evaluation/comp_P6/random_seed34_comparison.png
+           nn/evaluation/comp_P6/random_seed34_alpha_spacetime.png
+metrics -> nn/evaluation/comp_P6/random_seed34_metrics.csv

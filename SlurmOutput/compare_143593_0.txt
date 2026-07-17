@@ -1,0 +1,259 @@
+MODEL - nn/training/checkpoints_P4/alpha_model_best.eqx
+[sod] n_elem=32 P=4 dt=2.0e-04 steps=1000 (T=0.2000) model=nodal alpha_max=1.0
+  DGSEM (no stabilization)         stable
+  Hybrid + Persson-Peraire         stable
+  Hybrid + NN policy               stable
+
+  scheme  |  stable  |  blowup_time  |  final_rel_L2_density  |  max_rel_L2_density  |  mean_alpha  |  max_alpha
+  DGSEM (no stabilization)  |  True  |    |  6.13204e-03  |  6.13204e-03  |  0.00000  |  0.00000
+  Hybrid + Persson-Peraire  |  True  |    |  9.12411e-03  |  9.74963e-03  |  0.01135  |  1.00000
+  Hybrid + NN policy  |  True  |    |  5.79306e-03  |  5.79306e-03  |  0.00143  |  0.01737
+figures -> nn/evaluation/comp_P4_N32/sod_comparison.png
+           nn/evaluation/comp_P4_N32/sod_alpha_spacetime.png
+metrics -> nn/evaluation/comp_P4_N32/sod_metrics.csv
+[lax] n_elem=32 P=4 dt=2.0e-04 steps=800 (T=0.1600) model=nodal alpha_max=1.0
+  DGSEM (no stabilization)         stable
+  Hybrid + Persson-Peraire         stable
+  Hybrid + NN policy               stable
+
+  scheme  |  stable  |  blowup_time  |  final_rel_L2_density  |  max_rel_L2_density  |  mean_alpha  |  max_alpha
+  DGSEM (no stabilization)  |  True  |    |  5.87817e-02  |  9.93310e-02  |  0.00000  |  0.00000
+  Hybrid + Persson-Peraire  |  True  |    |  8.46618e-02  |  9.17290e-02  |  0.04236  |  1.00000
+  Hybrid + NN policy  |  True  |    |  3.58590e-02  |  4.04325e-02  |  0.00452  |  0.79028
+figures -> nn/evaluation/comp_P4_N32/lax_comparison.png
+           nn/evaluation/comp_P4_N32/lax_alpha_spacetime.png
+metrics -> nn/evaluation/comp_P4_N32/lax_metrics.csv
+[shu-osher] n_elem=32 P=4 dt=2.0e-04 steps=9000 (T=1.8000) model=nodal alpha_max=1.0
+  DGSEM (no stabilization)         BLEW UP at t=0.5760
+  Hybrid + Persson-Peraire         stable
+  Hybrid + NN policy               stable
+
+  scheme  |  stable  |  blowup_time  |  final_rel_L2_density  |  max_rel_L2_density  |  mean_alpha  |  max_alpha
+  DGSEM (no stabilization)  |  False  |  0.57600  |  5.52322e-02  |  5.52322e-02  |  0.00000  |  0.00000
+  Hybrid + Persson-Peraire  |  True  |    |  8.26416e-02  |  1.13015e-01  |  0.06285  |  1.00000
+  Hybrid + NN policy  |  True  |    |  4.96244e-02  |  5.82942e-02  |  0.01925  |  0.95581
+figures -> nn/evaluation/comp_P4_N32/shu-osher_comparison.png
+           nn/evaluation/comp_P4_N32/shu-osher_alpha_spacetime.png
+metrics -> nn/evaluation/comp_P4_N32/shu-osher_metrics.csv
+[random_seed24] n_elem=32 P=4 dt=2.0e-04 steps=512 (T=0.1024) model=nodal alpha_max=1.0
+  DGSEM (no stabilization)         BLEW UP at t=0.0804
+  Hybrid + Persson-Peraire         stable
+  Hybrid + NN policy               stable
+
+  scheme  |  stable  |  blowup_time  |  final_rel_L2_density  |  max_rel_L2_density  |  mean_alpha  |  max_alpha
+  DGSEM (no stabilization)  |  False  |  0.08040  |  1.48080e-01  |  1.55331e-01  |  0.00000  |  0.00000
+  Hybrid + Persson-Peraire  |  True  |    |  8.22821e-02  |  1.68156e-01  |  0.09356  |  1.00000
+  Hybrid + NN policy  |  True  |    |  4.23682e-02  |  7.94432e-02  |  0.01332  |  0.96355
+figures -> nn/evaluation/comp_P4_N32/random_seed24_comparison.png
+           nn/evaluation/comp_P4_N32/random_seed24_alpha_spacetime.png
+metrics -> nn/evaluation/comp_P4_N32/random_seed24_metrics.csv
+[sod] n_elem=64 P=4 dt=2.0e-04 steps=1000 (T=0.2000) model=nodal alpha_max=1.0
+  DGSEM (no stabilization)         stable
+  Hybrid + Persson-Peraire         stable
+  Hybrid + NN policy               stable
+
+  scheme  |  stable  |  blowup_time  |  final_rel_L2_density  |  max_rel_L2_density  |  mean_alpha  |  max_alpha
+  DGSEM (no stabilization)  |  True  |    |  8.70882e-03  |  8.70882e-03  |  0.00000  |  0.00000
+  Hybrid + Persson-Peraire  |  True  |    |  7.95705e-03  |  8.67876e-03  |  0.01339  |  1.00000
+  Hybrid + NN policy  |  True  |    |  8.25948e-03  |  8.25948e-03  |  0.00126  |  0.02439
+figures -> nn/evaluation/comp_P4_N64/sod_comparison.png
+           nn/evaluation/comp_P4_N64/sod_alpha_spacetime.png
+metrics -> nn/evaluation/comp_P4_N64/sod_metrics.csv
+[lax] n_elem=64 P=4 dt=2.0e-04 steps=800 (T=0.1600) model=nodal alpha_max=1.0
+  DGSEM (no stabilization)         stable
+  Hybrid + Persson-Peraire         stable
+  Hybrid + NN policy               stable
+
+  scheme  |  stable  |  blowup_time  |  final_rel_L2_density  |  max_rel_L2_density  |  mean_alpha  |  max_alpha
+  DGSEM (no stabilization)  |  True  |    |  5.12707e-02  |  7.94516e-02  |  0.00000  |  0.00000
+  Hybrid + Persson-Peraire  |  True  |    |  5.77873e-02  |  6.89468e-02  |  0.02591  |  1.00000
+  Hybrid + NN policy  |  True  |    |  2.46804e-02  |  3.15868e-02  |  0.00333  |  0.79243
+figures -> nn/evaluation/comp_P4_N64/lax_comparison.png
+           nn/evaluation/comp_P4_N64/lax_alpha_spacetime.png
+metrics -> nn/evaluation/comp_P4_N64/lax_metrics.csv
+[shu-osher] n_elem=64 P=4 dt=2.0e-04 steps=9000 (T=1.8000) model=nodal alpha_max=1.0
+  DGSEM (no stabilization)         BLEW UP at t=0.2880
+  Hybrid + Persson-Peraire         stable
+  Hybrid + NN policy               stable
+
+  scheme  |  stable  |  blowup_time  |  final_rel_L2_density  |  max_rel_L2_density  |  mean_alpha  |  max_alpha
+  DGSEM (no stabilization)  |  False  |  0.28800  |  3.56347e-02  |  3.56347e-02  |  0.00000  |  0.00000
+  Hybrid + Persson-Peraire  |  True  |    |  6.31485e-02  |  9.96942e-02  |  0.03531  |  1.00000
+  Hybrid + NN policy  |  True  |    |  4.59290e-02  |  5.12254e-02  |  0.01772  |  0.93203
+figures -> nn/evaluation/comp_P4_N64/shu-osher_comparison.png
+           nn/evaluation/comp_P4_N64/shu-osher_alpha_spacetime.png
+metrics -> nn/evaluation/comp_P4_N64/shu-osher_metrics.csv
+[random_seed24] n_elem=64 P=4 dt=2.0e-04 steps=512 (T=0.1024) model=nodal alpha_max=1.0
+  DGSEM (no stabilization)         BLEW UP at t=0.0588
+  Hybrid + Persson-Peraire         stable
+  Hybrid + NN policy               stable
+
+  scheme  |  stable  |  blowup_time  |  final_rel_L2_density  |  max_rel_L2_density  |  mean_alpha  |  max_alpha
+  DGSEM (no stabilization)  |  False  |  0.05880  |  6.45996e-02  |  6.45996e-02  |  0.00000  |  0.00000
+  Hybrid + Persson-Peraire  |  True  |    |  6.40308e-02  |  1.16029e-01  |  0.04494  |  1.00000
+  Hybrid + NN policy  |  True  |    |  3.13507e-02  |  6.06500e-02  |  0.00782  |  0.96950
+figures -> nn/evaluation/comp_P4_N64/random_seed24_comparison.png
+           nn/evaluation/comp_P4_N64/random_seed24_alpha_spacetime.png
+metrics -> nn/evaluation/comp_P4_N64/random_seed24_metrics.csv
+[sod] n_elem=128 P=4 dt=2.0e-04 steps=1000 (T=0.2000) model=nodal alpha_max=1.0
+  DGSEM (no stabilization)         stable
+  Hybrid + Persson-Peraire         stable
+  Hybrid + NN policy               stable
+
+  scheme  |  stable  |  blowup_time  |  final_rel_L2_density  |  max_rel_L2_density  |  mean_alpha  |  max_alpha
+  DGSEM (no stabilization)  |  True  |    |  4.69680e-03  |  6.35844e-03  |  0.00000  |  0.00000
+  Hybrid + Persson-Peraire  |  True  |    |  5.95765e-03  |  5.96735e-03  |  0.00941  |  1.00000
+  Hybrid + NN policy  |  True  |    |  4.31699e-03  |  5.93974e-03  |  0.00118  |  0.02584
+figures -> nn/evaluation/comp_P4_N128/sod_comparison.png
+           nn/evaluation/comp_P4_N128/sod_alpha_spacetime.png
+metrics -> nn/evaluation/comp_P4_N128/sod_metrics.csv
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:69: RuntimeWarning: overflow encountered in multiply
+  return np.where(a * b > 0.0, np.sign(a) * np.minimum(np.abs(a), np.abs(b)),
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:29: RuntimeWarning: overflow encountered in multiply
+  return GM1 * (E - 0.5 * rhou * rhou / rho)
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:37: RuntimeWarning: overflow encountered in multiply
+  return np.stack([rhou, rhou * u + p, u * (E + p)])
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:112: RuntimeWarning: overflow encountered in multiply
+  flux = 0.5 * (F_L + F_R) - 0.5 * a[None, :] * (U_R - U_L)
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:112: RuntimeWarning: invalid value encountered in subtract
+  flux = 0.5 * (F_L + F_R) - 0.5 * a[None, :] * (U_R - U_L)
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:115: RuntimeWarning: invalid value encountered in subtract
+  flux_diff = flux - self._shift(flux, 1)
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:36: RuntimeWarning: overflow encountered in multiply
+  p = GM1 * (E - 0.5 * rhou * u)
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:36: RuntimeWarning: invalid value encountered in subtract
+  p = GM1 * (E - 0.5 * rhou * u)
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:37: RuntimeWarning: invalid value encountered in add
+  return np.stack([rhou, rhou * u + p, u * (E + p)])
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:29: RuntimeWarning: invalid value encountered in subtract
+  return GM1 * (E - 0.5 * rhou * rhou / rho)
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:112: RuntimeWarning: invalid value encountered in add
+  flux = 0.5 * (F_L + F_R) - 0.5 * a[None, :] * (U_R - U_L)
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:116: RuntimeWarning: overflow encountered in divide
+  return -flux_diff / self.dx
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:97: RuntimeWarning: invalid value encountered in subtract
+  du_fwd = self._shift(U, -1) - U                # U_{i+1} - U_i
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:98: RuntimeWarning: invalid value encountered in subtract
+  du_bwd = U - self._shift(U, 1)                 # U_i - U_{i-1}
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:112: RuntimeWarning: overflow encountered in add
+  flux = 0.5 * (F_L + F_R) - 0.5 * a[None, :] * (U_R - U_L)
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:115: RuntimeWarning: overflow encountered in subtract
+  flux_diff = flux - self._shift(flux, 1)
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:35: RuntimeWarning: invalid value encountered in divide
+  u = rhou / rho
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:43: RuntimeWarning: invalid value encountered in divide
+  u = rhou / rho
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:29: RuntimeWarning: invalid value encountered in divide
+  return GM1 * (E - 0.5 * rhou * rhou / rho)
+/home/lgd25/Desktop/MSc/Spectral/nn/evaluation/compare.py:242: RuntimeWarning: overflow encountered in square
+  np.sum((rho - ref_rho[:end]) ** 2, axis=1)
+/home/lgd25/Desktop/MSc/Spectral/nn/evaluation/compare.py:243: RuntimeWarning: overflow encountered in square
+  / np.sum(ref_rho[:end] ** 2, axis=1))
+[lax] n_elem=128 P=4 dt=2.0e-04 steps=800 (T=0.1600) model=nodal alpha_max=1.0
+  DGSEM (no stabilization)         stable
+  Hybrid + Persson-Peraire         stable
+  Hybrid + NN policy               stable
+Traceback (most recent call last):
+  File "/home/lgd25/Desktop/MSc/Spectral/nn/evaluation/compare.py", line 419, in <module>
+    main()
+    ~~~~^^
+  File "/home/lgd25/Desktop/MSc/Spectral/nn/evaluation/compare.py", line 414, in main
+    compare_schemes(cfg, args.case, args.seed, args.model, args.alpha_max,
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    args.n_save, args.rollout_steps, args.outdir)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lgd25/Desktop/MSc/Spectral/nn/evaluation/compare.py", line 248, in compare_schemes
+    fig1 = _figure_comparison(tag, cfg, mesh, xL, xR, times, runs, errors,
+                              x_muscl, muscl_traj, xc_zoom)
+  File "/home/lgd25/Desktop/MSc/Spectral/nn/evaluation/compare.py", line 308, in _figure_comparison
+    ax.set_ylim(lo - pad, hi + pad); ax.ticklabel_format(useOffset=False)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/home/lgd25/Desktop/MSc/Spectral/.venv_spectral/lib/python3.13/site-packages/matplotlib/axes/_base.py", line 4219, in set_ylim
+    return self.yaxis._set_lim(bottom, top, emit=emit, auto=auto)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lgd25/Desktop/MSc/Spectral/.venv_spectral/lib/python3.13/site-packages/matplotlib/axis.py", line 1263, in _set_lim
+    v0 = self.axes._validate_converted_limits(v0, self.convert_units)
+  File "/home/lgd25/Desktop/MSc/Spectral/.venv_spectral/lib/python3.13/site-packages/matplotlib/axes/_base.py", line 3891, in _validate_converted_limits
+    raise ValueError("Axis limits cannot be NaN or Inf")
+ValueError: Axis limits cannot be NaN or Inf
+[shu-osher] n_elem=128 P=4 dt=2.0e-04 steps=9000 (T=1.8000) model=nodal alpha_max=1.0
+  DGSEM (no stabilization)         BLEW UP at t=0.1620
+  Hybrid + Persson-Peraire         stable
+  Hybrid + NN policy               stable
+
+  scheme  |  stable  |  blowup_time  |  final_rel_L2_density  |  max_rel_L2_density  |  mean_alpha  |  max_alpha
+  DGSEM (no stabilization)  |  False  |  0.16200  |  4.42809e-02  |  4.42809e-02  |  0.00000  |  0.00000
+  Hybrid + Persson-Peraire  |  True  |    |  3.72996e-02  |  7.84363e-02  |  0.01823  |  1.00000
+  Hybrid + NN policy  |  True  |    |  3.13401e-02  |  3.32765e-02  |  0.01603  |  0.90940
+figures -> nn/evaluation/comp_P4_N128/shu-osher_comparison.png
+           nn/evaluation/comp_P4_N128/shu-osher_alpha_spacetime.png
+metrics -> nn/evaluation/comp_P4_N128/shu-osher_metrics.csv
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:69: RuntimeWarning: overflow encountered in multiply
+  return np.where(a * b > 0.0, np.sign(a) * np.minimum(np.abs(a), np.abs(b)),
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:29: RuntimeWarning: overflow encountered in multiply
+  return GM1 * (E - 0.5 * rhou * rhou / rho)
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:37: RuntimeWarning: overflow encountered in multiply
+  return np.stack([rhou, rhou * u + p, u * (E + p)])
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:112: RuntimeWarning: overflow encountered in multiply
+  flux = 0.5 * (F_L + F_R) - 0.5 * a[None, :] * (U_R - U_L)
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:112: RuntimeWarning: invalid value encountered in subtract
+  flux = 0.5 * (F_L + F_R) - 0.5 * a[None, :] * (U_R - U_L)
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:36: RuntimeWarning: overflow encountered in multiply
+  p = GM1 * (E - 0.5 * rhou * u)
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:37: RuntimeWarning: invalid value encountered in add
+  return np.stack([rhou, rhou * u + p, u * (E + p)])
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:29: RuntimeWarning: invalid value encountered in subtract
+  return GM1 * (E - 0.5 * rhou * rhou / rho)
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:112: RuntimeWarning: invalid value encountered in add
+  flux = 0.5 * (F_L + F_R) - 0.5 * a[None, :] * (U_R - U_L)
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:116: RuntimeWarning: overflow encountered in divide
+  return -flux_diff / self.dx
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:97: RuntimeWarning: invalid value encountered in subtract
+  du_fwd = self._shift(U, -1) - U                # U_{i+1} - U_i
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:98: RuntimeWarning: invalid value encountered in subtract
+  du_bwd = U - self._shift(U, 1)                 # U_i - U_{i-1}
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:36: RuntimeWarning: invalid value encountered in subtract
+  p = GM1 * (E - 0.5 * rhou * u)
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:115: RuntimeWarning: invalid value encountered in subtract
+  flux_diff = flux - self._shift(flux, 1)
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:35: RuntimeWarning: invalid value encountered in divide
+  u = rhou / rho
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:43: RuntimeWarning: invalid value encountered in divide
+  u = rhou / rho
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:29: RuntimeWarning: invalid value encountered in divide
+  return GM1 * (E - 0.5 * rhou * rhou / rho)
+/home/lgd25/Desktop/MSc/Spectral/nn/muscl/euler.py:115: RuntimeWarning: overflow encountered in subtract
+  flux_diff = flux - self._shift(flux, 1)
+/home/lgd25/Desktop/MSc/Spectral/.venv_spectral/lib/python3.13/site-packages/numpy/_core/_methods.py:132: RuntimeWarning: invalid value encountered in reduce
+  ret = umr_sum(arr, axis, dtype, out, keepdims, where=where)
+/home/lgd25/Desktop/MSc/Spectral/nn/evaluation/compare.py:242: RuntimeWarning: overflow encountered in square
+  np.sum((rho - ref_rho[:end]) ** 2, axis=1)
+/home/lgd25/Desktop/MSc/Spectral/nn/evaluation/compare.py:243: RuntimeWarning: overflow encountered in square
+  / np.sum(ref_rho[:end] ** 2, axis=1))
+[random_seed24] n_elem=128 P=4 dt=2.0e-04 steps=512 (T=0.1024) model=nodal alpha_max=1.0
+  DGSEM (no stabilization)         BLEW UP at t=0.0588
+  Hybrid + Persson-Peraire         stable
+  Hybrid + NN policy               stable
+Traceback (most recent call last):
+  File "/home/lgd25/Desktop/MSc/Spectral/nn/evaluation/compare.py", line 419, in <module>
+    main()
+    ~~~~^^
+  File "/home/lgd25/Desktop/MSc/Spectral/nn/evaluation/compare.py", line 414, in main
+    compare_schemes(cfg, args.case, args.seed, args.model, args.alpha_max,
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    args.n_save, args.rollout_steps, args.outdir)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lgd25/Desktop/MSc/Spectral/nn/evaluation/compare.py", line 248, in compare_schemes
+    fig1 = _figure_comparison(tag, cfg, mesh, xL, xR, times, runs, errors,
+                              x_muscl, muscl_traj, xc_zoom)
+  File "/home/lgd25/Desktop/MSc/Spectral/nn/evaluation/compare.py", line 308, in _figure_comparison
+    ax.set_ylim(lo - pad, hi + pad); ax.ticklabel_format(useOffset=False)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/home/lgd25/Desktop/MSc/Spectral/.venv_spectral/lib/python3.13/site-packages/matplotlib/axes/_base.py", line 4219, in set_ylim
+    return self.yaxis._set_lim(bottom, top, emit=emit, auto=auto)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lgd25/Desktop/MSc/Spectral/.venv_spectral/lib/python3.13/site-packages/matplotlib/axis.py", line 1263, in _set_lim
+    v0 = self.axes._validate_converted_limits(v0, self.convert_units)
+  File "/home/lgd25/Desktop/MSc/Spectral/.venv_spectral/lib/python3.13/site-packages/matplotlib/axes/_base.py", line 3891, in _validate_converted_limits
+    raise ValueError("Axis limits cannot be NaN or Inf")
+ValueError: Axis limits cannot be NaN or Inf

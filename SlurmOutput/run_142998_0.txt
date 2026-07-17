@@ -1,0 +1,13 @@
+MODEL - nn/training/checkpoints_P4/alpha_model_best.eqx
+[sod] n_elem=128 P=4 dt=2.0e-04 steps=1000 (T=0.2000) model=nodal alpha_max=1.0
+  DGSEM (no stabilization)         stable
+  Hybrid + Persson-Peraire         stable
+  Hybrid + NN policy               stable
+
+  scheme  |  stable  |  blowup_time  |  final_rel_L2_density  |  max_rel_L2_density  |  mean_alpha  |  max_alpha
+  DGSEM (no stabilization)  |  True  |    |  4.69680e-03  |  6.35844e-03  |  0.00000  |  0.00000
+  Hybrid + Persson-Peraire  |  True  |    |  5.95765e-03  |  5.96735e-03  |  0.00941  |  1.00000
+  Hybrid + NN policy  |  True  |    |  2.95398e-03  |  3.74713e-03  |  0.05353  |  0.31054
+figures -> nn/evaluation/128_elem/sod_comparison.png
+           nn/evaluation/128_elem/sod_alpha_spacetime.png
+metrics -> nn/evaluation/128_elem/sod_metrics.csv

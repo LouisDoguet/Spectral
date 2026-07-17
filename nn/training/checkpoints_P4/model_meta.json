@@ -21,7 +21,7 @@
     "w_acc": 1.0,
     "w_alpha": 1e-05,
     "proj_pts_per_elem": 16,
-    "epochs": 100,
+    "epochs": 500,
     "K": 16,
     "batches_per_epoch": 20,
     "batch_size": 8,

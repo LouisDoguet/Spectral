@@ -102,9 +102,8 @@ class NodalAlphaModel(eqx.Module):
                                   key=keys[0])
         self.blocks = tuple(
             ResBlock(width, kernel_size, key=keys[1 + i]) for i in range(depth))
-        # Zero readout weight + logit(alpha_init) bias: the untrained policy
-        # outputs the constant alpha_init ~ 0.05 (almost pure DG) so the solver
-        # is stable at the start of training.
+        # Zero readout weight + logit(alpha_init) bias: 
+        # The untrained policy outputs the constant alpha_init ~ 0.05 (almost pure DG) so the solver is stable at the start of training.
         self.proj_w = jnp.zeros((width,))
         self.proj_b = jnp.array(jnp.log(alpha_init / (1.0 - alpha_init)))
         self.Nn = Nn

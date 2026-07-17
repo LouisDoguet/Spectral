@@ -1,0 +1,12 @@
+=== array task 1: P=6, 500 epochs -> nn/training/checkpoints_P6 ===
+Python: Python 3.13.5  (.venv_spectral/bin/python)
+found existing checkpoint -> resuming
+config: TrainConfig(P=6, n_elem=32, xL=0.0, xR=1.0, muscl_cells_per_elem=64, muscl_substeps=4, dt=0.0001674107142857143, rollout_steps=612, alpha_max=1.0, alpha_diffuse=False, w_osc=1e-05, w_acc=1.0, w_alpha=1e-05, proj_pts_per_elem=16, epochs=500, K=16, batches_per_epoch=20, batch_size=8, lr=0.001, grad_clip=1.0, seed=0, n_fourier_modes=12, ic_amp=0.4, vel_modes=3, shock_time_fraction=0.5, model_type='nodal', alpha_init=0.2, width=16, kernel_size=3, depth=1, n_val=4, plot_every=1, checkpoint_dir='nn/training/checkpoints_P6')
+resuming from epoch 442 (best_val 4.875665e+01)
+epoch 442: train 5.035491e+01   val 4.893608e+01   [C_osc 3.711e+06  C_acc 1.182e+01  C_alpha 6.725e+02  alpha mean 0.016 max 0.998]
+epoch 443: train 4.822256e+01   val 4.929515e+01   [C_osc 3.763e+06  C_acc 1.166e+01  C_alpha 5.809e+02  alpha mean 0.013 max 0.994]
+epoch 444: train 4.391257e+01   val 4.893311e+01   [C_osc 3.649e+06  C_acc 1.243e+01  C_alpha 7.935e+02  alpha mean 0.019 max 0.998]
+epoch 445: train 5.079887e+01   val 4.870590e+01   [C_osc 3.678e+06  C_acc 1.192e+01  C_alpha 7.698e+02  alpha mean 0.019 max 0.999]  *best*
+epoch 446: train 5.358790e+01   val 4.891190e+01   [C_osc 3.723e+06  C_acc 1.168e+01  C_alpha 6.569e+02  alpha mean 0.015 max 0.997]
+epoch 447: train 5.022332e+01   val 4.881979e+01   [C_osc 3.704e+06  C_acc 1.177e+01  C_alpha 6.662e+02  alpha mean 0.016 max 0.997]
+slurmstepd-meteor: error: *** JOB 143229 ON meteor CANCELLED AT 2026-07-16T18:11:50 ***

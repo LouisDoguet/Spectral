@@ -25,8 +25,17 @@ MOD="${MOD_PATH}${SUBNAME[$SLURM_ARRAY_TASK_ID]}/${MOD_BEST}"
 
 echo "MODEL - ${MOD}"
 
-python3 ${COMPARE_PATH} --model ${MOD} --case sod               --outdir ${OUT_DIR} --P ${POLY[${SLURM_ARRAY_TASK_ID}]}
-python3 ${COMPARE_PATH} --model ${MOD} --case lax               --outdir ${OUT_DIR} --P ${POLY[${SLURM_ARRAY_TASK_ID}]}
-python3 ${COMPARE_PATH} --model ${MOD} --case shu-osher         --outdir ${OUT_DIR} --P ${POLY[${SLURM_ARRAY_TASK_ID}]}
-python3 ${COMPARE_PATH} --model ${MOD} --case random --seed 11  --outdir ${OUT_DIR} --P ${POLY[${SLURM_ARRAY_TASK_ID}]}
+python3 ${COMPARE_PATH} --model ${MOD} --case sod               --outdir "${OUT_DIR}_N32" --P ${POLY[${SLURM_ARRAY_TASK_ID}]} --n-elem 32
+python3 ${COMPARE_PATH} --model ${MOD} --case lax               --outdir "${OUT_DIR}_N32" --P ${POLY[${SLURM_ARRAY_TASK_ID}]} --n-elem 32
+python3 ${COMPARE_PATH} --model ${MOD} --case shu-osher         --outdir "${OUT_DIR}_N32" --P ${POLY[${SLURM_ARRAY_TASK_ID}]} --n-elem 32
+python3 ${COMPARE_PATH} --model ${MOD} --case random --seed 24  --outdir "${OUT_DIR}_N32" --P ${POLY[${SLURM_ARRAY_TASK_ID}]} --n-elem 32
 
+python3 ${COMPARE_PATH} --model ${MOD} --case sod               --outdir "${OUT_DIR}_N64" --P ${POLY[${SLURM_ARRAY_TASK_ID}]} --n-elem 64
+python3 ${COMPARE_PATH} --model ${MOD} --case lax               --outdir "${OUT_DIR}_N64" --P ${POLY[${SLURM_ARRAY_TASK_ID}]} --n-elem 64
+python3 ${COMPARE_PATH} --model ${MOD} --case shu-osher         --outdir "${OUT_DIR}_N64" --P ${POLY[${SLURM_ARRAY_TASK_ID}]} --n-elem 64
+python3 ${COMPARE_PATH} --model ${MOD} --case random --seed 24  --outdir "${OUT_DIR}_N64" --P ${POLY[${SLURM_ARRAY_TASK_ID}]} --n-elem 64
+
+python3 ${COMPARE_PATH} --model ${MOD} --case sod               --outdir "${OUT_DIR}_N128" --P ${POLY[${SLURM_ARRAY_TASK_ID}]} --n-elem 128
+python3 ${COMPARE_PATH} --model ${MOD} --case lax               --outdir "${OUT_DIR}_N128" --P ${POLY[${SLURM_ARRAY_TASK_ID}]} --n-elem 128
+python3 ${COMPARE_PATH} --model ${MOD} --case shu-osher         --outdir "${OUT_DIR}_N128" --P ${POLY[${SLURM_ARRAY_TASK_ID}]} --n-elem 128
+python3 ${COMPARE_PATH} --model ${MOD} --case random --seed 24  --outdir "${OUT_DIR}_N128" --P ${POLY[${SLURM_ARRAY_TASK_ID}]} --n-elem 128

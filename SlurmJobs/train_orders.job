@@ -44,7 +44,7 @@ mkdir -p SlurmOutput
 # --- polynomial order for this array task ----------------------------------
 ORDERS=(4 6 8)
 P=${ORDERS[$SLURM_ARRAY_TASK_ID]}
-EPOCHS=100
+EPOCHS=500
 CKPT="nn/training/checkpoints_P${P}"
 echo "=== array task ${SLURM_ARRAY_TASK_ID}: P=${P}, ${EPOCHS} epochs -> ${CKPT} ==="
 
