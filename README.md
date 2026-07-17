@@ -23,15 +23,14 @@ A 1D Spectral Element Method solver for the Euler equations.
 The framework contains a working neural network, ready to be tested with `MNIST` dataset. Switched later to a more complex `JAX/EQX` neural network framework
 
 The *flux blending* hybrid FV/DGSEM is developped only in python for `JAX` training but will be added later.
-
 ## Hybrid Flux Blending FV/DGSEM solver
 `JAX`-differentiable solver for CNN backpropagation.
 
-![hDGSEM](./img/hDGSEM.drawio.png =250x)[]
+<img src="./img/hDGSEM.drawio.png" width="250" alt="hDGSEM">
 
 ## `JAX` Neural Network
 
-![NN](./img/NN.drawio.png)
+<img src="./img/NN.drawio.png" width="400" alt="JAX Neural Network">
 
 Python CNN framework to learn the behavior of the blending coefficient.
 - `nn/jax_dgsem` : `JAX`-differentiable DGSEM solver (previous section)
@@ -39,7 +38,7 @@ Python CNN framework to learn the behavior of the blending coefficient.
 - `nn/network` : Networks structure. Element networks and Quadrature networks.
 - `nn/training` : Training policy of the network.
 
-![training](./img/Training.drawio.png)
+<img src="./img/Training.drawio.png" width="350" alt="Training diagram">
 
 ## Build & Compile
 Requires `BLAS`, `LAPACK`, `BOOST_PROGRAM_OPTIONS`
