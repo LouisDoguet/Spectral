@@ -45,7 +45,7 @@ mkdir -p SlurmOutput
 ORDERS=(4 6 8)
 P=${ORDERS[$SLURM_ARRAY_TASK_ID]}
 EPOCHS=500
-CKPT="nn/training/checkpoints_P${P}"
+CKPT="nn/training/checkpoints_diff_P${P}"
 echo "=== array task ${SLURM_ARRAY_TASK_ID}: P=${P}, ${EPOCHS} epochs -> ${CKPT} ==="
 
 # --- Python environment ----------------------------------------------------

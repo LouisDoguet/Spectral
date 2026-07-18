@@ -30,7 +30,7 @@ class TrainConfig:
 
     # --- alpha post-processing during training (soft: no hard clipping) ----
     alpha_max: float = 1.0    # cap (C++ CLI default 0.5)
-    alpha_diffuse: bool = False
+    alpha_diffuse: bool = True
 
     # --- cost weights (C_vis -> L2 penalty on alpha) -----------------------
     w_osc: float = 1e-5
