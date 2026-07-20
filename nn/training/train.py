@@ -213,10 +213,12 @@ def build_discretization(cfg):
     return mesh, project, dx_ref
 
 
-def build_model(cfg):
+def build_model(cfg, stable_init=True):
+    """stable_init=True gives the saturated stable Stage-2 cold start; pass
+    False for a trainable readout when the model will be PP-pretrained."""
     key = jax.random.split(jax.random.PRNGKey(cfg.seed))[1]
     return build_alpha_model(cfg.model_type, cfg.P, cfg.width, cfg.kernel_size,
-                             cfg.depth, key, cfg.alpha_init)
+                             cfg.depth, key, cfg.alpha_init, stable_init)
 
 
 def build_optimizer(cfg, model):
@@ -395,7 +397,20 @@ def train(cfg=None, resume=False):
     # --- build every piece once -------------------------------------------
     rng = np.random.default_rng(cfg.seed)
     mesh, project, dx_ref = build_discretization(cfg)
-    model = build_model(cfg)
+
+    # Stage 1 (optional): PP-imitation warm-start, so Stage-2 rollouts survive
+    # the forming shock from step 0. Skipped on resume (the checkpoint already
+    # holds the trained-from-warm-start weights). The pretrained model needs a
+    # trainable readout (stable_init=False), otherwise the regression can't move.
+    pretraining = cfg.pretrain_epochs > 0 and not resume
+    model = build_model(cfg, stable_init=not pretraining)
+    if pretraining:
+        from training.pretrain import pretrain_pp
+        model = pretrain_pp(model, cfg, mesh, cfg.seed, cfg.pretrain_epochs)
+        os.makedirs(cfg.checkpoint_dir, exist_ok=True)
+        save_model(os.path.join(cfg.checkpoint_dir,
+                                "alpha_model_pretrained.eqx"), model)
+
     optimizer, opt_state = build_optimizer(cfg, model)
     train_step, eval_loss, eval_breakdown = make_step_functions(
         mesh, project, cfg.dt, dx_ref, cfg, optimizer)
@@ -459,6 +474,7 @@ def _config_from_args(args):
         ("n_elem", args.n_elem), ("model_type", args.model_type),
         ("epochs", args.epochs), ("seed", args.seed), ("lr", args.lr),
         ("dt", args.dt), ("rollout_steps", args.rollout_steps),
+        ("pretrain_epochs", args.pretrain_epochs),
         ("checkpoint_dir", args.checkpoint_dir)) if v is not None}
     return replace(cfg, **overrides) if overrides else cfg
 
@@ -477,6 +493,8 @@ if __name__ == "__main__":
     ap.add_argument("--lr", type=float, default=None)
     ap.add_argument("--dt", type=float, default=None)
     ap.add_argument("--rollout-steps", type=int, default=None)
+    ap.add_argument("--pretrain-epochs", type=int, default=None,
+                    help="Stage-1 PP-imitation warm-start epochs (0 = off)")
     ap.add_argument("--checkpoint-dir", default=None)
     ap.add_argument("--resume", action="store_true",
                     help="continue from the checkpoint dir after a kill")

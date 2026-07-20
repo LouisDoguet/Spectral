@@ -114,11 +114,3 @@ class GLLBasis:
     def interpolation_to(self, xi_out: np.ndarray) -> jnp.ndarray:
         return jnp.asarray(
             lagrange_interpolation_matrix(np.asarray(self.quads), xi_out))
-    
-
-
-P = 3
-b = GLLBasis(P)
-print(b.D)
-print(b.weights)
-

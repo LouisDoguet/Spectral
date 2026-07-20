@@ -48,7 +48,7 @@ echo "Python: $($PY --version)  ($PY)"
 # --- Run --------------------------------------------------------------------
 # -u: unbuffered, so the per-epoch lines appear live in the SLURM log.
 export PYTHONUNBUFFERED=1
-$PY -u nn/training/train.py "$@" --checkpoint-dir "M512"
+$PY -u nn/training/train.py "$@" --checkpoint-dir "nn/training/dg_fv_residual" --pretrain-epochs 400
 status=$?
 
 echo ""

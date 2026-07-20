@@ -1,8 +1,0 @@
-=== array task 2: P=8, 100 epochs -> nn/training/checkpoints_P8 ===
-Python: Python 3.13.5  (.venv_spectral/bin/python)
-found existing checkpoint -> resuming
-config: TrainConfig(P=8, n_elem=32, xL=0.0, xR=1.0, muscl_cells_per_elem=64, muscl_substeps=4, dt=9.765625e-05, rollout_steps=1049, alpha_max=1.0, alpha_diffuse=False, w_osc=1e-05, w_acc=1.0, w_alpha=1e-05, proj_pts_per_elem=16, epochs=100, K=16, batches_per_epoch=20, batch_size=8, lr=0.001, grad_clip=1.0, seed=0, n_fourier_modes=12, ic_amp=0.4, vel_modes=3, shock_time_fraction=0.5, model_type='nodal', alpha_init=0.2, width=16, kernel_size=3, depth=1, n_val=4, plot_every=1, checkpoint_dir='nn/training/checkpoints_P8')
-resuming from epoch 100 (best_val 8.040754e+01)
-nothing to do (raise --epochs to continue)
-
-DONE: P=8 training finished.

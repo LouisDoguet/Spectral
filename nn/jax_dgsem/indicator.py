@@ -46,6 +46,22 @@ def postprocess_alpha(raw, alpha_min: float = 0.001, alpha_max: float = 0.5,
     return a
 
 
+def persson_peraire_indicator(U, mesh: Mesh1D):
+    """The raw Persson-Peraire modal-energy indicator E_ind, per element
+    (n_elem,). This is the single scalar PP thresholds: the fraction of the
+    density modal energy sitting in the top mode(s). Small in smooth elements,
+    O(0.1) at a discontinuity. Used as a network input channel."""
+    P = mesh.P
+    m = jnp.einsum("kj,ej->ek", mesh.modal, U[0])
+    e = m * m
+    total = jnp.sum(e, axis=1)
+    total_m1 = total - e[:, P]
+    E_N = jnp.where(total > 1e-300, e[:, P] / jnp.maximum(total, 1e-300), 0.0)
+    E_Nm = jnp.where((P > 0) & (total_m1 > 1e-300),
+                     e[:, P - 1] / jnp.maximum(total_m1, 1e-300), 0.0)
+    return jnp.maximum(E_N, E_Nm)
+
+
 def persson_peraire_alpha(U, mesh: Mesh1D, alpha_min: float = 0.001,
                           alpha_max: float = 0.5, diffuse: bool = True):
     """Persson-Peraire modal energy indicator (hybrid_solver.cpp Eqs. 40-48).

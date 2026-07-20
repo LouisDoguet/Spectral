@@ -40,7 +40,7 @@ class TrainConfig:
     proj_pts_per_elem: int = 16   # uniform cost-grid points per coarse element
 
     # --- optimization -------------------------------------------------------
-    epochs: int = 30
+    epochs: int = 300
     K: int = 16               # initial conditions generated per epoch
     batches_per_epoch: int = 20
     batch_size: int = 8       # ICs per gradient step (from-IC rollouts)
@@ -67,10 +67,18 @@ class TrainConfig:
                                #   node sequence, output (n_elem, P).
                                # "element": legacy per-element modal-energy CNN,
                                #   output (n_elem,).
-    alpha_init: float = 0.1    # untrained-policy alpha. Must be high enough that
-                               # the coarse scheme survives the FORMING shock
-                               # from step 0 (alpha~0.05 blows up), so every
-                               # batch yields a gradient instead of a NaN.
+    alpha_init: float = 1e-3   # untrained-policy alpha (used when NOT
+                               # pretraining). Must be high enough that the
+                               # coarse scheme survives the FORMING shock from
+                               # step 0 (alpha~0.05 blows up); with pretrain_pp
+                               # the PP warm-start provides the stable start
+                               # instead, so alpha_init is irrelevant.
+    pretrain_epochs: int = 0   # Stage-1 PP-imitation warm-start (0 = off).
+                               # Regresses the network toward the Persson-
+                               # Peraire indicator on PP-driven rollout states,
+                               # so Stage-2 rollouts survive the forming shock
+                               # from step 0. A warm start, not a target.
+    pretrain_lr: float = 1e-3
     width: int = 16
     kernel_size: int = P+1
     depth: int = 1

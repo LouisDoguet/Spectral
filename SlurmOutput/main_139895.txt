@@ -1,1 +1,0 @@
-[main] saved animation -> out.gif
