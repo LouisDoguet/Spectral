@@ -7,10 +7,10 @@ A 1D Spectral Element Method solver for the Euler equations.
 - **Time Integration**: 4th-order Runge-Kutta method.
 - **HPC Optimized**:
     - **Unified Buffer Strategy**: Conserved variables are stored in contiguous global arrays to maximize CPU cache locality.
-    - **BLAS Integration**: 
+    - **BLAS Integration**
 
 ## Code Structure
-- `lib/base/`: GLL basis and derivative matrix construction. POssibility to define RBF basis and RBF solving `[EARLY DEV PHASE : RBF base switch]`
+- `[EARLY DEV PHASE : RBF base switch]` `lib/base/`: GLL basis and derivative matrix construction. POssibility to define RBF basis and RBF solving 
 - `lib/phy/`: Euler flux functions and Riemann solver. Entropy conserving and entropy stable flux calculation from Charnesav.
 - `lib/math` : Math helpers
 - `lib/space/`: `Mesh` and `Element` classes managing the unified memory and spatial operator.
@@ -19,7 +19,7 @@ A 1D Spectral Element Method solver for the Euler equations.
 ## C++ Neural Network
 - `neural/` : Contains an entire (non-batched) Neural Network with a set of activation functions, loss functions, and a test suite ofn the `MNIST` dataset. It is possible to generate a `.nn` file to export metadata of the created neural network.
 
-`[C++ simple neural network framework - EARLY DEV PHASE]`
+`[EARLY DEV PHASE : C++ simple neural network framework]`
 The framework contains a working neural network, ready to be tested with `MNIST` dataset. Switched later to a more complex `JAX/EQX` neural network framework
 
 The *flux blending* hybrid FV/DGSEM is developped only in python for `JAX` training but will be added later.
@@ -30,7 +30,7 @@ The *flux blending* hybrid FV/DGSEM is developped only in python for `JAX` train
 
 ## `JAX` Neural Network
 
-<img src="./img/NN.drawio.png" width="400" alt="JAX Neural Network">
+<img src="./img/NN.drawio.png" width="600" alt="JAX Neural Network">
 
 Python CNN framework to learn the behavior of the blending coefficient.
 - `nn/jax_dgsem` : `JAX`-differentiable DGSEM solver (previous section)
@@ -38,7 +38,7 @@ Python CNN framework to learn the behavior of the blending coefficient.
 - `nn/network` : Networks structure. Element networks and Quadrature networks.
 - `nn/training` : Training policy of the network.
 
-<img src="./img/Training.drawio.png" width="350" alt="Training diagram">
+<img src="./img/Training.drawio.png" width="600" alt="Training diagram">
 
 ## Build & Compile
 Requires `BLAS`, `LAPACK`, `BOOST_PROGRAM_OPTIONS`

@@ -30,7 +30,7 @@ class TrainConfig:
 
     # --- alpha post-processing during training (soft: no hard clipping) ----
     alpha_max: float = 1.0    # cap (C++ CLI default 0.5)
-    alpha_diffuse: bool = True
+    alpha_diffuse: bool = False
 
     # --- cost weights (C_vis -> L2 penalty on alpha) -----------------------
     w_osc: float = 1e-5
@@ -47,7 +47,7 @@ class TrainConfig:
     lr: float = 1e-3
     grad_clip: float = 1.0    # global-norm clip (gradient spikes when a shock
                               # forms in the rollout)
-    seed: int = 0
+    seed: int = 67
 
     # --- initial conditions -------------------------------------------------
     n_fourier_modes: int = 12
@@ -67,12 +67,12 @@ class TrainConfig:
                                #   node sequence, output (n_elem, P).
                                # "element": legacy per-element modal-energy CNN,
                                #   output (n_elem,).
-    alpha_init: float = 0.2    # untrained-policy alpha. Must be high enough that
+    alpha_init: float = 0.1    # untrained-policy alpha. Must be high enough that
                                # the coarse scheme survives the FORMING shock
                                # from step 0 (alpha~0.05 blows up), so every
                                # batch yields a gradient instead of a NaN.
     width: int = 16
-    kernel_size: int = 3
+    kernel_size: int = P+1
     depth: int = 1
 
     # --- bookkeeping ---------------------------------------------------------

@@ -16,7 +16,7 @@ source .venv_spectral/bin/activate
 
 MOD_PATH="nn/training/checkpoints"
 COMPARE_PATH="nn/evaluation/compare.py"
-SUBNAME=("_P4" "_P6" "_P8")
+SUBNAME=("_kern5_P4" "_kern7_P6" "_kern9_P8")
 POLY=(4 6 8)
 MOD_BEST="alpha_model_best.eqx"
 OUT_DIR="nn/evaluation/comp${SUBNAME[$SLURM_ARRAY_TASK_ID]}"

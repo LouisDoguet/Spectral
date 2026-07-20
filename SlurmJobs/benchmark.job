@@ -1,0 +1,56 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --gres=gpu:1
+#SBATCH --mem=16GB
+#SBATCH --time=24:00:00
+#SBATCH --job-name=NNbench
+#SBATCH --partition=gpu
+#SBATCH --account=aero_research_cantwell
+#SBATCH --array=0-17
+#SBATCH --output=SlurmOutput/benchmark_%A_%a.txt
+
+# ==========================================================================
+# Benchmark the alpha-policy network (ONE-FACTOR-AT-A-TIME sweep).
+#
+# One SLURM array task = one hyperparameter configuration: it trains the
+# network, then evaluates it on sod / lax / shu-osher / random against the fine
+# MUSCL reference, and appends one JSON summary. Each task also refreshes the
+# ranked table, so once the whole array finishes you have the final table with
+# no second command.
+#
+#   sbatch SlurmJobs/benchmark.job                 # run all configs
+#   sbatch --array=0,1,2 SlurmJobs/benchmark.job   # just a few
+#
+# IMPORTANT: --array must match the number of configs. Check it with:
+#   python3 nn/evaluation/benchmark.py --count      # currently 18 -> 0-17
+#   python3 nn/evaluation/benchmark.py --list       # names + ids
+# If you edit the sweep in benchmark.py, update --array above.
+#
+# Results (all under nn/training/benchmark/):
+#   <name>/                     trained model + model_meta.json + history/recap
+#   results/<name>.json         per-model metrics on the four cases
+#   RANKING.csv / RANKING.md    the ranked table (best network on top)
+# Config names are self-describing, e.g. P8_N64_M64_R512_K9_wo5_wa5.
+# ==========================================================================
+
+EPOCHS=250
+
+module load cuda
+cd "${SLURM_SUBMIT_DIR:-$(dirname "$0")/..}" || exit 1
+mkdir -p SlurmOutput
+source .venv_spectral/bin/activate
+
+echo "=== benchmark array task ${SLURM_ARRAY_TASK_ID} (epochs=${EPOCHS}) ==="
+python3 -u nn/evaluation/benchmark.py --task-id "${SLURM_ARRAY_TASK_ID}" \
+        --epochs "${EPOCHS}"
+status=$?
+
+echo ""
+if [ $status -eq 0 ]; then
+    echo "DONE: config ${SLURM_ARRAY_TASK_ID} trained + evaluated."
+    echo "Ranked table so far: nn/training/benchmark/RANKING.md"
+else
+    echo "FAILED (exit $status) for config ${SLURM_ARRAY_TASK_ID}."
+fi
+exit $status

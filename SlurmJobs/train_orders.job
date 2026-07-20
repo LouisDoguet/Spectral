@@ -44,8 +44,9 @@ mkdir -p SlurmOutput
 # --- polynomial order for this array task ----------------------------------
 ORDERS=(4 6 8)
 P=${ORDERS[$SLURM_ARRAY_TASK_ID]}
+KER=${ORDERS[$SLURM_ARRAY_TASK_ID]+1}
 EPOCHS=500
-CKPT="nn/training/checkpoints_diff_P${P}"
+CKPT="nn/training/checkpoints_kern${KER}_P${P}"
 echo "=== array task ${SLURM_ARRAY_TASK_ID}: P=${P}, ${EPOCHS} epochs -> ${CKPT} ==="
 
 # --- Python environment ----------------------------------------------------
