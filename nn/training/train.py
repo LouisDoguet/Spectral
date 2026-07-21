@@ -221,14 +221,25 @@ def build_model(cfg, stable_init=True):
                              cfg.depth, key, cfg.alpha_init, stable_init)
 
 
-def build_optimizer(cfg, model):
+def build_optimizer(cfg, model, bool_const:bool = True ):
     """Adam with two guards: clip gradient spikes (forming shocks), and never
     apply a non-finite update (skip that batch) so one bad rollout cannot
     permanently poison the weights."""
+
+    if not bool_const:
+        lr_schedule = optax.exponential_decay(
+            init_value=cfg.lr,
+            transition_steps=cfg.batches_per_epoch * 5,
+            decay_rate=0.9
+        )
+    else:
+        lr_schedule = cfg.lr
+
     optimizer = optax.apply_if_finite(
         optax.chain(optax.clip_by_global_norm(cfg.grad_clip),
-                    optax.adam(cfg.lr)),
+                    optax.adam(learning_rate=lr_schedule)),
         max_consecutive_errors=10 * cfg.batches_per_epoch)
+    
     return optimizer, optimizer.init(eqx.filter(model, eqx.is_array))
 
 

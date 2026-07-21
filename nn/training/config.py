@@ -13,13 +13,13 @@ from dataclasses import dataclass
 @dataclass
 class TrainConfig:
     # --- DGSEM_grid (coarse mesh = the mesh the network trains on) ----------
-    P: int = 4                # polynomial order (matches C++ default)
+    P: int = 6                # polynomial order (matches C++ default)
     n_elem: int = 32          # coarse DGSEM elements
     xL: float = 0.0
     xR: float = 1.0
 
     # --- MUSCL_grid (fine reference grid) ----------------------------------
-    muscl_cells_per_elem: int = 16   # MUSCL_grid has n_elem * this cells;
+    muscl_cells_per_elem: int = 32   # MUSCL_grid has n_elem * this cells;
                                      # must be a multiple of proj_pts_per_elem
     muscl_substeps: int = 4          # MUSCL substeps per DGSEM step (dt/this)
 
@@ -30,14 +30,14 @@ class TrainConfig:
 
     # --- alpha post-processing during training (soft: no hard clipping) ----
     alpha_max: float = 1.0    # cap (C++ CLI default 0.5)
-    alpha_diffuse: bool = False
+    alpha_diffuse: bool = True
 
     # --- cost weights (C_vis -> L2 penalty on alpha) -----------------------
     w_osc: float = 1e-5
     w_acc: float = 1.0
     w_alpha: float = 1e-5
 
-    proj_pts_per_elem: int = 16   # uniform cost-grid points per coarse element
+    proj_pts_per_elem: int = 32   # uniform cost-grid points per coarse element
 
     # --- optimization -------------------------------------------------------
     epochs: int = 100
@@ -73,7 +73,7 @@ class TrainConfig:
                                # step 0 (alpha~0.05 blows up); with pretrain_pp
                                # the PP warm-start provides the stable start
                                # instead, so alpha_init is irrelevant.
-    pretrain_epochs: int = 100 # Stage-1 PP-imitation warm-start (0 = off).
+    pretrain_epochs: int = 400 # Stage-1 PP-imitation warm-start (0 = off).
                                # Regresses the network toward the Persson-
                                # Peraire indicator on PP-driven rollout states,
                                # so Stage-2 rollouts survive the forming shock
@@ -81,7 +81,7 @@ class TrainConfig:
     pretrain_lr: float = 1e-3
     width: int = 16
     kernel_size: int = P+1
-    depth: int = 1
+    depth: int = 2
 
     # --- bookkeeping ---------------------------------------------------------
     n_val: int = 4            # validation ICs (fixed at start of training)

@@ -16,8 +16,8 @@ source .venv_spectral/bin/activate
 
 MOD_PATH="nn/training/checkpoints"
 COMPARE_PATH="nn/evaluation/compare.py"
-SUBNAME=("_kern5_P4" "_kern7_P6" "_kern9_P8")
-POLY=(4 6 8)
+SUBNAME=("_AlphaNetO6")
+POLY=(6)
 MOD_BEST="alpha_model_best.eqx"
 OUT_DIR="nn/evaluation/comp${SUBNAME[$SLURM_ARRAY_TASK_ID]}"
 
@@ -28,14 +28,14 @@ echo "MODEL - ${MOD}"
 python3 ${COMPARE_PATH} --model ${MOD} --case sod               --outdir "${OUT_DIR}_N32" --P ${POLY[${SLURM_ARRAY_TASK_ID}]} --n-elem 32
 python3 ${COMPARE_PATH} --model ${MOD} --case lax               --outdir "${OUT_DIR}_N32" --P ${POLY[${SLURM_ARRAY_TASK_ID}]} --n-elem 32
 python3 ${COMPARE_PATH} --model ${MOD} --case shu-osher         --outdir "${OUT_DIR}_N32" --P ${POLY[${SLURM_ARRAY_TASK_ID}]} --n-elem 32
-python3 ${COMPARE_PATH} --model ${MOD} --case random --seed 24  --outdir "${OUT_DIR}_N32" --P ${POLY[${SLURM_ARRAY_TASK_ID}]} --n-elem 32
+python3 ${COMPARE_PATH} --model ${MOD} --case random --seed 42  --outdir "${OUT_DIR}_N32" --P ${POLY[${SLURM_ARRAY_TASK_ID}]} --n-elem 32
 
 python3 ${COMPARE_PATH} --model ${MOD} --case sod               --outdir "${OUT_DIR}_N64" --P ${POLY[${SLURM_ARRAY_TASK_ID}]} --n-elem 64
 python3 ${COMPARE_PATH} --model ${MOD} --case lax               --outdir "${OUT_DIR}_N64" --P ${POLY[${SLURM_ARRAY_TASK_ID}]} --n-elem 64
 python3 ${COMPARE_PATH} --model ${MOD} --case shu-osher         --outdir "${OUT_DIR}_N64" --P ${POLY[${SLURM_ARRAY_TASK_ID}]} --n-elem 64
-python3 ${COMPARE_PATH} --model ${MOD} --case random --seed 24  --outdir "${OUT_DIR}_N64" --P ${POLY[${SLURM_ARRAY_TASK_ID}]} --n-elem 64
+python3 ${COMPARE_PATH} --model ${MOD} --case random --seed 42  --outdir "${OUT_DIR}_N64" --P ${POLY[${SLURM_ARRAY_TASK_ID}]} --n-elem 64
 
 python3 ${COMPARE_PATH} --model ${MOD} --case sod               --outdir "${OUT_DIR}_N128" --P ${POLY[${SLURM_ARRAY_TASK_ID}]} --n-elem 128
 python3 ${COMPARE_PATH} --model ${MOD} --case lax               --outdir "${OUT_DIR}_N128" --P ${POLY[${SLURM_ARRAY_TASK_ID}]} --n-elem 128
 python3 ${COMPARE_PATH} --model ${MOD} --case shu-osher         --outdir "${OUT_DIR}_N128" --P ${POLY[${SLURM_ARRAY_TASK_ID}]} --n-elem 128
-python3 ${COMPARE_PATH} --model ${MOD} --case random --seed 24  --outdir "${OUT_DIR}_N128" --P ${POLY[${SLURM_ARRAY_TASK_ID}]} --n-elem 128
+python3 ${COMPARE_PATH} --model ${MOD} --case random --seed 42  --outdir "${OUT_DIR}_N128" --P ${POLY[${SLURM_ARRAY_TASK_ID}]} --n-elem 128

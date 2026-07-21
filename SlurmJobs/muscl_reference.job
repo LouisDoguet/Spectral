@@ -1,0 +1,17 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --gres=gpu:1
+#SBATCH --mem=8GB
+#SBATCH --time=1:00:00
+#SBATCH --job-name=MUSCL_ref
+#SBATCH --partition=gpu
+#SBATCH --output=SlurmOutput/muscl_reference_%j.txt
+#SBATCH --account=aero_research_cantwell
+
+# Fine-grid MUSCL reference GIFs for the Sod / Lax / Shu-Osher benchmarks.
+# This is pure NumPy + matplotlib (no GPU needed) — switch to a CPU partition
+# and drop --gres if one is available on your cluster.
+
+module load cuda
+python3 nn/muscl/reference_gif.py --case all --N 2048 --frames 160 --outdir nn/img
