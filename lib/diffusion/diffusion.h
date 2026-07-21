@@ -5,12 +5,6 @@
 #include "../sensor/sensor.h"
 #include <string>
 
-#ifdef WITH_ONNX
-#include <memory>
-#include <vector>
-#include <onnxruntime_cxx_api.h>
-#endif
-
 namespace diff {
 
 class _Diffusion {
@@ -54,27 +48,6 @@ private:
   double s0, kappa, eps0;
   sens::PerssonPeraire sensor;
 };
-
-#ifdef WITH_ONNX
-/**
- * @brief Diffusion driven by a trained ONNX model.
- * Input : [rho | rhou | e] concatenated  (1 x 3*n_total float32)
- * Output: eps per node                   (1 x n_total   float32, >= 0)
- */
-class ONNX : public Diffusion {
-public:
-  ONNX(const std::string &model_path, int n_total);
-  void apply(mesh::Mesh *mesh) override;
-
-private:
-  int n_total;
-  std::vector<float>  input_buf;
-  std::vector<float>  output_buf;
-  std::vector<double> eps_buf;       // float->double conversion for diffuse()
-  std::unique_ptr<Ort::Env>     env;
-  std::unique_ptr<Ort::Session> session;
-};
-#endif // WITH_ONNX
 
 } // namespace DIFF
 

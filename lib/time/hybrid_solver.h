@@ -2,7 +2,7 @@
 #define HYBRID_SOLVER_H
 
 #include "solver.h"
-#include "hybrid_alpha.h"
+#include "../equinox/alpha_net.h"
 #include <vector>
 
 namespace solver {
@@ -53,16 +53,17 @@ public:
     const std::vector<double>& getAlpha() const { return alpha_; }
 
     /**
-     * @brief Use a trained policy network to predict alpha instead of the
+     * @brief Use a trained equinox policy network (exported from JAX, loaded
+     *        from a .nnx file) to predict the per-interface alpha instead of the
      *        Persson-Peraire modal indicator. Pass nullptr to revert to PP.
-     * The alpha_max cap, alpha_min clipping and neighbour diffusion are still
-     * applied to the network output for safety.
+     * The alpha_min clip and alpha_max cap are still applied to the network
+     * output for safety.
      */
-    void setAlphaNet(HybridAlphaNet* net) { alpha_net_ = net; }
+    void setAlphaNet(equinox::AlphaNet* net) { alpha_net_ = net; }
 
 private:
-    std::vector<double> alpha_;
-    HybridAlphaNet* alpha_net_ = nullptr;
+    std::vector<double> alpha_;   ///< per interior subcell interface: n_elem*P
+    equinox::AlphaNet* alpha_net_ = nullptr;
 
     double alpha_max_ = 0.5;
     double alpha_min_ = 0.001;

@@ -14,12 +14,12 @@ module load cuda
 
 source .venv_spectral/bin/activate
 
-MOD_PATH="nn/training/dg_fv_residual"
+MOD_PATH="nn/training/checkpoints_pretrained_P4"
 COMPARE_PATH="nn/evaluation/compare.py"
 SUBNAME=("")
 POLY=(4)
 MOD_BEST="alpha_model_best.eqx"
-OUT_DIR="nn/evaluation/dg_fv_res"
+OUT_DIR="nn/evaluation/comp_pretrained_P4"
 
 MOD="${MOD_PATH}${SUBNAME[$SLURM_ARRAY_TASK_ID]}/${MOD_BEST}"
 
@@ -28,4 +28,4 @@ echo "MODEL - ${MOD}"
 python3 ${COMPARE_PATH} --model ${MOD} --case shu-osher --outdir ${OUT_DIR} --P ${POLY[${SLURM_ARRAY_TASK_ID}]} --n-elem 64
 python3 ${COMPARE_PATH} --model ${MOD} --case lax --outdir ${OUT_DIR} --P ${POLY[${SLURM_ARRAY_TASK_ID}]} --n-elem 64
 python3 ${COMPARE_PATH} --model ${MOD} --case sod --outdir ${OUT_DIR} --P ${POLY[${SLURM_ARRAY_TASK_ID}]} --n-elem 64
-python3 ${COMPARE_PATH} --model ${MOD} --case random --seed 7 --outdir ${OUT_DIR} --P ${POLY[${SLURM_ARRAY_TASK_ID}]} --n-elem 64
+python3 ${COMPARE_PATH} --model ${MOD} --case random --seed 56 --outdir ${OUT_DIR} --P ${POLY[${SLURM_ARRAY_TASK_ID}]} --n-elem 64

@@ -14,15 +14,31 @@ A 1D Spectral Element Method solver for the Euler equations.
 - `lib/phy/`: Euler flux functions and Riemann solver. Entropy conserving and entropy stable flux calculation from Charnesav.
 - `lib/math` : Math helpers
 - `lib/space/`: `Mesh` and `Element` classes managing the unified memory and spatial operator.
-- `lib/time/`: Optimized `RK4` class and data export routines. Hybrid solver handles the *residual* entropy stable hybrid FV/DGSEM solver.
+- `lib/time/`: Optimized `RK4` class and data export routines. The hybrid solver blends the entropy-stable DG and FV *subcell fluxes* per interface (`(1-a)B_dg + a B_fv`), matching `nn/jax_dgsem`, so a per-interface (nodal) blending factor stays conservative and entropy-stable.
+- `lib/equinox/`: inference-only C++ runtime for the trained JAX/equinox alpha policy (`Conv1d`, `ResBlock`, `AlphaNet`). Loads a `.nnx` file produced by `nn/export/export.py` and reproduces the JAX `NodalAlphaModel` to machine precision.
 
-## C++ Neural Network
-- `neural/` : Contains an entire (non-batched) Neural Network with a set of activation functions, loss functions, and a test suite ofn the `MNIST` dataset. It is possible to generate a `.nn` file to export metadata of the created neural network.
+## Neural alpha policy: JAX → C++ export
 
-`[EARLY DEV PHASE : C++ simple neural network framework]`
-The framework contains a working neural network, ready to be tested with `MNIST` dataset. Switched later to a more complex `JAX/EQX` neural network framework
+The blending factor `alpha` can be driven either by the Persson-Peraire modal
+indicator (default) or by a network trained in JAX. The network is trained,
+exported, and consumed by the C++ solver as a single attachable object
+(`HybridDGSEM::setAlphaNet`):
 
-The *flux blending* hybrid FV/DGSEM is developped only in python for `JAX` training but will be added later.
+```
+train (JAX, nn/) -> nn/export/export.py -> model.nnx -> build/spectral --nn_model model.nnx
+```
+
+```bash
+python nn/export/export.py nn/training/checkpoints_pretrained_P4
+build/spectral --solver hybrid_dgsem --case sod \
+    --nn_model nn/training/checkpoints_pretrained_P4/alpha_model.nnx
+```
+
+Omit `--nn_model` to fall back to the Persson-Peraire indicator. Re-run
+`export.py` after each training run (a stale `.nnx` no longer matches the
+checkpoint). See [NN_EXPORT_MIGRATION.md](NN_EXPORT_MIGRATION.md) for the `.nnx`
+format and the JAX↔C++ parity check (`nn/export/parity_check.py`).
+
 ## Hybrid Flux Blending FV/DGSEM solver
 `JAX`-differentiable solver for CNN backpropagation.
 

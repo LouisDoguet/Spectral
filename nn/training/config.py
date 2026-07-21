@@ -19,7 +19,7 @@ class TrainConfig:
     xR: float = 1.0
 
     # --- MUSCL_grid (fine reference grid) ----------------------------------
-    muscl_cells_per_elem: int = 64   # MUSCL_grid has n_elem * this cells;
+    muscl_cells_per_elem: int = 16   # MUSCL_grid has n_elem * this cells;
                                      # must be a multiple of proj_pts_per_elem
     muscl_substeps: int = 4          # MUSCL substeps per DGSEM step (dt/this)
 
@@ -40,14 +40,14 @@ class TrainConfig:
     proj_pts_per_elem: int = 16   # uniform cost-grid points per coarse element
 
     # --- optimization -------------------------------------------------------
-    epochs: int = 300
+    epochs: int = 100
     K: int = 16               # initial conditions generated per epoch
     batches_per_epoch: int = 20
     batch_size: int = 8       # ICs per gradient step (from-IC rollouts)
     lr: float = 1e-3
     grad_clip: float = 1.0    # global-norm clip (gradient spikes when a shock
                               # forms in the rollout)
-    seed: int = 67
+    seed: int = 777
 
     # --- initial conditions -------------------------------------------------
     n_fourier_modes: int = 12
@@ -73,7 +73,7 @@ class TrainConfig:
                                # step 0 (alpha~0.05 blows up); with pretrain_pp
                                # the PP warm-start provides the stable start
                                # instead, so alpha_init is irrelevant.
-    pretrain_epochs: int = 0   # Stage-1 PP-imitation warm-start (0 = off).
+    pretrain_epochs: int = 100 # Stage-1 PP-imitation warm-start (0 = off).
                                # Regresses the network toward the Persson-
                                # Peraire indicator on PP-driven rollout states,
                                # so Stage-2 rollouts survive the forming shock

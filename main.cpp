@@ -1,7 +1,6 @@
 #include "lib/test_cases.h"
 #include "lib/base/base.h"
 #include "lib/diffusion/diffusion.h"
-#include "lib/diffusion/neural_diffusion.h"
 #include "lib/math/math.h"
 #include "lib/sensor/sensor.h"
 #include "lib/space/mesh.h"
@@ -13,9 +12,6 @@
 #include <filesystem>
 #include <iomanip>
 #include <iostream>
-#ifdef WITH_ONNX
-#include <memory>
-#endif
 namespace po = boost::program_options;
 
 int main(int argc, char *argv[]) {
@@ -166,15 +162,9 @@ int main(int argc, char *argv[]) {
   sens::_Sensor *ssor = nullptr;
   diff::_Diffusion *dif = nullptr;
 
-  // The RK4 artificial-diffusion network is only meaningful for the rk4 solver.
-  // For hybrid_dgsem the network drives the blending factor alpha directly and
-  // is loaded further below as a HybridAlphaNet.
-  if (!nn_model.empty() && solver_type != "hybrid_dgsem") {
-    std::cout << "Model loaded" << std::endl;
-    std::string nn_norm = nn_model;
-    nn_norm.replace(nn_norm.rfind(".nn"), 3, ".norm");
-    dif = new diff::NeuralNetwork(nn_model, nn_norm);
-  } else if (sensor_id == 1) {
+  // For hybrid_dgsem, --nn_model drives the blending factor alpha directly and
+  // is loaded further below as an equinox::AlphaNet.
+  if (sensor_id == 1) {
     ssor = new sens::PerssonPeraire();
     dif = new diff::PerssonPeraire(trunc, s0, kappa, eps0);
   }
@@ -218,12 +208,12 @@ int main(int argc, char *argv[]) {
     S->setVerbosity(verbose);
     S->getExporter().useComputedNodes(export_nodal);
 
-    solver::HybridAlphaNet *anet = nullptr;
+    equinox::AlphaNet *anet = nullptr;
     if (!nn_model.empty()) {
-      anet = new solver::HybridAlphaNet(nn_model);
+      anet = new equinox::AlphaNet(nn_model);
       S->setAlphaNet(anet);
-      std::cout << "hybrid_dgsem: alpha driven by neural network policy"
-                << std::endl;
+      std::cout << "hybrid_dgsem: alpha driven by exported equinox NN policy ("
+                << nn_model << ")" << std::endl;
     }
 
     S1D::RunShockTube(S, T_final, dt, output, nullptr, nullptr);

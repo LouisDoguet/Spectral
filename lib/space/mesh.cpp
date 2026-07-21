@@ -471,31 +471,62 @@ void Mesh::computeFVResidual() {
 
 void Mesh::computeHybridResidual(const double *alpha) {
   const int Nn = elem[0]->getBasis()->getOrder() + 1;
+  const int P = Nn - 1;   // number of interior subcell interfaces per element
 
-  // 1) First-order FV residual -> stash it (per node).
-  computeFVResidual();
-  std::vector<double> fv1(n * Nn), fv2(n * Nn), fv3(n * Nn);
-  for (int e = 0; e < n; ++e)
-    for (int j = 0; j < Nn; ++j) {
-      fv1[e * Nn + j] = *(elem[e]->getDivF1(j));
-      fv2[e * Nn + j] = *(elem[e]->getDivF2(j));
-      fv3[e * Nn + j] = *(elem[e]->getDivF3(j));
-    }
-
-  // 2) High-order DG residual -> left in each element's divF.
-  computeDGResidual();
-
-  // 3) Direct convex combination:  R = (1 - alpha) R_DG + alpha R_FV.
+  // Blend the SUBCELL FLUXES per interface, then difference. Matches
+  // nn/jax_dgsem/solver.py hybrid_residual + _alpha_on_interfaces.
+  std::vector<double> Bd1(Nn + 1), Bd2(Nn + 1), Bd3(Nn + 1);
+  std::vector<double> Bf1(Nn + 1), Bf2(Nn + 1), Bf3(Nn + 1);
+  std::vector<double> Bh1(Nn + 1), Bh2(Nn + 1), Bh3(Nn + 1);
   for (int e = 0; e < n; ++e) {
-    const double a = alpha[e];
-    for (int j = 0; j < Nn; ++j) {
-      elem[e]->setDivF1(j, (1.0 - a) * (*(elem[e]->getDivF1(j))) +
-                               a * fv1[e * Nn + j]);
-      elem[e]->setDivF2(j, (1.0 - a) * (*(elem[e]->getDivF2(j))) +
-                               a * fv2[e * Nn + j]);
-      elem[e]->setDivF3(j, (1.0 - a) * (*(elem[e]->getDivF3(j))) +
-                               a * fv3[e * Nn + j]);
+    buildSubcellFluxDG(e, Bd1.data(), Bd2.data(), Bd3.data());
+    buildSubcellFluxFV(e, Bf1.data(), Bf2.data(), Bf3.data());
+    for (int k = 0; k <= Nn; ++k) {
+      // interfaces 0 and Nn are the element boundaries (physical flux, a=0);
+      // interior interfaces 1..Nn-1 take alpha[e*P + (k-1)].
+      const double a = (k == 0 || k == Nn) ? 0.0 : alpha[e * P + (k - 1)];
+      Bh1[k] = (1.0 - a) * Bd1[k] + a * Bf1[k];
+      Bh2[k] = (1.0 - a) * Bd2[k] + a * Bf2[k];
+      Bh3[k] = (1.0 - a) * Bd3[k] + a * Bf3[k];
     }
+    storeSubcellDivergence(e, Bh1.data(), Bh2.data(), Bh3.data());
+  }
+  // Shared entropy-stable surface term + closure (identical for DG/FV/hybrid).
+  applyEntropyStableInterfaces();
+  applyEntropyStableBoundaries();
+  for (int e = 0; e < n; ++e)
+    elem[e]->applyMassInverse();
+}
+
+void Mesh::densityResidualDifference(std::vector<double> &out) {
+  const int Nn = elem[0]->getBasis()->getOrder() + 1;
+  out.assign(n * Nn, 0.0);
+  // DG residual density component, stash.
+  computeDGResidual();
+  std::vector<double> dg(n * Nn);
+  for (int e = 0; e < n; ++e)
+    for (int j = 0; j < Nn; ++j) dg[e * Nn + j] = *(elem[e]->getDivF1(j));
+  // FV residual density component, difference.
+  computeFVResidual();
+  for (int e = 0; e < n; ++e)
+    for (int j = 0; j < Nn; ++j)
+      out[e * Nn + j] = dg[e * Nn + j] - *(elem[e]->getDivF1(j));
+}
+
+void Mesh::perssonPeraireIndicator(std::vector<double> &eind) {
+  const int P = elem[0]->getBasis()->getOrder();
+  eind.assign(n, 0.0);
+  for (int e = 0; e < n; ++e) {
+    elem[e]->computeLegendreCoefficients();
+    const double *m_coef = elem[e]->getModes();
+    double total = 0.0;
+    for (int j = 0; j <= P; ++j) total += m_coef[j] * m_coef[j];
+    if (total < 1e-300) { eind[e] = 0.0; continue; }
+    double total_m1 = total - m_coef[P] * m_coef[P];
+    double E_N = m_coef[P] * m_coef[P] / total;
+    double E_Nm = (P > 0 && total_m1 > 1e-300)
+                      ? m_coef[P - 1] * m_coef[P - 1] / total_m1 : 0.0;
+    eind[e] = std::max(E_N, E_Nm);
   }
 }
 

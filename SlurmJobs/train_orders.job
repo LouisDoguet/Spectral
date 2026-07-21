@@ -42,7 +42,7 @@ cd "${SLURM_SUBMIT_DIR:-$(dirname "$0")}" || exit 1
 mkdir -p SlurmOutput
 
 # --- polynomial order for this array task ----------------------------------
-ORDERS=(4 6 8)
+ORDERS=(4 6)
 P=${ORDERS[$SLURM_ARRAY_TASK_ID]}
 KER=${ORDERS[$SLURM_ARRAY_TASK_ID]+1}
 EPOCHS=500

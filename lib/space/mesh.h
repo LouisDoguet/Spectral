@@ -5,6 +5,7 @@
 #include "../boundary_conditions/boundary_conditions.h"
 #include "../sensor/sensor.h"
 #include "element.h"
+#include <vector>
 
 namespace mesh {
 /**
@@ -114,22 +115,34 @@ public:
   void computeFVResidual();
 
   /**
-   * @brief Hybrid DGSEM residual: a direct convex combination of the DG and FV
-   *        residuals (Hennemann et al. 2021, Eqs. 16 & 18).
+   * @brief Hybrid DGSEM residual: blend of the DG and FV SUBCELL FLUXES
+   *        (Hennemann et al. 2021, Eq. 18), matching nn/jax_dgsem/solver.py.
    *
-   *   `R = (1 - alpha) * R_DG  +  alpha * R_FV`      (per element)
+   *   B_hyb = (1 - alpha) * B_DG + alpha * B_FV   (per subcell interface)
+   *   divF  = B_hyb[j+1] - B_hyb[j]               (then surface + mass-inverse)
    *
-   * Because `R_DG` and `R_FV` share the same entropy-stable surface term and the
-   * mass-inverse is linear, this element-wise blend of the two residuals is
-   * exactly the Eq. 18 blend of the subcell fluxes.
+   * Blending the fluxes (not the residuals) keeps the scheme conservative and
+   * entropy-stable for a per-interface alpha. For a per-element CONSTANT alpha
+   * it is algebraically identical to the old residual blend.
    *
-   * @param alpha Per-element blending factors, length n.
-   * 
-   *              `alpha=0`: pure high-order EC DGSEM (`computeDGResidual`).
-   * 
-   *              `alpha=1`: pure first-order ES finite volume (`computeFVResidual`).
+   * @param alpha  Per interior subcell interface blending factors, size
+   *               n_elem * P (P = Nn-1 interior interfaces per element), in
+   *               element-major order: alpha[e*P + i], i = 0..P-1. The two
+   *               element-boundary interfaces (0 and Nn) are never blended
+   *               (physical flux, alpha = 0), matching jax _alpha_on_interfaces.
+   *               `alpha=0` everywhere: pure EC DGSEM. `alpha=1`: pure ES FV.
    */
   void computeHybridResidual(const double* alpha);
+
+  /// @brief Per-node density residual difference (DG - FV), size n_elem*Nn,
+  /// element-major. Matches nn/network/policy.py channel_residual (before its
+  /// max-abs normalization). NOTE: overwrites the elements' divF (recomputed by
+  /// the next residual call), so use it only inside computeAlpha().
+  void densityResidualDifference(std::vector<double>& out);
+
+  /// @brief Persson-Peraire modal-energy indicator E_ind per element
+  /// (n_elem), = max(E_N, E_{N-1}). Matches nn/jax_dgsem/indicator.py.
+  void perssonPeraireIndicator(std::vector<double>& eind);
 
   /// Boundary conditions
   void applyDirichlet();

@@ -56,7 +56,8 @@ echo "==========================================================================
     --alpha_max "$A" \
     --dt -1 --cfl "$C" \
     --output "$CASE" \
-    --verbose 1 > "SlurmOutput/${CASE}.log" 2>&1
+    --nn_model nn/training/checkpoints_pretrained_P4/alpha_model.nnx \
+    --verbose 2 > "SlurmOutput/${CASE}.log" 2>&1
 
 status=$?
 echo ""
