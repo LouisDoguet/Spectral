@@ -30,7 +30,7 @@ class TrainConfig:
 
     # --- alpha post-processing during training (soft: no hard clipping) ----
     alpha_max: float = 1.0    # cap (C++ CLI default 0.5)
-    alpha_diffuse: bool = True
+    alpha_diffuse: bool = False
 
     # --- cost weights (C_vis -> L2 penalty on alpha) -----------------------
     w_osc: float = 1e-5
@@ -44,7 +44,10 @@ class TrainConfig:
     K: int = 16               # initial conditions generated per epoch
     batches_per_epoch: int = 20
     batch_size: int = 8       # ICs per gradient step (from-IC rollouts)
-    lr: float = 1e-3
+    lr: float = 1e-5
+    bool_constant_lr: bool = False
+                              # Constant learning rate or warm up, with initial value = lr
+                              # Max value = 3e-4 (Adam optim. reference value)
     grad_clip: float = 1.0    # global-norm clip (gradient spikes when a shock
                               # forms in the rollout)
     seed: int = 777
@@ -78,10 +81,11 @@ class TrainConfig:
                                # Peraire indicator on PP-driven rollout states,
                                # so Stage-2 rollouts survive the forming shock
                                # from step 0. A warm start, not a target.
-    pretrain_lr: float = 1e-3
-    width: int = 16
+    pretrain_lr: float = 3e-4
+    width: int = 32
+    bool_res:bool = True       # Boolean to activate a residual block, or a simple 2 layers CNN
     kernel_size: int = P+1
-    depth: int = 2
+    depth: int = 1
 
     # --- bookkeeping ---------------------------------------------------------
     n_val: int = 4            # validation ICs (fixed at start of training)

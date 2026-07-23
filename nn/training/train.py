@@ -218,19 +218,18 @@ def build_model(cfg, stable_init=True):
     False for a trainable readout when the model will be PP-pretrained."""
     key = jax.random.split(jax.random.PRNGKey(cfg.seed))[1]
     return build_alpha_model(cfg.model_type, cfg.P, cfg.width, cfg.kernel_size,
-                             cfg.depth, key, cfg.alpha_init, stable_init)
+                             cfg.depth, key, cfg.alpha_init, stable_init, b_res=cfg.bool_res)
 
 
-def build_optimizer(cfg, model, bool_const:bool = True ):
+def build_optimizer(cfg, model):
     """Adam with two guards: clip gradient spikes (forming shocks), and never
     apply a non-finite update (skip that batch) so one bad rollout cannot
     permanently poison the weights."""
 
-    if not bool_const:
-        lr_schedule = optax.exponential_decay(
-            init_value=cfg.lr,
-            transition_steps=cfg.batches_per_epoch * 5,
-            decay_rate=0.9
+    if not cfg.bool_constant_lr:
+        lr_schedule = optax.warmup_cosine_decay_schedule(
+            init_value=cfg.lr, peak_value=3e-4,   # more conservative than O4
+            warmup_steps=200, decay_steps=2000, end_value=1e-6
         )
     else:
         lr_schedule = cfg.lr

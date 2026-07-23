@@ -84,12 +84,12 @@ def alpha_features(U, mesh, model_type: str = "nodal"):
 
 def build_alpha_model(model_type: str, P: int, width: int, kernel_size: int,
                       depth: int, key, alpha_init: float = 0.05,
-                      stable_init: bool = True, n_data_channels: int = None):
+                      stable_init: bool = True, n_data_channels: int = None, b_res:bool = True):
     if model_type == "nodal":
         nc = n_nodal_data() if n_data_channels is None else n_data_channels
         return NodalAlphaModel(P, width, kernel_size, depth, key=key,
                                alpha_init=alpha_init, stable_init=stable_init,
-                               n_data_channels=nc)
+                               n_data_channels=nc, bool_res=b_res)
     return AlphaModel(P + 1, width, kernel_size, depth, key=key,
                       alpha_init=alpha_init, stable_init=stable_init)
 

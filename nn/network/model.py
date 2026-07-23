@@ -35,6 +35,22 @@ class ResBlock(eqx.Module):
         y = jax.nn.relu(self.conv1(x))
         y = self.conv2(y)
         return jax.nn.relu(x + y)
+    
+class Block(eqx.Module):
+    """Two same-width convolutions (Fig. 5 inner block)."""
+
+    conv1: eqx.nn.Conv1d
+    conv2: eqx.nn.Conv1d
+
+    def __init__(self, width: int, kernel_size: int, *, key):
+        k1, k2 = jax.random.split(key)
+        pad = kernel_size // 2
+        self.conv1 = eqx.nn.Conv1d(width, width, kernel_size, padding=pad, key=k1)
+        self.conv2 = eqx.nn.Conv1d(width, width, kernel_size, padding=pad, key=k2)
+
+    def __call__(self, x):
+        x = jax.nn.relu(self.conv1(x))
+        return jax.nn.relu(self.conv2(x))
 
 
 class AlphaModel(eqx.Module):
@@ -46,14 +62,18 @@ class AlphaModel(eqx.Module):
 
     def __init__(self, in_channels: int, width: int = 16, kernel_size: int = 3,
                  depth: int = 1, *, key, alpha_init: float = 0.05,
-                 stable_init: bool = True):
+                 stable_init: bool = True, bool_res:bool = True):
         keys = jax.random.split(key, depth + 2)
         pad = kernel_size // 2
         self.lift = eqx.nn.Conv1d(in_channels, width, kernel_size, padding=pad,
                                   key=keys[0])
-        self.blocks = tuple(
-            ResBlock(width, kernel_size, key=keys[1 + i]) for i in range(depth))
+        if bool_res:
+            self.blocks = tuple(ResBlock(width, kernel_size, key=keys[1 + i]) for i in range(depth))
+        else:
+            self.blocks = tuple(Block(width, kernel_size, key=keys[1 + i]) for i in range(depth))
+
         head = eqx.nn.Conv1d(width, 1, kernel_size, padding=pad, key=keys[-1])
+
         if stable_init:
             # Zero kernel + negative bias: the untrained policy outputs the
             # constant sigmoid(head_bias) ~ alpha_init, an almost-pure DG scheme
@@ -102,7 +122,7 @@ class NodalAlphaModel(eqx.Module):
 
     def __init__(self, P: int, width: int = 16, kernel_size: int = 3,
                  depth: int = 1, *, key, alpha_init: float = 0.05,
-                 stable_init: bool = True, n_data_channels: int = 2):
+                 stable_init: bool = True, n_data_channels: int = 2, bool_res: bool = True):
         Nn = P + 1
         # input = n_data_channels data rows + Nn one-hot position rows. The
         # data-channel count comes from network.policy.NODAL_DATA_CHANNELS.
@@ -111,8 +131,11 @@ class NodalAlphaModel(eqx.Module):
         pad = kernel_size // 2
         self.lift = eqx.nn.Conv1d(in_channels, width, kernel_size, padding=pad,
                                   key=keys[0])
-        self.blocks = tuple(
-            ResBlock(width, kernel_size, key=keys[1 + i]) for i in range(depth))
+        if bool_res:
+            self.blocks = tuple(ResBlock(width, kernel_size, key=keys[1 + i]) for i in range(depth))
+        else:
+            self.blocks = tuple(Block(width, kernel_size, key=keys[1 + i]) for i in range(depth))
+
         if stable_init:
             # Zero readout weight + logit(alpha_init) bias: the untrained policy
             # outputs the constant alpha_init (almost pure DG) so the solver is

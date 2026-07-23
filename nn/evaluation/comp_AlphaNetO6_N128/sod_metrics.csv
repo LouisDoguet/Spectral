@@ -1,4 +1,4 @@
 scheme,stable,blowup_time,final_rel_L2_density,max_rel_L2_density,mean_alpha,max_alpha
 DGSEM (no stabilization),True,,4.86161e-03,7.14257e-03,0.00000,0.00000
 Hybrid + Persson-Peraire,True,,3.27700e-03,3.63724e-03,0.00525,1.00000
-Hybrid + NN policy,True,,2.80318e-03,3.17133e-03,0.00252,0.82382
+Hybrid + NN policy,True,,2.92001e-03,3.20479e-03,0.00331,0.74238
