@@ -45,7 +45,7 @@ from jax_dgsem import GLLBasis, Mesh1D
 from jax_dgsem.solver import rk4_step
 from jax_dgsem.indicator import persson_peraire_alpha, postprocess_alpha
 from network.model import load_model
-from network.policy import alpha_features, build_from_meta
+from network.policy import alpha_features, build_from_meta, channels_from_meta
 from training.config import TrainConfig
 from training.cost import uniform_projector
 from training.ic import (draw_fourier_coeffs, sample_on_dgsem, sample_on_muscl,
@@ -53,6 +53,7 @@ from training.ic import (draw_fourier_coeffs, sample_on_dgsem, sample_on_muscl,
 from muscl.euler import MusclEulerGrid, MusclEulerSolver
 from vizstyle import (apply_style, finish_axes, SCHEME_STYLE, ALPHA_CMAP,
                       INK, INK_2)
+from training.plotstyle import draw_elements
 
 SCHEMES = ("dg", "pp", "nn")
 PERIODIC = ("periodic", None)
@@ -127,16 +128,18 @@ def setup_case(case, cfg, seed):
 # Alpha sources and scheme runs
 # ---------------------------------------------------------------------------
 
-def make_alpha_fn(scheme, mesh, cfg, model=None, mtype="element", alpha_max=1.0):
+def make_alpha_fn(scheme, mesh, cfg, model=None, mtype="element", alpha_max=1.0,
+                  channels=None):
     if scheme == "dg":
         return lambda U: jnp.zeros(mesh.n_elem)
     if scheme == "pp":
         return lambda U: persson_peraire_alpha(U, mesh, alpha_max=alpha_max)
     if scheme == "nn":
         def fn(U):
-            return postprocess_alpha(model(alpha_features(U, mesh, mtype)),
-                                     alpha_min=0.001, alpha_max=alpha_max,
-                                     diffuse=cfg.alpha_diffuse, hard_clip=True)
+            return postprocess_alpha(
+                model(alpha_features(U, mesh, mtype, channels)),
+                alpha_min=0.001, alpha_max=alpha_max,
+                diffuse=cfg.alpha_diffuse, hard_clip=True)
         return fn
     raise ValueError(scheme)
 
@@ -196,10 +199,12 @@ def compare_schemes(cfg, case, seed, model_path, alpha_max=None, n_save=200,
                     n_steps_override=None, outdir="nn/evaluation/figures"):
     model, meta = load_trained_model(model_path)
     mtype = meta.get("model_type", "element")
+    channels = channels_from_meta(meta)     # the input this checkpoint was trained on
     if alpha_max is None:
         alpha_max = float(meta.get("alpha_max", cfg.alpha_max))
     if int(meta.get("P", cfg.P)) != cfg.P:
         print(f"[warn] model P={meta.get('P')} != cfg P={cfg.P}")
+    print(f"       data_channels={channels}  precondition={meta.get('precondition', False)}")
 
     cs = setup_case(case, cfg, seed)
     mesh, xL, xR, tag = cs["mesh"], cs["xL"], cs["xR"], cs["tag"]
@@ -225,7 +230,7 @@ def compare_schemes(cfg, case, seed, model_path, alpha_max=None, n_save=200,
     U0 = cs["U0_dg"]
     runs = {}
     for scheme in SCHEMES:
-        fn = make_alpha_fn(scheme, mesh, cfg, model, mtype, alpha_max)
+        fn = make_alpha_fn(scheme, mesh, cfg, model, mtype, alpha_max, channels)
         runs[scheme] = run_scheme(fn, U0, mesh, cfg.dt, n_out, stride)
         _, _, blow = runs[scheme]
         note = f"BLEW UP at t={times[blow]:.4f}" if blow is not None else "stable"
@@ -295,12 +300,14 @@ def _figure_comparison(tag, cfg, mesh, xL, xR, times, runs, errors, x_muscl,
 
     ax = axes[0, 0]
     _plot_solutions(ax, x_plot, cfg, runs, x_muscl, ref_rho_final, times)
+    draw_elements(ax, xL, xR, cfg.n_elem)
     ax.set_xlabel("x"); ax.set_ylabel("density ρ")
     ax.set_title("(a) Density at final time"); ax.legend(loc="best")
 
     ax = axes[0, 1]
     half = 0.08 * L
     _plot_solutions(ax, x_plot, cfg, runs, x_muscl, ref_rho_final, times)
+    draw_elements(ax, xL, xR, cfg.n_elem)
     ax.set_xlim(xc_zoom - half, xc_zoom + half)
     win = (x_muscl > xc_zoom - half) & (x_muscl < xc_zoom + half)
     lo, hi = ref_rho_final[win].min(), ref_rho_final[win].max()
@@ -328,15 +335,37 @@ def _figure_comparison(tag, cfg, mesh, xL, xR, times, runs, errors, x_muscl,
     ax.set_title("(c) Error vs MUSCL over time"); ax.legend(loc="best")
 
     ax = axes[1, 1]
+    # Relative dissipation BUDGET: cumulative injected dissipation (running sum of
+    # the space-mean alpha) as a PERCENTAGE of Persson-Peraire's cumulative
+    # dissipation up to time t (PP = 100%). The endpoint is the whole-run budget:
+    # 200% = the scheme spent twice PP's total dissipation, DG = 0%. Cumulative
+    # (not the instantaneous ratio) so it is not dominated by the noisy blow-ups
+    # where PP momentarily injects almost nothing.
+    _, pp_alphas, pp_blow = runs["pp"]
+    pp_end = pp_blow if pp_blow is not None else len(pp_alphas)
+    pp_cum = np.cumsum(_space_mean(pp_alphas, pp_end))
+    # start once PP has accrued >=2% of its budget: before that the denominator
+    # is tiny and the ratio is a meaningless transient (a scheme that injects
+    # before PP would read thousands of %).
+    thresh = 2e-2 * pp_cum[-1] if pp_cum[-1] > 0 else np.inf
+    rel_all = []
     for scheme in SCHEMES:
         _, alphas, blow = runs[scheme]
         st = SCHEME_STYLE[scheme]
         end = blow if blow is not None else len(alphas)
-        ax.plot(times[:end], _space_mean(alphas, end),
-                color=st["color"], ls=st["ls"], label=st["label"])
-    ax.set_xlabel("t"); ax.set_ylabel("mean blending factor ᾱ(t)")
-    ax.set_ylim(bottom=0.0)
-    ax.set_title("(d) Dissipation budget (lower = closer to pure DG)")
+        m = min(end, pp_end)
+        rel = 100.0 * np.cumsum(_space_mean(alphas, m)) / pp_cum[:m]
+        rel = np.where(pp_cum[:m] > thresh, rel, np.nan)   # hide where PP ~ 0
+        ax.plot(times[:m], rel, color=st["color"], ls=st["ls"], label=st["label"])
+        rel_all.append(rel[np.isfinite(rel)])
+    # robust y-limit: keep the settled band and the 200% mark readable, clip any
+    # residual startup transient instead of letting it set the scale.
+    finite = np.concatenate(rel_all) if rel_all else np.array([100.0])
+    top = 1.15 * float(np.nanpercentile(finite, 90)) if finite.size else 200.0
+    ax.set_ylim(0.0, max(200.0, top))
+    ax.axhline(100.0, color=INK_2, lw=0.6, ls=":", zorder=0)   # PP baseline guide
+    ax.set_xlabel("t"); ax.set_ylabel("cumulative dissipation vs PP  (%)")
+    ax.set_title("(d) Relative dissipation budget (PP = 100%)")
     ax.legend(loc="best")
 
     for ax in axes.ravel():
@@ -354,11 +383,13 @@ def _figure_alpha_spacetime(tag, cfg, mesh, xL, times, runs):
     layouts = {s: _alpha_layout(runs[s][1], mesh, xL) for s in ("pp", "nn")}
     vmax = max(max(float(np.nanmax(a)) for _, a in layouts.values()), 1e-6)
 
+    xR = xL + cfg.n_elem * mesh.dx
     pm = None
     for ax, scheme in zip(axes, ("pp", "nn")):
         x_a, alphas = layouts[scheme]
         pm = ax.pcolormesh(x_a, times, alphas, cmap=ALPHA_CMAP, vmin=0.0,
                            vmax=vmax, shading="nearest", rasterized=True)
+        draw_elements(ax, xL, xR, cfg.n_elem, on_heatmap=True)
         ax.set_title(SCHEME_STYLE[scheme]["label"], fontsize=10)
         ax.set_xlabel("x"); ax.grid(False)
     axes[0].set_ylabel("t")

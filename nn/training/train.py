@@ -218,7 +218,8 @@ def build_model(cfg, stable_init=True):
     False for a trainable readout when the model will be PP-pretrained."""
     key = jax.random.split(jax.random.PRNGKey(cfg.seed))[1]
     return build_alpha_model(cfg.model_type, cfg.P, cfg.width, cfg.kernel_size,
-                             cfg.depth, key, cfg.alpha_init, stable_init, b_res=cfg.bool_res)
+                             cfg.depth, key, cfg.alpha_init, stable_init,
+                             b_res=cfg.bool_res, precondition=cfg.precondition)
 
 
 def build_optimizer(cfg, model):
@@ -485,6 +486,7 @@ def _config_from_args(args):
         ("epochs", args.epochs), ("seed", args.seed), ("lr", args.lr),
         ("dt", args.dt), ("rollout_steps", args.rollout_steps),
         ("pretrain_epochs", args.pretrain_epochs),
+        ("precondition", args.precondition),
         ("checkpoint_dir", args.checkpoint_dir)) if v is not None}
     return replace(cfg, **overrides) if overrides else cfg
 
@@ -505,6 +507,9 @@ if __name__ == "__main__":
     ap.add_argument("--rollout-steps", type=int, default=None)
     ap.add_argument("--pretrain-epochs", type=int, default=None,
                     help="Stage-1 PP-imitation warm-start epochs (0 = off)")
+    ap.add_argument("--precondition", action="store_true", default=None,
+                    help="ZCA-whiten the data-channel feature matrix before the "
+                         "one-hot is appended (config.precondition)")
     ap.add_argument("--checkpoint-dir", default=None)
     ap.add_argument("--resume", action="store_true",
                     help="continue from the checkpoint dir after a kill")

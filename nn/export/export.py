@@ -58,6 +58,13 @@ def export(model_path, meta_path, out_path):
         meta = json.load(f)
     if meta.get("model_type", "nodal") != "nodal":
         raise SystemExit("export.py only supports the nodal model (model_type='nodal')")
+    if meta.get("precondition", False):
+        raise SystemExit(
+            "export.py: this checkpoint uses input preconditioning "
+            "(model_meta 'precondition': true), which the C++ equinox runtime "
+            "does not replicate. Retrain with precondition=False to export, or "
+            "extend lib/equinox/AlphaNet::assembleFeatures to whiten the data "
+            "channels the same way (see network.model.whiten_rows).")
 
     model = load_model(model_path, build_from_meta(meta, jax.random.PRNGKey(0)))
     leaves = [np.asarray(l, dtype=np.float64)

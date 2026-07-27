@@ -33,6 +33,8 @@ except Exception:                         # vizstyle is optional
     def finish_axes(ax):
         ax.spines["top"].set_visible(False); ax.spines["right"].set_visible(False)
 
+from training.plotstyle import draw_elements
+
 PLOT_PTS = 12
 
 
@@ -103,6 +105,7 @@ def plot_snapshot(model, mesh, coeffs, cfg, epoch, outdir):
         else:
             ax.text(0.5, 0.5, f"DGSEM blew up\nat step {blow}",
                     transform=ax.transAxes, ha="center", color="#c0392b")
+        draw_elements(ax, cfg.xL, cfg.xR, cfg.n_elem)
         ax.set_title(f"density,  t = {t:.4f}  (step {s})")
         ax.set_xlabel("x"); ax.set_ylabel(r"$\rho$")
         if j == 0:
@@ -114,6 +117,7 @@ def plot_snapshot(model, mesh, coeffs, cfg, epoch, outdir):
         s_a = min(s, len(alphas) - 1)
         axa.plot(x_alpha, alphas[s_a], color=BLUE, lw=1.5)
         axa.fill_between(x_alpha, 0, alphas[s_a], color=BLUE, alpha=0.15)
+        draw_elements(axa, cfg.xL, cfg.xR, cfg.n_elem)
         axa.set_ylim(0, max(0.05, float(np.nanmax(alphas)) * 1.1))
         axa.set_xlabel("x"); axa.set_ylabel(r"$\alpha$")
         finish_axes(axa)

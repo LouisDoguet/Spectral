@@ -119,10 +119,12 @@ class NodalAlphaModel(eqx.Module):
     proj_w: jnp.ndarray            # (width,) interface readout weight
     proj_b: jnp.ndarray            # scalar bias
     Nn: int = eqx.field(static=True)
+    precondition: bool = eqx.field(static=True)
 
     def __init__(self, P: int, width: int = 16, kernel_size: int = 3,
                  depth: int = 1, *, key, alpha_init: float = 0.05,
-                 stable_init: bool = True, n_data_channels: int = 2, bool_res: bool = True):
+                 stable_init: bool = True, n_data_channels: int = 2, bool_res: bool = True,
+                 precondition: bool = False):
         Nn = P + 1
         # input = n_data_channels data rows + Nn one-hot position rows. The
         # data-channel count comes from network.policy.NODAL_DATA_CHANNELS.
@@ -148,9 +150,19 @@ class NodalAlphaModel(eqx.Module):
             self.proj_w = 0.1 * jax.random.normal(keys[-1], (width,))
             self.proj_b = jnp.array(0.0)
         self.Nn = Nn
+        self.precondition = precondition
 
     def __call__(self, features):
-        """features: (n_data_channels + Nn, n_elem*Nn) -> alpha (n_elem, P)."""
+        """features: (n_data_channels + Nn, n_elem*Nn) -> alpha (n_elem, P).
+
+        When self.precondition is set, the DATA channels (everything but the Nn
+        one-hot rows) are whitened as an (N_points, N_features) matrix before the
+        one-hot block is re-appended -- see whiten_data_channels."""
+        if self.precondition:
+            n_data = features.shape[0] - self.Nn
+            data, onehot = features[:n_data], features[n_data:]   # strip one-hot
+            data = whiten_rows(data)                              # precondition
+            features = jnp.concatenate([data, onehot], axis=0)    # re-append one-hot
         x = jax.nn.relu(self.lift(features))
         for block in self.blocks:
             x = block(x)                       # (width, n_elem*Nn)
@@ -159,6 +171,32 @@ class NodalAlphaModel(eqx.Module):
         hi = 0.5 * (h[:, :-1, :] + h[:, 1:, :])  # (n_elem, P, width) interface feats
         logit = hi @ self.proj_w + self.proj_b   # (n_elem, P)
         return jax.nn.sigmoid(logit)
+
+
+def whiten_rows(rows, eps: float = 1e-5):
+    """Per-sample ZCA whitening of a feature matrix, used to *precondition* the
+    network input (toggled by NodalAlphaModel.precondition).
+
+    rows: (F, N) = (N_features, N_integration_points). Interpreted as the feature
+    space X = rows.T of shape (N_points, N_features): each integration point is a
+    sample, each channel a feature. Returns the whitened rows, same shape (F, N),
+    with the transformed features decorrelated and unit-variance (identity
+    covariance up to the eps ridge):
+
+        Xc = X - mean_over_points(X)
+        Σ  = (Xc^T Xc)/N + eps I            # (F, F) feature covariance
+        Xw = Xc @ Σ^(-1/2)                  # symmetric (ZCA) inverse sqrt
+
+    Statistics are computed from THIS state's own points (instance whitening), so
+    it is stateless and differentiable. A small eps keeps Σ^(-1/2) well-defined
+    when a feature is (near-)constant or two features are collinear."""
+    X = rows.T                                   # (N_points, N_features)
+    n, f = X.shape
+    Xc = X - jnp.mean(X, axis=0, keepdims=True)
+    cov = (Xc.T @ Xc) / n + eps * jnp.eye(f)     # (F, F), symmetric PSD
+    evals, evecs = jnp.linalg.eigh(cov)          # cov = V diag(evals) V^T
+    inv_sqrt = (evecs * (1.0 / jnp.sqrt(evals))) @ evecs.T   # Σ^(-1/2)
+    return (Xc @ inv_sqrt).T                      # back to (F, N)
 
 
 def nodal_features(scalars):

@@ -19,13 +19,13 @@ class TrainConfig:
     xR: float = 1.0
 
     # --- MUSCL_grid (fine reference grid) ----------------------------------
-    muscl_cells_per_elem: int = 32   # MUSCL_grid has n_elem * this cells;
+    muscl_cells_per_elem: int = 16   # MUSCL_grid has n_elem * this cells;
                                      # must be a multiple of proj_pts_per_elem
     muscl_substeps: int = 4          # MUSCL substeps per DGSEM step (dt/this)
 
     # --- time stepping (IMPOSED dt, no CFL) --------------------------------
     dt: float = 2e-4          # DGSEM coarse step; MUSCL step = dt/muscl_substeps
-    rollout_steps: int = 512  # DGSEM steps rolled from the IC and compared to
+    rollout_steps: int = 512 # DGSEM steps rolled from the IC and compared to
                               # the MUSCL reference (the training horizon)
 
     # --- alpha post-processing during training (soft: no hard clipping) ----
@@ -37,20 +37,20 @@ class TrainConfig:
     w_acc: float = 1.0
     w_alpha: float = 1e-5
 
-    proj_pts_per_elem: int = 32   # uniform cost-grid points per coarse element
+    proj_pts_per_elem: int = 16   # uniform cost-grid points per coarse element
 
     # --- optimization -------------------------------------------------------
     epochs: int = 100
-    K: int = 16               # initial conditions generated per epoch
+    K: int = 24               # initial conditions generated per epoch
     batches_per_epoch: int = 20
     batch_size: int = 8       # ICs per gradient step (from-IC rollouts)
-    lr: float = 1e-5
-    bool_constant_lr: bool = False
+    lr: float = 3e-4
+    bool_constant_lr: bool = True
                               # Constant learning rate or warm up, with initial value = lr
                               # Max value = 3e-4 (Adam optim. reference value)
     grad_clip: float = 1.0    # global-norm clip (gradient spikes when a shock
                               # forms in the rollout)
-    seed: int = 777
+    seed: int = 4
 
     # --- initial conditions -------------------------------------------------
     n_fourier_modes: int = 12
@@ -76,16 +76,19 @@ class TrainConfig:
                                # step 0 (alpha~0.05 blows up); with pretrain_pp
                                # the PP warm-start provides the stable start
                                # instead, so alpha_init is irrelevant.
-    pretrain_epochs: int = 400 # Stage-1 PP-imitation warm-start (0 = off).
+    pretrain_epochs: int = 50  # Stage-1 PP-imitation warm-start (0 = off).
                                # Regresses the network toward the Persson-
                                # Peraire indicator on PP-driven rollout states,
                                # so Stage-2 rollouts survive the forming shock
                                # from step 0. A warm start, not a target.
     pretrain_lr: float = 3e-4
-    width: int = 32
+    width: int = 24
     bool_res:bool = True       # Boolean to activate a residual block, or a simple 2 layers CNN
-    kernel_size: int = P+1
-    depth: int = 1
+    kernel_size: int = 3
+    depth: int = 2
+    precondition: bool = True  # ZCA-whiten the (N_points, N_features) data-channel
+                               #   matrix before the one-hot is appended and fed to
+                               #   the network (per-state instance whitening).
 
     # --- bookkeeping ---------------------------------------------------------
     n_val: int = 4            # validation ICs (fixed at start of training)

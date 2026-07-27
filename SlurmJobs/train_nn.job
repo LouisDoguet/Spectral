@@ -3,9 +3,9 @@
 #SBATCH --ntasks=1
 #SBATCH --gres=gpu:1
 #SBATCH --mem=16GB
-#SBATCH --time=6:00:00
-#SBATCH --job-name=TrainAlphaNN
 #SBATCH --partition=gpu
+#SBATCH --time=5:59:00
+#SBATCH --job-name=TrainAlphaNN
 #SBATCH --output=SlurmOutput/train_nn_%j.txt
 #SBATCH --account=aero_research_cantwell
 
@@ -45,10 +45,21 @@ else
 fi
 echo "Python: $($PY --version)  ($PY)"
 
+# --- Input diagnostic -------------------------------------------------------
+# Show the NEW input (full modal spectrum, network.policy.NODAL_DATA_CHANNELS)
+# before/after the ZCA preconditioner. Non-fatal: never blocks training.
+export PYTHONUNBUFFERED=1
+$PY -u nn/training/viz_precondition.py --case random --P 6 --steps 400 \
+    --out nn/img/precond_FullSpectrum.pdf \
+    || echo "viz_precondition failed (non-fatal), continuing to training"
+
 # --- Run --------------------------------------------------------------------
 # -u: unbuffered, so the per-epoch lines appear live in the SLURM log.
-export PYTHONUNBUFFERED=1
-$PY -u nn/training/train.py "$@" --checkpoint-dir "nn/training/checkpoints_AlphaNetO6_W32_warmupLR"
+# --precondition: whiten the data channels (recommended with the collinear
+# full-spectrum input). Input channels are selected in network/policy.py.
+$PY -u nn/training/train.py "$@" \
+    --checkpoint-dir "nn/training/checkpoints_AlphaNetO6_FullSpectrum_PreCond" \
+    --resume
 status=$?
 
 echo ""

@@ -1,12 +1,12 @@
 #!/bin/bash
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --gres=gpu:1
+
 #SBATCH --mem=16GB
 #SBATCH --time=6:00:00
 #SBATCH --job-name=NNcomp
-#SBATCH --array=0-2
-#SBATCH --partition=gpu
+#SBATCH --array=0
+
 #SBATCH --output=SlurmOutput/compare_%j_%a.txt
 #SBATCH --account=aero_research_cantwell
 
@@ -16,7 +16,7 @@ source .venv_spectral/bin/activate
 
 MOD_PATH="nn/training/checkpoints"
 COMPARE_PATH="nn/evaluation/compare.py"
-SUBNAME=("_AlphaNetO6_W32")
+SUBNAME=("_AlphaNetO6_FullSpectrum_PreCond")
 POLY=(6)
 MOD_BEST="alpha_model_best.eqx"
 OUT_DIR="nn/evaluation/comp${SUBNAME[$SLURM_ARRAY_TASK_ID]}"

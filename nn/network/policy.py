@@ -55,41 +55,96 @@ def channel_energy(U, mesh):
     return jnp.broadcast_to(decision[:, None], (n_elem, Nn))
 
 
-# The nodal input's data channels, in order. Comment out a line to remove that
-# channel (e.g. remove "energy" to go back to residual-only).
-NODAL_DATA_CHANNELS = [
-    ("residual", channel_residual),
-    ("energy",   channel_energy),
-]
+def channel_modal_spectrum(U, mesh):
+    """The FULL normalized density modal-energy spectrum per element -- the Nn =
+    P+1 values feat_j = m_j^2 / sum_k m_k^2 (network.indicator.modal_energy) --
+    transferred as P+1 data channels, each broadcast onto its element's nodes.
+
+    This is the raw spectrum the scalar `energy` channel distills into a single
+    PP decision; handing the network the whole spectrum lets it learn its own
+    mode weighting instead of PP's fixed top-mode threshold. Note the spectrum
+    sums to 1 across modes (the channels are collinear), so pair it with
+    preconditioning (the eps ridge) or drop one mode if you whiten.
+
+    Returns (Nn, n_elem, Nn) = (mode, elem, node)."""
+    spec = modal_energy(U, mesh)                     # (n_elem, Nn) = (elem, mode)
+    n_elem, Nn = spec.shape
+    return jnp.broadcast_to(spec.T[:, :, None], (Nn, n_elem, Nn))
 
 
-def n_nodal_data() -> int:
-    return len(NODAL_DATA_CHANNELS)
+# Registry of every available data channel: name -> (fn, width). fn(U, mesh)
+# returns (n_elem, Nn) when width == 1, else (width, n_elem, Nn); width is an int
+# or a callable P -> int (the modal spectrum expands to P+1 channels).
+CHANNELS = {
+    "residual":  (channel_residual,       1),
+    "energy":    (channel_energy,         1),
+    "mspectrum": (channel_modal_spectrum, lambda P: P + 1),
+}
+
+# The ACTIVE nodal input for NEW training runs, in order (names from CHANNELS).
+# Edit this list to change the input. It is recorded in every checkpoint's meta
+# ("data_channels"), so a saved model is always evaluated on the channels it was
+# trained with -- see channels_from_meta and alpha_features(channels=...). That
+# lets old checkpoints (e.g. ["residual", "energy"]) be compared even after the
+# default here changes.
+NODAL_DATA_CHANNELS = ["residual", "mspectrum"]
 
 
-def nodal_data(U, mesh):
-    """Stack the enabled data channels: (len(NODAL_DATA_CHANNELS), n_elem, Nn)."""
-    return jnp.stack([fn(U, mesh) for _, fn in NODAL_DATA_CHANNELS])
+def _channel_width(name, P):
+    w = CHANNELS[name][1]
+    return w(P) if callable(w) else w
+
+
+def _resolve_channels(channels):
+    return list(NODAL_DATA_CHANNELS if channels is None else channels)
+
+
+def n_nodal_data(P: int, channels=None) -> int:
+    """Total data-channel count for a channel set (some entries expand with P)."""
+    return sum(_channel_width(nm, P) for nm in _resolve_channels(channels))
+
+
+def nodal_channel_names(P: int, channels=None):
+    """Per-channel names, expanding multi-channel entries; len == n_nodal_data."""
+    names = []
+    for nm in _resolve_channels(channels):
+        k = _channel_width(nm, P)
+        names += [nm] if k == 1 else [f"{nm}[{j}]" for j in range(k)]
+    return names
+
+
+def nodal_data(U, mesh, channels=None):
+    """Concatenate the selected data channels -> (n_nodal_data(P), n_elem, Nn)."""
+    parts = []
+    for nm in _resolve_channels(channels):
+        f = CHANNELS[nm][0](U, mesh)
+        parts.append(f[None] if f.ndim == 2 else f)   # (1|width, n_elem, Nn)
+    return jnp.concatenate(parts, axis=0)
 
 
 # ---------------------------------------------------------------------------
 # Features and model construction
 # ---------------------------------------------------------------------------
 
-def alpha_features(U, mesh, model_type: str = "nodal"):
+def alpha_features(U, mesh, model_type: str = "nodal", channels=None):
+    """channels: list of channel names to build (defaults to the active
+    NODAL_DATA_CHANNELS). Pass the checkpoint's own set (channels_from_meta) when
+    evaluating a saved model so it sees the input it was trained with."""
     if model_type == "nodal":
-        return nodal_features(nodal_data(U, mesh))     # [data..., one-hot]
+        return nodal_features(nodal_data(U, mesh, channels))   # [data..., one-hot]
     return modal_energy(U, mesh).T
 
 
 def build_alpha_model(model_type: str, P: int, width: int, kernel_size: int,
                       depth: int, key, alpha_init: float = 0.05,
-                      stable_init: bool = True, n_data_channels: int = None, b_res:bool = True):
+                      stable_init: bool = True, n_data_channels: int = None,
+                      b_res: bool = True, precondition: bool = False):
     if model_type == "nodal":
-        nc = n_nodal_data() if n_data_channels is None else n_data_channels
+        nc = n_nodal_data(P) if n_data_channels is None else n_data_channels
         return NodalAlphaModel(P, width, kernel_size, depth, key=key,
                                alpha_init=alpha_init, stable_init=stable_init,
-                               n_data_channels=nc, bool_res=b_res)
+                               n_data_channels=nc, bool_res=b_res,
+                               precondition=precondition)
     return AlphaModel(P + 1, width, kernel_size, depth, key=key,
                       alpha_init=alpha_init, stable_init=stable_init)
 
@@ -98,7 +153,21 @@ def model_meta(cfg) -> dict:
     """Serializable descriptor so loaders can rebuild the right template."""
     return {"model_type": cfg.model_type, "P": cfg.P, "width": cfg.width,
             "kernel_size": cfg.kernel_size, "depth": cfg.depth,
-            "n_data_channels": n_nodal_data(), "alpha_max": cfg.alpha_max}
+            "n_data_channels": n_nodal_data(cfg.P), "alpha_max": cfg.alpha_max,
+            "precondition": cfg.precondition,
+            "data_channels": list(NODAL_DATA_CHANNELS)}
+
+
+def channels_from_meta(meta: dict):
+    """The data-channel names a checkpoint was trained with. Prefers the list
+    stored in the meta; for checkpoints saved before that list was recorded,
+    falls back to the historical default inferred from the channel count
+    (2 -> ["residual", "energy"], 1 -> ["residual"])."""
+    if meta.get("data_channels"):
+        return list(meta["data_channels"])
+    n = int(meta.get("n_data_channels", 1))
+    return {1: ["residual"], 2: ["residual", "energy"]}.get(
+        n, list(NODAL_DATA_CHANNELS))
 
 
 def build_from_meta(meta: dict, key):
@@ -106,4 +175,5 @@ def build_from_meta(meta: dict, key):
     OWN n_data_channels so an old model loads even if the list changed since."""
     return build_alpha_model(meta.get("model_type", "element"), meta["P"],
                              meta["width"], meta["kernel_size"], meta["depth"],
-                             key, n_data_channels=meta.get("n_data_channels"))
+                             key, n_data_channels=meta.get("n_data_channels"),
+                             precondition=meta.get("precondition", False))
