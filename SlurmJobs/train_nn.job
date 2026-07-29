@@ -11,25 +11,34 @@
 
 # ==========================================================================
 # Train the hybrid-DGSEM alpha policy (JAX differentiable-physics training,
-# Algorithm 1). Extra arguments are forwarded to nn/training/train.py:
+# Algorithm 1). Default model is now the PNO+GNN "graph" policy
+# (network.model.GraphAlphaModel, PNO_GNN_integration_spec.md) -- P- and
+# n_elem-independent, replacing the CNN+one-hot "nodal" sensor. Extra
+# arguments are forwarded to nn/training/train.py:
 #
 #   sbatch train_nn.job --light                       # fast demo training
 #   sbatch train_nn.job                               # full TrainConfig
 #   sbatch train_nn.job --epochs 60 --seed 3 \
 #          --checkpoint-dir nn/training/ckpt_seed3    # custom run
+#   sbatch train_nn.job --model-type nodal            # old CNN+one-hot, for
+#          --checkpoint-dir nn/training/checkpoints_AlphaNetO6_FullSpectrum_PreCond
+#                                                      # A/B against the graph model
 #
 # Outputs land in the checkpoint dir (relative to the repo root):
 #   alpha_model_best.eqx / alpha_model_last.eqx   (checkpoints, every epoch)
 #   training_history.npz                          (metrics, every epoch)
 #   training_recap.png                            (rendered at the end;
 #        regenerate anytime: python nn/training/plots.py <history.npz>)
-# A wall-time kill loses nothing but the unfinished epoch.
+# A wall-time kill loses nothing but the unfinished epoch; resubmitting the
+# same sbatch auto-resumes (see below) -- no --resume flag needed.
 # ==========================================================================
 
 module load cuda
 
 cd "${SLURM_SUBMIT_DIR:-$(dirname "$0")}" || exit 1
 mkdir -p SlurmOutput
+
+CKPT="nn/training/checkpoints_GraphPNO_O6_pt4000_light"
 
 # --- Python environment ----------------------------------------------------
 # Reuse the local venv if the repo was synced with it; otherwise bootstrap
@@ -45,21 +54,26 @@ else
 fi
 echo "Python: $($PY --version)  ($PY)"
 
-# --- Input diagnostic -------------------------------------------------------
-# Show the NEW input (full modal spectrum, network.policy.NODAL_DATA_CHANNELS)
-# before/after the ZCA preconditioner. Non-fatal: never blocks training.
-export PYTHONUNBUFFERED=1
-$PY -u nn/training/viz_precondition.py --case random --P 6 --steps 400 \
-    --out nn/img/precond_FullSpectrum.pdf \
-    || echo "viz_precondition failed (non-fatal), continuing to training"
+# --- auto-resume if a checkpoint already exists -----------------------------
+# (the graph model is a new architecture -- CKPT starts empty, so the first
+# submission trains from scratch; only later resubmissions resume)
+RESUME=""
+if [ -f "${CKPT}/alpha_model_last.eqx" ]; then
+    RESUME="--resume"
+    echo "found existing checkpoint -> resuming"
+fi
 
 # --- Run --------------------------------------------------------------------
 # -u: unbuffered, so the per-epoch lines appear live in the SLURM log.
-# --precondition: whiten the data channels (recommended with the collinear
-# full-spectrum input). Input channels are selected in network/policy.py.
-$PY -u nn/training/train.py "$@" \
-    --checkpoint-dir "nn/training/checkpoints_AlphaNetO6_FullSpectrum_PreCond" \
-    --resume
+# --model-type graph is explicit here (rather than relying on the TrainConfig
+# default) so this script keeps training the graph model even if that default
+# changes later. argparse keeps the LAST value of a repeated flag, so these
+# defaults are listed BEFORE "$@" -- any flag the caller passes (--model-type,
+# --checkpoint-dir, ...) overrides them, matching the usage examples above.
+# (Overriding --checkpoint-dir bypasses the auto-resume check above, which is
+# computed against $CKPT; pass --resume yourself in that case if needed.)
+export PYTHONUNBUFFERED=1
+$PY -u nn/training/train.py --model-type graph --checkpoint-dir "$CKPT" $RESUME "$@"
 status=$?
 
 echo ""

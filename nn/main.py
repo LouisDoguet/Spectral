@@ -59,14 +59,18 @@ N_FRAMES = 120                   # animation frames
 # ---------------------------------------------------------------------------
 
 def build_alpha_fn(kind, mesh, cfg, model_path):
+    """Every alpha_fn(U) -> (alpha, alpha_boundary): alpha_boundary is the
+    graph model's element-interface blend (jax_dgsem.solver.hybrid_residual's
+    alpha_boundary arg); None for "dg"/"pp"/legacy models, which fall back to
+    the solver's hardcoded entropy-stable-LF interface."""
     if kind == "dg":
-        return lambda U: jnp.zeros(mesh.n_elem), "DGSEM (alpha = 0, pure DG)"
+        return lambda U: (jnp.zeros(mesh.n_elem), None), "DGSEM (alpha = 0, pure DG)"
     if kind == "pp":
-        return (lambda U: persson_peraire_alpha(U, mesh, alpha_max=cfg.alpha_max),
+        return (lambda U: (persson_peraire_alpha(U, mesh, alpha_max=cfg.alpha_max), None),
                 "DGSEM + Persson-Peraire")
     if kind == "nn":
         from network.model import load_model
-        from network.policy import alpha_features, build_from_meta
+        from network.policy import apply_alpha, build_from_meta
         meta_path = os.path.join(os.path.dirname(model_path), "model_meta.json")
         if not (os.path.exists(model_path) and os.path.exists(meta_path)):
             print(f"[main] no checkpoint at {model_path}; falling back to PP")
@@ -78,9 +82,12 @@ def build_alpha_fn(kind, mesh, cfg, model_path):
         mtype = meta.get("model_type", "element")
 
         def fn(U):
-            return postprocess_alpha(model(alpha_features(U, mesh, mtype)),
-                                     alpha_max=amax, diffuse=cfg.alpha_diffuse,
-                                     hard_clip=True)
+            raw, raw_b = apply_alpha(model, U, mesh, mtype)
+            alpha = postprocess_alpha(raw, alpha_max=amax,
+                                      diffuse=cfg.alpha_diffuse, hard_clip=True)
+            alpha_b = None if raw_b is None else postprocess_alpha(
+                raw_b, alpha_max=amax, diffuse=cfg.alpha_diffuse, hard_clip=True)
+            return alpha, alpha_b
         return fn, "DGSEM + NN policy"
     raise ValueError(kind)
 
@@ -112,16 +119,17 @@ def run_solvers(cfg, seed, alpha_kind, model_path, solver_choice):
         @eqx.filter_jit
         def dg_run(U0):
             def inner(U, _):
-                return rk4_step(U, alpha_fn(U), cfg.dt, mesh), None
+                a, ab = alpha_fn(U)
+                return rk4_step(U, a, cfg.dt, mesh, ab), None
             def outer(U, _):
                 U1, _ = jax.lax.scan(inner, U, None, length=stride)
-                return U1, (U1, alpha_fn(U1))
+                return U1, (U1, alpha_fn(U1)[0])
             _, (traj, al) = jax.lax.scan(outer, U0, None, length=n_out)
             return traj, al
 
         dg_traj, dg_alpha = dg_run(U0)
         dg_traj = np.concatenate([np.asarray(U0)[None], np.asarray(dg_traj)])
-        dg_alpha = np.concatenate([np.asarray(alpha_fn(U0))[None], np.asarray(dg_alpha)])
+        dg_alpha = np.concatenate([np.asarray(alpha_fn(U0)[0])[None], np.asarray(dg_alpha)])
 
         proj = uniform_projector(cfg.P, cfg.n_elem, PLOT_PTS)
         N_plot = cfg.n_elem * PLOT_PTS

@@ -36,7 +36,7 @@ from jax_dgsem import GLLBasis, Mesh1D
 from jax_dgsem.solver import rk4_step
 from jax_dgsem.indicator import postprocess_alpha
 from network.model import save_model, load_model
-from network.policy import alpha_features, build_alpha_model, model_meta
+from network.policy import apply_alpha, build_alpha_model, model_meta
 from training.config import TrainConfig
 from training.cost import uniform_projector, cost_step, cost_terms
 from training.ic import draw_fourier_coeffs, sample_on_dgsem, sample_on_muscl
@@ -50,14 +50,23 @@ PERIODIC = ("periodic", None)
 # ===========================================================================
 
 def network_alpha(model, U, mesh, cfg):
-    """State U -> blending factor alpha from the network.
+    """State U -> (alpha, alpha_boundary) from the network.
 
     Soft post-processing (no hard clip) so gradients stay alive during
-    training; the hard clip is only used at deployment. Shape is (n_elem,) for
-    the element policy, (n_elem, P) for the nodal policy."""
-    raw = model(alpha_features(U, mesh, cfg.model_type))
-    return postprocess_alpha(raw, alpha_max=cfg.alpha_max,
-                             diffuse=cfg.alpha_diffuse, hard_clip=False)
+    training; the hard clip is only used at deployment. alpha is (n_elem,) for
+    the element policy, (n_elem, P) for the nodal/graph policy.
+    alpha_boundary is the graph model's extra (n_elem,) element-interface
+    blend (see network.model.GraphAlphaModel.__call__ / jax_dgsem.solver
+    .hybrid_residual); None for model types with no such lever."""
+    raw, raw_boundary = apply_alpha(model, U, mesh, cfg.model_type)
+    alpha = postprocess_alpha(raw, alpha_max=cfg.alpha_max,
+                              diffuse=cfg.alpha_diffuse, hard_clip=False)
+    if raw_boundary is None:
+        return alpha, None
+    alpha_boundary = postprocess_alpha(raw_boundary, alpha_max=cfg.alpha_max,
+                                       diffuse=cfg.alpha_diffuse,
+                                       hard_clip=False)
+    return alpha, alpha_boundary
 
 
 def rollout_cost(model, U0, targets, mesh, project, dt, dx_ref, cfg):
@@ -69,10 +78,10 @@ def rollout_cost(model, U0, targets, mesh, project, dt, dx_ref, cfg):
 
     @eqx.filter_checkpoint
     def step(U, target):
-        alpha = network_alpha(model, U, mesh, cfg)
-        U_next = rk4_step(U, alpha, dt, mesh)
+        alpha, alpha_boundary = network_alpha(model, U, mesh, cfg)
+        U_next = rk4_step(U, alpha, dt, mesh, alpha_boundary)
         cost = cost_step(project(U_next), target, alpha, dx_ref,
-                         cfg.w_osc, cfg.w_acc, cfg.w_alpha)
+                         cfg.w_osc, cfg.w_acc, cfg.w_alpha, alpha_boundary)
         return U_next, cost
 
     _, costs = jax.lax.scan(step, U0, targets)
@@ -81,15 +90,21 @@ def rollout_cost(model, U0, targets, mesh, project, dt, dx_ref, cfg):
 
 def rollout_diagnostics(model, U0, targets, mesh, project, dt, dx_ref, cfg):
     """Same rollout, but returns the UNWEIGHTED (C_osc, C_acc, C_alpha) plus
-    alpha mean/max -- the numbers that go into the training-analysis logs."""
+    alpha mean/max -- the numbers that go into the training-analysis logs.
+    alpha mean/max pool the subcell AND element-interface values together (one
+    statistic for every integration point, matching how they are now
+    regularized and blended identically)."""
 
     @eqx.filter_checkpoint
     def step(U, target):
-        alpha = network_alpha(model, U, mesh, cfg)
-        U_next = rk4_step(U, alpha, dt, mesh)
-        osc, acc, alph = cost_terms(project(U_next), target, alpha, dx_ref)
-        return U_next, jnp.stack([osc, acc, alph, jnp.mean(alpha),
-                                  jnp.max(alpha)])
+        alpha, alpha_boundary = network_alpha(model, U, mesh, cfg)
+        U_next = rk4_step(U, alpha, dt, mesh, alpha_boundary)
+        osc, acc, alph = cost_terms(project(U_next), target, alpha, dx_ref,
+                                    alpha_boundary)
+        a_all = alpha.reshape(-1) if alpha_boundary is None else \
+            jnp.concatenate([alpha.reshape(-1), alpha_boundary.reshape(-1)])
+        return U_next, jnp.stack([osc, acc, alph, jnp.mean(a_all),
+                                  jnp.max(a_all)])
 
     _, per_step = jax.lax.scan(step, U0, targets)
     osc, acc, alph = per_step[:, 0].sum(), per_step[:, 1].sum(), per_step[:, 2].sum()
@@ -119,12 +134,20 @@ def make_step_functions(mesh, project, dt, dx_ref, cfg, optimizer):
 
     @eqx.filter_jit
     def eval_loss(model, starts, targets):
-        return mean_loss(model, starts, targets)
+        # nanmean, NOT mean_loss: the fixed n_val validation set is small, and
+        # a not-yet-converged policy occasionally destabilizes ONE of those
+        # ICs' 512-step rollout (an expected, transient event, same as the
+        # non-finite TRAINING batches train_step already tolerates). A plain
+        # mean would blank the WHOLE epoch's reported val_loss to NaN from a
+        # single bad IC, which reads as "training produces garbage" when only
+        # one fixed validation case briefly wasn't.
+        return jnp.nanmean(batch_mean(rollout_cost, model, starts, targets, *core))
 
     @eqx.filter_jit
     def eval_breakdown(model, starts, targets):
-        return batch_mean(rollout_diagnostics, model, starts, targets,
-                          *core).mean(axis=0)
+        per_ic = batch_mean(rollout_diagnostics, model, starts, targets, *core)
+        n_finite = jnp.sum(jnp.all(jnp.isfinite(per_ic), axis=1))
+        return jnp.nanmean(per_ic, axis=0), n_finite
 
     return train_step, eval_loss, eval_breakdown
 
@@ -219,7 +242,10 @@ def build_model(cfg, stable_init=True):
     key = jax.random.split(jax.random.PRNGKey(cfg.seed))[1]
     return build_alpha_model(cfg.model_type, cfg.P, cfg.width, cfg.kernel_size,
                              cfg.depth, key, cfg.alpha_init, stable_init,
-                             b_res=cfg.bool_res, precondition=cfg.precondition)
+                             b_res=cfg.bool_res, precondition=cfg.precondition,
+                             pno_channels=cfg.pno_channels,
+                             pno_hidden=cfg.pno_hidden,
+                             fusion_hidden=cfg.fusion_hidden)
 
 
 def build_optimizer(cfg, model):
@@ -261,21 +287,27 @@ def run_training_epoch(model, opt_state, data, train_step, rng, cfg, history,
 
 
 def evaluate(model, val_batch, eval_loss, eval_breakdown):
-    """Validation loss + unweighted cost breakdown + alpha statistics."""
-    osc, acc, alph, a_mean, a_max = np.asarray(eval_breakdown(model, *val_batch))
+    """Validation loss + unweighted cost breakdown + alpha statistics.
+
+    val_n_finite reports how many of the fixed n_val ICs produced a finite
+    rollout this epoch (see eval_breakdown) -- < n_val is a signal to look at
+    stability/alpha_max, not a training-loop bug by itself."""
+    (osc, acc, alph, a_mean, a_max), n_finite = eval_breakdown(model, *val_batch)
     return dict(val_loss=float(eval_loss(model, *val_batch)),
                 val_c_osc=float(osc), val_c_acc=float(acc),
                 val_c_alpha=float(alph), val_alpha_mean=float(a_mean),
-                val_alpha_max=float(a_max))
+                val_alpha_max=float(a_max), val_n_finite=int(n_finite))
 
 
-def log_epoch(epoch, train_loss, m, n_skipped, is_best):
+def log_epoch(epoch, train_loss, m, n_skipped, n_val, is_best):
     flag = "  *best*" if is_best else ""
     skip = f"  (skipped {n_skipped} non-finite)" if n_skipped else ""
+    val_bad = f"  (val {m['val_n_finite']}/{n_val} ICs finite)" \
+        if m["val_n_finite"] < n_val else ""
     print(f"epoch {epoch:3d}: train {train_loss:.6e}   val {m['val_loss']:.6e}   "
           f"[C_osc {m['val_c_osc']:.3e}  C_acc {m['val_c_acc']:.3e}  "
           f"C_alpha {m['val_c_alpha']:.3e}  alpha mean {m['val_alpha_mean']:.3f} "
-          f"max {m['val_alpha_max']:.3f}]{flag}{skip}")
+          f"max {m['val_alpha_max']:.3f}]{flag}{skip}{val_bad}")
 
 
 def save_snapshot(model, mesh, coeffs, cfg, epoch):
@@ -308,7 +340,7 @@ class History:
     """Per-epoch and per-batch metrics, serializable to one .npz."""
 
     _EPOCH = ("epoch", "train_loss", "val_loss", "val_c_osc", "val_c_acc",
-              "val_c_alpha", "val_alpha_mean", "val_alpha_max")
+              "val_c_alpha", "val_alpha_mean", "val_alpha_max", "val_n_finite")
     _BATCH = ("batch_loss", "batch_epoch")
 
     def __init__(self, data=None):
@@ -326,7 +358,8 @@ class History:
 
     @property
     def best_val(self):
-        return min(self.data["val_loss"]) if self.data["val_loss"] else float("inf")
+        finite = [v for v in self.data["val_loss"] if np.isfinite(v)]
+        return min(finite) if finite else float("inf")
 
     @property
     def next_epoch(self):
@@ -339,7 +372,11 @@ class History:
     @classmethod
     def load(cls, path):
         d = dict(np.load(path))
-        return cls({k: list(d[k]) for k in cls._EPOCH + cls._BATCH})
+        # val_n_finite is new; older histories don't have it -- backfill with
+        # -1 ("not tracked"), distinct from any real 0..n_val count.
+        missing = [-1] * len(d["epoch"]) if "epoch" in d else []
+        return cls({k: list(d[k]) if k in d else missing
+                    for k in cls._EPOCH + cls._BATCH})
 
 
 class Checkpointer:
@@ -366,6 +403,11 @@ class Checkpointer:
             old = json.load(f)
         arch = {"model_type": cfg.model_type, "P": cfg.P, "width": cfg.width,
                 "kernel_size": cfg.kernel_size, "depth": cfg.depth}
+        if cfg.model_type == "graph":
+            del arch["kernel_size"]          # unused by the graph model
+            arch.update(pno_channels=cfg.pno_channels,
+                        pno_hidden=cfg.pno_hidden,
+                        fusion_hidden=cfg.fusion_hidden)
         mismatch = {k: (old.get(k), v) for k, v in arch.items()
                     if old.get(k) != v}
         if mismatch:
@@ -461,7 +503,7 @@ def train(cfg=None, resume=False):
         ckpt.save(model, opt_state, rng, history, cfg, is_best)
 
         log_epoch(epoch, train_loss, metrics,
-                  int(opt_state.notfinite_count), is_best)
+                  int(opt_state.notfinite_count), cfg.n_val, is_best)
         save_snapshot(model, mesh, viz_coeffs, cfg, epoch)
 
     render_recap(ckpt.hist, cfg)
@@ -499,7 +541,8 @@ if __name__ == "__main__":
                     help="fast demonstration training (TrainConfig.light)")
     ap.add_argument("--P", type=int, default=None, help="polynomial order")
     ap.add_argument("--n-elem", type=int, default=None)
-    ap.add_argument("--model-type", default=None, choices=["nodal", "element"])
+    ap.add_argument("--model-type", default=None,
+                    choices=["graph", "nodal", "element"])
     ap.add_argument("--epochs", type=int, default=None)
     ap.add_argument("--seed", type=int, default=None)
     ap.add_argument("--lr", type=float, default=None)

@@ -47,20 +47,30 @@ def _dxx(v, dx_ref):
         / (dx_ref * dx_ref)
 
 
+def _c_alpha(alpha, alpha_boundary):
+    """L2 penalization of the control, subcell AND element-interface alike --
+    one regularizer for every integration point (alpha_boundary is None for
+    model types that have no interface lever, e.g. "nodal"/"element")."""
+    c = jnp.sum(alpha * alpha)
+    if alpha_boundary is not None:
+        c = c + jnp.sum(alpha_boundary * alpha_boundary)
+    return c
+
+
 def cost_step(U_proj, ref_proj, alpha, dx_ref,
-              w_osc: float, w_acc: float, w_alpha: float):
+              w_osc: float, w_acc: float, w_alpha: float, alpha_boundary=None):
     """Local-in-time cost C(U^n, U_ref^n) on already-projected states."""
     c_acc = dx_ref * jnp.sum(jnp.abs(U_proj - ref_proj), axis=1).mean()
     c_osc = dx_ref * jnp.sum(
         jnp.abs(_dxx(U_proj, dx_ref) - _dxx(ref_proj, dx_ref)), axis=1).mean()
-    c_alpha = jnp.sum(alpha * alpha)
+    c_alpha = _c_alpha(alpha, alpha_boundary)
     return w_osc * c_osc + w_acc * c_acc + w_alpha * c_alpha
 
 
-def cost_terms(U_proj, ref_proj, alpha, dx_ref):
+def cost_terms(U_proj, ref_proj, alpha, dx_ref, alpha_boundary=None):
     """Unweighted (C_osc, C_acc, C_alpha) for monitoring."""
     c_acc = dx_ref * jnp.sum(jnp.abs(U_proj - ref_proj), axis=1).mean()
     c_osc = dx_ref * jnp.sum(
         jnp.abs(_dxx(U_proj, dx_ref) - _dxx(ref_proj, dx_ref)), axis=1).mean()
-    c_alpha = jnp.sum(alpha * alpha)
+    c_alpha = _c_alpha(alpha, alpha_boundary)
     return c_osc, c_acc, c_alpha

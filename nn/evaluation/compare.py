@@ -45,7 +45,7 @@ from jax_dgsem import GLLBasis, Mesh1D
 from jax_dgsem.solver import rk4_step
 from jax_dgsem.indicator import persson_peraire_alpha, postprocess_alpha
 from network.model import load_model
-from network.policy import alpha_features, build_from_meta, channels_from_meta
+from network.policy import apply_alpha, build_from_meta, channels_from_meta
 from training.config import TrainConfig
 from training.cost import uniform_projector
 from training.ic import (draw_fourier_coeffs, sample_on_dgsem, sample_on_muscl,
@@ -130,16 +130,22 @@ def setup_case(case, cfg, seed):
 
 def make_alpha_fn(scheme, mesh, cfg, model=None, mtype="element", alpha_max=1.0,
                   channels=None):
+    """Every alpha_fn(U) -> (alpha, alpha_boundary); alpha_boundary is the
+    graph model's element-interface blend, None for "dg"/"pp"/legacy models
+    (falls back to the solver's hardcoded entropy-stable-LF interface)."""
     if scheme == "dg":
-        return lambda U: jnp.zeros(mesh.n_elem)
+        return lambda U: (jnp.zeros(mesh.n_elem), None)
     if scheme == "pp":
-        return lambda U: persson_peraire_alpha(U, mesh, alpha_max=alpha_max)
+        return lambda U: (persson_peraire_alpha(U, mesh, alpha_max=alpha_max), None)
     if scheme == "nn":
         def fn(U):
-            return postprocess_alpha(
-                model(alpha_features(U, mesh, mtype, channels)),
-                alpha_min=0.001, alpha_max=alpha_max,
+            raw, raw_b = apply_alpha(model, U, mesh, mtype, channels)
+            alpha = postprocess_alpha(raw, alpha_min=0.001, alpha_max=alpha_max,
+                                      diffuse=cfg.alpha_diffuse, hard_clip=True)
+            alpha_b = None if raw_b is None else postprocess_alpha(
+                raw_b, alpha_min=0.001, alpha_max=alpha_max,
                 diffuse=cfg.alpha_diffuse, hard_clip=True)
+            return alpha, alpha_b
         return fn
     raise ValueError(scheme)
 
@@ -151,18 +157,19 @@ def run_scheme(alpha_fn, U0, mesh, dt, n_out, stride):
     @eqx.filter_jit
     def _run(U0):
         def inner(U, _):
-            return rk4_step(U, alpha_fn(U), dt, mesh), None
+            a, ab = alpha_fn(U)
+            return rk4_step(U, a, dt, mesh, ab), None
 
         def outer(U, _):
             U1, _ = jax.lax.scan(inner, U, None, length=stride)
-            return U1, (U1, alpha_fn(U1))
+            return U1, (U1, alpha_fn(U1)[0])
 
         _, (traj, al) = jax.lax.scan(outer, U0, None, length=n_out)
         return traj, al
 
     traj, al = _run(U0)
     traj = np.concatenate([np.asarray(U0)[None], np.asarray(traj)])
-    al = np.concatenate([np.asarray(alpha_fn(U0))[None], np.asarray(al)])
+    al = np.concatenate([np.asarray(alpha_fn(U0)[0])[None], np.asarray(al)])
     finite = np.isfinite(traj).all(axis=tuple(range(1, traj.ndim)))
     blowup = None if finite.all() else int(np.argmin(finite))
     return traj, al, blowup

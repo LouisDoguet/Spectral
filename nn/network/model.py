@@ -213,6 +213,241 @@ def nodal_features(scalars):
     return jnp.concatenate([rows, onehot], axis=0)
 
 
+# ---------------------------------------------------------------------------
+# PNO + GNN sensor (P-independent, replaces the CNN + one-hot pipeline)
+# ---------------------------------------------------------------------------
+
+def apply_linear(lin, x):
+    """Apply an eqx.nn.Linear over the LAST axis of an arbitrarily-shaped x.
+
+    eqx.nn.Linear.__call__ only takes a single (in,) vector; this is the shared
+    per-point / per-mode application (same weights at every position), which is
+    exactly what keeps the graph model independent of P and n_elem."""
+    y = x @ lin.weight.T
+    return y if lin.bias is None else y + lin.bias
+
+
+class PolynomialNeuralOperator(eqx.Module):
+    """Modal energy -> (global element feature, nodal reconstruction), any P.
+
+    The P-independence mechanism: each mode k becomes a token
+    (coord_k, log-energy_k) with coord_k = k/P the normalized frequency (the
+    modal-space analogue of the point coordinate xi), a SHARED per-mode MLP maps
+    every token to `channels` features (fixed parameter count for any number of
+    modes), and
+      1. mean-pooling over modes gives the global feature (n_elem, channels);
+      2. the Legendre Vandermonde Phi (mesh constant, a formula -- not learned)
+         projects the mode features back onto the integration points:
+         nodal = Phi @ mode_feat, (n_elem, Nn, channels).
+    Mode ORDER is kept (mode index = frequency, physically meaningful); only
+    the point/element axes are permutation-safe.
+
+    The log10 transform is the (formula-based) preconditioning of the energy:
+    the normalized spectrum spans ~[1e-12, 1] and is untrainable raw (same
+    rationale as the PP decision rescaling in network.policy.channel_energy)."""
+
+    lin1: eqx.nn.Linear
+    lin2: eqx.nn.Linear
+    channels: int = eqx.field(static=True)
+
+    def __init__(self, hidden: int, channels: int, *, key):
+        k1, k2 = jax.random.split(key)
+        self.lin1 = eqx.nn.Linear(2, hidden, key=k1)
+        self.lin2 = eqx.nn.Linear(hidden, channels, key=k2)
+        self.channels = channels
+
+    def __call__(self, energy, Phi):
+        """energy: (n_elem, Nn) per-element spectrum, Phi: (Nn, Nn) Vandermonde
+        -> (pno_global (n_elem, C), nodal (n_elem, Nn, C))."""
+        n_elem, Nn = energy.shape
+        coord = jnp.arange(Nn) / max(Nn - 1, 1)             # k/P, the P-trick
+        e_log = jnp.log10(energy + 1e-12) / 12.0            # ~[-1, 0]
+        tokens = jnp.stack([jnp.broadcast_to(coord, (n_elem, Nn)), e_log],
+                           axis=-1)                          # (n_elem, Nn, 2)
+        mode_feat = apply_linear(self.lin2,
+                                 jax.nn.relu(apply_linear(self.lin1, tokens)))
+        pno_global = jnp.mean(mode_feat, axis=1)             # (n_elem, C)
+        nodal = jnp.einsum("ik,ekc->eic", Phi, mode_feat)    # (n_elem, Nn, C)
+        return pno_global, nodal
+
+
+class GraphBlock(eqx.Module):
+    """One volume + one surface message-passing round, both residual.
+
+    The graph is the ACTUAL DGSEM coupling, in dense form (no edge lists):
+      - volume: every intra-element point pair, weighted by the differentiation
+        matrix -- receiver j aggregates sum_k D[j,k] m_k, which is exactly
+        einsum('jk,ekf->ejf', D, m), the same contraction the split-form volume
+        term uses (jax_dgsem.solver._subcell_flux_dg);
+      - surface: the two face nodes exchange with the touching neighbour face
+        node (roll over the element axis; wrap rows zeroed when not periodic),
+        the graph analogue of the numerical-flux exchange the old per-element
+        CNN could not represent.
+    No order-dependent op (no conv, no reshape-to-grid): position enters ONLY
+    through D, xi and the face pairing, i.e. the physical structure.
+
+    D must be pre-normalized by the caller (GraphAlphaModel.point_latents
+    divides by P(P+1), D's row-sum growth rate) -- the raw reference-element D
+    is unbounded in P (row-sums ~16/37/68 at P=4/6/8), which would make the
+    volume round blow up at high P and dominate the real (state-dependent)
+    signal with a P-and-position-only bias at any fixed P."""
+
+    vol_msg: eqx.nn.Linear
+    vol_upd: eqx.nn.Linear
+    surf_msg: eqx.nn.Linear
+    surf_upd: eqx.nn.Linear
+
+    def __init__(self, hidden: int, *, key):
+        k1, k2, k3, k4 = jax.random.split(key, 4)
+        self.vol_msg = eqx.nn.Linear(hidden, hidden, key=k1)
+        self.vol_upd = eqx.nn.Linear(2 * hidden, hidden, key=k2)
+        self.surf_msg = eqx.nn.Linear(hidden, hidden, key=k3)
+        self.surf_upd = eqx.nn.Linear(2 * hidden, hidden, key=k4)
+
+    def __call__(self, h, D, periodic: bool):
+        """h: (n_elem, Nn, H) -> (n_elem, Nn, H)."""
+        # volume round: D-weighted intra-element aggregation
+        m = jax.nn.relu(apply_linear(self.vol_msg, h))
+        agg = jnp.einsum("jk,ekf->ejf", D, m)
+        h = jax.nn.relu(h + apply_linear(self.vol_upd,
+                                         jnp.concatenate([h, agg], axis=-1)))
+        # surface round: face-node exchange with the neighbour element
+        m = jax.nn.relu(apply_linear(self.surf_msg, h))
+        from_left = jnp.roll(m[:, -1, :], 1, axis=0)    # elem e <- (e-1)'s last
+        from_right = jnp.roll(m[:, 0, :], -1, axis=0)   # elem e <- (e+1)'s first
+        if not periodic:
+            from_left = from_left.at[0].set(0.0)        # no neighbour outside
+            from_right = from_right.at[-1].set(0.0)
+        agg = (jnp.zeros_like(h).at[:, 0, :].set(from_left)
+               .at[:, -1, :].set(from_right))
+        return jax.nn.relu(h + apply_linear(self.surf_upd,
+                                            jnp.concatenate([h, agg], axis=-1)))
+
+
+class DGSEMGraphNet(eqx.Module):
+    """Encoder + `depth` GraphBlocks on the DGSEM graph: (n_elem, Nn, in) ->
+    (n_elem, Nn, hidden). Permutation-equivariant over points and elements."""
+
+    encoder: eqx.nn.Linear
+    blocks: tuple
+
+    def __init__(self, in_features: int, hidden: int, depth: int, *, key):
+        keys = jax.random.split(key, depth + 1)
+        self.encoder = eqx.nn.Linear(in_features, hidden, key=keys[0])
+        self.blocks = tuple(GraphBlock(hidden, key=keys[1 + i])
+                            for i in range(depth))
+
+    def __call__(self, node_feats, D, periodic: bool):
+        h = jax.nn.relu(apply_linear(self.encoder, node_feats))
+        for blk in self.blocks:
+            h = blk(h, D, periodic)
+        return h
+
+
+class GraphAlphaModel(eqx.Module):
+    """PNO + GNN alpha policy -- the P- and n_elem-independent sensor.
+
+    Input  : features (2, n_elem, Nn) = stacked [DG-FV density residual per
+             node, modal-energy spectrum per element] (network.policy
+             .graph_features -- NO one-hot), plus the mesh (whose quads/D/Phi
+             are the reference-element constants the branches reuse; passed as
+             an argument so they never enter the trainable pytree).
+    Output : (alpha, alpha_boundary).
+             alpha: (n_elem, P) in (0,1) per interior subcell interface -- the
+             same contract as NodalAlphaModel, formed by the same adjacent-
+             node-pair readout, consumed by hybrid_residual's subcell blend.
+             alpha_boundary: (n_elem,) in (0,1) per TRUE element-to-element
+             interface, formed by the SAME readout applied across the element
+             roll instead of within an element -- consumed by
+             hybrid_residual's alpha_boundary argument to blend the
+             element-interface flux itself (entropy-conservative vs.
+             entropy-stable-LF), the one coupling the subcell alpha can never
+             reach.
+
+    Forward: PNO(energy) -> global + nodal features; node features =
+    [residual, xi, nodal] (xi = mesh.quads replaces the one-hot); GNN message
+    passing; fuse with the broadcast global feature; pointwise MLP; interface
+    readout (subcell AND element-boundary, same weights). Unlike
+    NodalAlphaModel this runs unchanged at ANY P: no weight shape depends on
+    Nn."""
+
+    pno: PolynomialNeuralOperator
+    gnn: DGSEMGraphNet
+    fuse: eqx.nn.Linear
+    proj_w: jnp.ndarray            # (fusion_hidden,) interface readout weight
+    proj_b: jnp.ndarray            # scalar bias
+
+    def __init__(self, pno_channels: int = 8, pno_hidden: int = 32,
+                 gnn_hidden: int = 24, fusion_hidden: int = 32, depth: int = 1,
+                 *, key, alpha_init: float = 0.05, stable_init: bool = True):
+        k1, k2, k3, k4 = jax.random.split(key, 4)
+        self.pno = PolynomialNeuralOperator(pno_hidden, pno_channels, key=k1)
+        self.gnn = DGSEMGraphNet(2 + pno_channels, gnn_hidden, depth, key=k2)
+        self.fuse = eqx.nn.Linear(gnn_hidden + pno_channels, fusion_hidden,
+                                  key=k3)
+        if stable_init:
+            # Zero readout weight + logit(alpha_init) bias: the untrained
+            # policy outputs the constant alpha_init (almost pure DG) so the
+            # solver is stable at the start of Stage-2 training.
+            self.proj_w = jnp.zeros((fusion_hidden,))
+            self.proj_b = jnp.array(jnp.log(alpha_init / (1.0 - alpha_init)))
+        else:
+            # Trainable readout for supervised PP-pretraining.
+            self.proj_w = 0.1 * jax.random.normal(k4, (fusion_hidden,))
+            self.proj_b = jnp.array(0.0)
+
+    def point_latents(self, features, mesh):
+        """Per-point latents (n_elem, Nn, fusion_hidden) -- everything before
+        the interface pairing; permutation-equivariant (tested)."""
+        residual, energy = features[0], features[1]      # (n_elem, Nn) each
+        n_elem, Nn = residual.shape
+        pno_global, nodal = self.pno(energy, mesh.Phi)
+        xi = jnp.broadcast_to(mesh.quads, (n_elem, Nn))
+        node_feats = jnp.concatenate(
+            [residual[..., None], xi[..., None], nodal], axis=-1)
+        # D's row-sums grow like P(P+1) (the GLL differentiation matrix is a
+        # reference-element operator, not scaled by dx like the physical
+        # derivative is) -- normalize so the volume round stays an O(1)
+        # aggregation at any P; this is what makes the SAME trained weights
+        # actually behave the same at P=3 and P=8 instead of blowing up at
+        # high P (unnormalized row-sums: ~16 at P=4, ~37 at P=6, ~68 at P=8).
+        D_msg = mesh.D / (mesh.P * (mesh.P + 1))
+        h = self.gnn(node_feats, D_msg, mesh.periodic)
+        fused = jnp.concatenate(
+            [h, jnp.broadcast_to(pno_global[:, None, :],
+                                 (n_elem, Nn, self.pno.channels))], axis=-1)
+        return jax.nn.relu(apply_linear(self.fuse, fused))
+
+    def __call__(self, features, mesh):
+        """features (2, n_elem, Nn), mesh -> (alpha, alpha_boundary).
+
+        alpha: (n_elem, P) in (0, 1), one per interior subcell interface (the
+        existing contract, unchanged).
+        alpha_boundary: (n_elem,) in (0, 1), one per TRUE element-to-element
+        interface (element e's right face, shared with element e+1's left
+        face) -- consumed by jax_dgsem.solver.hybrid_residual to blend the
+        interface flux itself, the one place the subcell alpha above can
+        never reach (see solver._apply_surface_and_mass_inverse).
+
+        Deliberately reuses the SAME proj_w/proj_b readout as the subcell
+        interfaces rather than a second head: an interior interface latent is
+        the average of its two adjacent NODE latents (z[:,:-1]+z[:,1:]); the
+        boundary interface is the exact same averaging, just paired across
+        the element roll (last node of e with first node of e+1) instead of
+        within-element indices. One mechanism, one set of weights, for every
+        integration point -- element edges are not a structurally different
+        case for the readout, only for which two node latents feed it."""
+        z = self.point_latents(features, mesh)
+        zi = 0.5 * (z[:, :-1, :] + z[:, 1:, :])   # (n_elem, P) interface feats
+        logit = zi @ self.proj_w + self.proj_b
+        alpha = jax.nn.sigmoid(logit)
+
+        z_bound = 0.5 * (z[:, -1, :] + jnp.roll(z[:, 0, :], -1, axis=0))
+        logit_b = z_bound @ self.proj_w + self.proj_b
+        alpha_boundary = jax.nn.sigmoid(logit_b)
+        return alpha, alpha_boundary
+
+
 def save_model(path: str, model):
     eqx.tree_serialise_leaves(path, model)
 

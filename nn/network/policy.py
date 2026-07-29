@@ -1,11 +1,19 @@
-"""Routing between the two alpha policies (per-element and nodal/subcell), and
-the definition of the NODAL NETWORK INPUT.
+"""Routing between the alpha policies (per-element, nodal/subcell, graph), and
+the definition of the NETWORK INPUTS.
 
   "element": legacy per-element policy. Input = normalized modal-energy
              spectrum (P+1 channels) over the elements; output alpha (n_elem,).
   "nodal"  : per interior subcell interface. Input = a stack of per-node DATA
              channels followed by the one-hot position block; output alpha
              (n_elem, P).
+  "graph"  : PNO + GNN policy (network.model.GraphAlphaModel), P- and
+             n_elem-independent. Input = graph_features (2, n_elem, Nn) =
+             [residual per node, modal-energy spectrum per element] -- no
+             one-hot (xi and the DGSEM graph replace it); the mesh is passed
+             to the model alongside the features (its quads/D/Phi are the
+             reference-element constants the branches reuse). Output alpha
+             (n_elem, P). Call through apply_alpha / call_model, which hide
+             the signature difference from the legacy models.
 
   Nodal input layout (this is the thing to tune):
 
@@ -24,7 +32,8 @@ import jax.numpy as jnp
 
 from jax_dgsem.indicator import modal_energy, persson_peraire_indicator
 from jax_dgsem.solver import dg_residual, fv_residual
-from network.model import AlphaModel, NodalAlphaModel, nodal_features
+from network.model import (AlphaModel, GraphAlphaModel, NodalAlphaModel,
+                           nodal_features)
 
 
 # ---------------------------------------------------------------------------
@@ -34,9 +43,26 @@ from network.model import AlphaModel, NodalAlphaModel, nodal_features
 def channel_residual(U, mesh):
     """DG - FV density residual per node, normalized to ~[-1, 1]. The per-NODE
     troubled signal: where the high-order and robust operators disagree. This
-    is what lets the network localize at the subcell level (beyond PP)."""
+    is what lets the network localize at the subcell level (beyond PP).
+
+    The two edge nodes (index 0 and Nn-1) are excluded before normalizing and
+    then overwritten with their nearest interior neighbour. Both builders set
+    B_dg[0]==B_fv[0] and B_dg[-1]==B_fv[-1] exactly (the element-boundary flux
+    is always the plain physical flux, never blended -- see
+    jax_dgsem.solver._alpha_on_interfaces), so the raw residual there is a
+    first difference against an EXACT zero, unlike every interior node's
+    genuine second difference -- structurally ~5-15x larger, in EVERY state,
+    smooth or shocked (verified: on a fully smooth mesh the single largest raw
+    residual in the whole domain sits at an edge node of an element PP scores
+    0.0, and even on a shocked mesh the argmax raw residual element is not the
+    argmax-PP element). Left in, this artifact anchors the per-state max and
+    teaches the network a position-only "high alpha near edges" shortcut that
+    fires regardless of whether there is a real shock nearby."""
     res = (dg_residual(U, mesh) - fv_residual(U, mesh))[0]      # (n_elem, Nn)
-    return res / (jnp.max(jnp.abs(res)) + 1e-8)
+    interior = res[:, 1:-1]
+    res = res.at[:, 0].set(res[:, 1]).at[:, -1].set(res[:, -2])
+    scale = jnp.max(jnp.abs(interior)) + 1e-8
+    return res / scale
 
 
 def channel_energy(U, mesh):
@@ -126,19 +152,65 @@ def nodal_data(U, mesh, channels=None):
 # Features and model construction
 # ---------------------------------------------------------------------------
 
+def graph_features(U, mesh):
+    """The graph-model input: (2, n_elem, Nn) = stacked
+      [0] DG-FV density residual per NODE  (channel_residual, max-abs norm),
+      [1] modal-energy spectrum per ELEMENT (modal_energy; axis 1 is the MODE
+          index, kept ordered -- mode index = frequency).
+    No one-hot: position awareness comes from xi and the DGSEM graph inside the
+    model. The two rows share the (n_elem, Nn) shape because Nn modes = Nn
+    nodes on a fixed-P mesh."""
+    return jnp.stack([channel_residual(U, mesh), modal_energy(U, mesh)])
+
+
 def alpha_features(U, mesh, model_type: str = "nodal", channels=None):
     """channels: list of channel names to build (defaults to the active
     NODAL_DATA_CHANNELS). Pass the checkpoint's own set (channels_from_meta) when
     evaluating a saved model so it sees the input it was trained with."""
+    if model_type == "graph":
+        return graph_features(U, mesh)
     if model_type == "nodal":
         return nodal_features(nodal_data(U, mesh, channels))   # [data..., one-hot]
     return modal_energy(U, mesh).T
 
 
+def call_model(model, feats, mesh, model_type: str):
+    """Apply a policy to PREBUILT features, hiding the signature split: graph
+    models also take the mesh (reference-element constants stay out of the
+    trainable pytree); legacy models take the features alone.
+
+    Returns (alpha, alpha_boundary): alpha is the existing per-subcell-
+    interface contract, unchanged for every model_type. alpha_boundary is the
+    graph model's extra (n_elem,) blend for the true element-to-element
+    interface flux (jax_dgsem.solver.hybrid_residual's alpha_boundary arg);
+    None for "nodal"/"element", which have no such lever and fall back to the
+    solver's old hardcoded entropy-stable-LF interface."""
+    if model_type == "graph":
+        return model(feats, mesh)
+    return model(feats), None
+
+
+def apply_alpha(model, U, mesh, model_type: str = "graph", channels=None):
+    """State U -> raw (alpha, alpha_boundary): the single entry point every
+    caller should use (features + model application in one step, any
+    model_type)."""
+    return call_model(model, alpha_features(U, mesh, model_type, channels),
+                      mesh, model_type)
+
+
 def build_alpha_model(model_type: str, P: int, width: int, kernel_size: int,
                       depth: int, key, alpha_init: float = 0.05,
                       stable_init: bool = True, n_data_channels: int = None,
-                      b_res: bool = True, precondition: bool = False):
+                      b_res: bool = True, precondition: bool = False,
+                      pno_channels: int = 8, pno_hidden: int = 32,
+                      fusion_hidden: int = 32):
+    if model_type == "graph":
+        # P-independent by construction: no weight shape depends on P (`width`
+        # is the GNN hidden size; kernel_size/b_res/precondition don't apply --
+        # the graph model's preconditioning is formula-based, see the PNO).
+        return GraphAlphaModel(pno_channels, pno_hidden, width, fusion_hidden,
+                               depth, key=key, alpha_init=alpha_init,
+                               stable_init=stable_init)
     if model_type == "nodal":
         nc = n_nodal_data(P) if n_data_channels is None else n_data_channels
         return NodalAlphaModel(P, width, kernel_size, depth, key=key,
@@ -151,11 +223,16 @@ def build_alpha_model(model_type: str, P: int, width: int, kernel_size: int,
 
 def model_meta(cfg) -> dict:
     """Serializable descriptor so loaders can rebuild the right template."""
-    return {"model_type": cfg.model_type, "P": cfg.P, "width": cfg.width,
+    meta = {"model_type": cfg.model_type, "P": cfg.P, "width": cfg.width,
             "kernel_size": cfg.kernel_size, "depth": cfg.depth,
             "n_data_channels": n_nodal_data(cfg.P), "alpha_max": cfg.alpha_max,
             "precondition": cfg.precondition,
             "data_channels": list(NODAL_DATA_CHANNELS)}
+    if cfg.model_type == "graph":
+        meta.update(pno_channels=cfg.pno_channels, pno_hidden=cfg.pno_hidden,
+                    fusion_hidden=cfg.fusion_hidden, precondition=False,
+                    data_channels=["residual", "menergy"])
+    return meta
 
 
 def channels_from_meta(meta: dict):
@@ -176,4 +253,7 @@ def build_from_meta(meta: dict, key):
     return build_alpha_model(meta.get("model_type", "element"), meta["P"],
                              meta["width"], meta["kernel_size"], meta["depth"],
                              key, n_data_channels=meta.get("n_data_channels"),
-                             precondition=meta.get("precondition", False))
+                             precondition=meta.get("precondition", False),
+                             pno_channels=meta.get("pno_channels", 8),
+                             pno_hidden=meta.get("pno_hidden", 32),
+                             fusion_hidden=meta.get("fusion_hidden", 32))

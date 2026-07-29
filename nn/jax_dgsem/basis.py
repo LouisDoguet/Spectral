@@ -70,6 +70,20 @@ def derivative_matrix(P: int, quads: np.ndarray) -> np.ndarray:
     return D
 
 
+def legendre_vandermonde(P: int, quads: np.ndarray) -> np.ndarray:
+    """Legendre Vandermonde Phi[i, k] = L_k(x_i), the modal -> nodal map.
+
+    Inverse of the modal projection: u = Phi @ c evaluates a Legendre
+    expansion at the nodes. A formula, not learned weights -- it is what makes
+    the PNO's nodal reconstruction adapt to any P (network.model).
+    """
+    N = P + 1
+    Phi = np.zeros((len(quads), N))
+    for k in range(N):
+        Phi[:, k] = legendre(k, quads)
+    return Phi
+
+
 def modal_projection_matrix(P: int, quads: np.ndarray,
                             weights: np.ndarray) -> np.ndarray:
     """Nodal -> Legendre-modal matrix (math.cpp computeLegendreCoeffs).
@@ -110,6 +124,7 @@ class GLLBasis:
         self.weights = jnp.asarray(w)
         self.D = jnp.asarray(derivative_matrix(P, q))
         self.modal = jnp.asarray(modal_projection_matrix(P, q, w))
+        self.Phi = jnp.asarray(legendre_vandermonde(P, q))
 
     def interpolation_to(self, xi_out: np.ndarray) -> jnp.ndarray:
         return jnp.asarray(

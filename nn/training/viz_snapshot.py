@@ -40,24 +40,30 @@ PLOT_PTS = 12
 
 def _dgsem_rollout(model, mesh, U0, cfg):
     """Roll the DGSEM trainee from U0, deployment-mode alpha (hard clip), and
-    return (trajectory (n+1,3,n_elem,Nn), alphas (n+1,n_elem))."""
+    return (trajectory (n+1,3,n_elem,Nn), alphas (n+1,n_elem)). alpha_boundary
+    (the graph model's element-interface blend) is applied to the rollout
+    physics but not plotted here -- only the subcell alpha field is shown."""
     def alpha_of(U):
-        from network.policy import alpha_features
-        return postprocess_alpha(model(alpha_features(U, mesh, cfg.model_type)),
-                                 alpha_max=cfg.alpha_max, diffuse=cfg.alpha_diffuse,
-                                 hard_clip=True)
+        from network.policy import apply_alpha
+        raw, raw_b = apply_alpha(model, U, mesh, cfg.model_type)
+        alpha = postprocess_alpha(raw, alpha_max=cfg.alpha_max,
+                                  diffuse=cfg.alpha_diffuse, hard_clip=True)
+        alpha_b = None if raw_b is None else postprocess_alpha(
+            raw_b, alpha_max=cfg.alpha_max, diffuse=cfg.alpha_diffuse,
+            hard_clip=True)
+        return alpha, alpha_b
 
     @eqx.filter_jit
     def run(U0):
         def body(U, _):
-            a = alpha_of(U)
-            return rk4_step(U, a, cfg.dt, mesh), (U, a)
+            a, ab = alpha_of(U)
+            return rk4_step(U, a, cfg.dt, mesh, ab), (U, a)
         _, (traj, al) = jax.lax.scan(body, U0, None, length=cfg.rollout_steps)
         return traj, al
 
     traj, al = run(U0)
     traj = np.concatenate([np.asarray(U0)[None], np.asarray(traj)])
-    al = np.concatenate([np.asarray(alpha_of(U0))[None], np.asarray(al)])
+    al = np.concatenate([np.asarray(alpha_of(U0)[0])[None], np.asarray(al)])
     return traj, al
 
 

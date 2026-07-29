@@ -31,6 +31,7 @@ class Mesh1D(eqx.Module):
     weights: jnp.ndarray
     D: jnp.ndarray
     modal: jnp.ndarray
+    Phi: jnp.ndarray
     n_elem: int = eqx.field(static=True)
     P: int = eqx.field(static=True)
     dx: float
@@ -46,6 +47,7 @@ class Mesh1D(eqx.Module):
         self.weights = basis.weights
         self.D = basis.D
         self.modal = basis.modal
+        self.Phi = basis.Phi
         self.n_elem = n_elem
         self.P = basis.P
         self.dx = (xR - xL) / n_elem
@@ -118,13 +120,33 @@ def _subcell_flux_fv(U, mesh: Mesh1D):
 # Shared surface term + closure
 # ---------------------------------------------------------------------------
 
-def _apply_surface_and_mass_inverse(divF, U, mesh: Mesh1D):
+def _apply_surface_and_mass_inverse(divF, U, mesh: Mesh1D, alpha_boundary=None):
     """applyEntropyStableInterfaces + applyEntropyStableBoundaries +
-    applyMassInverse, in the exact C++ order."""
+    applyMassInverse, in the exact C++ order.
+
+    alpha_boundary: optional (n_elem,) blending factor for the TRUE
+    element-to-element interface flux, using the SAME convex-combination
+    convention as the subcell blend (0 -> entropy-conservative Chandrashekar
+    flux, "DG-like"; 1 -> the entropy-stable LF flux already used
+    unconditionally below, "FV-like"). A convex combination of an EC and an
+    ES flux is itself entropy stable, exactly the argument that already
+    justifies the interior subcell blend -- this just extends it to the one
+    place alpha previously could not reach at all. None (the default, and
+    always the case for dg_residual/fv_residual's own calls) reproduces the
+    old hardcoded entropy_stable_lf exactly, i.e. alpha_boundary == 1
+    everywhere. Only ever consumed for genuine INTERIOR couplings (periodic
+    wrap included); the non-periodic domain ends below are a physical
+    boundary condition (fixed ghost state), not a neighbour to blend with,
+    and are left untouched."""
     # Interior interfaces: L_i = (F* - F_int) lifts
     UL = U[:, :-1, -1]                    # (3, n_elem-1) left of interface
     UR = U[:, 1:, 0]
-    fstar = entropy_stable_lf(UL, UR)
+    f_lf = entropy_stable_lf(UL, UR)
+    if alpha_boundary is None:
+        fstar = f_lf
+    else:
+        a = alpha_boundary[:-1][None, :]           # (1, n_elem-1)
+        fstar = (1.0 - a) * chandrashekar_ec(UL, UR) + a * f_lf
     divF = divF.at[:, :-1, -1].add(fstar - physical_flux(UL))
     divF = divF.at[:, 1:, 0].add(physical_flux(UR) - fstar)
 
@@ -134,7 +156,12 @@ def _apply_surface_and_mass_inverse(divF, U, mesh: Mesh1D):
         # stable and freestream preserving (constant U -> zero lift).
         ULp = U[:, -1, -1]
         URp = U[:, 0, 0]
-        fp = entropy_stable_lf(ULp, URp)
+        fp_lf = entropy_stable_lf(ULp, URp)
+        if alpha_boundary is None:
+            fp = fp_lf
+        else:
+            ap = alpha_boundary[-1]
+            fp = (1.0 - ap) * chandrashekar_ec(ULp, URp) + ap * fp_lf
         divF = divF.at[:, -1, -1].add(fp - physical_flux(ULp))
         divF = divF.at[:, 0, 0].add(physical_flux(URp) - fp)
     else:
@@ -184,12 +211,16 @@ def _alpha_on_interfaces(alpha, n_elem, P):
     return a[None, :, :]
 
 
-def hybrid_residual(U, alpha, mesh: Mesh1D):
+def hybrid_residual(U, alpha, mesh: Mesh1D, alpha_boundary=None):
     """R = difference of the blended subcell fluxes B_hyb = (1-a) B_DG + a B_FV.
 
     Blending the FLUXES (before differencing) rather than the residuals keeps
     the scheme conservative and entropy stable for a per-interface alpha; for a
-    per-element alpha it is bit-identical to the old residual blend."""
+    per-element alpha it is bit-identical to the old residual blend.
+
+    alpha_boundary: optional (n_elem,) blend for the true element-to-element
+    interface (see _apply_surface_and_mass_inverse); None reproduces the old
+    always-entropy-stable-LF interface exactly."""
     B_dg = _subcell_flux_dg(U, mesh)   # (3, n_elem, Nn+1)  -- UNCHANGED builders
     B_fv = _subcell_flux_fv(U, mesh)   # (3, n_elem, Nn+1)
 
@@ -197,7 +228,7 @@ def hybrid_residual(U, alpha, mesh: Mesh1D):
     B_hyb = (1 - a) * B_dg + a * B_fv              # blend the FLUXES
 
     divF = B_hyb[:, :, 1:] - B_hyb[:, :, :-1]      # difference ONCE, after blending
-    return -_apply_surface_and_mass_inverse(divF, U, mesh)
+    return -_apply_surface_and_mass_inverse(divF, U, mesh, alpha_boundary)
 
 
 
@@ -205,12 +236,13 @@ def hybrid_residual(U, alpha, mesh: Mesh1D):
 # Time integration (hybrid_solver.cpp: alpha frozen across the 4 RK4 stages)
 # ---------------------------------------------------------------------------
 
-def rk4_step(U, alpha, dt, mesh: Mesh1D):
-    """Classical RK4 with the residual evaluated at frozen alpha."""
-    k1 = hybrid_residual(U, alpha, mesh)
-    k2 = hybrid_residual(U + 0.5 * dt * k1, alpha, mesh)
-    k3 = hybrid_residual(U + 0.5 * dt * k2, alpha, mesh)
-    k4 = hybrid_residual(U + dt * k3, alpha, mesh)
+def rk4_step(U, alpha, dt, mesh: Mesh1D, alpha_boundary=None):
+    """Classical RK4 with the residual (and alpha_boundary) evaluated at
+    frozen alpha across all 4 stages, same convention as alpha itself."""
+    k1 = hybrid_residual(U, alpha, mesh, alpha_boundary)
+    k2 = hybrid_residual(U + 0.5 * dt * k1, alpha, mesh, alpha_boundary)
+    k3 = hybrid_residual(U + 0.5 * dt * k2, alpha, mesh, alpha_boundary)
+    k4 = hybrid_residual(U + dt * k3, alpha, mesh, alpha_boundary)
     return U + dt / 6.0 * (k1 + 2.0 * k2 + 2.0 * k3 + k4)
 
 

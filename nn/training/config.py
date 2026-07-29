@@ -19,7 +19,7 @@ class TrainConfig:
     xR: float = 1.0
 
     # --- MUSCL_grid (fine reference grid) ----------------------------------
-    muscl_cells_per_elem: int = 16   # MUSCL_grid has n_elem * this cells;
+    muscl_cells_per_elem: int = 32   # MUSCL_grid has n_elem * this cells;
                                      # must be a multiple of proj_pts_per_elem
     muscl_substeps: int = 4          # MUSCL substeps per DGSEM step (dt/this)
 
@@ -35,9 +35,9 @@ class TrainConfig:
     # --- cost weights (C_vis -> L2 penalty on alpha) -----------------------
     w_osc: float = 1e-5
     w_acc: float = 1.0
-    w_alpha: float = 1e-5
+    w_alpha: float = 1e-4
 
-    proj_pts_per_elem: int = 16   # uniform cost-grid points per coarse element
+    proj_pts_per_elem: int = 32   # uniform cost-grid points per coarse element
 
     # --- optimization -------------------------------------------------------
     epochs: int = 100
@@ -65,9 +65,14 @@ class TrainConfig:
                                # None -> no shock control (amplitude-only vel).
 
     # --- model ---------------------------------------------------------------
-    model_type: str = "nodal"  # "nodal": per interior subcell interface,
-                               #   input = [rho, one-hot node position] over the
-                               #   node sequence, output (n_elem, P).
+    model_type: str = "graph"  # "graph": PNO + GNN sensor (P- and n_elem-
+                               #   independent), input = [residual per node,
+                               #   modal spectrum per element], output
+                               #   (n_elem, P) per interior subcell interface.
+                               # "nodal": per interior subcell interface CNN,
+                               #   input = [data channels, one-hot node
+                               #   position] over the node sequence, output
+                               #   (n_elem, P).
                                # "element": legacy per-element modal-energy CNN,
                                #   output (n_elem,).
     alpha_init: float = 1e-3   # untrained-policy alpha (used when NOT
@@ -76,19 +81,30 @@ class TrainConfig:
                                # step 0 (alpha~0.05 blows up); with pretrain_pp
                                # the PP warm-start provides the stable start
                                # instead, so alpha_init is irrelevant.
-    pretrain_epochs: int = 50  # Stage-1 PP-imitation warm-start (0 = off).
+    pretrain_epochs: int = 2000# Stage-1 PP-imitation warm-start (0 = off).
                                # Regresses the network toward the Persson-
                                # Peraire indicator on PP-driven rollout states,
                                # so Stage-2 rollouts survive the forming shock
                                # from step 0. A warm start, not a target.
     pretrain_lr: float = 3e-4
-    width: int = 24
+    width: int = 24            # CNN width ("nodal"/"element") or GNN hidden
+                               #   size ("graph")
     bool_res:bool = True       # Boolean to activate a residual block, or a simple 2 layers CNN
-    kernel_size: int = 3
-    depth: int = 2
+                               #   ("nodal"/"element" only)
+    kernel_size: int = 3       # ("nodal"/"element" only; the graph model has
+                               #   no convolution)
+    depth: int = 2             # ResBlock count ("nodal"/"element") or
+                               #   volume+surface GraphBlock pairs ("graph")
     precondition: bool = True  # ZCA-whiten the (N_points, N_features) data-channel
                                #   matrix before the one-hot is appended and fed to
                                #   the network (per-state instance whitening).
+                               #   "nodal"/"element" only: the graph model's
+                               #   preconditioning is formula-based (max-abs
+                               #   residual norm + log10 energy tokens).
+    # graph-model sizes (P-independent: none of these depends on P)
+    pno_channels: int = 8      # PNO output features per mode/point (C)
+    pno_hidden: int = 8       # hidden width of the shared per-mode MLP
+    fusion_hidden: int = 8    # width of the post-fusion pointwise MLP
 
     # --- bookkeeping ---------------------------------------------------------
     n_val: int = 4            # validation ICs (fixed at start of training)
