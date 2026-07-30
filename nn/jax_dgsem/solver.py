@@ -31,6 +31,7 @@ class Mesh1D(eqx.Module):
     weights: jnp.ndarray
     D: jnp.ndarray
     modal: jnp.ndarray
+    Phi: jnp.ndarray
     n_elem: int = eqx.field(static=True)
     P: int = eqx.field(static=True)
     dx: float
@@ -46,6 +47,7 @@ class Mesh1D(eqx.Module):
         self.weights = basis.weights
         self.D = basis.D
         self.modal = basis.modal
+        self.Phi = basis.Phi
         self.n_elem = n_elem
         self.P = basis.P
         self.dx = (xR - xL) / n_elem

@@ -213,6 +213,251 @@ def nodal_features(scalars):
     return jnp.concatenate([rows, onehot], axis=0)
 
 
+# ---------------------------------------------------------------------------
+# Element-GNN -> OPNO sensor (P- and n_elem-independent, the inverted pipeline)
+# ---------------------------------------------------------------------------
+
+# Floor for the log-energy transform. log10(clip(e, floor, 1)) is identical to
+# log10(e) for every mode that carries real signal (PP's own threshold at P=6
+# is ~6e-4) but has EXACTLY zero gradient below the floor. The GNN_PNO branch
+# used log10(e + 1e-12), whose backward factor at floor-level energies is
+# ~4e11: bounded forward, exploding backward, and it sits inside the training
+# closed loop -- measured there as the dominant cause of the 1e28-1e33 BPTT
+# gradients. Round-off-level mode energies are noise; their gradient SHOULD
+# be zero.
+ENERGY_FLOOR = 1e-6
+
+# Fixed physical scales of the asinh residual channels (network.policy
+# .opno_features). Deliberately NOT state-dependent (no max/std normalization):
+# a state-dependent scale either crushes smooth-region signal under a global
+# max (the alpha-comb failure mode on GNN_PNO) or re-amplifies round-off under
+# a per-element max (measured worse ||dalpha/dU||). asinh is linear at small
+# arguments and logarithmic at large ones, so two fixed scales cover the
+# smooth-to-shock dynamic range with a gradient bounded by 1/s.
+RES_SCALES = (1.0, 100.0)
+
+
+def apply_linear(lin, x):
+    """Apply an eqx.nn.Linear over the LAST axis of an arbitrarily-shaped x.
+
+    eqx.nn.Linear.__call__ only takes a single (in,) vector; this is the shared
+    per-token application (same weights at every node/mode/element), which is
+    what keeps the opno model independent of P and n_elem."""
+    y = x @ lin.weight.T
+    return y if lin.bias is None else y + lin.bias
+
+
+def log_energy(energy):
+    """Bounded-backward log transform of a normalized modal spectrum, ~[-1, 0]."""
+    return jnp.log10(jnp.clip(energy, ENERGY_FLOOR, 1.0)) / 6.0
+
+
+class TokenMLP(eqx.Module):
+    """Two shared Linear layers applied over the last axis: the per-token map
+    every P-independent branch reuses (tokens = nodes, modes, or elements)."""
+
+    lin1: eqx.nn.Linear
+    lin2: eqx.nn.Linear
+
+    def __init__(self, n_in: int, hidden: int, n_out: int, *, key):
+        k1, k2 = jax.random.split(key)
+        self.lin1 = eqx.nn.Linear(n_in, hidden, key=k1)
+        self.lin2 = eqx.nn.Linear(hidden, n_out, key=k2)
+
+    def __call__(self, x):
+        return apply_linear(self.lin2, jax.nn.relu(apply_linear(self.lin1, x)))
+
+
+class ElementEncoder(eqx.Module):
+    """Per-element embedding from (residual nodes, modal spectrum), any P.
+
+    Two token-pooling branches (the P-trick: shared per-token MLP + mean pool,
+    so no weight shape depends on Nn):
+      - residual tokens (xi_i, r1_i, r2_i) over the element's nodes -- xi is a
+        token COORDINATE here (inside a pooled sum), not a raw feature channel
+        the readout could latch onto;
+      - spectrum tokens (k/P, logE_k) over the element's modes (order kept:
+        mode index = frequency).
+    Concatenated and projected to the GNN width."""
+
+    res_mlp: TokenMLP
+    spec_mlp: TokenMLP
+    proj: eqx.nn.Linear
+
+    def __init__(self, n_res_channels: int, hidden: int, width: int, *, key):
+        k1, k2, k3 = jax.random.split(key, 3)
+        self.res_mlp = TokenMLP(1 + n_res_channels, hidden, hidden, key=k1)
+        self.spec_mlp = TokenMLP(2, hidden, hidden, key=k2)
+        self.proj = eqx.nn.Linear(2 * hidden, width, key=k3)
+
+    def __call__(self, res_channels, energy, quads):
+        """res_channels (C_res, n_elem, Nn), energy (n_elem, Nn), quads (Nn,)
+        -> (n_elem, width)."""
+        n_res, n_elem, Nn = res_channels.shape
+        xi = jnp.broadcast_to(quads, (n_elem, Nn))
+        res_tok = jnp.concatenate(
+            [xi[..., None], jnp.moveaxis(res_channels, 0, -1)], axis=-1)
+        res_emb = jnp.mean(self.res_mlp(res_tok), axis=1)      # (n_elem, hidden)
+
+        coord = jnp.arange(Nn) / max(Nn - 1, 1)                # k/P
+        spec_tok = jnp.stack(
+            [jnp.broadcast_to(coord, (n_elem, Nn)), log_energy(energy)], axis=-1)
+        spec_emb = jnp.mean(self.spec_mlp(spec_tok), axis=1)   # (n_elem, hidden)
+
+        return apply_linear(self.proj,
+                            jnp.concatenate([res_emb, spec_emb], axis=-1))
+
+
+class ElementGraphNet(eqx.Module):
+    """Message passing on the element line graph: how neighbouring elements'
+    features relate. Nodes are ELEMENTS (not integration points -- the
+    inversion from the GNN_PNO design); edges are the physical adjacency the
+    numerical flux couples, in dense roll form (no edge lists, jit-friendly,
+    n_elem-independent). Direction-aware: separate left/right message MLPs
+    (upwind and downwind neighbours are physically different)."""
+
+    msg_l: eqx.nn.Linear
+    msg_r: eqx.nn.Linear
+    upd: eqx.nn.Linear
+
+    def __init__(self, width: int, *, key):
+        k1, k2, k3 = jax.random.split(key, 3)
+        self.msg_l = eqx.nn.Linear(width, width, key=k1)
+        self.msg_r = eqx.nn.Linear(width, width, key=k2)
+        self.upd = eqx.nn.Linear(3 * width, width, key=k3)
+
+    def __call__(self, h, periodic: bool):
+        """h (n_elem, width) -> (n_elem, width), one residual round."""
+        m_l = jax.nn.relu(apply_linear(self.msg_l, h))   # what e sends rightward
+        m_r = jax.nn.relu(apply_linear(self.msg_r, h))   # what e sends leftward
+        from_left = jnp.roll(m_l, 1, axis=0)             # e receives from e-1
+        from_right = jnp.roll(m_r, -1, axis=0)           # e receives from e+1
+        if not periodic:
+            from_left = from_left.at[0].set(0.0)         # no neighbour outside
+            from_right = from_right.at[-1].set(0.0)
+        agg = jnp.concatenate([h, from_left, from_right], axis=-1)
+        return jax.nn.relu(h + apply_linear(self.upd, agg))
+
+
+class ModalOPNO(eqx.Module):
+    """Orthogonal-polynomial neural operator decoder: enrich each mode of the
+    spectrum with the element's neighbour-aware GNN latent, then reconstruct
+    per-node features through the Legendre Vandermonde.
+
+    Per-mode tokens (k/P, logE_k, h_e) -> shared MLP -> mode features
+    (n_elem, Nn, C); nodal = Phi @ mode features. Phi is a mesh constant (a
+    formula, not learned), which is what makes the reconstruction run at any
+    P; the within-element alpha profile is therefore a smooth Legendre
+    expansion by construction. Mode ORDER is kept (mode index = frequency)."""
+
+    mlp: TokenMLP
+    channels: int = eqx.field(static=True)
+
+    def __init__(self, width: int, hidden: int, channels: int, *, key):
+        self.mlp = TokenMLP(2 + width, hidden, channels, key=key)
+        self.channels = channels
+
+    def __call__(self, energy, h, Phi):
+        """energy (n_elem, Nn), h (n_elem, width), Phi (Nn, Nn)
+        -> mode feats (n_elem, Nn, C), nodal feats (n_elem, Nn, C)."""
+        n_elem, Nn = energy.shape
+        coord = jnp.arange(Nn) / max(Nn - 1, 1)
+        tokens = jnp.concatenate(
+            [jnp.broadcast_to(coord, (n_elem, Nn))[..., None],
+             log_energy(energy)[..., None],
+             jnp.broadcast_to(h[:, None, :], (n_elem, Nn, h.shape[-1]))],
+            axis=-1)
+        mode_feat = self.mlp(tokens)                         # (n_elem, Nn, C)
+        nodal = jnp.einsum("ik,ekc->eic", Phi, mode_feat)    # (n_elem, Nn, C)
+        return mode_feat, nodal
+
+
+class OPNOAlphaModel(eqx.Module):
+    """Element-GNN -> OPNO alpha policy (the inverted, P-/n_elem-independent
+    sensor).
+
+    Input  : features (2 + len(RES_SCALES) - 1, n_elem, Nn) from
+             network.policy.opno_features = stacked [asinh residual channels
+             (node axis), modal-energy spectrum (MODE axis)], plus the mesh
+             (quads/Phi/periodic are reference-element constants passed as an
+             argument so they never enter the trainable pytree).
+    Output : alpha (n_elem, P) in (0,1) per interior subcell interface -- the
+             exact NodalAlphaModel contract, consumed unchanged by
+             jax_dgsem.solver.hybrid_residual. (No element-interface blend on
+             this branch: the solver keeps its validated entropy-stable-LF
+             interfaces.)
+
+    Forward: ElementEncoder pools each element's residual nodes and spectrum
+    modes into h0; ElementGraphNet exchanges depth rounds of neighbour
+    messages (the "how elements relate" stage); ModalOPNO re-expands the
+    spectrum, mode by mode, conditioned on the neighbour-aware latent, and
+    reconstructs nodal features through Phi; a pointwise fuse combines
+    [nodal reconstruction, per-node residual channels, h_e] so subcell
+    localization survives the element-level pooling; the interface readout is
+    the same adjacent-node averaging as NodalAlphaModel."""
+
+    encoder: ElementEncoder
+    gnn_blocks: tuple
+    opno: ModalOPNO
+    fuse: eqx.nn.Linear
+    proj_w: jnp.ndarray            # (fusion_hidden,) interface readout weight
+    proj_b: jnp.ndarray            # scalar bias
+    n_res: int = eqx.field(static=True)
+
+    def __init__(self, n_res_channels: int = 2, width: int = 24,
+                 opno_hidden: int = 32, opno_channels: int = 8,
+                 fusion_hidden: int = 32, depth: int = 2, *, key,
+                 alpha_init: float = 0.05, stable_init: bool = True):
+        k1, k2, k3, k4, k5 = jax.random.split(key, 5)
+        self.encoder = ElementEncoder(n_res_channels, opno_hidden, width, key=k1)
+        self.gnn_blocks = tuple(
+            ElementGraphNet(width, key=k) for k in jax.random.split(k2, depth))
+        self.opno = ModalOPNO(width, opno_hidden, opno_channels, key=k3)
+        self.fuse = eqx.nn.Linear(opno_channels + n_res_channels + width,
+                                  fusion_hidden, key=k4)
+        if stable_init:
+            # Zero readout weight + logit(alpha_init) bias: the untrained
+            # policy outputs the constant alpha_init (almost pure DG) so the
+            # solver is stable at the start of Stage-2 training.
+            self.proj_w = jnp.zeros((fusion_hidden,))
+            self.proj_b = jnp.array(jnp.log(alpha_init / (1.0 - alpha_init)))
+        else:
+            # Trainable readout for supervised PP-pretraining (a saturated
+            # readout would kill the regression gradients).
+            self.proj_w = 0.1 * jax.random.normal(k5, (fusion_hidden,))
+            self.proj_b = jnp.array(0.0)
+        self.n_res = n_res_channels
+
+    def element_latents(self, features, mesh):
+        """The neighbour-aware element latents h (n_elem, width) after the GNN
+        -- Stage A + B, exposed for the tests (pooling invariance, locality)."""
+        res_channels, energy = features[:self.n_res], features[self.n_res]
+        h = self.encoder(res_channels, energy, mesh.quads)
+        for blk in self.gnn_blocks:
+            h = blk(h, mesh.periodic)
+        return h
+
+    def point_latents(self, features, mesh):
+        """Per-node latents (n_elem, Nn, fusion_hidden): everything before the
+        interface pairing."""
+        res_channels, energy = features[:self.n_res], features[self.n_res]
+        n_elem, Nn = energy.shape
+        h = self.element_latents(features, mesh)
+        _, nodal = self.opno(energy, h, mesh.Phi)
+        fused = jnp.concatenate(
+            [nodal, jnp.moveaxis(res_channels, 0, -1),
+             jnp.broadcast_to(h[:, None, :], (n_elem, Nn, h.shape[-1]))],
+            axis=-1)
+        return jax.nn.relu(apply_linear(self.fuse, fused))
+
+    def __call__(self, features, mesh):
+        """features (1+n_res, n_elem, Nn), mesh -> alpha (n_elem, P)."""
+        z = self.point_latents(features, mesh)
+        zi = 0.5 * (z[:, :-1, :] + z[:, 1:, :])   # (n_elem, P, fusion_hidden)
+        logit = zi @ self.proj_w + self.proj_b    # (n_elem, P)
+        return jax.nn.sigmoid(logit)
+
+
 def save_model(path: str, model):
     eqx.tree_serialise_leaves(path, model)
 

@@ -66,7 +66,7 @@ def build_alpha_fn(kind, mesh, cfg, model_path):
                 "DGSEM + Persson-Peraire")
     if kind == "nn":
         from network.model import load_model
-        from network.policy import alpha_features, build_from_meta
+        from network.policy import apply_alpha, build_from_meta
         meta_path = os.path.join(os.path.dirname(model_path), "model_meta.json")
         if not (os.path.exists(model_path) and os.path.exists(meta_path)):
             print(f"[main] no checkpoint at {model_path}; falling back to PP")
@@ -78,7 +78,7 @@ def build_alpha_fn(kind, mesh, cfg, model_path):
         mtype = meta.get("model_type", "element")
 
         def fn(U):
-            return postprocess_alpha(model(alpha_features(U, mesh, mtype)),
+            return postprocess_alpha(apply_alpha(model, U, mesh, mtype),
                                      alpha_max=amax, diffuse=cfg.alpha_diffuse,
                                      hard_clip=True)
         return fn, "DGSEM + NN policy"

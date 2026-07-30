@@ -45,7 +45,7 @@ from jax_dgsem import GLLBasis, Mesh1D
 from jax_dgsem.solver import rk4_step
 from jax_dgsem.indicator import persson_peraire_alpha, postprocess_alpha
 from network.model import load_model
-from network.policy import alpha_features, build_from_meta, channels_from_meta
+from network.policy import apply_alpha, build_from_meta, channels_from_meta
 from training.config import TrainConfig
 from training.cost import uniform_projector
 from training.ic import (draw_fourier_coeffs, sample_on_dgsem, sample_on_muscl,
@@ -137,7 +137,7 @@ def make_alpha_fn(scheme, mesh, cfg, model=None, mtype="element", alpha_max=1.0,
     if scheme == "nn":
         def fn(U):
             return postprocess_alpha(
-                model(alpha_features(U, mesh, mtype, channels)),
+                apply_alpha(model, U, mesh, mtype, channels),
                 alpha_min=0.001, alpha_max=alpha_max,
                 diffuse=cfg.alpha_diffuse, hard_clip=True)
         return fn

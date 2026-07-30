@@ -58,8 +58,8 @@ $PY -u nn/training/viz_precondition.py --case random --P 6 --steps 400 \
 # --precondition: whiten the data channels (recommended with the collinear
 # full-spectrum input). Input channels are selected in network/policy.py.
 $PY -u nn/training/train.py "$@" \
-    --checkpoint-dir "nn/training/checkpoints_AlphaNetO6_FullSpectrum_PreCond" \
-    --resume
+    --checkpoint-dir "nn/training/checkpoints_AlphaNetO6_FullSpectrum_OPNO" \
+
 status=$?
 
 echo ""

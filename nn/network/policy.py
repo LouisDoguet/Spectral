@@ -1,11 +1,19 @@
-"""Routing between the two alpha policies (per-element and nodal/subcell), and
-the definition of the NODAL NETWORK INPUT.
+"""Routing between the alpha policies (per-element, nodal/subcell, opno), and
+the definition of the NETWORK INPUTS.
 
   "element": legacy per-element policy. Input = normalized modal-energy
              spectrum (P+1 channels) over the elements; output alpha (n_elem,).
   "nodal"  : per interior subcell interface. Input = a stack of per-node DATA
              channels followed by the one-hot position block; output alpha
              (n_elem, P).
+  "opno"   : element-GNN -> OPNO policy (network.model.OPNOAlphaModel), P- and
+             n_elem-independent. Input = opno_features (1 + len(RES_SCALES),
+             n_elem, Nn) = [asinh residual channels per node, modal-energy
+             spectrum per element] -- no one-hot; the mesh is passed to the
+             model alongside the features (its quads/Phi/periodic are the
+             reference-element constants the branches reuse). Output alpha
+             (n_elem, P), same contract as "nodal". Call through apply_alpha /
+             call_model, which hide the signature difference.
 
   Nodal input layout (this is the thing to tune):
 
@@ -24,7 +32,8 @@ import jax.numpy as jnp
 
 from jax_dgsem.indicator import modal_energy, persson_peraire_indicator
 from jax_dgsem.solver import dg_residual, fv_residual
-from network.model import AlphaModel, NodalAlphaModel, nodal_features
+from network.model import (RES_SCALES, AlphaModel, NodalAlphaModel,
+                           OPNOAlphaModel, nodal_features)
 
 
 # ---------------------------------------------------------------------------
@@ -126,19 +135,83 @@ def nodal_data(U, mesh, channels=None):
 # Features and model construction
 # ---------------------------------------------------------------------------
 
+def _edge_fixed_residual(U, mesh):
+    """RAW DG - FV density residual per node, with the two edge nodes
+    overwritten by their nearest interior neighbour.
+
+    Both subcell-flux builders set B_dg[0]==B_fv[0] and B_dg[-1]==B_fv[-1]
+    exactly (the element-boundary flux is always the plain physical flux, never
+    blended -- jax_dgsem.solver._alpha_on_interfaces), so the raw residual at an
+    edge node is a first difference against an EXACT zero, unlike every interior
+    node's genuine second difference -- structurally ~5-15x larger in EVERY
+    state, smooth or shocked (measured on the GNN_PNO branch). Left in, this
+    artifact teaches the network a position-only "high alpha near edges"
+    shortcut that fires regardless of whether there is a real shock nearby.
+
+    Used by the opno features only: `channel_residual` keeps the historical
+    (unfixed, max-normalized) definition so saved nodal checkpoints still see
+    the exact input they were trained with."""
+    res = (dg_residual(U, mesh) - fv_residual(U, mesh))[0]      # (n_elem, Nn)
+    return res.at[:, 0].set(res[:, 1]).at[:, -1].set(res[:, -2])
+
+
+def opno_features(U, mesh):
+    """The opno-model input: (1 + len(RES_SCALES), n_elem, Nn) = stacked
+      [0..] asinh(residual / s) for each fixed scale s in RES_SCALES (node
+            axis) -- bounded gradient (<= 1/s), no state-dependent
+            normalization, magnitude information preserved across the
+            smooth-to-shock dynamic range;
+      [-1]  modal-energy spectrum per ELEMENT (modal_energy; axis 1 is the
+            MODE index, kept ordered -- mode index = frequency; the bounded
+            log lives inside the model, network.model.log_energy).
+    No one-hot and no raw xi channel: position enters only through the
+    physical basis (Phi) and inside the model's pooled element encoder."""
+    res = _edge_fixed_residual(U, mesh)
+    rows = [jnp.arcsinh(res / s) for s in RES_SCALES]
+    return jnp.stack(rows + [modal_energy(U, mesh)])
+
+
 def alpha_features(U, mesh, model_type: str = "nodal", channels=None):
     """channels: list of channel names to build (defaults to the active
     NODAL_DATA_CHANNELS). Pass the checkpoint's own set (channels_from_meta) when
     evaluating a saved model so it sees the input it was trained with."""
+    if model_type == "opno":
+        return opno_features(U, mesh)
     if model_type == "nodal":
         return nodal_features(nodal_data(U, mesh, channels))   # [data..., one-hot]
     return modal_energy(U, mesh).T
 
 
+def call_model(model, feats, mesh, model_type: str):
+    """Apply a policy to PREBUILT features, hiding the signature split: opno
+    models also take the mesh (reference-element constants stay out of the
+    trainable pytree); legacy models take the features alone."""
+    if model_type == "opno":
+        return model(feats, mesh)
+    return model(feats)
+
+
+def apply_alpha(model, U, mesh, model_type: str = "nodal", channels=None):
+    """State U -> raw alpha: the single entry point every caller should use
+    (features + model application in one step, any model_type)."""
+    return call_model(model, alpha_features(U, mesh, model_type, channels),
+                      mesh, model_type)
+
+
 def build_alpha_model(model_type: str, P: int, width: int, kernel_size: int,
                       depth: int, key, alpha_init: float = 0.05,
                       stable_init: bool = True, n_data_channels: int = None,
-                      b_res: bool = True, precondition: bool = False):
+                      b_res: bool = True, precondition: bool = False,
+                      opno_hidden: int = 32, opno_channels: int = 8,
+                      fusion_hidden: int = 32):
+    if model_type == "opno":
+        # P-independent by construction: no weight shape depends on P (`width`
+        # is the element-GNN width; kernel_size/b_res/precondition don't apply
+        # -- the opno model's preconditioning is formula-based: asinh residual
+        # scales + the clipped log energy, see network.model).
+        return OPNOAlphaModel(len(RES_SCALES), width, opno_hidden,
+                              opno_channels, fusion_hidden, depth, key=key,
+                              alpha_init=alpha_init, stable_init=stable_init)
     if model_type == "nodal":
         nc = n_nodal_data(P) if n_data_channels is None else n_data_channels
         return NodalAlphaModel(P, width, kernel_size, depth, key=key,
@@ -151,11 +224,21 @@ def build_alpha_model(model_type: str, P: int, width: int, kernel_size: int,
 
 def model_meta(cfg) -> dict:
     """Serializable descriptor so loaders can rebuild the right template."""
-    return {"model_type": cfg.model_type, "P": cfg.P, "width": cfg.width,
+    meta = {"model_type": cfg.model_type, "P": cfg.P, "width": cfg.width,
             "kernel_size": cfg.kernel_size, "depth": cfg.depth,
             "n_data_channels": n_nodal_data(cfg.P), "alpha_max": cfg.alpha_max,
             "precondition": cfg.precondition,
             "data_channels": list(NODAL_DATA_CHANNELS)}
+    if cfg.model_type == "opno":
+        from network.model import ENERGY_FLOOR
+        meta.update(n_data_channels=len(RES_SCALES) + 1,
+                    data_channels=["residual_asinh", "menergy"],
+                    precondition=False,     # formula-based, no ZCA whitening
+                    opno_hidden=cfg.opno_hidden,
+                    opno_channels=cfg.opno_channels,
+                    fusion_hidden=cfg.fusion_hidden,
+                    res_scales=list(RES_SCALES), energy_floor=ENERGY_FLOOR)
+    return meta
 
 
 def channels_from_meta(meta: dict):
@@ -176,4 +259,7 @@ def build_from_meta(meta: dict, key):
     return build_alpha_model(meta.get("model_type", "element"), meta["P"],
                              meta["width"], meta["kernel_size"], meta["depth"],
                              key, n_data_channels=meta.get("n_data_channels"),
-                             precondition=meta.get("precondition", False))
+                             precondition=meta.get("precondition", False),
+                             opno_hidden=meta.get("opno_hidden", 32),
+                             opno_channels=meta.get("opno_channels", 8),
+                             fusion_hidden=meta.get("fusion_hidden", 32))

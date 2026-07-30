@@ -81,6 +81,13 @@ def plot_training_history(history, out_path: str = None):
     ax = axes[1, 1]
     ax.plot(ep, h["val_alpha_mean"], color=VIOLET, label="mean α")
     ax.plot(ep, h["val_alpha_max"], color=VIOLET, ls=(0, (5, 2)), label="max α")
+    if "val_alpha_if_max" in h and np.isfinite(h["val_alpha_if_max"]).any():
+        # comb detector: per-interface-index mean alpha band. A position-keyed
+        # collapse (GNN_PNO failure mode) shows as the band's top ripping away
+        # from its bottom while mean alpha stays tame.
+        ax.fill_between(ep, h["val_alpha_if_min"], h["val_alpha_if_max"],
+                        color=VIOLET, alpha=0.15, lw=0,
+                        label="per-interface mean range")
     ax.set_xlabel("epoch")
     ax.set_ylabel("blending factor α")
     ax.set_ylim(bottom=0.0)

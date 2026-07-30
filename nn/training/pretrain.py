@@ -23,7 +23,7 @@ import optax
 
 from jax_dgsem.solver import rk4_step
 from jax_dgsem.indicator import persson_peraire_alpha
-from network.policy import alpha_features
+from network.policy import alpha_features, call_model
 from training.ic import draw_fourier_coeffs, sample_on_dgsem
 
 
@@ -76,24 +76,35 @@ def pretrain_pp(model, cfg, mesh, seed, epochs, n_ics=None,
     # precompute inputs and PP targets once (they do not change)
     feats = jax.vmap(lambda U: alpha_features(U, mesh, cfg.model_type))(states)
     pp = jax.vmap(_pp_alpha(cfg, mesh))(states)              # (M, n_elem)
-    out_shape = model(feats[0]).shape                        # (n_elem,) or (n_elem, P)
-    if len(out_shape) == 2:                                  # nodal: broadcast to interfaces
+    out_shape = call_model(model, feats[0], mesh, cfg.model_type).shape
+    if len(out_shape) == 2:                # nodal/opno: broadcast to interfaces
         targets = jnp.broadcast_to(pp[:, :, None], (M,) + out_shape)
     else:
         targets = pp
 
-    optimizer = optax.adam(cfg.pretrain_lr)
+    # Same two guards as Stage-2's optimizer (training.train.build_optimizer):
+    # clip gradient spikes and skip (rather than apply) a non-finite update,
+    # so a single bad batch can't poison the warm start.
+    batches_per_epoch = max(1, -(-M // batch_size))   # ceil(M / batch_size)
+    optimizer = optax.apply_if_finite(
+        optax.chain(optax.clip_by_global_norm(cfg.grad_clip),
+                    optax.adam(cfg.pretrain_lr)),
+        max_consecutive_errors=10 * batches_per_epoch)
     opt_state = optimizer.init(eqx.filter(model, eqx.is_array))
 
     @eqx.filter_jit
     def step(model, opt_state, feats_b, targets_b):
         def mse(m):
-            return jnp.mean((jax.vmap(m)(feats_b) - targets_b) ** 2)
+            out = jax.vmap(
+                lambda f: call_model(m, f, mesh, cfg.model_type))(feats_b)
+            return jnp.mean((out - targets_b) ** 2)
         loss, grads = eqx.filter_value_and_grad(mse)(model)
         updates, opt_state = optimizer.update(grads, opt_state, model)
         return eqx.apply_updates(model, updates), opt_state, loss
 
-    print(f"[pretrain] {M} PP states, imitating PP for {epochs} epochs")
+    target_mse = getattr(cfg, "pretrain_target_mse", 0.0) or 0.0
+    print(f"[pretrain] {M} PP states, imitating PP for up to {epochs} epochs"
+          + (f" (early stop at MSE {target_mse:.1e})" if target_mse else ""))
     idx = np.arange(M)
     for e in range(epochs):
         rng.shuffle(idx)
@@ -102,6 +113,16 @@ def pretrain_pp(model, cfg, mesh, seed, epochs, n_ics=None,
             b = idx[i:i + batch_size]
             model, opt_state, loss = step(model, opt_state, feats[b], targets[b])
             losses.append(float(loss))
+        mse_e = float(np.nanmean(losses))
         if e % max(1, epochs // 10) == 0 or e == epochs - 1:
-            print(f"[pretrain] epoch {e:3d}: MSE {np.mean(losses):.3e}")
+            print(f"[pretrain] epoch {e:3d}: MSE {mse_e:.3e}")
+        if target_mse and mse_e < target_mse:
+            # Deliberately NOT driven to convergence: over-imitating the
+            # hard-clipped PP targets inflates the layer spectral norms (and
+            # with them the closed-loop Lipschitz constant / BPTT gradient
+            # growth) -- the warm start only needs to survive the forming
+            # shock, not to BE Persson-Peraire.
+            print(f"[pretrain] epoch {e:3d}: MSE {mse_e:.3e} < "
+                  f"{target_mse:.1e} target -- early stop")
+            break
     return model

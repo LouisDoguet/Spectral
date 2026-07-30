@@ -42,8 +42,8 @@ def _dgsem_rollout(model, mesh, U0, cfg):
     """Roll the DGSEM trainee from U0, deployment-mode alpha (hard clip), and
     return (trajectory (n+1,3,n_elem,Nn), alphas (n+1,n_elem))."""
     def alpha_of(U):
-        from network.policy import alpha_features
-        return postprocess_alpha(model(alpha_features(U, mesh, cfg.model_type)),
+        from network.policy import apply_alpha
+        return postprocess_alpha(apply_alpha(model, U, mesh, cfg.model_type),
                                  alpha_max=cfg.alpha_max, diffuse=cfg.alpha_diffuse,
                                  hard_clip=True)
 

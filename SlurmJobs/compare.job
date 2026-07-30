@@ -16,7 +16,7 @@ source .venv_spectral/bin/activate
 
 MOD_PATH="nn/training/checkpoints"
 COMPARE_PATH="nn/evaluation/compare.py"
-SUBNAME=("_AlphaNetO6_FullSpectrum_PreCond")
+SUBNAME=("_AlphaNetO6_FullSpectrum_OPNO")
 POLY=(6)
 MOD_BEST="alpha_model_best.eqx"
 OUT_DIR="nn/evaluation/comp${SUBNAME[$SLURM_ARRAY_TASK_ID]}"
