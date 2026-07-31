@@ -1,5 +1,0 @@
-var searchData=
-[
-  ['initialize_0',['initialize',['../dd/df8/classbase_1_1RBF.html#a18149d3f6e76da85fe3c3710cf1c230d',1,'base::RBF']]],
-  ['interpolate_1',['interpolate',['../d0/d61/classbase_1_1__Basis.html#ac9137548fb600ae683c4dbd7fe903bcc',1,'base::_Basis::interpolate()'],['../db/df9/classbase_1_1Lagrange.html#a15f46586e3bf9e1638141ecf706689af',1,'base::Lagrange::interpolate()'],['../dd/df8/classbase_1_1RBF.html#a92265c70295c9ee42c1da4e717090f2f',1,'base::RBF::interpolate()']]]
-];
