@@ -14,9 +14,15 @@ main
 *.gif
 **epoch**.png
 **comp**.png
+**shu-osher**.png
+**lax**.png
+**sod**.png
+**random**.png
 *.jpg
 *.eqx
 *.npz
 **SlurmOutput**
 **/evaluation/comp_**/**.png
 **/.ipynb**/**
+**/html/**
+**/latex/**

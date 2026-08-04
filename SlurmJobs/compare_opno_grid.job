@@ -1,0 +1,65 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --gres=gpu:1
+#SBATCH --mem=16GB
+#SBATCH --time=2:00:00
+#SBATCH --job-name=OPNOgrid
+#SBATCH --output=SlurmOutput/compare_opno_grid_%j.txt
+#SBATCH --partition=gpu
+#SBATCH --account=aero_research_cantwell
+
+# Demonstrates that the trained OPNO alpha policy (element-GNN -> OPNO decoder,
+# network.model.OPNOAlphaModel) is P- and n_elem-independent by construction:
+# runs EVERY compare.py case (sod, lax, shu-osher, random) at EVERY (P, n_elem)
+# combination below, even though the checkpoint was trained at a single fixed
+# P=6, n_elem=32. No retraining, no shape changes -- same weights every cell.
+#
+# Results land in nn/compare/OPNO_C16/P{P}_N{n_elem}/ (compare.py's own
+# per-case comparison.png + alpha_spacetime.png + metrics.csv), and are then
+# rolled up by aggregate_grid.py into nn/compare/OPNO_C16/summary/ (a P x
+# n_elem heatmap per case, both in absolute error and as a % of Persson-
+# Peraire's error, plus one combined CSV over the whole grid).
+
+module load cuda
+cd "${SLURM_SUBMIT_DIR:-$(dirname "$0")}" || exit 1
+
+source .venv_spectral/bin/activate
+
+MODEL="nn/training/checkpoints_AlphaNetO6_OPNO_C16/alpha_model_best.eqx"
+COMPARE="nn/evaluation/compare.py"
+AGGREGATE="nn/evaluation/aggregate_grid.py"
+ROOT="nn/compare/OPNO_C16"
+
+POLY_ORDERS=(4 6 8)
+N_ELEMS=(32 64 96)
+
+echo "MODEL - ${MODEL}"
+mkdir -p "$ROOT"
+
+for P in "${POLY_ORDERS[@]}"; do
+    for N in "${N_ELEMS[@]}"; do
+        OUT="${ROOT}/P${P}_N${N}"
+        mkdir -p "$OUT"
+        python3 "$COMPARE" --model "$MODEL" --case sod               --outdir "$OUT" --P "$P" --n-elem "$N"
+        python3 "$COMPARE" --model "$MODEL" --case lax               --outdir "$OUT" --P "$P" --n-elem "$N"
+        python3 "$COMPARE" --model "$MODEL" --case shu-osher         --outdir "$OUT" --P "$P" --n-elem "$N"
+        python3 "$COMPARE" --model "$MODEL" --case random --seed 42  --outdir "$OUT" --P "$P" --n-elem "$N"
+    done
+done
+
+echo ""
+echo "all (P, n_elem, case) runs done -- rolling up the summary grid"
+python3 "$AGGREGATE" --root "$ROOT" \
+    --P "${POLY_ORDERS[@]}" --n-elem "${N_ELEMS[@]}" \
+    --cases sod lax shu-osher random_seed42 \
+    --title-suffix "  --  OPNO_C16 (trained at P=6, n_elem=32)"
+
+status=$?
+echo ""
+if [ $status -eq 0 ]; then
+    echo "DONE: grid comparison + summary finished -> ${ROOT}"
+else
+    echo "FAILED (exit $status) at the summary step -- per-cell results under ${ROOT} are still usable."
+fi
+exit $status

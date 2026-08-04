@@ -69,7 +69,7 @@ class TrainConfig:
                               # divide rollout_steps; 0 or None = full BPTT
                               # (the CNN tolerates full 512; default is the
                               # safe window for the stiffer opno model).
-    seed: int = 4
+    seed: int = 5
 
     # --- initial conditions -------------------------------------------------
     n_fourier_modes: int = 12
@@ -113,7 +113,7 @@ class TrainConfig:
                                # closed-loop Lipschitz constant. See
                                # pretrain_target_mse.
     pretrain_lr: float = 3e-4
-    pretrain_target_mse: float = 1e-2
+    pretrain_target_mse: float = 1e-3
                                # early-stop the imitation once the epoch MSE
                                # falls below this (the ~200-epoch quality that
                                # produced the only healthy GNN_PNO run).
@@ -134,7 +134,7 @@ class TrainConfig:
                                #   residual scales + clipped log energy).
     # opno-model sizes (P-independent: none of these depends on P)
     opno_hidden: int = 32      # hidden width of every shared token MLP
-    opno_channels: int = 8     # OPNO mode/nodal feature channels (C)
+    opno_channels: int = 16     # OPNO mode/nodal feature channels (C)
     fusion_hidden: int = 32    # width of the pointwise fuse layer
 
     # --- bookkeeping ---------------------------------------------------------
