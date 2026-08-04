@@ -18,6 +18,7 @@ main
 **lax**.png
 **sod**.png
 **random**.png
+**/compare/**.png
 *.jpg
 *.eqx
 *.npz
