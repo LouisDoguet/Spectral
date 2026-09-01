@@ -132,7 +132,7 @@ def _panel_cov(ax, C, names, title):
     for i in range(C.shape[0]):
         for j in range(C.shape[1]):
             ax.text(j, i, f"{C[i, j]:.2g}", ha="center", va="center",
-                    color="#111", fontsize=7)
+                    color="#000000", fontsize=11)
     return im
 
 
@@ -153,33 +153,27 @@ def make_figure(case, P, n_elem, out_path, steps=0, seed=0):
     xnodes = np.asarray(mesh.node_positions(c["xL"])).ravel()   # (N_points,)
 
     fig, axes = plt.subplots(2, 3, figsize=(11.5, 6.6), constrained_layout=True)
-    roll = f", rolled {steps} steps" if steps else ""
-    fig.suptitle(f"Feature preconditioning (ZCA whitening) — {case}{roll}, "
-                 f"{n_elem} elements, P={P}", fontsize=11)
 
     # row 0: raw injected features -----------------------------------------
-    _panel_lines(axes[0, 0], xnodes, X, names, c["xL"], c["xR"], n_elem,
-                 "(a) input injected")
+    _panel_lines(axes[0, 0], xnodes, X, names, c["xL"], c["xR"], n_elem, "(a)")
     scatter_names = names[:2] if C >= 2 else names * 2
     if C >= 2:
-        _panel_scatter(axes[0, 1], X, xnodes, scatter_names,
-                       "(b) feature space (raw)")
+        _panel_scatter(axes[0, 1], X, xnodes, scatter_names, "(b)")
     else:
         axes[0, 1].axis("off")
-    _panel_cov(axes[0, 2], _cov(X), names, "(c) covariance (raw)")
+    _panel_cov(axes[0, 2], _cov(X), names, "(c)")
 
     # row 1: after the preconditioner --------------------------------------
-    _panel_lines(axes[1, 0], xnodes, Xw, names, c["xL"], c["xR"], n_elem,
-                 "(d) after preconditioner")
+    _panel_lines(axes[1, 0], xnodes, Xw, names, c["xL"], c["xR"], n_elem, "(d)")
     if C >= 2:
         sc = _panel_scatter(axes[1, 1], Xw, xnodes, scatter_names,
-                            "(e) feature space (whitened)", equal_unit=True)
+                            "(e)", equal_unit=True)
         cb = fig.colorbar(sc, ax=axes[0, 1], location="right", pad=0.02,
                           fraction=0.046)
         cb.set_label("node position x")
     else:
         axes[1, 1].axis("off")
-    _panel_cov(axes[1, 2], _cov(Xw), names, "(f) covariance (whitened)")
+    _panel_cov(axes[1, 2], _cov(Xw), names, "(f)")
 
     for ax in (axes[0, 0], axes[1, 0], axes[0, 1], axes[1, 1]):
         plotstyle.despine(ax)

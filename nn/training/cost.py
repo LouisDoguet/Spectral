@@ -51,16 +51,14 @@ def cost_step(U_proj, ref_proj, alpha, dx_ref,
               w_osc: float, w_acc: float, w_alpha: float):
     """Local-in-time cost C(U^n, U_ref^n) on already-projected states."""
     c_acc = dx_ref * jnp.sum(jnp.abs(U_proj - ref_proj), axis=1).mean()
-    c_osc = dx_ref * jnp.sum(
-        jnp.abs(_dxx(U_proj, dx_ref) - _dxx(ref_proj, dx_ref)), axis=1).mean()
-    c_alpha = jnp.sum(alpha * alpha)
-    return w_osc * c_osc + w_acc * c_acc + w_alpha * c_alpha
+    c_osc = dx_ref * jnp.sum(jnp.abs(_dxx(U_proj, dx_ref) - _dxx(ref_proj, dx_ref)), axis=1).mean()
+    c_alp = jnp.sum(alpha * alpha)
+    return w_osc * c_osc + w_acc * c_acc + w_alpha * c_alp
 
 
 def cost_terms(U_proj, ref_proj, alpha, dx_ref):
     """Unweighted (C_osc, C_acc, C_alpha) for monitoring."""
     c_acc = dx_ref * jnp.sum(jnp.abs(U_proj - ref_proj), axis=1).mean()
-    c_osc = dx_ref * jnp.sum(
-        jnp.abs(_dxx(U_proj, dx_ref) - _dxx(ref_proj, dx_ref)), axis=1).mean()
-    c_alpha = jnp.sum(alpha * alpha)
-    return c_osc, c_acc, c_alpha
+    c_osc = dx_ref * jnp.sum(jnp.abs(_dxx(U_proj, dx_ref) - _dxx(ref_proj, dx_ref)), axis=1).mean()
+    c_alp = jnp.sum(alpha * alpha)
+    return c_osc, c_acc, c_alp

@@ -51,8 +51,7 @@ from training.cost import uniform_projector
 from training.ic import (draw_fourier_coeffs, sample_on_dgsem, sample_on_muscl,
                          primitives_to_conservative)
 from muscl.euler import MusclEulerGrid, MusclEulerSolver
-from vizstyle import (apply_style, finish_axes, SCHEME_STYLE, ALPHA_CMAP,
-                      INK, INK_2)
+from vizstyle import apply_style, finish_axes, SCHEME_STYLE, INK, INK_2
 from training.plotstyle import draw_elements
 
 SCHEMES = ("dg", "pp", "nn")
@@ -253,11 +252,13 @@ def compare_schemes(cfg, case, seed, model_path, alpha_max=None, n_save=200,
     fig1 = _figure_comparison(tag, cfg, mesh, xL, xR, times, runs, errors,
                               x_muscl, muscl_traj, xc_zoom)
     p1 = os.path.join(outdir, f"{tag}_comparison.png")
-    fig1.savefig(p1, dpi=160); plt.close(fig1)
+    fig1.savefig(p1, dpi=200)
+    plt.close(fig1)
 
     fig2 = _figure_alpha_spacetime(tag, cfg, mesh, xL, times, runs)
     p2 = os.path.join(outdir, f"{tag}_alpha_spacetime.png")
-    fig2.savefig(p2, dpi=160); plt.close(fig2)
+    fig2.savefig(p2, dpi=200)
+    plt.close(fig2)
 
     p3 = os.path.join(outdir, f"{tag}_metrics.csv")
     _write_metrics(p3, times, runs, errors)
@@ -289,9 +290,7 @@ def _plot_solutions(ax, x_plot, cfg, runs, x_ref, ref_rho_final, times):
 def _figure_comparison(tag, cfg, mesh, xL, xR, times, runs, errors, x_muscl,
                        muscl_traj, xc_zoom):
     apply_style()
-    fig, axes = plt.subplots(2, 2, figsize=(12, 8))
-    fig.suptitle(f"{tag}: DGSEM stabilization vs MUSCL "
-                 f"({cfg.n_elem} elements, P={cfg.P})", color=INK, fontsize=13)
+    fig, axes = plt.subplots(2, 2, figsize=(12, 7.4))
 
     N_plot = cfg.n_elem * PLOT_PTS
     x_plot = xL + (np.arange(N_plot) + 0.5) * (xR - xL) / N_plot
@@ -301,8 +300,8 @@ def _figure_comparison(tag, cfg, mesh, xL, xR, times, runs, errors, x_muscl,
     ax = axes[0, 0]
     _plot_solutions(ax, x_plot, cfg, runs, x_muscl, ref_rho_final, times)
     draw_elements(ax, xL, xR, cfg.n_elem)
-    ax.set_xlabel("x"); ax.set_ylabel("density ρ")
-    ax.set_title("(a) Density at final time"); ax.legend(loc="best")
+    ax.set_xlabel("$x$"); ax.set_ylabel(r"Density $\rho$")
+    ax.set_title("(a)")
 
     ax = axes[0, 1]
     half = 0.08 * L
@@ -313,26 +312,25 @@ def _figure_comparison(tag, cfg, mesh, xL, xR, times, runs, errors, x_muscl,
     lo, hi = ref_rho_final[win].min(), ref_rho_final[win].max()
     pad = 0.35 * max(hi - lo, 1e-3)
     ax.set_ylim(lo - pad, hi + pad); ax.ticklabel_format(useOffset=False)
-    ax.set_xlabel("x"); ax.set_ylabel("density ρ")
-    ax.set_title("(b) Zoom on the strongest gradient (oscillations)")
+    ax.set_xlabel("$x$"); ax.set_ylabel(r"Density $\rho$")
+    ax.set_title("(b)")
 
     ax = axes[1, 0]
     for scheme in SCHEMES:
         st = SCHEME_STYLE[scheme]
         e = errors[scheme][1:]
         t = times[1:len(e) + 1]
-        ax.plot(t, np.maximum(e, 1e-16), color=st["color"], ls=st["ls"],
-                label=st["label"])
+        ax.plot(t, np.maximum(e, 1e-16), color=st["color"], ls=st["ls"])
         _, _, blow = runs[scheme]
         if blow is not None and len(e):
             ax.plot(t[-1], max(e[-1], 1e-16), "x", color=st["color"],
-                    markersize=10, markeredgewidth=2.5)
+                    markersize=9, markeredgewidth=2.2, zorder=5)
             ax.annotate("blow-up", (t[-1], max(e[-1], 1e-16)),
                         textcoords="offset points", xytext=(6, 6),
-                        color=st["color"], fontsize=9)
-    ax.set_yscale("log"); ax.set_xlabel("t")
-    ax.set_ylabel("relative L2 density error")
-    ax.set_title("(c) Error vs MUSCL over time"); ax.legend(loc="best")
+                        color=st["color"], fontsize=14)
+    ax.set_yscale("log"); ax.set_xlabel("$t$")
+    ax.set_ylabel(r"Relative $L_2$ density error")
+    ax.set_title("(c)")
 
     ax = axes[1, 1]
     # Relative dissipation BUDGET: cumulative injected dissipation (running sum of
@@ -356,7 +354,7 @@ def _figure_comparison(tag, cfg, mesh, xL, xR, times, runs, errors, x_muscl,
         m = min(end, pp_end)
         rel = 100.0 * np.cumsum(_space_mean(alphas, m)) / pp_cum[:m]
         rel = np.where(pp_cum[:m] > thresh, rel, np.nan)   # hide where PP ~ 0
-        ax.plot(times[:m], rel, color=st["color"], ls=st["ls"], label=st["label"])
+        ax.plot(times[:m], rel, color=st["color"], ls=st["ls"])
         rel_all.append(rel[np.isfinite(rel)])
     # robust y-limit: keep the settled band and the 200% mark readable, clip any
     # residual startup transient instead of letting it set the scale.
@@ -364,37 +362,43 @@ def _figure_comparison(tag, cfg, mesh, xL, xR, times, runs, errors, x_muscl,
     top = 1.15 * float(np.nanpercentile(finite, 90)) if finite.size else 200.0
     ax.set_ylim(0.0, max(200.0, top))
     ax.axhline(100.0, color=INK_2, lw=0.6, ls=":", zorder=0)   # PP baseline guide
-    ax.set_xlabel("t"); ax.set_ylabel("cumulative dissipation vs PP  (%)")
-    ax.set_title("(d) Relative dissipation budget (PP = 100%)")
-    ax.legend(loc="best")
+    ax.set_xlabel("$t$"); ax.set_ylabel("Dissipation vs. PP (%)")
+    ax.set_title("(d)")
 
     for ax in axes.ravel():
         finish_axes(ax)
-    fig.tight_layout(rect=(0, 0, 1, 0.955))
+
+    # One shared legend for the whole figure (all four panels plot the same
+    # four series) instead of repeating an identical legend box three times.
+    handles, labels = axes[0, 0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc="upper center", ncol=len(labels),
+              bbox_to_anchor=(0.5, 0.995), frameon=False)
+
+    fig.subplots_adjust(left=0.085, right=0.985, top=0.87, bottom=0.075,
+                        hspace=0.38, wspace=0.30)
     return fig
 
 
 def _figure_alpha_spacetime(tag, cfg, mesh, xL, times, runs):
     apply_style()
     fig, axes = plt.subplots(1, 2, figsize=(11, 4.2), sharey=True)
-    fig.suptitle(f"{tag}: where and when the schemes inject dissipation",
-                 color=INK, fontsize=13)
 
     layouts = {s: _alpha_layout(runs[s][1], mesh, xL) for s in ("pp", "nn")}
     vmax = max(max(float(np.nanmax(a)) for _, a in layouts.values()), 1e-6)
 
     xR = xL + cfg.n_elem * mesh.dx
     pm = None
-    for ax, scheme in zip(axes, ("pp", "nn")):
+    for ax, scheme, letter in zip(axes, ("pp", "nn"), ("(a)", "(b)")):
         x_a, alphas = layouts[scheme]
-        pm = ax.pcolormesh(x_a, times, alphas, cmap=ALPHA_CMAP, vmin=0.0,
+        pm = ax.pcolormesh(x_a, times, alphas, cmap="viridis", vmin=0.0,
                            vmax=vmax, shading="nearest", rasterized=True)
         draw_elements(ax, xL, xR, cfg.n_elem, on_heatmap=True)
-        ax.set_title(SCHEME_STYLE[scheme]["label"], fontsize=10)
-        ax.set_xlabel("x"); ax.grid(False)
-    axes[0].set_ylabel("t")
-    cb = fig.colorbar(pm, ax=axes, pad=0.015)
-    cb.set_label("blending factor α", color=INK_2)
+        ax.set_title(letter, color=INK)
+        ax.set_xlabel("$x$"); ax.grid(False)
+    axes[0].set_ylabel("$t$")
+    fig.subplots_adjust(left=0.08, right=0.88, top=0.88, bottom=0.14, wspace=0.08)
+    cb = fig.colorbar(pm, ax=axes, pad=0.02)
+    cb.set_label(r"$\alpha$", color=INK_2)
     cb.outline.set_visible(False)
     return fig
 

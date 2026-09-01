@@ -81,7 +81,7 @@ def rollout_cost(model, U0, targets, mesh, project, dt, dx_ref, cfg):
         n_win, win = 1, targets.shape[0]          # full BPTT (CNN-safe)
     else:
         n_win, win = targets.shape[0] // window, window
-    tgt = targets.reshape((n_win, win) + targets.shape[1:])
+    tgt = targets.reshape((n_win, win) + targets.shape[1:]) # -> (n_win, win_size, 3, N_cost )
 
     @eqx.filter_checkpoint
     def window_cost(U, targets_w):
@@ -91,7 +91,7 @@ def rollout_cost(model, U0, targets, mesh, project, dt, dx_ref, cfg):
             cost = cost_step(project(U_next), target, alpha, dx_ref,
                              cfg.w_osc, cfg.w_acc, cfg.w_alpha)
             return U_next, cost
-        U_end, costs = jax.lax.scan(step, U, targets_w)
+        U_end, costs = jax.lax.scan(step, U, targets_w) # For each window : apply step to the target, return U_next and cost
         return jax.lax.stop_gradient(U_end), jnp.sum(costs)
 
     _, costs = jax.lax.scan(window_cost, U0, tgt)

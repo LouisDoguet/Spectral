@@ -1,0 +1,100 @@
+P,n_elem,case,scheme,stable,blowup_time,final_rel_L2_density,max_rel_L2_density,mean_alpha,max_alpha
+4,32,sod,DGSEM (no stabilization),True,,6.47177e-03,6.47177e-03,0.00000,0.00000
+4,32,sod,Hybrid + Persson-Peraire,True,,9.29146e-03,9.94974e-03,0.01135,1.00000
+4,32,sod,Hybrid + NN policy,True,,6.05352e-03,6.13427e-03,0.00306,0.94897
+4,32,lax,DGSEM (no stabilization),True,,5.94923e-02,1.01011e-01,0.00000,0.00000
+4,32,lax,Hybrid + Persson-Peraire,True,,8.53831e-02,9.36346e-02,0.04236,1.00000
+4,32,lax,Hybrid + NN policy,True,,5.80490e-02,6.06758e-02,0.01498,1.00000
+4,32,shu-osher,DGSEM (no stabilization),False,0.57600,5.92576e-02,5.92576e-02,0.00000,0.00000
+4,32,shu-osher,Hybrid + Persson-Peraire,True,,8.30870e-02,1.13796e-01,0.06285,1.00000
+4,32,shu-osher,Hybrid + NN policy,True,,5.98336e-02,7.65137e-02,0.01932,1.00000
+4,32,random_seed42,DGSEM (no stabilization),True,,6.45952e-02,7.31835e-02,0.00000,0.00000
+4,32,random_seed42,Hybrid + Persson-Peraire,True,,6.17164e-02,6.42763e-02,0.05780,1.00000
+4,32,random_seed42,Hybrid + NN policy,True,,4.12371e-02,4.61050e-02,0.02293,1.00000
+4,64,sod,DGSEM (no stabilization),True,,8.99343e-03,8.99343e-03,0.00000,0.00000
+4,64,sod,Hybrid + Persson-Peraire,True,,8.11288e-03,8.75765e-03,0.01339,1.00000
+4,64,sod,Hybrid + NN policy,True,,5.70005e-03,5.76383e-03,0.00461,1.00000
+4,64,lax,DGSEM (no stabilization),True,,5.27520e-02,8.01752e-02,0.00000,0.00000
+4,64,lax,Hybrid + Persson-Peraire,True,,5.90135e-02,7.03176e-02,0.02591,1.00000
+4,64,lax,Hybrid + NN policy,True,,4.23133e-02,4.93131e-02,0.01237,1.00000
+4,64,shu-osher,DGSEM (no stabilization),False,0.28800,3.77190e-02,3.77190e-02,0.00000,0.00000
+4,64,shu-osher,Hybrid + Persson-Peraire,True,,6.33864e-02,1.00658e-01,0.03531,1.00000
+4,64,shu-osher,Hybrid + NN policy,True,,4.85492e-02,6.95494e-02,0.01370,1.00000
+4,64,random_seed42,DGSEM (no stabilization),True,,4.76933e-02,5.40916e-02,0.00000,0.00000
+4,64,random_seed42,Hybrid + Persson-Peraire,True,,4.71085e-02,4.80556e-02,0.02557,1.00000
+4,64,random_seed42,Hybrid + NN policy,True,,3.11126e-02,3.35778e-02,0.01289,1.00000
+4,96,sod,DGSEM (no stabilization),True,,5.98296e-03,7.41238e-03,0.00000,0.00000
+4,96,sod,Hybrid + Persson-Peraire,True,,7.01192e-03,7.16459e-03,0.01206,1.00000
+4,96,sod,Hybrid + NN policy,True,,4.85630e-03,4.85630e-03,0.00416,1.00000
+4,96,shu-osher,DGSEM (no stabilization),False,0.18000,3.00994e-02,3.00994e-02,0.00000,0.00000
+4,96,shu-osher,Hybrid + Persson-Peraire,True,,4.89742e-02,9.17366e-02,0.02399,1.00000
+4,96,shu-osher,Hybrid + NN policy,True,,3.53238e-02,6.16237e-02,0.00986,1.00000
+4,96,random_seed42,DGSEM (no stabilization),True,,5.22748e-02,5.27285e-02,0.00000,0.00000
+4,96,random_seed42,Hybrid + Persson-Peraire,True,,3.51340e-02,3.99020e-02,0.01649,1.00000
+4,96,random_seed42,Hybrid + NN policy,True,,2.13935e-02,2.78732e-02,0.00861,1.00000
+6,32,sod,DGSEM (no stabilization),True,,6.00090e-03,7.09193e-03,0.00000,0.00000
+6,32,sod,Hybrid + Persson-Peraire,True,,5.62172e-03,6.24769e-03,0.00530,1.00000
+6,32,sod,Hybrid + NN policy,True,,4.03321e-03,4.85294e-03,0.00180,0.84250
+6,32,lax,DGSEM (no stabilization),False,0.10000,6.42412e-02,7.62265e-02,0.00000,0.00000
+6,32,lax,Hybrid + Persson-Peraire,True,,4.89537e-02,5.69956e-02,0.01952,1.00000
+6,32,lax,Hybrid + NN policy,True,,4.67967e-02,4.87562e-02,0.01025,1.00000
+6,32,shu-osher,DGSEM (no stabilization),False,0.58500,6.31426e-02,6.31426e-02,0.00000,0.00000
+6,32,shu-osher,Hybrid + Persson-Peraire,True,,6.11874e-02,7.82167e-02,0.03503,1.00000
+6,32,shu-osher,Hybrid + NN policy,True,,4.50010e-02,5.59662e-02,0.01257,1.00000
+6,32,random_seed42,DGSEM (no stabilization),True,,6.80923e-02,7.48790e-02,0.00000,0.00000
+6,32,random_seed42,Hybrid + Persson-Peraire,True,,4.13275e-02,4.47633e-02,0.03410,1.00000
+6,32,random_seed42,Hybrid + NN policy,True,,2.94165e-02,3.65274e-02,0.01193,1.00000
+6,64,sod,DGSEM (no stabilization),True,,5.86297e-03,9.41146e-03,0.00000,0.00000
+6,64,sod,Hybrid + Persson-Peraire,True,,5.35478e-03,5.66858e-03,0.00750,1.00000
+6,64,sod,Hybrid + NN policy,True,,4.18901e-03,4.80610e-03,0.00315,0.99868
+6,64,lax,DGSEM (no stabilization),False,0.05040,4.90097e-02,5.67735e-02,0.00000,0.00000
+6,64,lax,Hybrid + Persson-Peraire,True,,3.61625e-02,4.21260e-02,0.01291,1.00000
+6,64,lax,Hybrid + NN policy,True,,3.50363e-02,4.06025e-02,0.00863,1.00000
+6,64,shu-osher,DGSEM (no stabilization),False,0.28800,3.49571e-02,3.62992e-02,0.00000,0.00000
+6,64,shu-osher,Hybrid + Persson-Peraire,True,,4.81821e-02,6.87615e-02,0.02138,1.00000
+6,64,shu-osher,Hybrid + NN policy,True,,2.86836e-02,4.94863e-02,0.00923,1.00000
+6,64,random_seed42,DGSEM (no stabilization),True,,5.04460e-02,5.46150e-02,0.00000,0.00000
+6,64,random_seed42,Hybrid + Persson-Peraire,True,,2.95697e-02,3.21633e-02,0.01526,1.00000
+6,64,random_seed42,Hybrid + NN policy,True,,2.40305e-02,2.70094e-02,0.00665,1.00000
+6,96,sod,DGSEM (no stabilization),True,,5.31924e-03,8.03075e-03,0.00000,0.00000
+6,96,sod,Hybrid + Persson-Peraire,True,,4.62672e-03,4.62672e-03,0.00614,1.00000
+6,96,sod,Hybrid + NN policy,True,,3.96796e-03,3.96796e-03,0.00280,1.00000
+6,96,shu-osher,DGSEM (no stabilization),False,0.18900,3.93077e-02,3.93077e-02,0.00000,0.00000
+6,96,shu-osher,Hybrid + Persson-Peraire,True,,3.49483e-02,5.57323e-02,0.01459,1.00000
+6,96,shu-osher,Hybrid + NN policy,True,,2.22023e-02,4.87693e-02,0.00709,1.00000
+6,96,random_seed42,DGSEM (no stabilization),True,,5.48785e-02,5.48785e-02,0.00000,0.00000
+6,96,random_seed42,Hybrid + Persson-Peraire,True,,2.23240e-02,2.63618e-02,0.01084,1.00000
+6,96,random_seed42,Hybrid + NN policy,True,,1.58791e-02,2.25839e-02,0.00524,1.00000
+8,32,sod,DGSEM (no stabilization),True,,5.01234e-03,7.46285e-03,0.00000,0.00000
+8,32,sod,Hybrid + Persson-Peraire,True,,4.20734e-03,4.99349e-03,0.00392,0.99752
+8,32,sod,Hybrid + NN policy,True,,3.21062e-03,3.86795e-03,0.00141,0.73561
+8,32,lax,DGSEM (no stabilization),False,0.08720,5.85965e-02,5.85965e-02,0.00000,0.00000
+8,32,lax,Hybrid + Persson-Peraire,True,,3.96226e-02,4.25570e-02,0.01427,1.00000
+8,32,lax,Hybrid + NN policy,True,,4.11315e-02,4.31248e-02,0.00808,1.00000
+8,32,shu-osher,DGSEM (no stabilization),False,0.54900,3.24713e-02,3.62177e-02,0.00000,0.00000
+8,32,shu-osher,Hybrid + Persson-Peraire,True,,5.09586e-02,5.97332e-02,0.02833,1.00000
+8,32,shu-osher,Hybrid + NN policy,True,,3.61672e-02,4.70102e-02,0.01004,1.00000
+8,32,random_seed42,DGSEM (no stabilization),False,0.17200,3.67062e-02,3.83400e-02,0.00000,0.00000
+8,32,random_seed42,Hybrid + Persson-Peraire,True,,3.24743e-02,3.46257e-02,0.02702,1.00000
+8,32,random_seed42,Hybrid + NN policy,True,,2.47794e-02,3.05973e-02,0.00932,1.00000
+8,64,sod,DGSEM (no stabilization),False,0.13600,7.08495e-03,7.38853e-03,0.00000,0.00000
+8,64,sod,Hybrid + Persson-Peraire,True,,3.78912e-03,4.51586e-03,0.00654,1.00000
+8,64,sod,Hybrid + NN policy,True,,3.50286e-03,3.91098e-03,0.00247,0.98762
+8,64,lax,DGSEM (no stabilization),False,0.00480,2.62252e-04,2.62252e-04,0.00000,0.00000
+8,64,lax,Hybrid + Persson-Peraire,False,0.00480,2.62252e-04,2.62252e-04,0.00541,1.00000
+8,64,lax,Hybrid + NN policy,False,0.00480,2.62252e-04,2.62252e-04,0.00298,0.88219
+8,64,shu-osher,DGSEM (no stabilization),False,0.23400,1.77188e-02,1.77188e-02,0.00000,0.00000
+8,64,shu-osher,Hybrid + Persson-Peraire,True,,3.90931e-02,5.43409e-02,0.01694,1.00000
+8,64,shu-osher,Hybrid + NN policy,True,,2.14895e-02,4.40133e-02,0.00721,1.00000
+8,64,random_seed42,DGSEM (no stabilization),False,0.17400,3.33148e-02,3.40897e-02,0.00000,0.00000
+8,64,random_seed42,Hybrid + Persson-Peraire,True,,2.30799e-02,2.54876e-02,0.01290,1.00000
+8,64,random_seed42,Hybrid + NN policy,True,,2.04968e-02,2.31649e-02,0.00542,1.00000
+8,96,sod,DGSEM (no stabilization),False,0.05800,2.00017e-03,2.00017e-03,0.00000,0.00000
+8,96,sod,Hybrid + Persson-Peraire,False,0.04900,5.57468e-04,5.57468e-04,0.00039,0.92836
+8,96,sod,Hybrid + NN policy,False,0.05700,1.78822e-03,1.78822e-03,0.00022,0.53089
+8,96,shu-osher,DGSEM (no stabilization),False,0.17100,1.83942e-02,1.83942e-02,0.00000,0.00000
+8,96,shu-osher,Hybrid + Persson-Peraire,True,,2.67792e-02,4.35912e-02,0.01188,1.00000
+8,96,shu-osher,Hybrid + NN policy,True,,1.70666e-02,4.21431e-02,0.00569,1.00000
+8,96,random_seed42,DGSEM (no stabilization),False,0.00900,7.41557e-04,7.41557e-04,0.00000,0.00000
+8,96,random_seed42,Hybrid + Persson-Peraire,False,0.00900,7.41557e-04,7.41557e-04,0.00000,0.00107
+8,96,random_seed42,Hybrid + NN policy,False,0.00900,7.41624e-04,7.41624e-04,0.00000,0.00000

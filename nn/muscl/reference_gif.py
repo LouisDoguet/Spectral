@@ -1,5 +1,5 @@
 """Animate the fine-grid MUSCL *reference* solution for the classic 1D Euler
-benchmarks (Sod, Lax, Shu-Osher) and save each as a GIF.
+benchmarks (Sod, Lax, Shu-Osher) and save each as an MP4.
 
 Uses the same reference solver the alpha-policy training targets
 (muscl.euler.MusclEulerSolver: minmod + Rusanov + SSP-RK2), with the exact
@@ -23,7 +23,7 @@ import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation, PillowWriter
+from matplotlib.animation import FuncAnimation, FFMpegWriter
 
 from muscl.euler import (MusclEulerGrid, MusclEulerSolver, GAMMA,
                          pressure as muscl_pressure, max_wave_speed)
@@ -122,7 +122,7 @@ def animate(name, x, times, traj, out_path, fps=20):
         return (*lines, title)
 
     anim = FuncAnimation(fig, update, frames=len(traj), blit=False)
-    anim.save(out_path, writer=PillowWriter(fps=fps))
+    anim.save(out_path, writer=FFMpegWriter(fps=fps))
     plt.close(fig)
     print(f"  saved {out_path}  ({len(traj)} frames)")
 
@@ -134,7 +134,7 @@ def main():
     ap.add_argument("--N", type=int, default=2048, help="MUSCL cells (fine grid)")
     ap.add_argument("--frames", type=int, default=160, help="animation frames")
     ap.add_argument("--fps", type=int, default=20)
-    ap.add_argument("--outdir", default="nn/img", help="output directory for GIFs")
+    ap.add_argument("--outdir", default="nn/img", help="output directory for MP4s")
     args = ap.parse_args()
 
     os.makedirs(args.outdir, exist_ok=True)
@@ -142,7 +142,7 @@ def main():
     for name in names:
         print(f"[{name}] running MUSCL reference (N={args.N}) ...")
         x, times, traj = run_case(name, args.N, args.frames)
-        out = os.path.join(args.outdir, f"{name}_muscl_reference.gif")
+        out = os.path.join(args.outdir, f"{name}_muscl_reference.mp4")
         animate(name, x, times, traj, out, fps=args.fps)
 
 

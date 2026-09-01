@@ -1,12 +1,12 @@
 #!/bin/bash
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --gres=gpu:1
 #SBATCH --mem=16GB
 #SBATCH --time=2:00:00
+#SBATCH --gres=gpu:1
+#SBATCH --partition=gpu
 #SBATCH --job-name=OPNOgrid
 #SBATCH --output=SlurmOutput/compare_opno_grid_%j.txt
-#SBATCH --partition=gpu
 #SBATCH --account=aero_research_cantwell
 
 # Demonstrates that the trained OPNO alpha policy (element-GNN -> OPNO decoder,
@@ -26,10 +26,11 @@ cd "${SLURM_SUBMIT_DIR:-$(dirname "$0")}" || exit 1
 
 source .venv_spectral/bin/activate
 
-MODEL="nn/training/checkpoints_AlphaNetO6_OPNO_C16/alpha_model_best.eqx"
+
+MODEL="nn/training/benchmark/opno_search/full/W64_D1_OH64_OC64_FH64_P8/alpha_model_best.eqx"
 COMPARE="nn/evaluation/compare.py"
 AGGREGATE="nn/evaluation/aggregate_grid.py"
-ROOT="nn/compare/OPNO_C16"
+ROOT="nn/compare/FINAL"
 
 POLY_ORDERS=(4 6 8)
 N_ELEMS=(32 64 96)

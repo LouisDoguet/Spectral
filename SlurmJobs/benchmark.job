@@ -11,46 +11,94 @@
 #SBATCH --output=SlurmOutput/benchmark_%A_%a.txt
 
 # ==========================================================================
-# Benchmark the alpha-policy network (ONE-FACTOR-AT-A-TIME sweep).
+# Benchmark the alpha-policy network. Three independent stages, selected by
+# MODE below -- pick the mode FIRST, then check --array against the matching
+# --count flag (each stage has its own config list/count).
 #
-# One SLURM array task = one hyperparameter configuration: it trains the
-# network, then evaluates it on sod / lax / shu-osher / random against the fine
-# MUSCL reference, and appends one JSON summary. Each task also refreshes the
-# ranked table, so once the whole array finishes you have the final table with
-# no second command.
+#   MODE=ofat     ONE-FACTOR-AT-A-TIME over mesh/training axes (P, n_elem,
+#                 muscl_cells, rollout, kernel, w_osc, w_alpha).
+#                   sbatch SlurmJobs/benchmark.job                 # all configs
+#                   sbatch --array=0,1,2 SlurmJobs/benchmark.job   # just a few
+#                 Count:  python3 nn/evaluation/benchmark.py --count
 #
-#   sbatch SlurmJobs/benchmark.job                 # run all configs
-#   sbatch --array=0,1,2 SlurmJobs/benchmark.job   # just a few
+#   MODE=opno     Joint RANDOM SEARCH over the OPNO model's own architecture
+#                 (width, depth, opno_hidden, opno_channels, fusion_hidden),
+#                 screened at a reduced epoch budget (SCREEN_EPOCHS) -- run
+#                 this stage first for an OPNO-capacity search.
+#                 Count:  python3 nn/evaluation/benchmark.py --opno-count \
+#                           --n-random "$N_RANDOM" --screen-epochs "$SCREEN_EPOCHS"
 #
-# IMPORTANT: --array must match the number of configs. Check it with:
-#   python3 nn/evaluation/benchmark.py --count      # currently 18 -> 0-17
-#   python3 nn/evaluation/benchmark.py --list       # names + ids
-# If you edit the sweep in benchmark.py, update --array above.
+#   MODE=promote  Re-trains the TOP_K screen survivors at the full epoch
+#                 budget (FULL_EPOCHS), at every polynomial order in
+#                 P_VALUES (default: just the screen's fixed BASELINE P, no
+#                 sweep -- the capacity search itself never varies P, so
+#                 this is the only place a P-sweep happens; see
+#                 promoted_configs()'s docstring for why it belongs here and
+#                 not in the screen stage). Run AFTER MODE=opno has fully
+#                 finished (it reads the screen stage's ranked results) --
+#                 keep N_RANDOM/SEED/SCREEN_EPOCHS identical to that run so
+#                 the screen configs can be regenerated and matched by name.
+#                 Count:  python3 nn/evaluation/benchmark.py --promote-count \
+#                           --top-k "$TOP_K" --full-epochs "$FULL_EPOCHS" \
+#                           --screen-epochs "$SCREEN_EPOCHS" --n-random "$N_RANDOM" \
+#                           --p-values $P_VALUES
 #
-# Results (all under nn/training/benchmark/):
-#   <name>/                     trained model + model_meta.json + history/recap
-#   results/<name>.json         per-model metrics on the four cases
-#   RANKING.csv / RANKING.md    the ranked table (best network on top)
-# Config names are self-describing, e.g. P8_N64_M64_R512_K9_wo5_wa5.
+# Set MODE + the budgets below to match how you submit, and point --array at
+# 0..(count-1) for that mode (edit the #SBATCH line, or `sbatch --array=0-N`).
+#
+# Results:
+#   ofat    -> nn/training/benchmark/{<name>/, results/, RANKING.csv,.md}
+#   opno    -> nn/training/benchmark/opno_search/screen/{<name>/, results/, RANKING.csv,.md}
+#   promote -> nn/training/benchmark/opno_search/full/{<name>/, results/, RANKING.csv,.md}
+# Config names are self-describing, e.g. P8_N64_M64_R512_K9_wo5_wa5 (ofat) or
+# W64_D1_OH64_OC64_FH64 (opno/promote, plus a _P{P} suffix when P_VALUES
+# sweeps away from the screen's baseline P).
 # ==========================================================================
 
-EPOCHS=250
+# Every var below can be overridden without editing this file, e.g.:
+#   sbatch --array=0-33 --export=ALL,MODE=opno SlurmJobs/benchmark.job
+MODE=${MODE:-ofat}                     # ofat | opno | promote
+EPOCHS=${EPOCHS:-250}                  # ofat epoch budget
+N_RANDOM=${N_RANDOM:-32}               # opno: random draws in the screen (+1 baseline trial)
+SEED=${SEED:-0}                        # opno/promote: search RNG seed -- must match between the two stages
+SCREEN_EPOCHS=${SCREEN_EPOCHS:-60}     # opno: screen-stage epoch budget
+FULL_EPOCHS=${FULL_EPOCHS:-250}        # promote: full-stage epoch budget
+TOP_K=${TOP_K:-5}                      # promote: how many screen survivors to re-train
+P_VALUES=${P_VALUES:-4}                # promote: polynomial orders to re-train each survivor at, e.g. "4 6 8"
 
 module load cuda
 cd "${SLURM_SUBMIT_DIR:-$(dirname "$0")/..}" || exit 1
 mkdir -p SlurmOutput
 source .venv_spectral/bin/activate
 
-echo "=== benchmark array task ${SLURM_ARRAY_TASK_ID} (epochs=${EPOCHS}) ==="
-python3 -u nn/evaluation/benchmark.py --task-id "${SLURM_ARRAY_TASK_ID}" \
-        --epochs "${EPOCHS}"
+echo "=== benchmark array task ${SLURM_ARRAY_TASK_ID}  (MODE=${MODE}) ==="
+case "$MODE" in
+  ofat)
+    python3 -u nn/evaluation/benchmark.py --task-id "${SLURM_ARRAY_TASK_ID}" \
+            --epochs "${EPOCHS}"
+    ;;
+  opno)
+    python3 -u nn/evaluation/benchmark.py --opno-task-id "${SLURM_ARRAY_TASK_ID}" \
+            --n-random "${N_RANDOM}" --seed "${SEED}" \
+            --screen-epochs "${SCREEN_EPOCHS}"
+    ;;
+  promote)
+    python3 -u nn/evaluation/benchmark.py --promote-task-id "${SLURM_ARRAY_TASK_ID}" \
+            --top-k "${TOP_K}" --full-epochs "${FULL_EPOCHS}" \
+            --screen-epochs "${SCREEN_EPOCHS}" --n-random "${N_RANDOM}" --seed "${SEED}" \
+            --p-values ${P_VALUES}
+    ;;
+  *)
+    echo "unknown MODE=${MODE} (expected ofat|opno|promote)" >&2
+    exit 1
+    ;;
+esac
 status=$?
 
 echo ""
 if [ $status -eq 0 ]; then
-    echo "DONE: config ${SLURM_ARRAY_TASK_ID} trained + evaluated."
-    echo "Ranked table so far: nn/training/benchmark/RANKING.md"
+    echo "DONE: task ${SLURM_ARRAY_TASK_ID} (MODE=${MODE}) trained + evaluated."
 else
-    echo "FAILED (exit $status) for config ${SLURM_ARRAY_TASK_ID}."
+    echo "FAILED (exit $status) for task ${SLURM_ARRAY_TASK_ID} (MODE=${MODE})."
 fi
 exit $status

@@ -366,7 +366,7 @@ class ModalOPNO(eqx.Module):
             [jnp.broadcast_to(coord, (n_elem, Nn))[..., None],
              log_energy(energy)[..., None],
              jnp.broadcast_to(h[:, None, :], (n_elem, Nn, h.shape[-1]))],
-            axis=-1)
+            axis=-1)                                         # (n_elem, Nn, 2+width)
         mode_feat = self.mlp(tokens)                         # (n_elem, Nn, C)
         nodal = jnp.einsum("ik,ekc->eic", Phi, mode_feat)    # (n_elem, Nn, C)
         return mode_feat, nodal

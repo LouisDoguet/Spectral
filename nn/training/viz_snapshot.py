@@ -28,7 +28,8 @@ import matplotlib.pyplot as plt
 try:
     from vizstyle import apply_style, finish_axes, BLUE, AQUA, YELLOW, INK, MUTED
 except Exception:                         # vizstyle is optional
-    BLUE, AQUA, YELLOW, INK, MUTED = "#2a78d6", "#1baf7a", "#eda100", "#111", "#888"
+    BLUE, AQUA, YELLOW = "#2a78d6", "#1baf7a", "#eda100"
+    INK, MUTED = "#000000", "#000000"
     def apply_style(): pass
     def finish_axes(ax):
         ax.spines["top"].set_visible(False); ax.spines["right"].set_visible(False)
@@ -123,7 +124,7 @@ def plot_snapshot(model, mesh, coeffs, cfg, epoch, outdir):
         finish_axes(axa)
 
     fig.suptitle(f"epoch {epoch}: DGSEM (n_elem={cfg.n_elem}, P={cfg.P}) vs "
-                 f"MUSCL (N={cfg.N_muscl})", color=INK, fontsize=13)
+                 f"MUSCL (N={cfg.N_muscl})", color=INK, fontsize=16)
     fig.tight_layout(rect=(0, 0, 1, 0.96))
     path = os.path.join(outdir, f"epoch_{epoch:04d}.png")
     fig.savefig(path, dpi=130)

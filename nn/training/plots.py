@@ -13,7 +13,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from vizstyle import (apply_style, finish_axes, SCHEME_STYLE, BLUE, AQUA,
-                      YELLOW, VIOLET, INK, MUTED)
+                      YELLOW, VIOLET, MUTED)
 
 
 def plot_training_history(history, out_path: str = None):
@@ -31,7 +31,6 @@ def plot_training_history(history, out_path: str = None):
 
     apply_style()
     fig, axes = plt.subplots(2, 2, figsize=(11, 7.5))
-    fig.suptitle("Alpha-policy training analysis", color=INK, fontsize=13)
 
     # (a) loss curves ------------------------------------------------------
     ax = axes[0, 0]
@@ -40,7 +39,7 @@ def plot_training_history(history, out_path: str = None):
     ax.set_yscale("log")
     ax.set_xlabel("epoch")
     ax.set_ylabel("loss  J(θ)")
-    ax.set_title("(a) Loss per epoch")
+    ax.set_title("(a)")
     ax.legend()
 
     # (b) per-batch loss ---------------------------------------------------
@@ -57,7 +56,7 @@ def plot_training_history(history, out_path: str = None):
     ax.set_yscale("log")
     ax.set_xlabel("gradient step")
     ax.set_ylabel("batch loss")
-    ax.set_title("(b) Per-batch training loss")
+    ax.set_title("(b)")
     ax.legend()
 
     # (c) weighted cost contributions on validation ------------------------
@@ -74,7 +73,7 @@ def plot_training_history(history, out_path: str = None):
     ax.set_yscale("log")
     ax.set_xlabel("epoch")
     ax.set_ylabel("weighted contribution")
-    ax.set_title("(c) Validation cost breakdown")
+    ax.set_title("(c)")
     ax.legend()
 
     # (d) alpha statistics --------------------------------------------------
@@ -91,12 +90,12 @@ def plot_training_history(history, out_path: str = None):
     ax.set_xlabel("epoch")
     ax.set_ylabel("blending factor α")
     ax.set_ylim(bottom=0.0)
-    ax.set_title("(d) Policy output on validation set")
+    ax.set_title("(d)")
     ax.legend()
 
     for ax in axes.ravel():
         finish_axes(ax)
-    fig.tight_layout(rect=(0, 0, 1, 0.96))
+    fig.tight_layout()
 
     if out_path:
         fig.savefig(out_path, dpi=160)

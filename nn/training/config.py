@@ -14,18 +14,18 @@ from dataclasses import dataclass
 class TrainConfig:
     # --- DGSEM_grid (coarse mesh = the mesh the network trains on) ----------
     P: int = 6                # polynomial order (matches C++ default)
-    n_elem: int = 32          # coarse DGSEM elements
+    n_elem: int = 64          # coarse DGSEM elements
     xL: float = 0.0
     xR: float = 1.0
 
     # --- MUSCL_grid (fine reference grid) ----------------------------------
-    muscl_cells_per_elem: int = 16   # MUSCL_grid has n_elem * this cells;
+    muscl_cells_per_elem: int = 64   # MUSCL_grid has n_elem * this cells;
                                      # must be a multiple of proj_pts_per_elem
     muscl_substeps: int = 4          # MUSCL substeps per DGSEM step (dt/this)
 
     # --- time stepping (IMPOSED dt, no CFL) --------------------------------
     dt: float = 2e-4          # DGSEM coarse step; MUSCL step = dt/muscl_substeps
-    rollout_steps: int = 512 # DGSEM steps rolled from the IC and compared to
+    rollout_steps: int = 512  # DGSEM steps rolled from the IC and compared to
                               # the MUSCL reference (the training horizon)
 
     # --- alpha post-processing during training (soft: no hard clipping) ----
@@ -33,19 +33,19 @@ class TrainConfig:
     alpha_diffuse: bool = False
 
     # --- cost weights (C_vis -> L2 penalty on alpha) -----------------------
-    w_osc: float = 1e-5
+    w_osc: float = 1.0
     w_acc: float = 1.0
-    w_alpha: float = 1e-5
+    w_alpha: float = 1.0
 
-    proj_pts_per_elem: int = 16   # uniform cost-grid points per coarse element
+    proj_pts_per_elem: int = 64   # uniform cost-grid points per coarse element
 
     # --- optimization -------------------------------------------------------
-    epochs: int = 100
-    K: int = 24               # initial conditions generated per epoch
+    epochs: int = 1000
+    K: int = 48               # initial conditions generated per epoch
     batches_per_epoch: int = 20
     batch_size: int = 8       # ICs per gradient step (from-IC rollouts)
     lr: float = 3e-4
-    bool_constant_lr: bool = True
+    bool_constant_lr: bool = False
                               # Constant learning rate or warm up, with initial value = lr
                               # Max value = 3e-4 (Adam optim. reference value)
     grad_clip: float = 1.0    # global-norm clip (gradient spikes when a shock
@@ -60,7 +60,7 @@ class TrainConfig:
                               # The healthy CNN batch gradients are O(1-1e2),
                               # so 1e3 rejects only pathological batches.
                               # 0 or None disables the guard.
-    bptt_window: int = 64     # truncated-BPTT window: gradients flow through
+    bptt_window: int = 32     # truncated-BPTT window: gradients flow through
                               # at most this many consecutive solver steps
                               # (stop_gradient on the carried state between
                               # windows; forward rollout unchanged). Measured
@@ -101,7 +101,7 @@ class TrainConfig:
                                # step 0 (alpha~0.05 blows up); with pretrain_pp
                                # the PP warm-start provides the stable start
                                # instead, so alpha_init is irrelevant.
-    pretrain_epochs: int = 300 # Stage-1 PP-imitation warm-start (0 = off).
+    pretrain_epochs: int = 1000 # Stage-1 PP-imitation warm-start (0 = off).
                                # Regresses the network toward the Persson-
                                # Peraire indicator on PP-driven rollout states,
                                # so Stage-2 rollouts survive the forming shock
@@ -113,17 +113,17 @@ class TrainConfig:
                                # closed-loop Lipschitz constant. See
                                # pretrain_target_mse.
     pretrain_lr: float = 3e-4
-    pretrain_target_mse: float = 1e-3
+    pretrain_target_mse: float = 1e-2
                                # early-stop the imitation once the epoch MSE
                                # falls below this (the ~200-epoch quality that
                                # produced the only healthy GNN_PNO run).
-    width: int = 24            # CNN width ("nodal"/"element") or element-GNN
+    width: int = 64            # CNN width ("nodal"/"element") or element-GNN
                                #   latent width ("opno")
     bool_res:bool = True       # Boolean to activate a residual block, or a simple 2 layers CNN
                                #   ("nodal"/"element" only)
     kernel_size: int = 3       # ("nodal"/"element" only; the opno model has no
                                #   convolution)
-    depth: int = 2             # ResBlock count ("nodal"/"element") or element-
+    depth: int = 1             # ResBlock count ("nodal"/"element") or element-
                                #   GNN message-passing rounds = neighbourhood
                                #   radius in elements ("opno")
     precondition: bool = True  # ZCA-whiten the (N_points, N_features) data-channel
@@ -133,13 +133,13 @@ class TrainConfig:
                                #   preconditioning is formula-based (asinh
                                #   residual scales + clipped log energy).
     # opno-model sizes (P-independent: none of these depends on P)
-    opno_hidden: int = 32      # hidden width of every shared token MLP
-    opno_channels: int = 16     # OPNO mode/nodal feature channels (C)
-    fusion_hidden: int = 32    # width of the pointwise fuse layer
+    opno_hidden: int = 64      # hidden width of every shared token MLP
+    opno_channels: int = 64     # OPNO mode/nodal feature channels (C)
+    fusion_hidden: int = 64    # width of the pointwise fuse layer
 
     # --- bookkeeping ---------------------------------------------------------
-    n_val: int = 4            # validation ICs (fixed at start of training)
-    plot_every: int = 1       # save a DGSEM-vs-MUSCL snapshot every N epochs
+    n_val: int = 16            # validation ICs (fixed at start of training)
+    plot_every: int = 25       # save a DGSEM-vs-MUSCL snapshot every N epochs
                               # (0 disables during-training visualization)
     checkpoint_dir: str = "nn/training/checkpoints"
 

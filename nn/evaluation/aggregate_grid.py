@@ -30,7 +30,7 @@ from vizstyle import apply_style, INK, INK_2, MUTED
 
 CASES = ("sod", "lax", "shu-osher", "random_seed42")
 CASE_TITLE = {"sod": "Sod", "lax": "Lax", "shu-osher": "Shu-Osher",
-             "random_seed42": "Random IC (seed 42)"}
+             "random_seed42": "Random"}
 NN_ROW = "Hybrid + NN policy"
 PP_ROW = "Hybrid + Persson-Peraire"
 
@@ -71,28 +71,24 @@ def _grid_values(rows, P, n, case, scheme_row, field):
 
 
 def _heatmap_panel(ax, Ps, n_elems, values, stable_mask, cmap, vmin, vmax,
-                   fmt="{:.2e}", cbar_label=None, fig=None):
+                   fmt="{:.2e}"):
     im = ax.imshow(values, cmap=cmap, vmin=vmin, vmax=vmax, aspect="auto",
                    origin="lower")
-    ax.set_xticks(range(len(n_elems)), [str(n) for n in n_elems])
+    ax.set_xticks(range(len(n_elems)), [f"N={n}" for n in n_elems])
     ax.set_yticks(range(len(Ps)), [f"P={p}" for p in Ps])
     for i in range(len(Ps)):
         for j in range(len(n_elems)):
             v = values[i, j]
             if np.isnan(v):
-                ax.text(j, i, "n/a", ha="center", va="center", fontsize=8,
+                ax.text(j, i, "n/a", ha="center", va="center", fontsize=12,
                         color=MUTED)
                 continue
             unstable = not stable_mask[i, j]
-            txt = fmt.format(v) + (" ✗" if unstable else "")
+            txt = fmt.format(v)
             color = INK if cmap is not None and (vmax - vmin) > 0 and \
-                (v - vmin) / (vmax - vmin) < 0.55 else "#fcfcfb"
-            ax.text(j, i, txt, ha="center", va="center", fontsize=8.5,
+                (v - vmin) / (vmax - vmin) < 0.55 else "#ffffff"
+            ax.text(j, i, txt, ha="center", va="center", fontsize=13,
                     color="#c23a2c" if unstable else color, fontweight="bold" if unstable else None)
-    if fig is not None and cbar_label is not None:
-        cb = fig.colorbar(im, ax=ax, pad=0.02, shrink=0.9)
-        cb.set_label(cbar_label, color=INK_2, fontsize=8)
-        cb.outline.set_visible(False)
     return im
 
 
@@ -103,12 +99,10 @@ def plot_error_grid(rows, Ps, n_elems, cases, title_suffix=""):
     gradient with P or n_elem."""
     apply_style()
     fig, axes = plt.subplots(2, 2, figsize=(11, 8.5))
-    fig.suptitle(f"OPNO policy: final relative L2 density error{title_suffix}\n"
-                 "(flat color across a panel = P-/n_elem-independent)",
-                 color=INK, fontsize=12)
     finite_vals = [float(r["final_rel_L2_density"]) for r in rows
                   if r["scheme"] == NN_ROW]
     vmin, vmax = (min(finite_vals), max(finite_vals)) if finite_vals else (0, 1)
+    im = None
     for ax, case in zip(axes.ravel(), cases):
         values = np.full((len(Ps), len(n_elems)), np.nan)
         stable = np.ones((len(Ps), len(n_elems)), dtype=bool)
@@ -120,11 +114,14 @@ def plot_error_grid(rows, Ps, n_elems, cases, title_suffix=""):
                     continue
                 values[i, j] = float(r["final_rel_L2_density"])
                 stable[i, j] = r["stable"] in ("True", "true", "1", True)
-        _heatmap_panel(ax, Ps, n_elems, values, stable, ERROR_CMAP,
-                      vmin, vmax, cbar_label="rel. L2 error", fig=fig)
-        ax.set_xlabel("n_elem"); ax.set_ylabel("polynomial order")
-        ax.set_title(CASE_TITLE.get(case, case), fontsize=10)
-    fig.tight_layout(rect=(0, 0, 1, 0.92))
+        im = _heatmap_panel(ax, Ps, n_elems, values, stable, ERROR_CMAP,
+                            vmin, vmax)
+        ax.set_title(CASE_TITLE.get(case, case))
+    fig.subplots_adjust(left=0.08, right=0.90, top=0.94, bottom=0.06,
+                        hspace=0.28, wspace=0.2)
+    cb = fig.colorbar(im, ax=axes.ravel().tolist(), pad=0.02, fraction=0.05)
+    cb.set_label("rel. L2 error", color=INK_2)
+    cb.outline.set_visible(False)
     return fig
 
 
@@ -134,9 +131,7 @@ def plot_ratio_grid(rows, Ps, n_elems, cases, title_suffix=""):
     stays < 100% (green) everywhere in the grid, not just at the trained P."""
     apply_style()
     fig, axes = plt.subplots(2, 2, figsize=(11, 8.5))
-    fig.suptitle(f"OPNO policy error as % of Persson-Peraire's error{title_suffix}\n"
-                 "(< 100% = NN beats the hand-tuned baseline at that P, n_elem)",
-                 color=INK, fontsize=12)
+    im = None
     for ax, case in zip(axes.ravel(), cases):
         values = np.full((len(Ps), len(n_elems)), np.nan)
         stable = np.ones((len(Ps), len(n_elems)), dtype=bool)
@@ -152,11 +147,14 @@ def plot_ratio_grid(rows, Ps, n_elems, cases, title_suffix=""):
                 nn_err = float(r_nn["final_rel_L2_density"])
                 values[i, j] = 100.0 * nn_err / pp_err if pp_err > 0 else np.nan
                 stable[i, j] = r_nn["stable"] in ("True", "true", "1", True)
-        _heatmap_panel(ax, Ps, n_elems, values, stable, RATIO_CMAP, 0.0, 200.0,
-                      fmt="{:.0f}%", cbar_label="NN / PP error  (%)", fig=fig)
-        ax.set_xlabel("n_elem"); ax.set_ylabel("polynomial order")
-        ax.set_title(CASE_TITLE.get(case, case), fontsize=10)
-    fig.tight_layout(rect=(0, 0, 1, 0.92))
+        im = _heatmap_panel(ax, Ps, n_elems, values, stable, RATIO_CMAP,
+                            0.0, 200.0, fmt="{:.0f}%")
+        ax.set_title(CASE_TITLE.get(case, case))
+    fig.subplots_adjust(left=0.08, right=0.90, top=0.94, bottom=0.06,
+                        hspace=0.28, wspace=0.2)
+    cb = fig.colorbar(im, ax=axes.ravel().tolist(), pad=0.02, fraction=0.05)
+    cb.set_label("NN / PP error  (%)", color=INK_2)
+    cb.outline.set_visible(False)
     return fig
 
 

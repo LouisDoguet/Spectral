@@ -11,7 +11,7 @@ Run from nn/ (or the repo root):
     python nn/main.py --alpha dg            # pure DG (no stabilization)
     python nn/main.py --alpha pp            # Persson-Peraire indicator
     python nn/main.py --alpha nn --model nn/training/checkpoints/alpha_model_best.eqx
-    python nn/main.py --seed 7 --save out.gif   # different IC, save a GIF
+    python nn/main.py --seed 7 --save out.mp4   # different IC, save an MP4
 
 --alpha nn falls back to PP with a warning if no checkpoint is found.
 """
@@ -28,7 +28,7 @@ import jax
 import jax.numpy as jnp
 import equinox as eqx
 import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation, PillowWriter
+from matplotlib.animation import FuncAnimation, FFMpegWriter
 
 from jax_dgsem import GLLBasis, Mesh1D
 from jax_dgsem.solver import rk4_step
@@ -249,13 +249,15 @@ def animate(data, save_path=None):
     fig.tight_layout(rect=(0, 0, 1, 0.96))
 
     if save_path:
-        anim.save(save_path, writer=PillowWriter(fps=20))
+        os.makedirs(os.path.dirname(save_path) or ".", exist_ok=True)
+        anim.save(save_path, writer=FFMpegWriter(fps=20))
     else:
         try:
             plt.show()
         except Exception:
-            out = "nn/dgsem_vs_muscl.gif"
-            anim.save(out, writer=PillowWriter(fps=20))
+            out = "nn/img/dgsem_vs_muscl.mp4"
+            os.makedirs(os.path.dirname(out), exist_ok=True)
+            anim.save(out, writer=FFMpegWriter(fps=20))
     return anim
 
 
@@ -267,7 +269,7 @@ def main():
                     default="nn/training/checkpoints/alpha_model_best.eqx")
     ap.add_argument("--seed", type=int, default=0, help="random IC seed")
     ap.add_argument("--save", default=None,
-                    help="save the animation to this .gif instead of showing")
+                    help="save the animation to this .mp4 instead of showing")
     ap.add_argument("--rollout-steps", type=int, default=None)
     
     # NEW ARGUMENT

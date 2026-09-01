@@ -15,43 +15,42 @@ A 1D Spectral Element Method solver for the Euler equations.
 - `lib/math` : Math helpers
 - `lib/space/`: `Mesh` and `Element` classes managing the unified memory and spatial operator.
 - `lib/time/`: Optimized `RK4` class and data export routines. The hybrid solver blends the entropy-stable DG and FV *subcell fluxes* per interface (`(1-a)B_dg + a B_fv`), matching `nn/jax_dgsem`, so a per-interface (nodal) blending factor stays conservative and entropy-stable.
-- `lib/equinox/`: inference-only C++ runtime for the trained JAX/equinox alpha policy (`Conv1d`, `ResBlock`, `AlphaNet`). Loads a `.nnx` file produced by `nn/export/export.py` and reproduces the JAX `NodalAlphaModel` to machine precision.
-
-## Neural alpha policy: JAX → C++ export
-
-The blending factor `alpha` can be driven either by the Persson-Peraire modal
-indicator (default) or by a network trained in JAX. The network is trained,
-exported, and consumed by the C++ solver as a single attachable object
-(`HybridDGSEM::setAlphaNet`):
-
-```
-train (JAX, nn/) -> nn/export/export.py -> model.nnx -> build/spectral --nn_model model.nnx
-```
-
-```bash
-python nn/export/export.py nn/training/checkpoints_pretrained_P4
-build/spectral --solver hybrid_dgsem --case sod \
-    --nn_model nn/training/checkpoints_pretrained_P4/alpha_model.nnx
-```
-
-Omit `--nn_model` to fall back to the Persson-Peraire indicator. Re-run
-`export.py` after each training run (a stale `.nnx` no longer matches the
-checkpoint). See [NN_EXPORT_MIGRATION.md](NN_EXPORT_MIGRATION.md) for the `.nnx`
-format and the JAX↔C++ parity check (`nn/export/parity_check.py`).
+- `lib/equinox/`: inference-only C++ runtime for the trained JAX/equinox alpha policy (`Conv1d`, `ResBlock`, `AlphaNet`). Loads a `.nnx` file produced by `nn/export/export.py` and reproduces the JAX `NodalAlphaModel` to machine precision. `[TODO: Convert OPNO+GNN policy to Equinox]`
 
 ## Hybrid Flux Blending FV/DGSEM solver
 `JAX`-differentiable solver for CNN backpropagation.
 
-<img src="./img/hDGSEM.drawio.png" width="250" alt="hDGSEM">
+<img src="./img/hDGSEM.drawio.png" width="300" alt="hDGSEM">
 
 ## `JAX` Neural Network
 
-<img src="./img/NN.drawio.png" width="600" alt="JAX Neural Network">
+<img src="./img/OPNOAlphaModel.drawio.png" width="600" alt="JAX Neural Network">
 
-Python CNN framework to learn the behavior of the blending coefficient.
+Python GNN+OPNO framework to learn the behavior of the blending coefficient.
+
+**Input:**
+- Quadrature points residuals
+- Energy spectrum of the element
+
+**Encoder:** returns *Homogeneous token*
+
+Homogenise the input token
+- Polynomial order
+- Mesh size
+
+**Graph Neural Network:** returns *Neighbour-aware token*
+- Data transfer between the elements
+
+**Orthogonal Polynomial Neural Operator:** returns *Enriched energy spectrum + signal*
+- From the energy spectrum and GNN token
+
+
+Final **fusion layer**, sigmoid-activated.
+
+
 - `nn/jax_dgsem` : `JAX`-differentiable DGSEM solver (previous section)
 - `nn/muscl` : Python (non `JAX`-differentiable solver) diffusive solver, to generate reference solution (on a finer mesh). The solver is second-order accurate MUSCL scheme, with a `minmod` limiter to ensure stability of the solution, despite the really high resolution of the grid.
-- `nn/network` : Networks structure. Element networks and Quadrature networks.
+- `nn/network` : Networks structure (element, quadrature point scale or ModalOPNO)
 - `nn/training` : Training policy of the network.
 
 <img src="./img/Training.drawio.png" width="600" alt="Training diagram">
